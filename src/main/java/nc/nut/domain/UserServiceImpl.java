@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByName(String name) {
 //todo: get authorities from AUTHORITIES table
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT Users.NAME, AUTHORITIES.ROLE,  ROLES.NAME AS authorities FROM USERS, AUTHORITIES WHERE USERS.NAME=:name AND USERS.PHONE=AUTHORITIES.USERNAME", name);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT Users.NAME, USERS.PASSWORD,  AUTHORITIES.ROLE AS authorities FROM USERS, AUTHORITIES WHERE USERS.NAME=:name AND USERS.PHONE=AUTHORITIES.USERNAME", name);
             sqlRowSet.next();
             String userName = sqlRowSet.getString("NAME");
             String password = sqlRowSet.getString("PASSWORD");
