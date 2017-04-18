@@ -3,10 +3,7 @@ package nc.nut.config;
 import nc.nut.controller.ModelInterceptor;
 import nc.nut.security.SecurityConfig;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -29,23 +26,24 @@ import java.util.Locale;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "nc.nut")
-@Import({ ServicesConfig.class, SecurityConfig.class })
+@PropertySource(value = "classpath:gmail.com.properties")
+@Import({ ServicesConfig.class, SecurityConfig.class,MailConfig.class })
 @EnableTransactionManagement(proxyTargetClass = true)
 public class SpringConfig extends WebMvcConfigurerAdapter {
     @Resource
     ModelInterceptor modelInterceptor;
-    
+
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
-    
+
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new MappingJackson2HttpMessageConverter());
         converters.add(new ByteArrayHttpMessageConverter());
     }
-    
+
     @Bean
     public UrlBasedViewResolver setupViewResolver() {
         UrlBasedViewResolver resolver = new UrlBasedViewResolver();
@@ -54,7 +52,7 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
         resolver.setViewClass(JstlView.class);
         return resolver;
     }
-    
+
     @Bean(name = "messageSource")
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
@@ -64,7 +62,7 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
         messageSource.setUseCodeAsDefaultMessage(true);
         return messageSource;
     }
-    
+
     @Bean
     public LocaleResolver localeResolver() {
         CookieLocaleResolver resolver = new CookieLocaleResolver();
@@ -73,7 +71,7 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
         resolver.setCookieMaxAge(4800);
         return resolver;
     }
-    
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
