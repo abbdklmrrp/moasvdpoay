@@ -25,4 +25,13 @@ public class User {
     public String getAuthorities() {
         return authorities;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", authorities='" + authorities + '\'' +
+                '}';
+    }
 }
