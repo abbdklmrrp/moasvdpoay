@@ -1,4 +1,6 @@
-package nc.nut.domain;
+package nc.nut.service.interf;
+
+import nc.nut.dao.entity.User;
 
 /**
  * @author Rysakova Anna

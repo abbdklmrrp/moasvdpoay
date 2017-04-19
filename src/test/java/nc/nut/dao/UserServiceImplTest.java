@@ -1,6 +1,7 @@
-package nc.nut.domain;
+package nc.nut.dao;
 
 import nc.nut.config.ServicesConfig;
+import nc.nut.service.interf.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

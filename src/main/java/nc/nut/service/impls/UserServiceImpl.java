@@ -1,5 +1,7 @@
-package nc.nut.domain;
+package nc.nut.service.impls;
 
+import nc.nut.service.interf.UserService;
+import nc.nut.dao.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

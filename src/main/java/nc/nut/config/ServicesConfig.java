@@ -1,8 +1,8 @@
 package nc.nut.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nc.nut.domain.UserService;
-import nc.nut.domain.UserServiceImpl;
+import nc.nut.service.interf.UserService;
+import nc.nut.service.impls.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,8 +36,6 @@ public class ServicesConfig {
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
-
-    //TODO add DataSource bean
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
