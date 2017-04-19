@@ -7,6 +7,9 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 
+/**
+ * @author Rysakova Anna
+ */
 public class SpringMvcInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {

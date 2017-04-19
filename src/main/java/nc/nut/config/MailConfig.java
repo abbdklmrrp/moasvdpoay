@@ -1,6 +1,5 @@
 package nc.nut.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import nc.nut.mail.Email;
 import nc.nut.mail.Mailer;
 import nc.nut.mail.Recipient;
@@ -11,6 +10,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
+
+/**
+ * @author Moiseienko Petro
+ * @since 15.04.2017.
+ */
 
 @Configuration
 public class MailConfig {

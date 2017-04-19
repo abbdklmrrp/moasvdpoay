@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 
+/**
+ * @author Rysakova Anna
+ */
 @Controller
 public class IndexController {
     @Resource

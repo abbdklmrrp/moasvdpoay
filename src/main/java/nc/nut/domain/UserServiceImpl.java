@@ -7,6 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Rysakova Anna
+ */
 @Service
 public class UserServiceImpl implements UserService {
     Logger logger = LoggerFactory.getLogger(getClass());

@@ -23,6 +23,9 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * @author Rysakova Anna
+ */
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "nc.nut")

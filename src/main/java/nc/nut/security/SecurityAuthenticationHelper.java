@@ -5,6 +5,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Rysakova Anna
+ */
 @Component
 public class SecurityAuthenticationHelper {
     public User getCurrentUser() {

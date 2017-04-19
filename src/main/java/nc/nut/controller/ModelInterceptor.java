@@ -11,6 +11,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author Rysakova Anna
+ */
 @Component
 public class ModelInterceptor extends HandlerInterceptorAdapter {
     @Resource

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
+/**
+ * @author Rysakova Anna
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Resource

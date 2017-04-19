@@ -1,5 +1,8 @@
 package nc.nut.security;
 
+/**
+ * @author Rysakova Anna
+ */
 public enum Authority implements AuthorityConstants {
     USER(USER_VALUE),
     ADMIN(ADMIN_VALUE),

@@ -13,6 +13,9 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
+/**
+ * @author Rysakova Anna
+ */
 @Configuration
 @PropertySource("classpath:db/oracle.properties")
 public class ServicesConfig {

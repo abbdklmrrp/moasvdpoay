@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author Rysakova Anna
+ */
 @Service
 public class UserDetailsServiceProviderImpl implements UserDetailsServiceProvider {
     Logger logger = LoggerFactory.getLogger(getClass());

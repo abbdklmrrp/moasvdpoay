@@ -5,6 +5,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Rysakova Anna
+ */
 @Component
 public class AuthenticationEventPublisherImpl implements AuthenticationEventPublisher {
     @Override

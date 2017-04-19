@@ -15,6 +15,9 @@ import org.springframework.web.util.WebUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author Rysakova Anna
+ */
 @Controller
 @RequestMapping
 public class LoginController {

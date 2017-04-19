@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.annotation.Resource;
 
+/**
+ * @author Rysakova Anna
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)

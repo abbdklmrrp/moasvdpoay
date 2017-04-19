@@ -1,5 +1,8 @@
 package nc.nut.domain;
 
+/**
+ * @author Rysakova Anna
+ */
 public class User {
     private String name;
     private String password;
