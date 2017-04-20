@@ -1,5 +1,5 @@
 import nc.nut.config.ServicesConfig;
-import nc.nut.dao.entity.User;
+import nc.nut.user.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

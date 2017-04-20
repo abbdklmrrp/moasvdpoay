@@ -1,7 +1,7 @@
 package nc.nut.security;
 
 import com.google.common.base.Preconditions;
-import nc.nut.service.interf.UserService;
+import nc.nut.user.UserDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +22,7 @@ public class UserDetailsServiceProviderImpl implements UserDetailsServiceProvide
     Logger logger = LoggerFactory.getLogger(getClass());
     
     @Resource
-    UserService userService;
+    private UserDAO userDAO;
     
     @Override
     public UserDetails provide(String username) throws UsernameNotFoundException {
@@ -30,7 +30,7 @@ public class UserDetailsServiceProviderImpl implements UserDetailsServiceProvide
         
         logger.info("Providing user details for {}", username);
         
-        nc.nut.dao.entity.User byName = userService.findByName(username);
+        nc.nut.user.User byName = userDAO.findByName(username);
         
         if (byName == null) {
             return null;

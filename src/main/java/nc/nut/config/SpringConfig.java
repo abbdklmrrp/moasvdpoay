@@ -1,6 +1,8 @@
 package nc.nut.config;
 
 import nc.nut.controller.ModelInterceptor;
+import nc.nut.mail.MailConfig;
+import nc.nut.persistence.PersistenceConfig;
 import nc.nut.security.SecurityConfig;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
@@ -30,7 +32,7 @@ import java.util.Locale;
 @EnableWebMvc
 @ComponentScan(basePackages = "nc.nut")
 @PropertySource(value = "classpath:gmail.com.properties")
-@Import({ ServicesConfig.class, SecurityConfig.class,MailConfig.class })
+@Import({ ServicesConfig.class, SecurityConfig.class, MailConfig.class, PersistenceConfig.class })
 @EnableTransactionManagement(proxyTargetClass = true)
 public class SpringConfig extends WebMvcConfigurerAdapter {
     @Resource

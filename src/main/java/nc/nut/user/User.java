@@ -1,4 +1,4 @@
-package nc.nut.dao.entity;
+package nc.nut.user;
 
 /**
  * @author Rysakova Anna
