@@ -6,6 +6,7 @@ import nc.nut.mail.Recipient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -17,6 +18,7 @@ import java.util.Properties;
  */
 
 @Configuration
+@PropertySource(value = "classpath:gmail.com.properties")
 public class MailConfig {
     @Value("${mail.host}")
     String host;

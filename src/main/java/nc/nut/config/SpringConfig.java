@@ -1,10 +1,8 @@
 package nc.nut.config;
 
 import nc.nut.controller.ModelInterceptor;
-import nc.nut.security.SecurityConfig;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -29,17 +27,13 @@ import java.util.Locale;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "nc.nut")
-@PropertySource(value = "classpath:gmail.com.properties")
-@Import({ ServicesConfig.class, SecurityConfig.class,MailConfig.class })
+@Import({ DataSourceConfig.class, MailConfig.class })
+@ImportResource({"classpath:/spring/spring-security.xml"})
 @EnableTransactionManagement(proxyTargetClass = true)
 public class SpringConfig extends WebMvcConfigurerAdapter {
+
     @Resource
     ModelInterceptor modelInterceptor;
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {

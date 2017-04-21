@@ -11,7 +11,7 @@
 </head>
 <body bgcolor="#f0f8ff">
 <div align="center">
-    ${user.username} page!
+    ${user.name} page!
     <a href="<%=request.getContextPath()%>/doLogout">Logout</a>
 </div>
 </body>

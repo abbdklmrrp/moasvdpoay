@@ -1,13 +1,10 @@
 package nc.nut.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import nc.nut.service.interf.UserService;
-import nc.nut.service.impls.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -17,8 +14,11 @@ import javax.sql.DataSource;
  * @author Rysakova Anna
  */
 @Configuration
-@PropertySource("classpath:db/oracle.properties")
-public class ServicesConfig {
+@PropertySources({
+        @PropertySource("classpath:db/oracle.properties"),
+        @PropertySource("classpath:sql/userdao.properties")
+})
+public class DataSourceConfig {
 
     @Value("${datasource.driver-class-name}")
     private String driver;
@@ -31,16 +31,6 @@ public class ServicesConfig {
 
     @Value("${datasource.password}")
     private String password;
-
-    @Bean(name = "objectMapper")
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
 
     @Bean(name = "dataSource")
     public DataSource dataSource() {
@@ -59,8 +49,4 @@ public class ServicesConfig {
         return new JdbcTemplate(dataSource());
     }
 
-    @Bean
-    public UserService userService() {
-        return new UserServiceImpl();
-    }
 }
