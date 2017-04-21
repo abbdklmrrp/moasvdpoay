@@ -1,6 +1,6 @@
 package nc.nut.controller;
 
-import nc.nut.security.SecurityAuthenticationHelper;
+import nc.nut.security.AuthorizedUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.WebUtils;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -22,13 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping
 public class LoginController {
     Logger logger = LoggerFactory.getLogger(getClass());
-    
-    @Resource
-    SecurityAuthenticationHelper securityAuthenticationHelper;
-    
+
+
     @RequestMapping({ "/", "/login" })
     String login() {
-        User currentUser = securityAuthenticationHelper.getCurrentUser();
+        User currentUser = AuthorizedUser.safeGet();
         if (currentUser != null) {
             return "redirect:index.htm";
         }

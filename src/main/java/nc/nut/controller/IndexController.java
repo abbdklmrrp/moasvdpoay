@@ -1,31 +1,26 @@
 package nc.nut.controller;
 
-import nc.nut.security.AuthorityConstants;
-import nc.nut.security.SecurityAuthenticationHelper;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import nc.nut.entity.Role;
+import nc.nut.security.AuthorizedUser;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.annotation.Resource;
 
 /**
  * @author Rysakova Anna
  */
 @Controller
 public class IndexController {
-    @Resource
-    SecurityAuthenticationHelper securityAuthenticationHelper;
-    
+
     @RequestMapping({ "index" })
     String index() {
-        User currentUser = securityAuthenticationHelper.getCurrentUser();
+        User currentUser = AuthorizedUser.safeGet();
         if (currentUser == null) {
             return "redirect:/login";
         }
-        boolean isAdmin = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityConstants.ADMIN_VALUE));
-        boolean isManager = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityConstants.MANAGER_VALUE));
-        boolean isSupport = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityConstants.SUPPORT_VALUE));
+        boolean isAdmin = currentUser.getAuthorities().contains(Role.admin);
+        boolean isManager = currentUser.getAuthorities().contains(Role.manager);
+        boolean isSupport = currentUser.getAuthorities().contains(Role.support);
         if (isAdmin) {
             return "/admin/admin";
         }
