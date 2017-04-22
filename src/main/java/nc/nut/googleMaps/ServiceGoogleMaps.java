@@ -26,45 +26,40 @@ public class ServiceGoogleMaps {
      * @param address input address.
      * @return region of address from param.
      */
-    public static String getRegion(String address){
+    public static String getRegion(String address) {
         Boolean regionExists = false;
         String region = null;
         GeoApiContext context = new GeoApiContext().setApiKey(apiKey);
-        GeocodingResult[] results = new GeocodingResult[0];
+        GeocodingResult[] results;
         try {
             results = GeocodingApi.geocode(context, address).await();
+            if (results != null && results.length != 0) {
+                // if it`s region
+                AddressComponent[] components = results[0].addressComponents;
+                for (int i = 0; i < components.length; i++) {
+                    AddressComponentType[] type = components[i].types;
+                    if (type[0].toString().equals("administrative_area_level_1")) {
+                        region = components[i].longName;
+                        regionExists = true;
+                        break;
+                    }
+                }
+                // if it`s city-region
+                if (!regionExists) {
+                    for (int i = 0; i < components.length; i++) {
+                        AddressComponentType[] type = components[i].types;
+                        if (type[0].toString().equals("administrative_area_level_2")) {
+                            region = components[i].longName;
+                            break;
+                        }
+                    }
+                }
+            }
         } catch (ApiException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            // if it`s region
-            AddressComponent[] components = results[0].addressComponents;
-            for (int i = 0; i < components.length; i++) {
-                AddressComponentType[] type = components[i].types;
-                if (type[0].toString().equals("administrative_area_level_1")) {
-                    region = components[i].longName;
-                    regionExists = true;
-                    break;
-                }
-            }
-            // if it`s city-region
-            if (!regionExists) {
-                for (int i = 0; i < components.length; i++) {
-                    AddressComponentType[] type = components[i].types;
-                    if (type[0].toString().equals("administrative_area_level_2")) {
-                        region = components[i].longName;
-                        break;
-                    }
-                }
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
             e.printStackTrace();
         }
         return region;
@@ -77,10 +72,10 @@ public class ServiceGoogleMaps {
      * @param address input address.
      * @return formatted address.
      */
-    public static String getFormattedAddress(String address){
+    public static String getFormattedAddress(String address) {
         String formattedAddress = null;
         GeoApiContext context = new GeoApiContext().setApiKey(apiKey);
-        GeocodingResult[] results = new GeocodingResult[0];
+        GeocodingResult[] results;
         try {
             results = GeocodingApi.geocode(context, address).await();
             formattedAddress = results[0].formattedAddress;
