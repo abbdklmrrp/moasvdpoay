@@ -12,21 +12,22 @@ import org.springframework.stereotype.Component;
 public class SecurityAuthenticationHelper {
     public User getCurrentUser() {
         Authentication authentication = getAuthentication();
-        
+
         if (authentication == null) {
             return null;
         }
-        
+
         Object user = authentication.getPrincipal();
         if (user instanceof String) {
+            //anonymousUser
             return null;
         } else {
             return (User) user;
         }
     }
-    
+
     Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
-    
+
 }
