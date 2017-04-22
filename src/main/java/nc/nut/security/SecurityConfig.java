@@ -48,8 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry =
                 http.authorizeRequests();
-        registry.antMatchers("/*").permitAll();
-//        registry.anyRequest().hasAnyAuthority(Authority.valueStrings());
+//        registry.antMatchers("/*").permitAll();
+        registry.anyRequest().hasAnyAuthority(Authority.valueStrings());
 
         Properties secured = readSecurityUrls();
         for (Map.Entry<Object, Object> e : secured.entrySet()) {
