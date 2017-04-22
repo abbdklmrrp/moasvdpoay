@@ -16,8 +16,8 @@ import javax.annotation.Resource;
 public class IndexController {
     @Resource
     SecurityAuthenticationHelper securityAuthenticationHelper;
-    
-    @RequestMapping({ "index" })
+
+    @RequestMapping({"index"})
     String index() {
         User currentUser = securityAuthenticationHelper.getCurrentUser();
         if (currentUser == null) {
@@ -37,6 +37,6 @@ public class IndexController {
         } else {
             return "/user/user";
         }
-        
+
     }
 }

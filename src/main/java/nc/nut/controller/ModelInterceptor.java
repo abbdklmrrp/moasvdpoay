@@ -18,12 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 public class ModelInterceptor extends HandlerInterceptorAdapter {
     @Resource
     ApplicationContext applicationContext;
-    
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         return true;
     }
-    
+
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         if (modelAndView != null && modelAndView.isReference() && !modelAndView.getViewName().startsWith("redirect:")) {

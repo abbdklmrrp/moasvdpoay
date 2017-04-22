@@ -22,11 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping
 public class LoginController {
     Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Resource
     SecurityAuthenticationHelper securityAuthenticationHelper;
-    
-    @RequestMapping({ "/", "/login" })
+
+    @RequestMapping({"/", "/login"})
     String login() {
         User currentUser = securityAuthenticationHelper.getCurrentUser();
         if (currentUser != null) {
@@ -34,18 +34,18 @@ public class LoginController {
         }
         return "login";
     }
-    
+
     @RequestMapping("/failure")
     String failure(HttpServletRequest request, Model model) {
         Object authenticationException = WebUtils.getSessionAttribute(request, WebAttributes.AUTHENTICATION_EXCEPTION);
-        
+
         if (authenticationException instanceof AuthenticationException) {
             AuthenticationException ex = (AuthenticationException) authenticationException;
-            
+
             logger.error("Redirected after unsuccessful authentication, details: {}", ex);
-            
+
             WebUtils.setSessionAttribute(request, WebAttributes.AUTHENTICATION_EXCEPTION, null);
-            
+
             if (authenticationException instanceof BadCredentialsException) {
                 model.addAttribute("error", "Unknown user");
             } else {
