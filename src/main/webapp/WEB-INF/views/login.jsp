@@ -26,7 +26,6 @@
             <input type="password" class="form-control" placeholder="Password" id="Password" name="password">
             <i class="fa fa-lock"></i>
         </div>
-        <span class="alert"></span>
         <c:if test="${not empty error}">
             <span style="float:right ; color: #10CE88;">${error}</span>
         </c:if>
@@ -35,7 +34,7 @@
 
 </form>
 <script class="cssdeck" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<script src="${contextPath}/resources/js/bootstrap.min.js"></script>
+<%--<script src="${contextPath}/resources/js/bootstrap.min.js"></script>--%>
 
 
 </body>

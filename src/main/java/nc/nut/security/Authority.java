@@ -18,4 +18,13 @@ public enum Authority implements AuthorityConstants {
     public String getId() {
         return id;
     }
+
+    public static String[] valueStrings() {
+        Authority[] values = values();
+        String[] auths = new String[values.length];
+        for (int i = 0; i < values.length; i++) {
+            auths[i] = values[i].id;
+        }
+        return auths;
+    }
 }

@@ -11,7 +11,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  */
 @Configuration
 //@PropertySource("classpath:db/oracle.properties")
-@PropertySource("classpath:db.properties")
+@PropertySource("classpath:ANN_DB.properties")
 public class ServicesConfig {
     @Bean(name = "objectMapper")
     public ObjectMapper objectMapper() {

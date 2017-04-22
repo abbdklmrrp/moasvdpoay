@@ -23,6 +23,6 @@ public class Md5PasswordEncoder implements PasswordEncoder {
     }
     
     public static void main(String[] args) {
-        System.out.println(new Md5PasswordEncoder().encode("support"));
+        System.out.println(new Md5PasswordEncoder().encode("user"));
     }
 }

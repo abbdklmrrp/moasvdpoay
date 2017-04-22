@@ -7,11 +7,11 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>User</title>
+    <title>Manager</title>
 </head>
-<body bgcolor="#fffaf0">
+<body bgcolor="#f5f5dc">
 <div align="center">
-    ${user.username} page!
+    ${user.username} on manager page!
     <a href="<%=request.getContextPath()%>/doLogout">Logout</a>
 </div>
 </body>

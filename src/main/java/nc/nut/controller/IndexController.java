@@ -27,16 +27,15 @@ public class IndexController {
         boolean isManager = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityConstants.MANAGER_VALUE));
         boolean isSupport = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityConstants.SUPPORT_VALUE));
         if (isAdmin) {
-            return "/admin/admin";
+            return "redirect:/admin/index";
         }
         if (isManager) {
-            return "/manager/manager";
+            return "redirect:/manager/index";
         }
         if (isSupport) {
-            return "/support/support";
+            return "redirect:/support/index";
         } else {
-            return "/user/user";
+            return "redirect:/user/index";
         }
-        
     }
 }

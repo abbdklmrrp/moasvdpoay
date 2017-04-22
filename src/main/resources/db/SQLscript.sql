@@ -188,10 +188,22 @@ CREATE OR REPLACE VIEW Persistent_logins AS
   FROM Users
     JOIN Logined ON Users.id = Logined.id;
 
-CREATE OR REPLACE VIEW Authorities AS
+CREATE OR REPLACE VIEW AUTHORITIES AS
   SELECT
-    Users.id,
-    Users.phone username,
-    Roles.name  role
+    Users.EMAIL username,
+    Users.PASSWORD,
+    Roles.NAME  role
   FROM Users
     JOIN Roles ON Roles.id = Users.role_id;
+
+  INSERT INTO ROLES VALUES (1,'ADMIN');
+  INSERT INTO ROLES VALUES (2,'MANAGER');
+  INSERT INTO ROLES VALUES (3,'SUPPORT');
+  INSERT INTO ROLES VALUES (4,'USER');
+
+  INSERT INTO USERS VALUES (1,'admin','58bd1d8f8a93b0b6c12ab4ed747567f3',1);
+  INSERT INTO USERS VALUES (2,'manager','2d889e183be0dd25b335fdd5ec92002b',2);
+  INSERT INTO USERS VALUES (3,'support','1d9e132d3a2fc27bc5fb819098038e6c',3);
+  INSERT INTO USERS VALUES (4,'user','2cd613d62f1988c770eecd11f6616801',4);
+
+COMMIT;
