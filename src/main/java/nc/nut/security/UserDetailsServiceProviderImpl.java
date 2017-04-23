@@ -19,30 +19,30 @@ import java.util.List;
  */
 @Service
 public class UserDetailsServiceProviderImpl implements UserDetailsServiceProvider {
-    Logger logger = LoggerFactory.getLogger(getClass());
-    
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Resource
     private UserDAO userDAO;
-    
+
     @Override
     public UserDetails provide(String username) throws UsernameNotFoundException {
         Preconditions.checkArgument(username != null && !username.isEmpty());
-        
+
         logger.info("Providing user details for {}", username);
-        
-        nc.nut.user.User byName = userDAO.findByName(username);
-        
-        if (byName == null) {
+
+        nc.nut.user.User findUser = userDAO.findByUsername(username);
+
+        if (findUser == null) {
             return null;
         }
-        
-        List<GrantedAuthority> auth = AuthorityUtils.commaSeparatedStringToAuthorityList(byName.getAuthorities());
-        
-        User user = new User(username, byName.getPassword(), auth);
-        
+
+        List<GrantedAuthority> auth = AuthorityUtils.createAuthorityList(findUser.getAuthorities());
+
+        User user = new User(username, findUser.getPassword(), auth);
+
         logger.info("Something found for {}", username);
-        
+
         return user;
     }
-    
+
 }

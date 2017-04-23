@@ -7,11 +7,11 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Manager</title>
+    <title>PMG</title>
 </head>
-<body bgcolor="#fff8dc">
+<body bgcolor="#f5f5dc">
 <div align="center">
-    ${user.username} on support page!
+    PMG page!
     <a href="<%=request.getContextPath()%>/doLogout">Logout</a>
 </div>
 </body>

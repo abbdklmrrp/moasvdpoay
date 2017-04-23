@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Rysakova Anna
  */
 @Controller
-@RequestMapping({ "support" })
-public class SupportController {
-    @RequestMapping({ "index" })
+@RequestMapping({"pmg"})
+public class PMGController {
+    @RequestMapping({"index"})
     String index() {
-        return "support/index";
+        return "pmg/index";
     }
 }

@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Rysakova Anna
  */
 @Controller
-@RequestMapping({ "manager" })
-public class ManagerController {
-    @RequestMapping({ "index" })
+@RequestMapping({"csr"})
+public class CSRController {
+    @RequestMapping({"index"})
     String index() {
-        return "manager/index";
+        return "csr/index";
     }
 }

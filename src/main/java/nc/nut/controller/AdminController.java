@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Rysakova Anna
  */
 @Controller
-@RequestMapping({ "admin" })
+@RequestMapping({"admin"})
 public class AdminController {
-    @RequestMapping({ "index" })
+    @RequestMapping({"index"})
     String index() {
         return "admin/index";
     }

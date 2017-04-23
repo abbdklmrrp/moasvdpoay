@@ -25,9 +25,9 @@ import java.util.Properties;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
     @Resource
-    Md5PasswordEncoder md5PasswordEncoder;
+    private Md5PasswordEncoder md5PasswordEncoder;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -48,8 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry =
                 http.authorizeRequests();
-//        registry.antMatchers("/*").permitAll();
-        registry.anyRequest().hasAnyAuthority(Authority.valueStrings());
+        registry.antMatchers("/*").permitAll();
+        registry.antMatchers("/*/**").permitAll();
+//        registry.anyRequest().hasAnyAuthority(Authority.valueStrings());
 
         Properties secured = readSecurityUrls();
         for (Map.Entry<Object, Object> e : secured.entrySet()) {
@@ -73,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private Properties readSecurityUrls() {
         try {
             Properties properties = PropertiesLoaderUtils.loadAllProperties("security.properties");
-            if(properties.isEmpty()) {
+            if (properties.isEmpty()) {
                 throw new IllegalStateException("File security.properties is not exist or not valid");
             }
             return properties;

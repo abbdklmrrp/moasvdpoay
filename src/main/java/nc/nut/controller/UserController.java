@@ -3,8 +3,6 @@ package nc.nut.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author Rysakova Anna
  */
@@ -12,9 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping({"user"})
 public class UserController {
     @RequestMapping({"index"})
-    String index(HttpServletRequest req) {
-        String uri=req.getRequestURI();
-        System.out.println(uri);
+    String index() {
         return "user/index";
     }
 }

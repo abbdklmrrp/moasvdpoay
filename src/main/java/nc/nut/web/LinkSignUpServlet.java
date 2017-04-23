@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 public class LinkSignUpServlet {
-    @RequestMapping(method = RequestMethod.GET,path = "/linkSignUpServlet")
+    @RequestMapping(method = RequestMethod.GET, path = "/linkSignUpServlet")
     public String dispatch() {
         return "signUp";
     }

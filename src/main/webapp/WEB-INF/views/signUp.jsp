@@ -33,7 +33,7 @@
             <br>
         </table>
         <input type="submit" value="Sign up!">
-</form>
+    </form>
 </div>
 </body>
 </html>
