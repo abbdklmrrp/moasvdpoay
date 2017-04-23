@@ -1,7 +1,7 @@
 package nc.nut.controller;
 
 import nc.nut.reports.ReportData;
-import nc.nut.reports.excel.XLSReportCreator;
+import nc.nut.reports.excel.ExcelReportCreator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Yuliya Pedash on 20.04.2017.
  */
 @Controller
-public class DownloadReportController {
+public class ReportController {
     @RequestMapping(value = "/report", method = RequestMethod.GET)
     public String showReport() {
         return "/report";
@@ -26,21 +26,22 @@ public class DownloadReportController {
     public void downloadExcelDocument(HttpServletResponse response) throws IOException {
         final String fileName = "sample.xlsx";
         OutputStream outputStream = response.getOutputStream();
-        XLSReportCreator reportMaker = new XLSReportCreator(fileName);
+        ExcelReportCreator reportMaker = new ExcelReportCreator(fileName);
         response.setContentType("application/vnd.ms-excel");
         response.setHeader
                 ("Content-Disposition", "attachment; filename=" + fileName);
-        reportMaker.makeReport(getDummyData());
+        reportMaker.makeReport(getData());
         reportMaker.getExcelWorkbook().write(outputStream);
+        reportMaker.getXlsDocWorker().getExcelReportFile().delete();
         outputStream.close();
     }
 
     /**
-     * gets dummy data just for example
+     * gets data for report just for example(temporary method).
      *
      * @return data
      */
-    private List<ReportData> getDummyData() {
+    private List<ReportData> getData() {
         List<ReportData> reportDataList = new ArrayList<>();
         reportDataList.add(new ReportData("11-11-2016", 54, 32));
         reportDataList.add(new ReportData("12-11-2016", 23, 11));
