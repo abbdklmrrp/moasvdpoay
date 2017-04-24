@@ -22,7 +22,7 @@
 
     <div class="login-form">
         <div class="form-group ">
-            <select name="productTypes" class="select" id="productTypes">
+            <select name="productTypes" class="form-control" id="productTypes">
                 <c:forEach var="types" items="${productTypes}">
                     <option value="${types.id}">${types.name}</option>
                 </c:forEach>
@@ -30,7 +30,7 @@
         </div>
 
         <div class="form-group ">
-            <select name="productCategories" class="select" id="select">
+            <select name="productCategories" class="form-control" id="select">
                 <c:forEach var="category" items="${productCategories}">
                     <option value="${category.id}">${category.name}</option>
                 </c:forEach>
@@ -38,13 +38,13 @@
         </div>
 
         <div class="form-group ">
-            <select name="duration" class="select" id="duration">
+            <select name="duration" class="form-control" id="duration">
                 <option value="12">12 month</option>
             </select>
         </div>
 
         <div class="form-group ">
-            <select name="needProcessing" class="select" id="needProcessing">
+            <select name="needProcessing" class="form-control" id="needProcessing">
                 <option value="1">need processing</option>
                 <option value="0">don't need processing</option>
             </select>
@@ -61,9 +61,9 @@
         </div>
         <div class="form-group ">
 
-            <select name="status" class="select" id="Status">
-                <option value="1">status activated</option>
-                <option value="0">status suspended</option>
+            <select name="status" class="form-control" id="Status">
+                <option value="1">Status activated</option>
+                <option value="0">Status suspended</option>
             </select>
         </div>
         <button type="submit" class="log-btn">Save</button>
