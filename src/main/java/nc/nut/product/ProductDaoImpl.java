@@ -47,19 +47,19 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<ProductCategories> findProductCategories() {
         List<ProductCategories> productCategories = jdbcTemplate.query(FIND_CATEGORIES, categoriesRowMapper);
-        return productCategories.isEmpty() ? null : productCategories;
+        return productCategories;
     }
 
     @Override
     public List<Product> getServices() {
         List<Product> services = jdbcTemplate.query(FIND_SERVICES, productRowMapper);
-        return services.isEmpty() ? null : services;
+        return services;
     }
 
     @Override
     public List<Product> getTariffs() {
         List<Product> tariffs = jdbcTemplate.query(FIND_TARIFFS, productRowMapper);
-        return tariffs.isEmpty() ? null : tariffs;
+        return tariffs;
     }
 
     @Override
@@ -73,6 +73,6 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<ProductTypes> findProductTypes() {
         List<ProductTypes> productTypes = jdbcTemplate.query(FIND_TYPES, typesRowMapper);
-        return productTypes.isEmpty() ? null : productTypes;
+        return productTypes;
     }
 }

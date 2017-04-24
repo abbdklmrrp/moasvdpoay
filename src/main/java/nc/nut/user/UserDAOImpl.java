@@ -27,7 +27,7 @@ class UserDAOImpl implements UserDAO {
             String authorities = rs.getString("ROLE");
             return new User(userName, password, authorities);
         });
-        return users.isEmpty() ? null : users.get(0);
+        return users.get(0);
     }
 
     @Override
