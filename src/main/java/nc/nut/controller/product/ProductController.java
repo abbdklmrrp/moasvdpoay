@@ -31,10 +31,10 @@ public class ProductController {
         model.addAttribute("productTypes", productTypes);
         model.addAttribute("productCategories", productCategories);
 
-        return "admin/addService";
+        return "admin/addProduct";
     }
 
-    @RequestMapping(value = {"addService"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"addProduct"}, method = RequestMethod.POST)
     String createProduct(@RequestParam(value = "productCategories") String categoryId,
                          @RequestParam(value = "duration") String duration,
                          @RequestParam(value = "productTypes") String typeId,

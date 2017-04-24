@@ -15,7 +15,7 @@
 <body>
 
 <div align="center">
-    <form method="POST" action="<%=request.getContextPath()%>/admin/addService">
+    <form method="POST" action="<%=request.getContextPath()%>/admin/addProduct">
         <table cellpadding="5" border="3" bgcolor="#138050">
 
             <tr>
