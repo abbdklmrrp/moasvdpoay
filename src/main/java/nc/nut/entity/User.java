@@ -2,10 +2,11 @@ package nc.nut.entity;
 
 /**
  * @author Rysakova Anna
+ * @author Nikita Alistratenko
  */
 public class User {
 
-    private Integer id;
+    private int id;
     private String name;
     private String surname;
     private String email;
@@ -14,28 +15,17 @@ public class User {
     private boolean enable;
     private String password;
     private Role role;
-
+    private long customer_id;
+    private long place_id;
 
     public User() {
     }
 
-    public User(Integer id, String name, String surname, String email, String phone, String address, boolean enable, String password, Role role) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.enable = enable;
-        this.password = password;
-        this.role = role;
-    }
-
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -103,18 +93,35 @@ public class User {
         this.role = role;
     }
 
+    public long getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(long customer_id) {
+        this.customer_id = customer_id;
+    }
+
+    public long getPlace_id() {
+        return place_id;
+    }
+
+    public void setPlace_id(long place_id) {
+        this.place_id = place_id;
+    }
+
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", enable=" + enable +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                '}';
+        return "User{" + "id=" + id
+                + ", name=" + name
+                + ", surname=" + surname
+                + ", email=" + email
+                + ", phone=" + phone
+                + ", address=" + address
+                + ", enable=" + enable
+                + ", password=" + password
+                + ", role=" + role.getAuthority()
+                + ", customer_id=" + customer_id
+                + ", place_id=" + place_id + '}';
     }
+
 }
