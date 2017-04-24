@@ -6,17 +6,16 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.AddressComponent;
 import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Anton Bulgakov
  * @since 21.04.2017
  */
 public class ServiceGoogleMaps {
-
     private static String apiKey = "AIzaSyBF2CMlYRcV-9zTHFND2m2InqbYdeyJz30";
 
     /**
@@ -26,7 +25,8 @@ public class ServiceGoogleMaps {
      * @param address input address.
      * @return region of address from param.
      */
-    public static String getRegion(String address) {
+    public String getRegion(String address) {
+        Logger logger = LoggerFactory.getLogger(getClass());
         Boolean regionExists = false;
         String region = null;
         GeoApiContext context = new GeoApiContext().setApiKey(apiKey);
@@ -55,12 +55,8 @@ public class ServiceGoogleMaps {
                     }
                 }
             }
-        } catch (ApiException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ApiException | InterruptedException | IOException e) {
+            logger.error("Can`t find this address.", e);
         }
         return region;
     }
@@ -72,21 +68,18 @@ public class ServiceGoogleMaps {
      * @param address input address.
      * @return formatted address.
      */
-    public static String getFormattedAddress(String address) {
+    public String getFormattedAddress(String address) {
+        Logger logger = LoggerFactory.getLogger(getClass());
         String formattedAddress = null;
         GeoApiContext context = new GeoApiContext().setApiKey(apiKey);
         GeocodingResult[] results;
         try {
             results = GeocodingApi.geocode(context, address).await();
-            formattedAddress = results[0].formattedAddress;
-        } catch (ApiException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
+            if (results != null && results.length != 0) {
+                formattedAddress = results[0].formattedAddress;
+            }
+        } catch (ApiException | InterruptedException | IOException e) {
+            logger.error("Can`t find this address.", e);
         }
         return formattedAddress;
     }
