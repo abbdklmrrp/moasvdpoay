@@ -12,8 +12,6 @@
 </head>
 
 <body>
-<div id="bg"></div>
-
 <form method="POST" action="<%=request.getContextPath()%>/doLogin">
     <div class="login-form">
         <h1>Login</h1>

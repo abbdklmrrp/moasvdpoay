@@ -12,7 +12,18 @@ body {
 h1 {
     color: #AAA173;
     text-align: center;
-    font-faimly: icon;
+    font-family: icon;
+}
+
+h2 {
+    text-align: center;
+    font-family: icon;
+}
+
+a {
+    color: #10CE88;
+    text-align: center;
+    font-family: Arial;
 }
 
 .login-form {

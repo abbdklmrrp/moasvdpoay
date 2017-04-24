@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>CREATE TARIFF</title>
+    <title>IDENTIFY TARIFF</title>
 </head>
 <body>
 

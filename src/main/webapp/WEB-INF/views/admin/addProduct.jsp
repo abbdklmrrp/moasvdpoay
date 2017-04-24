@@ -16,11 +16,9 @@
 
 </head>
 <body>
-<div id="bg"></div>
-
 <form method="POST" action="<%=request.getContextPath()%>/admin/addProduct">
-
     <div class="login-form">
+        <h1>ENTER NEW PRODUCT</h1>
         <div class="form-group ">
             <select name="productTypes" class="form-control" id="productTypes">
                 <c:forEach var="types" items="${productTypes}">
