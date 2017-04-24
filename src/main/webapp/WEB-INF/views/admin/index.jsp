@@ -18,7 +18,8 @@
     <h1>ADMIN PAGE</h1>
     <div class="form-group "><br>
         <h2><a href="<%=request.getContextPath()%>/doLogout">Logout</a></h2><br>
-        <h2><a href="${contextPath}/admin/createProduct">create new product</a></h2>
+        <h2><a href="${contextPath}/admin/createProduct">Create new product</a></h2><br>
+        <h2><a href="${contextPath}/admin/identifyTariffService">Identify service to tariff</a></h2>
     </div>
 </div>
 </body>

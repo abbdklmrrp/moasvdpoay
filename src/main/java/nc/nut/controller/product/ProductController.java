@@ -34,7 +34,7 @@ public class ProductController {
         return "admin/addProduct";
     }
 
-    //TODO: add modelAttribute, check "typeId"
+    //TODO: add modelAttribute, fix "typeId"
     @RequestMapping(value = {"addProduct"}, method = RequestMethod.POST)
     String createProduct(@RequestParam(value = "productCategories") int categoryId,
                          @RequestParam(value = "duration") int duration,

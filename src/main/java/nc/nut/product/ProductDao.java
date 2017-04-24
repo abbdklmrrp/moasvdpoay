@@ -11,4 +11,10 @@ public interface ProductDao {
     List<ProductTypes> findProductTypes();
 
     List<ProductCategories> findProductCategories();
+
+    List<Product> getServices();
+
+    List<Product> getTariffs();
+
+    void identifyTariff(int idTariff, int idService);
 }

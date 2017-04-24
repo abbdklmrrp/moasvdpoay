@@ -17,16 +17,22 @@ public class ProductDaoImpl implements ProductDao {
             ":needProcessing,:description,:status)";
     private final static String FIND_CATEGORIES = "SELECT * FROM PRODUCT_CATEGORIES";
     private final static String FIND_TYPES = "SELECT * FROM PRODUCT_TYPES";
+    private final static String FIND_SERVICES = "SELECT * FROM PRODUCTS WHERE TYPE_ID=2 ORDER BY ID";
+    private final static String FIND_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 ORDER BY ID";
+    private final static String ADD_TARIFF_SERVICE = "INSERT INTO TARIFF_SERVICES VALUES(:tariff_id,:service_id)";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Resource
     private ProductCategoriesRowMapper categoriesRowMapper;
     @Resource
     private ProductTypesRowMapper typesRowMapper;
+    @Resource
+    private ProductRowMapper productRowMapper;
 
     @Override
     public void addProduct(Product product) {
         MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", product.getId());
         params.addValue("typeId", product.getTypeId());
         params.addValue("categoryId", product.getCategoryId());
         params.addValue("nameProduct", product.getName());
@@ -42,6 +48,26 @@ public class ProductDaoImpl implements ProductDao {
     public List<ProductCategories> findProductCategories() {
         List<ProductCategories> productCategories = jdbcTemplate.query(FIND_CATEGORIES, categoriesRowMapper);
         return productCategories.isEmpty() ? null : productCategories;
+    }
+
+    @Override
+    public List<Product> getServices() {
+        List<Product> services = jdbcTemplate.query(FIND_SERVICES, productRowMapper);
+        return services.isEmpty() ? null : services;
+    }
+
+    @Override
+    public List<Product> getTariffs() {
+        List<Product> tariffs = jdbcTemplate.query(FIND_TARIFFS, productRowMapper);
+        return tariffs.isEmpty() ? null : tariffs;
+    }
+
+    @Override
+    public void identifyTariff(int idTariff, int idService) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("tariff_id", idTariff);
+        params.addValue("service_id", idService);
+        jdbcTemplate.update(ADD_TARIFF_SERVICE, params);
     }
 
     @Override
