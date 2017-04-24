@@ -12,7 +12,8 @@
 <body bgcolor="#f0f8ff">
 <div align="center">
     admin page!
-    <a href="<%=request.getContextPath()%>/doLogout">Logout</a>
+    <a href="<%=request.getContextPath()%>/doLogout">Logout</a><br><br>
+    <a href="${contextPath}/admin/createProduct">create new product</a>
 </div>
 </body>
 </html>
