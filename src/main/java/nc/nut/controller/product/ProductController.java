@@ -35,22 +35,22 @@ public class ProductController {
     }
 
     @RequestMapping(value = {"addProduct"}, method = RequestMethod.POST)
-    String createProduct(@RequestParam(value = "productCategories") String categoryId,
-                         @RequestParam(value = "duration") String duration,
-                         @RequestParam(value = "productTypes") String typeId,
-                         @RequestParam(value = "needProcessing") String needProcessing,
+    String createProduct(@RequestParam(value = "productCategories") int categoryId,
+                         @RequestParam(value = "duration") int duration,
+                         @RequestParam(value = "productTypes") int typeId,
+                         @RequestParam(value = "needProcessing") int needProcessing,
                          @RequestParam(value = "name") String name,
                          @RequestParam(value = "description") String description,
-                         @RequestParam(value = "status") String status) {
+                         @RequestParam(value = "status") int status) {
 
         Product product = new Product();
-        product.setCategoryId(Integer.parseInt(categoryId));
-        product.setDuration(Integer.parseInt(duration));
-        product.setTypeId(Integer.parseInt(typeId));
-        product.setNeedProcessing(Integer.parseInt(needProcessing));
+        product.setCategoryId(categoryId);
+        product.setDuration(duration);
+        product.setTypeId(typeId);
+        product.setNeedProcessing(needProcessing);
         product.setName(name);
         product.setDescription(description);
-        product.setStatus(Integer.parseInt(status));
+        product.setStatus(status);
 
         productDao.addProduct(product);
 
