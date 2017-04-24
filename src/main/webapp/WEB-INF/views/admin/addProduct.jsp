@@ -13,6 +13,7 @@
     <title>ADD NEW PRODUCT</title>
     <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <script src="${contextPath}/resources/js/serviceTariff.min.js"></script>
 
 </head>
 <body>
@@ -20,21 +21,23 @@
     <div class="login-form">
         <h1>ENTER NEW PRODUCT</h1>
         <div class="form-group ">
-            <select name="productTypes" class="form-control" id="productTypes">
+
+            <select id="productTypes" name="productTypes" class="form-control" aria-required="true"
+                    onChange="Selected(this)">
                 <c:forEach var="types" items="${productTypes}">
                     <option value="${types.id}">${types.name}</option>
                 </c:forEach>
             </select>
         </div>
-
         <div class="form-group ">
-            <select name="productCategories" class="form-control" id="select">
-                <c:forEach var="category" items="${productCategories}">
-                    <option value="${category.id}">${category.name}</option>
-                </c:forEach>
-            </select>
+            <div id='Block1' style='display: none;'>
+                <select name="productCategories" class="form-control" id="select">
+                    <c:forEach var="category" items="${productCategories}">
+                        <option value="${category.id}">${category.name}</option>
+                    </c:forEach>
+                </select>
+            </div>
         </div>
-
         <div class="form-group ">
             <select name="duration" class="form-control" id="duration">
                 <option value="12">12 month</option>
@@ -43,8 +46,8 @@
 
         <div class="form-group ">
             <select name="needProcessing" class="form-control" id="needProcessing">
-                <option value="1">need processing</option>
-                <option value="0">don't need processing</option>
+                <option value="1">Need processing</option>
+                <option value="0">Do not need processing</option>
             </select>
         </div>
 
