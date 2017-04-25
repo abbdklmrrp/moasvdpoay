@@ -24,14 +24,18 @@ public class TariffController {
     @RequestMapping(value = {"identifyTariffService"}, method = RequestMethod.GET)
     String addProduct(Model model) {
 
-        List<Product> tariffs = productDao.getTariffs();
+        List<Product> tariffs = productDao.getAllFreeTariffs();
 
-        List<Product> servicesWI = productDao.getServices();
-//        List<Product> services2G = productDao.getServices();
-//        List<Product> services3G = productDao.getServices();
-//        List<Product> services4G = productDao.getServices();
-//        List<Product> servicesMC = productDao.getServices();
+        List<Product> servicesWI = productDao.getServices("Wired Internet");
+        List<Product> services2G = productDao.getServices("2G");
+        List<Product> services3G = productDao.getServices("3G");
+        List<Product> services4G = productDao.getServices("4G");
+        List<Product> servicesMC = productDao.getServices("Mobile communication");
         model.addAttribute("servicesWI", servicesWI);
+        model.addAttribute("services2G", services2G);
+        model.addAttribute("services3G", services3G);
+        model.addAttribute("services4G", services4G);
+        model.addAttribute("servicesMC", servicesMC);
         model.addAttribute("tariffs", tariffs);
         return "admin/identifyTariff";
     }
@@ -39,19 +43,19 @@ public class TariffController {
     //TODO: add modelAttribute, check "typeId"
     @RequestMapping(value = {"identifyTariff"}, method = RequestMethod.POST)
     String createProduct(@RequestParam(value = "tariffs") int tariffs,
-                         @RequestParam(value = "services") int services)
-//                         @RequestParam(value = "serviceWI") int serviceWI,
-//                         @RequestParam(value = "service2G") int service2G,
-//                         @RequestParam(value = "service3G") int service3G,
-//                         @RequestParam(value = "service4G") int service4G,
-//                         @RequestParam(value = "serviceMC") int serviceMC)
+                         @RequestParam(value = "services") int services,
+                         @RequestParam(value = "serviceWI") int serviceWI,
+                         @RequestParam(value = "service2G") int service2G,
+                         @RequestParam(value = "service3G") int service3G,
+                         @RequestParam(value = "service4G") int service4G,
+                         @RequestParam(value = "serviceMC") int serviceMC)
     {
-        productDao.identifyTariff(tariffs, services);
-//        productDao.identifyTariff(tariffId, serviceWI);
-//        productDao.identifyTariff(tariffId, service2G);
-//        productDao.identifyTariff(tariffId, service3G);
-//        productDao.identifyTariff(tariffId, service4G);
-//        productDao.identifyTariff(tariffId, serviceMC);
+     //   productDao.identifyTariff(tariffs, services);
+        productDao.identifyTariff(tariffs, serviceWI);
+        productDao.identifyTariff(tariffs, service2G);
+        productDao.identifyTariff(tariffs, service3G);
+        productDao.identifyTariff(tariffs, service4G);
+        productDao.identifyTariff(tariffs, serviceMC);
         return "admin/index";
     }
 

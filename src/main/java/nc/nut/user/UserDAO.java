@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserDAO {
     User findByUsername(String username);
 
-    User save(User user);
+    boolean save(User user);
 
     // false if not found
     boolean delete(int id);
@@ -17,4 +17,10 @@ public interface UserDAO {
     User get(int id);
 
     List<User> getAll();
+
+    List<User> getAllClient();
+
+    Integer findRole(String name);
+
+    Integer findPlaceId(String name);
 }

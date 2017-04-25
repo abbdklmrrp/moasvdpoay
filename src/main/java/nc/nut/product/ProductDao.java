@@ -16,5 +16,9 @@ public interface ProductDao {
 
     List<Product> getTariffs();
 
+    List<Product> getServices(String categoryName);
+
+    List<Product> getAllFreeTariffs();
+
     void identifyTariff(int idTariff, int idService);
 }

@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import javax.mail.Session;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.util.Properties;
 
 /**
@@ -50,19 +53,13 @@ public class MailConfig {
     @Bean(name = "templateMessage")
     public SimpleMailMessage simpleMailMessage() {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom(from);
+        simpleMailMessage.setText("Dear %s, \n %s.");
         return simpleMailMessage;
-    }
-
-    @Bean(name = "recipient")
-    public Recipient recipient() {
-        return new Recipient();
     }
 
     @Bean(name = "email")
     public Email email() {
         Email email = new Email();
-        email.setRecipient(recipient());
         email.setSimpleMailMessage(simpleMailMessage());
         return email;
     }

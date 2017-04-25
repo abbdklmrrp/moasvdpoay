@@ -32,34 +32,34 @@
                 </c:forEach>
             </select>
         </div>
-        <%--<div class="form-group ">--%>
-        <%--<select name="services2G" class="form-control" id="services2G">--%>
-        <%--<c:forEach var="service" items="${services2G}">--%>
-        <%--<option value="${service.id}">${service.name}</option>--%>
-        <%--</c:forEach>--%>
-        <%--</select>--%>
-        <%--</div>--%>
-        <%--<div class="form-group ">--%>
-        <%--<select name="services3G" class="form-control" id="services3G">--%>
-        <%--<c:forEach var="service" items="${services3G}">--%>
-        <%--<option value="${service.id}">${service.name}</option>--%>
-        <%--</c:forEach>--%>
-        <%--</select>--%>
-        <%--</div>--%>
-        <%--<div class="form-group ">--%>
-        <%--<select name="services4G" class="form-control" id="services4G">--%>
-        <%--<c:forEach var="service" items="${services4G}">--%>
-        <%--<option value="${service.id}">${service.name}</option>--%>
-        <%--</c:forEach>--%>
-        <%--</select>--%>
-        <%--</div>--%>
-        <%--<div class="form-group ">--%>
-        <%--<select name="servicesMC" class="form-control" id="servicesMC">--%>
-        <%--<c:forEach var="service" items="${servicesMC}">--%>
-        <%--<option value="${service.id}">${service.name}</option>--%>
-        <%--</c:forEach>--%>
-        <%--</select>--%>
-        <%--</div>--%>
+        <div class="form-group ">
+            <select name="services2G" class="form-control" id="services2G">
+                <c:forEach var="service" items="${services2G}">
+                    <option value="${service.id}">${service.name}</option>
+                </c:forEach>
+            </select>
+        </div>
+        <div class="form-group ">
+            <select name="services3G" class="form-control" id="services3G">
+                <c:forEach var="service" items="${services3G}">
+                    <option value="${service.id}">${service.name}</option>
+                </c:forEach>
+            </select>
+        </div>
+        <div class="form-group ">
+            <select name="services4G" class="form-control" id="services4G">
+                <c:forEach var="service" items="${services4G}">
+                    <option value="${service.id}">${service.name}</option>
+                </c:forEach>
+            </select>
+        </div>
+        <div class="form-group ">
+            <select name="servicesMC" class="form-control" id="servicesMC">
+                <c:forEach var="service" items="${servicesMC}">
+                    <option value="${service.id}">${service.name}</option>
+                </c:forEach>
+            </select>
+        </div>
         <button type="submit" class="log-btn">Save</button>
     </div>
 </form>
