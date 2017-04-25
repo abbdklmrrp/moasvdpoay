@@ -31,7 +31,8 @@
 
         <div class="form-group ">
             <div id='Block1' style='display: none;'>
-                <select name="productCategories" class="form-control" id="select">
+                <select name="productCategories" class="form-control" id="productCategories">
+                    <option value="" selected="selected">-</option>
                     <c:forEach var="category" items="${productCategories}">
                         <option value="${category.id}">${category.name}</option>
                     </c:forEach>
