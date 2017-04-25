@@ -7,12 +7,13 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>User</title>
+    <title>ADMIN</title>
 </head>
-<body bgcolor="#fffaf0">
+<body bgcolor="#f0f8ff">
 <div align="center">
-    ${user.name} page!
-    <a href="<%=request.getContextPath()%>/doLogout">Logout</a>
+    admin page!
+    <a href="<%=request.getContextPath()%>/doLogout">Logout</a><br><br>
+    <a href="${contextPath}/admin/createProduct">create new product</a>
 </div>
 </body>
 </html>

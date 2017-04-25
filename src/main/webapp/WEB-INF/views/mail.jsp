@@ -13,12 +13,12 @@
 <body>
 
 <div align="CENTER">
-<form action="linkMailServlet" method="get">
-    <input type="submit" value="Create new email">
-</form>
-<form action="linkSignUpServlet" method="get">
-    <input type="submit" value="Sign up">
-</form>
-    </div>
+    <form action="linkMailServlet" method="get">
+        <input type="submit" value="Create new email">
+    </form>
+    <form action="linkSignUpServlet" method="get">
+        <input type="submit" value="Sign up">
+    </form>
+</div>
 </body>
 </html>

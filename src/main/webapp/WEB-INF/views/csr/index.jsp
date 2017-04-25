@@ -7,11 +7,11 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Admin</title>
+    <title>CSR</title>
 </head>
-<body bgcolor="#f0f8ff">
+<body bgcolor="#fff8dc">
 <div align="center">
-    ${user.name} page!
+    CSR page!
     <a href="<%=request.getContextPath()%>/doLogout">Logout</a>
 </div>
 </body>

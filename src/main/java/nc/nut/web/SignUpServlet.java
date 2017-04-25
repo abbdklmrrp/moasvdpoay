@@ -29,12 +29,11 @@ public class SignUpServlet {
         System.out.println(sgnSName);
         System.out.println(sgnEmail);
         System.out.println(sgnPass);
-        recipient.setName(sgnFName+" "+sgnSName);
+        recipient.setName(sgnFName + " " + sgnSName);
         recipient.setAddress(sgnEmail);
         mailer.sendRegistrationMail(recipient);
 
 
-
-            return "mail";
-        }
+        return "mail";
     }
+}

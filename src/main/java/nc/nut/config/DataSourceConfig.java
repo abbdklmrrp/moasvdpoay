@@ -1,52 +1,46 @@
-package nc.nut.config;
+package nc.nut.persistence;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
 
 /**
- * @author Rysakova Anna
+ * Created by Anna on 20.04.2017.
  */
 @Configuration
-@PropertySources({
-        @PropertySource("classpath:db/oracle.properties"),
-        @PropertySource("classpath:sql/userdao.properties")
-})
-public class DataSourceConfig {
-
+@PropertySource("classpath:db/oracle.properties")
+public class PersistenceConfig {
     @Value("${datasource.driver-class-name}")
     private String driver;
-
     @Value("${datasource.url}")
     private String url;
-
     @Value("${datasource.username}")
     private String username;
-
     @Value("${datasource.password}")
     private String password;
 
     @Bean(name = "dataSource")
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+        BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName(driver);
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
+        dataSource.setInitialSize(5);
+        dataSource.setMinIdle(5);
+        dataSource.setMaxIdle(15);
 
         return dataSource;
     }
 
-
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new NamedParameterJdbcTemplate(dataSource);
     }
-
 }
