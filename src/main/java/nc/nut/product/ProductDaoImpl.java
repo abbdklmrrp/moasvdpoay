@@ -18,7 +18,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_CATEGORIES = "SELECT * FROM PRODUCT_CATEGORIES";
     private final static String FIND_TYPES = "SELECT * FROM PRODUCT_TYPES";
     @Resource
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Resource
     private ProductCategoriesRowMapper categoriesRowMapper;
     @Resource
@@ -35,18 +35,18 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("description", product.getDescription());
         params.addValue("status", product.getStatus());
 
-        jdbcTemplate.update(ADD_SERVICE, params);
+        namedParameterJdbcTemplate.update(ADD_SERVICE, params);
     }
 
     @Override
     public List<ProductCategories> findProductCategories() {
-        List<ProductCategories> productCategories = jdbcTemplate.query(FIND_CATEGORIES, categoriesRowMapper);
+        List<ProductCategories> productCategories = namedParameterJdbcTemplate.query(FIND_CATEGORIES, categoriesRowMapper);
         return productCategories.isEmpty() ? null : productCategories;
     }
 
     @Override
     public List<ProductTypes> findProductTypes() {
-        List<ProductTypes> productTypes = jdbcTemplate.query(FIND_TYPES, typesRowMapper);
+        List<ProductTypes> productTypes = namedParameterJdbcTemplate.query(FIND_TYPES, typesRowMapper);
         return productTypes.isEmpty() ? null : productTypes;
     }
 }

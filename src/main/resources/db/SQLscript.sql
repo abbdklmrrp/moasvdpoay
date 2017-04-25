@@ -24,7 +24,7 @@ CREATE TABLE Users
  role_id NUMBER(38) NOT NULL,
  place_id NUMBER(38),
  customer_id NUMBER(38),
- enable NUMBER(2)
+ enable NUMBER(2) DEFAULT 1
 );
 
 CREATE TABLE Complaints
@@ -47,7 +47,7 @@ CREATE TABLE Products
 (
  id NUMBER(38),
  type_id NUMBER(38) NOT NULL,
- category_id NUMBER(38) NOT NULL,
+ category_id NUMBER(38),
  name VARCHAR2(100) NOT NULL,
  duration NUMBER(4),
  need_processing NUMBER(1),

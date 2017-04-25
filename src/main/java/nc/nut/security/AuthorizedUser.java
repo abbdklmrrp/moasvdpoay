@@ -1,6 +1,6 @@
 package nc.nut.security;
 
-import nc.nut.entity.User;
+import nc.nut.user.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

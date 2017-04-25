@@ -1,20 +1,21 @@
 package nc.nut.service.impls;
 
-import nc.nut.dao.UserDAO;
 import nc.nut.security.AuthorizedUser;
 import nc.nut.service.interf.UserService;
+import nc.nut.user.User;
+import nc.nut.user.UserDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
 /**
  * @author Rysakova Anna
+ * @author Dyrda Sergiy
  */
-@Service("userService")
+//@Service("userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -22,16 +23,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private UserDAO userDAO;
 
     @Override
-    public nc.nut.entity.User findByName(String name) {
+    public User findByName(String name) {
         return null;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
-        nc.nut.entity.User user = userDAO.getByPhone(phone);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userDAO.findByEmail(email);
         if (user == null) {
-            System.out.println("WHAT A FUCK = loadUserByUsername - " + phone);
-            throw new UsernameNotFoundException("User " + phone + " is not found");
+            System.out.println("WHAT A FUCK = loadUserByUsername - " + email);
+            throw new UsernameNotFoundException("User " + email + " is not found");
         }
 
         return new AuthorizedUser(user);

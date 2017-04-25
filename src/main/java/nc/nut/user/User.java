@@ -2,39 +2,132 @@ package nc.nut.user;
 
 /**
  * @author Rysakova Anna
+ * @author Nikita Alistratenko
  */
 public class User {
-    private String name;
-    private String password;
-    private String authorities;
 
-    public User(String name, String password, String authorities) {
-        this.name = name;
-        this.password = password;
-        this.authorities = authorities;
-    }
+    private Integer id;
+    private String name;
+    private String surname;
+    private String email;
+    private String phone;
+    private String address;
+    private boolean enable;
+    private String password;
+    private Role role;
+    private Long customer_id;
+    private Long place_id;
 
     public User() {
+    }
+
+    public User(String email, String password, String authorities) {
+        this.email = email;
+        this.password = password;
+        this.role = Enum.valueOf(Role.class, authorities);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
     public String getPassword() {
         return password;
     }
 
-    public String getAuthorities() {
-        return authorities;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Long getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(Long customer_id) {
+        this.customer_id = customer_id;
+    }
+
+    public Long getPlace_id() {
+        return place_id;
+    }
+
+    public void setPlace_id(Long place_id) {
+        this.place_id = place_id;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", authorities='" + authorities + '\'' +
-                '}';
+        return "User{" + "id=" + id
+                + ", name=" + name
+                + ", surname=" + surname
+                + ", email=" + email
+                + ", phone=" + phone
+                + ", address=" + address
+                + ", enable=" + enable
+                + ", password=" + password
+                + ", role=" + role.getAuthority()
+                + ", customer_id=" + customer_id
+                + ", place_id=" + place_id + '}';
     }
+
 }

@@ -5,9 +5,10 @@
  */
 package nc.nut.dao;
 
-import java.util.List;
 import nc.nut.entity.Customer;
-import nc.nut.entity.User;
+import nc.nut.user.User;
+
+import java.util.List;
 
 /**
  *

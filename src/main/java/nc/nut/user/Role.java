@@ -1,4 +1,4 @@
-package nc.nut.entity;
+package nc.nut.user;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -7,10 +7,10 @@ import org.springframework.security.core.GrantedAuthority;
  */
 public enum Role implements GrantedAuthority {
 
-    user,
-    admin,
-    manager,
-    support;
+    USER,
+    ADMIN,
+    PMG,
+    CSR;
 
     @Override
     public String getAuthority() {

@@ -10,10 +10,10 @@
     <http use-expressions="true">
         <intercept-url pattern="/login.htm" access="permitAll"/>
 
-        <intercept-url pattern="/**" access="permitAll"/>
-        <intercept-url pattern="/**/admin/**" access="hasRole('admin')"/>
-        <intercept-url pattern="/**/manager/**" access="hasAnyRole('admin', 'manager')"/>
-        <intercept-url pattern="/**/support/**" access="hasAnyRole('admin', 'manager', 'support')"/>
+        <intercept-url pattern="/**/user/**" access="hasRole('USER')"/>
+        <intercept-url pattern="/**/admin/**" access="hasRole('ADMIN')"/>
+        <intercept-url pattern="/**/pmg/**" access="hasAnyRole('ADMIN', 'PMG')"/>
+        <intercept-url pattern="/**/csr/**" access="hasAnyRole('ADMIN', 'PMG', 'CSR')"/>
 
         <form-login login-page="/login.htm" default-target-url="/index.htm"
                     username-parameter="username" password-parameter="password"
@@ -21,7 +21,7 @@
                     login-processing-url="/doLogin"/>
         <logout logout-url="/doLogout" logout-success-url="/login.htm"/>
     </http>
-    <beans:bean class="nc.nut.security.Md5PasswordEncoder" id="passwordEncoder" factory-method="getPasswordEncoder"/>
+    <beans:bean class="nc.nut.security.Md5PasswordEncoder" id="passwordEncoder"/>
 
     <security:authentication-manager>
         <security:authentication-provider user-service-ref="userService">

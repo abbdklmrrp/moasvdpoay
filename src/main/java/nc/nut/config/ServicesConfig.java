@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 /**
  * @author Rysakova Anna
@@ -13,10 +12,6 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 //@PropertySource("classpath:db/oracle.properties")
 @PropertySource("classpath:ANN_DB.properties")
 public class ServicesConfig {
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
 
     @Bean(name = "objectMapper")
     public ObjectMapper objectMapper() {

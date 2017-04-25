@@ -1,6 +1,6 @@
 package nc.nut.service.interf;
 
-import nc.nut.entity.User;
+import nc.nut.user.User;
 
 /**
  * @author Rysakova Anna
