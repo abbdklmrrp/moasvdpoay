@@ -35,11 +35,11 @@
     </logger>
 
     <logger name="org.springframework.security.web.FilterChainProxy">
-        <level value="w"/>
+        <level value="debug"/>
     </logger>
 
     <logger name="org.springframework.security.access">
-        <level value="warn"/>
+        <level value="debug"/>
     </logger>
 
 

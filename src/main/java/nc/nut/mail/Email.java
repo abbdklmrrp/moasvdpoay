@@ -13,20 +13,20 @@ public class Email {
     private String text;
     private String subject;
 
-    public void setSimpleMailMessage(SimpleMailMessage simpleMailMessage) {
-        this.simpleMailMessage = simpleMailMessage;
+    public Recipient getRecipient() {
+        return recipient;
     }
 
     public void setRecipient(Recipient recipient) {
         this.recipient = recipient;
     }
 
-    public Recipient getRecipient() {
-        return recipient;
-    }
-
     public SimpleMailMessage getSimpleMailMessage() {
         return simpleMailMessage;
+    }
+
+    public void setSimpleMailMessage(SimpleMailMessage simpleMailMessage) {
+        this.simpleMailMessage = simpleMailMessage;
     }
 
     public String getText() {
@@ -39,7 +39,7 @@ public class Email {
 
     public void createMail(String subject, String content) {
         SimpleMailMessage message = new SimpleMailMessage(simpleMailMessage);
-        message.setText("Dear "+recipient.getName()+",\n"+content);
+        message.setText("Dear " + recipient.getName() + ",\n" + content);
         this.text = message.getText();
         message.setSubject(subject);
         this.subject = subject;
