@@ -24,7 +24,7 @@ CREATE TABLE Users
   role_id     NUMBER(38)     NOT NULL,
   place_id    NUMBER(38),
   customer_id NUMBER(38),
-  enable      NUMBER(2)
+  enable      NUMBER(2) DEFAULT 1
 );
 
 CREATE TABLE Complaints
@@ -301,7 +301,12 @@ START WITH 1
 INCREMENT BY 1
 NOMAXVALUE;
 
-CREATE OR REPLACE TRIGGER customers_trg
+CREATE SEQUENCE complaint_history_seq
+START WITH 1
+INCREMENT BY 1
+NOMAXVALUE;
+
+CREATE OR REPLACE TRIGGER autoinc_customers_trg
 BEFORE INSERT ON Customers
 FOR EACH ROW
   BEGIN
@@ -314,7 +319,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER role_trg
+CREATE OR REPLACE TRIGGER autoinc_role_trg
 BEFORE INSERT ON Roles
 FOR EACH ROW
   BEGIN
@@ -327,7 +332,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER operation_status_trg
+CREATE OR REPLACE TRIGGER autoinc_operation_status_trg
 BEFORE INSERT ON Operation_status
 FOR EACH ROW
   BEGIN
@@ -340,7 +345,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER users_trg
+CREATE OR REPLACE TRIGGER autoinc_users_trg
 BEFORE INSERT ON Users
 FOR EACH ROW
   BEGIN
@@ -353,7 +358,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER complaints_trg
+CREATE OR REPLACE TRIGGER autoinc_complaints_trg
 BEFORE INSERT ON Complaints
 FOR EACH ROW
   BEGIN
@@ -366,7 +371,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER complaint_status_trg
+CREATE OR REPLACE TRIGGER autoinc_complaint_status_trg
 BEFORE INSERT ON Complaint_status
 FOR EACH ROW
   BEGIN
@@ -379,7 +384,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER orders_trg
+CREATE OR REPLACE TRIGGER autoinc_orders_trg
 BEFORE INSERT ON Orders
 FOR EACH ROW
   BEGIN
@@ -392,7 +397,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER places_trg
+CREATE OR REPLACE TRIGGER autoinc_places_trg
 BEFORE INSERT ON Places
 FOR EACH ROW
   BEGIN
@@ -405,7 +410,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER operations_history_trg
+CREATE OR REPLACE TRIGGER autoinc_operations_history_trg
 BEFORE INSERT ON Operations_history
 FOR EACH ROW
   BEGIN
@@ -418,7 +423,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER discounts_trg
+CREATE OR REPLACE TRIGGER autoinc_discounts_trg
 BEFORE INSERT ON Discounts
 FOR EACH ROW
   BEGIN
@@ -431,7 +436,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER product_types_trg
+CREATE OR REPLACE TRIGGER autoinc_product_types_trg
 BEFORE INSERT ON Product_types
 FOR EACH ROW
   BEGIN
@@ -444,7 +449,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER products_trg
+CREATE OR REPLACE TRIGGER autoinc_products_trg
 BEFORE INSERT ON Products
 FOR EACH ROW
   BEGIN
@@ -457,7 +462,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER product_categories_trg
+CREATE OR REPLACE TRIGGER autoinc_product_categories_trg
 BEFORE INSERT ON Product_categories
 FOR EACH ROW
   BEGIN
@@ -470,7 +475,7 @@ FOR EACH ROW
   END;
 /
 
-CREATE OR REPLACE TRIGGER planned_tasks_trg
+CREATE OR REPLACE TRIGGER autoinc_planned_tasks_trg
 BEFORE INSERT ON Planned_tasks
 FOR EACH ROW
   BEGIN
@@ -483,15 +488,59 @@ FOR EACH ROW
   END;
 /
 
+CREATE OR REPLACE TRIGGER autoinc_complaint_history_trg
+BEFORE INSERT ON Complaint_history
+FOR EACH ROW
+  BEGIN
+    IF :new.id IS NULL
+    THEN
+      SELECT complaint_history_seq.nextval
+      INTO :new.id
+      FROM dual;
+    END IF;
+  END;
+/
+
+CREATE OR REPLACE TRIGGER afterInsertOrders_trg
+AFTER INSERT ON Orders
+FOR EACH ROW
+  BEGIN
+    INSERT INTO Operations_history (order_id, status_id, operation_date)
+    VALUES (:new.id, :new.current_status_id, SYSDATE);
+  END;
+/
+
+CREATE OR REPLACE TRIGGER afterUpdateOrders_trg
+AFTER UPDATE ON Orders
+FOR EACH ROW
+  BEGIN
+    INSERT INTO Operations_history (order_id, status_id, operation_date)
+    VALUES (:new.id, :new.current_status_id, SYSDATE);
+  END;
+/
+
+CREATE OR REPLACE TRIGGER afterInsertComplaints_trg
+AFTER UPDATE ON Complaints
+FOR EACH ROW
+  BEGIN
+    INSERT INTO Complaint_history (complaint_id, status_id, operation_date)
+    VALUES (:new.id, :new.status_id, SYSDATE);
+  END;
+/
+
+CREATE OR REPLACE TRIGGER afterUpdateComplaints_trg
+AFTER UPDATE ON Complaints
+FOR EACH ROW
+  BEGIN
+    INSERT INTO Complaint_history (complaint_id, status_id, operation_date)
+    VALUES (:new.id, :new.status_id, SYSDATE);
+  END;
+/
+
 INSERT INTO Roles (name) VALUES ('ADMIN');
 INSERT INTO Roles (name) VALUES ('PMG');
 INSERT INTO Roles (name) VALUES ('CSR');
 INSERT INTO Roles (name) VALUES ('USER');
-
--- INSERT INTO USERS VALUES (1,'admin','58bd1d8f8a93b0b6c12ab4ed747567f3',1);
--- INSERT INTO USERS VALUES (2,'mng','2d889e183be0dd25b335fdd5ec92002b',2);
--- INSERT INTO USERS VALUES (3,'csr','1d9e132d3a2fc27bc5fb819098038e6c',3);
--- INSERT INTO USERS VALUES (4,'user','2cd613d62f1988c770eecd11f6616801',4);
 
 INSERT INTO Complaint_status (name) VALUES ('Send');
 INSERT INTO Complaint_status (name) VALUES ('In processing');
