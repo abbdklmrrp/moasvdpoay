@@ -12,7 +12,7 @@ public class Email {
     private SimpleMailMessage simpleMailMessage;
     private User recipient;
 
-    public Email(){
+    public Email() {
     }
 
     public void setRecipient(User recipient) {
@@ -30,7 +30,7 @@ public class Email {
 
     public SimpleMailMessage createMail(String subject, String content) {
         SimpleMailMessage message = new SimpleMailMessage(simpleMailMessage);
-        message.setText(String.format(message.getText(),recipient.getName(),content));
+        message.setText(String.format(message.getText(), recipient.getName(), content));
         message.setSubject(subject);
         message.setTo(recipient.getEmail());
         message.setFrom("briariy2010@yandex.ru");

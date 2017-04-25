@@ -23,12 +23,12 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_SERVICES = "SELECT * FROM PRODUCTS WHERE TYPE_ID=2 ORDER BY ID";
     private final static String FIND_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 ORDER BY ID";
     private final static String ADD_TARIFF_SERVICE = "INSERT INTO TARIFF_SERVICES VALUES(:tariff_id,:service_id)";
-    private final static String FIND_ALL_SERVICES="SELECT prod.ID, prod.NAME, prod.DESCRIPTION,prod.DURATION,prod.NEED_PROCESSING,\n" +
+    private final static String FIND_ALL_SERVICES = "SELECT prod.ID, prod.NAME, prod.DESCRIPTION,prod.DURATION,prod.NEED_PROCESSING,\n" +
             "prod.TYPE_ID,prod.CATEGORY_ID\n" +
             "FROM PRODUCTS prod JOIN PRODUCT_TYPES pTypes ON (prod.TYPE_ID=pTypes.ID)\n" +
             "JOIN PRODUCT_CATEGORIES pCategories ON (prod.CATEGORY_ID=pCategories.ID)\n" +
-            "where prod.STATUS=1 AND pTypes.name='Service' AND pCategories.name=:categoryName";
-    private final static String FIND_ALL_FREE_TARIFFS="SELECT * FROM PRODUCTS p join PRODUCT_TYPES ptype ON(p.TYPE_ID=ptype.ID)\n" +
+            "WHERE prod.STATUS=1 AND pTypes.name='Service' AND pCategories.name=:categoryName";
+    private final static String FIND_ALL_FREE_TARIFFS = "SELECT * FROM PRODUCTS p join PRODUCT_TYPES ptype ON(p.TYPE_ID=ptype.ID)\n" +
             "    LEFT JOIN TARIFF_SERVICES ts ON(p.ID=ts.TARIFF_ID)\n" +
             "WHERE ptype.name='Tariff' AND ts.TARIFF_ID IS NULL";
     @Resource
@@ -57,8 +57,8 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("status", product.getStatus());
 
         jdbcTemplate.update(ADD_SERVICE, params);
-        List<User> users=userDAO.getAllClient();
-        mailer.sendProposal(users,product.getDescription());
+        List<User> users = userDAO.getAllClient();
+        mailer.sendProposal(users, product.getDescription());
 
     }
 
@@ -93,12 +93,13 @@ public class ProductDaoImpl implements ProductDao {
         List<ProductTypes> productTypes = jdbcTemplate.query(FIND_TYPES, typesRowMapper);
         return productTypes;
     }
+
     @Override
     public List<Product> getServices(String categoryName) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("categoryName", categoryName);
-        List<Product> services=jdbcTemplate.query(FIND_ALL_SERVICES,params,(rs, rowNum) -> {
-            Product product=new Product();
+        List<Product> services = jdbcTemplate.query(FIND_ALL_SERVICES, params, (rs, rowNum) -> {
+            Product product = new Product();
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setId(rs.getInt("ID"));
             product.setTypeId(rs.getInt("TYPE_ID"));
@@ -114,8 +115,8 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getAllFreeTariffs() {
-        List<Product> tariffs= jdbcTemplate.query(FIND_ALL_FREE_TARIFFS, (rs, rowNum) -> {
-            Product product=new Product();
+        List<Product> tariffs = jdbcTemplate.query(FIND_ALL_FREE_TARIFFS, (rs, rowNum) -> {
+            Product product = new Product();
             product.setId(rs.getInt("ID"));
             product.setTypeId(rs.getInt("TYPE_ID"));
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));

@@ -18,8 +18,6 @@ public class User {
     private int enable;
 
 
-
-
     public User(String name, String password, String authorities) {
         this.name = name;
         this.password = password;
@@ -43,10 +41,6 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getSurname() {
@@ -97,14 +91,6 @@ public class User {
         this.customerId = customerId;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setAuthorities(String authorities) {
-        this.authorities = authorities;
-    }
-
     public int getRoleId() {
         return roleId;
     }
@@ -117,12 +103,24 @@ public class User {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getPassword() {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getAuthorities() {
         return authorities;
+    }
+
+    public void setAuthorities(String authorities) {
+        this.authorities = authorities;
     }
 
     @Override

@@ -6,9 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import javax.mail.Session;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import java.util.Properties;
 
 /**

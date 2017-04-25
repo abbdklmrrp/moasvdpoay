@@ -44,9 +44,9 @@ public class Mailer {
 
     public void send(User recipient, String subject, String text) throws EmailException {
         this.getEmail().setRecipient(recipient);
-        SimpleMailMessage message=email.createMail(subject, text);
+        SimpleMailMessage message = email.createMail(subject, text);
         if (this.validate(message)) {
-            mailSender.send( message);
+            mailSender.send(message);
         }
     }
 
@@ -123,7 +123,7 @@ public class Mailer {
             throw new EmailException(EmailException.MISSING_CONTENT);
         } else if (email.getSubject().isEmpty()) {
             throw new EmailException(EmailException.MISSING_SUBJECT);
-        } else if (email.getTo()==null) {
+        } else if (email.getTo() == null) {
             throw new EmailException(EmailException.MISSING_RECIPIENT);
         }
         return true;

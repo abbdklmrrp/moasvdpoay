@@ -22,14 +22,14 @@ public class VerificationCompanyController {
 
     @RequestMapping(value = "/verificationCompany", method = RequestMethod.POST)
     public String verification(@RequestParam(value = "companyName") String name,
-                               @RequestParam(value = "secretKey") String key, HttpServletRequest request){
-        Customer customer=customerDAO.checkCustomer(name,key);
-        if(customer==null){
+                               @RequestParam(value = "secretKey") String key, HttpServletRequest request) {
+        Customer customer = customerDAO.checkCustomer(name, key);
+        if (customer == null) {
             return "chooseCompany";
-        }else{
-            int id=customer.getId();
-            HttpSession session=request.getSession();
-            session.setAttribute("companyId",id);
+        } else {
+            int id = customer.getId();
+            HttpSession session = request.getSession();
+            session.setAttribute("companyId", id);
             return "signUp";
         }
     }

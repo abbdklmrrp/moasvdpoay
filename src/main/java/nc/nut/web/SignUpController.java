@@ -46,8 +46,8 @@ public class SignUpController {
         user.setAddress(address);
         user.setPlaceId(placeId);
         user.setCustomerId(customerId);
-        if(!userDAO.save(user)) {
+        if (!userDAO.save(user)) {
             return "signUp";
-        }else  return "login";
+        } else return "login";
     }
 }

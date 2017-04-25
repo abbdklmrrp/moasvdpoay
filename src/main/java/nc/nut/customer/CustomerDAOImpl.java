@@ -18,20 +18,20 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    private Md5PasswordEncoder encoder=new Md5PasswordEncoder();
+    private Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 
     @Override
     public Customer checkCustomer(String name, String secretKey) {
-        String password=encoder.encode(secretKey);
+        String password = encoder.encode(secretKey);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("customerName", name);
         params.addValue("secretKey", password);
         List<Customer> customers = jdbcTemplate.query(FIND_COMPANY, params, (rs, rowNum) -> {
-            String customerName=rs.getString("NAME");
-            String secret=rs.getString("SECRET_KEY");
-            int id=rs.getInt("ID");
-            return new Customer(id,customerName,secret);
+            String customerName = rs.getString("NAME");
+            String secret = rs.getString("SECRET_KEY");
+            int id = rs.getInt("ID");
+            return new Customer(id, customerName, secret);
         });
-        return customers.isEmpty()? null:customers.get(0);
+        return customers.isEmpty() ? null : customers.get(0);
     }
 }

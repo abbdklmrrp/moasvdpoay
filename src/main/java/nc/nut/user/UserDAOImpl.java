@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by Anna on 20.04.2017.
+ * Created by Rysakova Anna, Moiseienko Petro on 20.04.2017.
  */
 @Service
 public class UserDAOImpl implements UserDAO {
@@ -20,8 +20,8 @@ public class UserDAOImpl implements UserDAO {
     private final static String SAVE_USER = "INSERT INTO USERS(NAME,SURNAME,EMAIL,PHONE,PASSWORD,ADDRESS,ROLE_ID,PLACE_ID,CUSTOMER_ID,ENABLE) " +
             "VALUES(:name,:surname,:email,:phone,:password, :address, :roleId, :placeId, :customerId, :enable)";
     private final static String FIND_PLACE_ID = "SELECT ID FROM PLACES WHERE NAME=:place";
-    private final static String FIND_BY_EMAIL="SElECT EMAIL FROM USERS WHERE EMAIL=:email";
-    private final static String FIND_ALL_CLIENTS="SELECT EMAIL,NAME FROM USERS WHERE ENABLE=1 AND CUSTOMER_ID IS NOT NULL";
+    private final static String FIND_BY_EMAIL = "SElECT EMAIL FROM USERS WHERE EMAIL=:email";
+    private final static String FIND_ALL_CLIENTS = "SELECT EMAIL,NAME FROM USERS WHERE ENABLE=1 AND CUSTOMER_ID IS NOT NULL";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -45,24 +45,24 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean save(User user) {
-        if(!this.validateFields(user)) return false;
-        else if(!this.isUnique(user)) return false;
-        else{
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        String encodePassword = encoder.encode(user.getPassword());
-        params.addValue("name", user.getName());
-        params.addValue("surname", user.getSurname());
-        params.addValue("email", user.getEmail());
-        params.addValue("phone", user.getPhone());
-        params.addValue("password", encodePassword);
-        params.addValue("roleId", user.getRoleId());
-        params.addValue("placeId", user.getPlaceId());
-        params.addValue("customerId", user.getCustomerId());
-        params.addValue("address", user.getAddress());
-        params.addValue("enable", 1);
-        jdbcTemplate.update(SAVE_USER, params);
-        mailer.sendRegistrationMail(user);
-        return true;
+        if (!this.validateFields(user)) return false;
+        else if (!this.isUnique(user)) return false;
+        else {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            String encodePassword = encoder.encode(user.getPassword());
+            params.addValue("name", user.getName());
+            params.addValue("surname", user.getSurname());
+            params.addValue("email", user.getEmail());
+            params.addValue("phone", user.getPhone());
+            params.addValue("password", encodePassword);
+            params.addValue("roleId", user.getRoleId());
+            params.addValue("placeId", user.getPlaceId());
+            params.addValue("customerId", user.getCustomerId());
+            params.addValue("address", user.getAddress());
+            params.addValue("enable", 1);
+            jdbcTemplate.update(SAVE_USER, params);
+            mailer.sendRegistrationMail(user);
+            return true;
         }
     }
 
@@ -115,17 +115,17 @@ public class UserDAOImpl implements UserDAO {
     private boolean validateFields(User user) {
         if (user.getSurname().isEmpty()) return false;
         else if (user.getRoleId() == 0) return false;
-          else if (user.getPhone().isEmpty()) return false;
-            else if (user.getName().isEmpty()) return false;
-              else if (user.getPassword().isEmpty()) return false;
-                else if (user.getEmail().isEmpty()) return false;
-                  else if (user.getAddress().isEmpty()) return false;
-                    else if (user.getPlaceId() == 0) return false;
+        else if (user.getPhone().isEmpty()) return false;
+        else if (user.getName().isEmpty()) return false;
+        else if (user.getPassword().isEmpty()) return false;
+        else if (user.getEmail().isEmpty()) return false;
+        else if (user.getAddress().isEmpty()) return false;
+        else if (user.getPlaceId() == 0) return false;
         return true;
     }
 
-    private boolean isUnique(User user){
-        String email=user.getEmail();
+    private boolean isUnique(User user) {
+        String email = user.getEmail();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("email", email);
         List<String> users = jdbcTemplate.query(FIND_BY_EMAIL, params, (rs, rowNum) -> {

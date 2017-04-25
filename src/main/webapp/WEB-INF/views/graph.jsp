@@ -16,27 +16,27 @@
         google.charts.load('current', {'packages': ['table']});
 
         function getStatisticList() {
-            var rowList = new Array();
+            var rowList = [];
             var list;
             var len;
-             jQuery.ajax({
-                 url: 'graphData',
-                 type: "GET",
-                 dataType: "json",
-                 data: jQuery("#formWithRegionsAndDates").serialize(),
-                 async: false,
-                 success: function (response) {
-                     list = response;
-                     len = list.length;
-                 },
-                 error: function () {
-                     return null;
-                 }
-             });
+            jQuery.ajax({
+                url: 'graphData',
+                type: "GET",
+                dataType: "json",
+                data: jQuery("#formWithRegionsAndDates").serialize(),
+                async: false,
+                success: function (response) {
+                    list = response;
+                    len = list.length;
+                },
+                error: function () {
+                    return null;
+                }
+            });
 
             for (var i = 0; i < len; i++) {
-                var row = new Array();
-                row.push(new Date(list[i].year,list[i].month,list[i].day,0,0,0,0), list[i].countOfOrders, list[i].countOfComplaints);
+                var row = [];
+                row.push(new Date(list[i].year, list[i].month, list[i].day, 0, 0, 0, 0), list[i].countOfOrders, list[i].countOfComplaints);
                 rowList.push(row);
             }
             return rowList;
@@ -51,8 +51,8 @@
 
 
             var dataList = getStatisticList();
-            if(dataList==null){
-                $('#err').html("Error while sending request")
+            if (dataList == null) {
+                $('#err').html("Error while sending request");
                 return;
             }
             data.addRows(dataList);
