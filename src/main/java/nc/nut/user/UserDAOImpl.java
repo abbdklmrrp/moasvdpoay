@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Anna on 20.04.2017.
  */
 @Service
-class UserDAOImpl implements UserDAO {
+public class UserDAOImpl implements UserDAO {
 
     private final static String FIND_BY_USERNAME = "SELECT * FROM AUTHORITIES WHERE USERNAME=:username";
     @Resource
