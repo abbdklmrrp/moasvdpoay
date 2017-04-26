@@ -1,4 +1,4 @@
-package nc.nut.user;
+package nc.nut.dao.user;
 
 /**
  * @author Rysakova Anna

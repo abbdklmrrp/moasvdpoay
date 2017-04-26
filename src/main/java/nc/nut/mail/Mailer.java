@@ -1,6 +1,6 @@
 package nc.nut.mail;
 
-import nc.nut.user.User;
+import nc.nut.dao.user.User;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 

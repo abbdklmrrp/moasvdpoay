@@ -1,7 +1,7 @@
-package nc.nut.product;
+package nc.nut.dao.product;
 
 /**
- * Created by Anna on 23.04.2017.
+ * Created by Rysakova Anna on 23.04.2017.
  */
 public class Product {
     private int id;

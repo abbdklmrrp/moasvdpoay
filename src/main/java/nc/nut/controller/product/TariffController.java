@@ -1,7 +1,7 @@
 package nc.nut.controller.product;
 
-import nc.nut.product.Product;
-import nc.nut.product.ProductDao;
+import nc.nut.dao.product.Product;
+import nc.nut.dao.product.ProductDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by Anna on 23.04.2017.
+ * Created by Rysakova Anna on 23.04.2017.
  */
 @Controller
 @RequestMapping({"admin"})

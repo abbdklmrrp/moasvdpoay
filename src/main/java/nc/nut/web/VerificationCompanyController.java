@@ -1,7 +1,7 @@
 package nc.nut.web;
 
-import nc.nut.customer.Customer;
-import nc.nut.customer.CustomerDAO;
+import nc.nut.dao.customer.Customer;
+import nc.nut.dao.customer.CustomerDAO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

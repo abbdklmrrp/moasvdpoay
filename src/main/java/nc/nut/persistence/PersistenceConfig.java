@@ -9,7 +9,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 /**
- * Created by Anna on 20.04.2017.
+ * Created by Rysakova Anna on 20.04.2017.
  */
 @Configuration
 public class PersistenceConfig {

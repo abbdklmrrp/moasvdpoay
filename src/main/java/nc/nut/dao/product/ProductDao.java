@@ -1,9 +1,9 @@
-package nc.nut.product;
+package nc.nut.dao.product;
 
 import java.util.List;
 
 /**
- * Created by Anna on 23.04.2017.
+ * Created by Rysakova Anna on 23.04.2017.
  */
 public interface ProductDao {
     void addProduct(Product product);

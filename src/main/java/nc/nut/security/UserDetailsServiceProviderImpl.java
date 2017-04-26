@@ -1,7 +1,7 @@
 package nc.nut.security;
 
 import com.google.common.base.Preconditions;
-import nc.nut.user.UserDAO;
+import nc.nut.dao.user.UserDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +30,7 @@ public class UserDetailsServiceProviderImpl implements UserDetailsServiceProvide
 
         logger.info("Providing user details for {}", username);
 
-        nc.nut.user.User findUser = userDAO.findByUsername(username);
+        nc.nut.dao.user.User findUser = userDAO.findByUsername(username);
 
         if (findUser == null) {
             return null;
