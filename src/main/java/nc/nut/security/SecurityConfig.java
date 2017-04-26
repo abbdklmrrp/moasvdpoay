@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/resources/**");
     }
 
-    //TODO: add matcher to roles
+    //TODO: REMOVE LINE 52 in deploy
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.logout().logoutUrl("/doLogout").logoutSuccessUrl("/login.htm");
@@ -50,7 +50,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 http.authorizeRequests();
         registry.antMatchers("/*").permitAll();
         registry.antMatchers("/*/**").permitAll();
-//        registry.anyRequest().hasAnyAuthority(Authority.valueStrings());
 
         Properties secured = readSecurityUrls();
         for (Map.Entry<Object, Object> e : secured.entrySet()) {

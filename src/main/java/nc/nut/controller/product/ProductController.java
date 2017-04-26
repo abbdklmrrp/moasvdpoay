@@ -36,7 +36,7 @@ public class ProductController {
 
     //TODO: add modelAttribute, fix "typeId"
     @RequestMapping(value = {"addProduct"}, method = RequestMethod.POST)
-    String createProduct(@RequestParam(value = "productCategories") Integer categoryId,
+    String createProduct(@RequestParam(value = "productCategories", required = false) Integer categoryId,
                          @RequestParam(value = "duration") int duration,
                          @RequestParam(value = "productTypes") int typeId,
                          @RequestParam(value = "needProcessing") int needProcessing,
