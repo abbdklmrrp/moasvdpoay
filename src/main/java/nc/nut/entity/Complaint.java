@@ -16,18 +16,18 @@ public class Complaint {
     private int id;
     private Calendar creation_date;
     private String description;
-    private int status_id;
+    private String status;
     private int csr_id;
     private int order_id;
 
     public Complaint() {
     }
 
-    public Complaint(int id, Calendar creation_date, String description, int status_id, int csr_id, int order_id) {
+    public Complaint(int id, Calendar creation_date, String description, String status, int csr_id, int order_id) {
         this.id = id;
         this.creation_date = creation_date;
         this.description = description;
-        this.status_id = status_id;
+        this.status = status;
         this.csr_id = csr_id;
         this.order_id = order_id;
     }
@@ -56,12 +56,12 @@ public class Complaint {
         this.description = description;
     }
 
-    public int getStatus_id() {
-        return status_id;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStatus_id(int status_id) {
-        this.status_id = status_id;
+    public void setStatus_id(String status) {
+        this.status = status;
     }
 
     public int getCsr_id() {
@@ -85,7 +85,7 @@ public class Complaint {
         return "Complaint{" + "id=" + id
                 + ", creation_date=" + creation_date
                 + ", description=" + description
-                + ", status_id=" + status_id
+                + ", status=" + status
                 + ", csr_id=" + csr_id
                 + ", order_id=" + order_id + '}';
     }

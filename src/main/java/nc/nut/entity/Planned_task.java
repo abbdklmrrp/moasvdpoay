@@ -14,16 +14,16 @@ import java.util.Calendar;
 public class Planned_task {
 
     private int id;
-    private int status_id;
+    private String status;
     private int order_id;
     private Calendar action_date;
 
     public Planned_task() {
     }
 
-    public Planned_task(int id, int status_id, int order_id, Calendar action_date) {
+    public Planned_task(int id, String status, int order_id, Calendar action_date) {
         this.id = id;
-        this.status_id = status_id;
+        this.status = status;
         this.order_id = order_id;
         this.action_date = action_date;
     }
@@ -36,12 +36,12 @@ public class Planned_task {
         this.id = id;
     }
 
-    public int getStatus_id() {
-        return status_id;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStatus_id(int status_id) {
-        this.status_id = status_id;
+    public void setStatus_id(String status) {
+        this.status = status;
     }
 
     public int getOrder_id() {
@@ -63,7 +63,7 @@ public class Planned_task {
     @Override
     public String toString() {
         return "Planned_task{" + "id=" + id
-                + ", status_id=" + status_id
+                + ", status=" + status
                 + ", order_id=" + order_id
                 + ", action_date=" + action_date + '}';
     }

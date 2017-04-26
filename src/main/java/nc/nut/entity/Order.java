@@ -14,16 +14,16 @@ public class Order {
     private int id;
     private int product_id;
     private int user_id;
-    private int current_status_id;
+    private String current_status;
 
     public Order() {
     }
 
-    public Order(int id, int product_id, int user_id, int current_status_id) {
+    public Order(int id, int product_id, int user_id, String current_status) {
         this.id = id;
         this.product_id = product_id;
         this.user_id = user_id;
-        this.current_status_id = current_status_id;
+        this.current_status = current_status;
     }
 
     public int getId() {
@@ -50,12 +50,12 @@ public class Order {
         this.user_id = user_id;
     }
 
-    public int getCurrent_status_id() {
-        return current_status_id;
+    public String getCurrent_status() {
+        return current_status;
     }
 
-    public void setCurrent_status_id(int current_status_id) {
-        this.current_status_id = current_status_id;
+    public void setCurrent_status_id(String current_status) {
+        this.current_status = current_status;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Order {
         return "Order{" + "id=" + id
                 + ", product_id=" + product_id
                 + ", user_id=" + user_id
-                + ", current_status_id=" + current_status_id + '}';
+                + ", current_status=" + current_status + '}';
     }
 
 }

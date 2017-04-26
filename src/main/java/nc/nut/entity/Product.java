@@ -12,9 +12,9 @@ package nc.nut.entity;
 public class Product {
 
     private int id;
-    private int category_id;
+    private String category;
     private int duration_in_days;
-    private int type_id;
+    private String type;
     private int need_processing;
     private String name;
     private String description;
@@ -23,11 +23,11 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, int category_id, int duration_in_days, int type_id, int need_processing, String name, String description, int status) {
+    public Product(int id, String category, int duration_in_days, String type, int need_processing, String name, String description, int status) {
         this.id = id;
-        this.category_id = category_id;
+        this.category = category;
         this.duration_in_days = duration_in_days;
-        this.type_id = type_id;
+        this.type = type;
         this.need_processing = need_processing;
         this.name = name;
         this.description = description;
@@ -42,12 +42,12 @@ public class Product {
         this.id = id;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategory_id(String category) {
+        this.category = category;
     }
 
     public int getDuration_in_days() {
@@ -58,12 +58,12 @@ public class Product {
         this.duration_in_days = duration_in_days;
     }
 
-    public int getType_id() {
-        return type_id;
+    public String getType() {
+        return type;
     }
 
-    public void setType_id(int type_id) {
-        this.type_id = type_id;
+    public void setType_id(String type) {
+        this.type = type;
     }
 
     public int getNeed_processing() {
@@ -101,9 +101,9 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" + "id=" + id
-                + ", category_id=" + category_id
+                + ", category=" + category
                 + ", duration_in_days=" + duration_in_days
-                + ", type_id=" + type_id
+                + ", type=" + type
                 + ", need_processing=" + need_processing
                 + ", name=" + name
                 + ", description=" + description
