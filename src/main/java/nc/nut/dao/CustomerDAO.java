@@ -6,20 +6,14 @@
 package nc.nut.dao;
 
 import java.util.List;
+
 import nc.nut.entity.Customer;
 import nc.nut.entity.User;
 
 /**
- *
  * @author Alistratenko Nikita
  */
-public interface CustomerDAO {
-
-    Customer save(Customer customer);
-
-    boolean delete(Customer customer);
-
-    Customer getById(int id);
+public interface CustomerDAO extends Dao<Customer> {
 
     boolean changeSecretKey(int customerId, String newSecretKey);
 

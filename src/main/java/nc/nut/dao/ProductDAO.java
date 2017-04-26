@@ -6,20 +6,13 @@
 package nc.nut.dao;
 
 import java.util.List;
+
 import nc.nut.entity.Product;
 
 /**
- *
  * @author Alistratenko Nikita
  */
-public interface ProductDAO {
-
-    Product save(Product product);
-
-    boolean delete(Product product);
-
-    Product getById(int id);
-
+public interface ProductDAO extends Dao<Product> {
     List<Product> getByTypeId(int id);
 
     List<Product> getByCategoryId(int id);
@@ -29,5 +22,11 @@ public interface ProductDAO {
     boolean changeDuration(int productId, int duration_in_days);
 
     boolean changeDescription(int productId, String description);
+
+    List<Product> getServicesNotInTariff(int tarrifId);
+
+    List<Product> getSerivicesByPlace(int placeId);
+
+    List<Product> getProductsByPlace(int placeId, int typeId);
 
 }

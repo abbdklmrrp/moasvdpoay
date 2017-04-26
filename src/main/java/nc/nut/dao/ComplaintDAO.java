@@ -6,19 +6,13 @@
 package nc.nut.dao;
 
 import java.util.List;
+
 import nc.nut.entity.Complaint;
 
 /**
- *
  * @author Alistratenko Nikita
  */
-public interface ComplaintDAO {
-
-    Complaint save(Complaint complaint);
-
-    boolean delete(Complaint complaint);
-
-    Complaint getById(int id);
+public interface ComplaintDAO extends Dao<Complaint> {
 
     List<Complaint> getByCSRId(int id);
 
