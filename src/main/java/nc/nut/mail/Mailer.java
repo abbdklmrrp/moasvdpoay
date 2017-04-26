@@ -1,6 +1,8 @@
 package nc.nut.mail;
 
+import nc.nut.user.User;
 import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,33 +30,33 @@ public class Mailer {
         }
     }
 
-    public void setEmail(Email email) {
-        this.email = email;
-    }
-
     public Email getEmail() {
         return email;
+    }
+
+    public void setEmail(Email email) {
+        this.email = email;
     }
 
     public void setMailSender(MailSender mailSender) {
         this.mailSender = mailSender;
     }
 
-    public void send(Recipient recipient, String subject, String text) throws EmailException {
+    public void send(User recipient, String subject, String text) throws EmailException {
         this.getEmail().setRecipient(recipient);
-        email.createMail(subject, text);
-        if (this.validate(email)) {
-            mailSender.send(email.getSimpleMailMessage());
+        SimpleMailMessage message = email.createMail(subject, text);
+        if (this.validate(message)) {
+            mailSender.send(message);
         }
     }
 
-    private void sendDispatch(List<Recipient> recipients, String subject, String text) {
-        for (Recipient recipient : recipients) {
+    private void sendDispatch(List<User> recipients, String subject, String text) {
+        for (User recipient : recipients) {
             this.send(recipient, subject, text);
         }
     }
 
-    public void sendComplaintAccepted(Recipient recipient, String number) {
+    public void sendComplaintAccepted(User recipient, String number) {
         StringBuilder text = new StringBuilder(properties.getProperty("complaint.accepted.text"));
         int i = text.indexOf("?");
         text.replace(i, i + 1, number);
@@ -62,7 +64,7 @@ public class Mailer {
         this.send(recipient, subject, text.toString());
     }
 
-    public void sendComplaintConsidering(Recipient recipient, String number) {
+    public void sendComplaintConsidering(User recipient, String number) {
         String subject = properties.getProperty("complaint.considering.subject");
         StringBuilder text = new StringBuilder(properties.getProperty("complaint.considering.text"));
         int i = text.indexOf("?");
@@ -70,7 +72,7 @@ public class Mailer {
         this.send(recipient, subject, text.toString());
     }
 
-    public void sendComplaintSolved(Recipient recipient, String number) {
+    public void sendComplaintSolved(User recipient, String number) {
         String subject = properties.getProperty("complaint.solved.subject");
         StringBuilder text = new StringBuilder(properties.getProperty("complaint.solved.text"));
         int i = text.indexOf("?");
@@ -78,7 +80,7 @@ public class Mailer {
         this.send(recipient, subject, text.toString());
     }
 
-    public void sendServiceActivated(Recipient recipient, String name) {
+    public void sendServiceActivated(User recipient, String name) {
         String subject = properties.getProperty("service.activated.subject");
         StringBuilder text = new StringBuilder(properties.getProperty("service.activated.text"));
         int i = text.indexOf("?");
@@ -86,7 +88,7 @@ public class Mailer {
         this.send(recipient, subject, text.toString());
     }
 
-    public void sendServiceSuspended(Recipient recipient, String name) {
+    public void sendServiceSuspended(User recipient, String name) {
         String subject = properties.getProperty("service.suspended.subject");
         StringBuilder text = new StringBuilder(properties.getProperty("service.suspended.text"));
         int i = text.indexOf("?");
@@ -94,7 +96,7 @@ public class Mailer {
         this.send(recipient, subject, text.toString());
     }
 
-    public void sendServiceDeactivated(Recipient recipient, String name) {
+    public void sendServiceDeactivated(User recipient, String name) {
         String subject = properties.getProperty("service.deactivated.subject");
         StringBuilder text = new StringBuilder(properties.getProperty("service.deactivated.text"));
         int i = text.indexOf("?");
@@ -102,13 +104,13 @@ public class Mailer {
         this.send(recipient, subject, text.toString());
     }
 
-    public void sendRegistrationMail(Recipient recipient) {
+    public void sendRegistrationMail(User recipient) {
         String subject = properties.getProperty("registration.subject");
         String text = properties.getProperty("registration.text");
         this.send(recipient, subject, text);
     }
 
-    public void sendProposal(List<Recipient> recipients, String description) {
+    public void sendProposal(List<User> recipients, String description) {
         String subject = properties.getProperty("new.proposal.subject");
         StringBuilder text = new StringBuilder(properties.getProperty("new.proposal.text"));
         int i = text.indexOf("?");
@@ -116,12 +118,12 @@ public class Mailer {
         this.sendDispatch(recipients, subject, text.toString());
     }
 
-    private boolean validate(Email email) throws EmailException {
-        if (email.getText() == null) {
+    private boolean validate(SimpleMailMessage email) throws EmailException {
+        if (email.getText().isEmpty()) {
             throw new EmailException(EmailException.MISSING_CONTENT);
-        } else if (email.getSubject() == null || email.getSubject().equals("")) {
+        } else if (email.getSubject().isEmpty()) {
             throw new EmailException(EmailException.MISSING_SUBJECT);
-        } else if (email.getRecipient() == null) {
+        } else if (email.getTo() == null) {
             throw new EmailException(EmailException.MISSING_RECIPIENT);
         }
         return true;

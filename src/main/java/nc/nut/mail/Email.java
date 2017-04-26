@@ -1,5 +1,6 @@
 package nc.nut.mail;
 
+import nc.nut.user.User;
 import org.springframework.mail.SimpleMailMessage;
 
 /**
@@ -9,43 +10,31 @@ import org.springframework.mail.SimpleMailMessage;
 
 public class Email {
     private SimpleMailMessage simpleMailMessage;
-    private Recipient recipient;
-    private String text;
-    private String subject;
+    private User recipient;
 
-    public void setSimpleMailMessage(SimpleMailMessage simpleMailMessage) {
-        this.simpleMailMessage = simpleMailMessage;
+    public Email() {
     }
 
-    public void setRecipient(Recipient recipient) {
+    public void setRecipient(User recipient) {
         this.recipient = recipient;
-    }
-
-    public Recipient getRecipient() {
-        return recipient;
     }
 
     public SimpleMailMessage getSimpleMailMessage() {
         return simpleMailMessage;
     }
 
-    public String getText() {
-        return text;
+    public void setSimpleMailMessage(SimpleMailMessage simpleMailMessage) {
+        this.simpleMailMessage = simpleMailMessage;
     }
 
-    public String getSubject() {
-        return subject;
-    }
 
-    public void createMail(String subject, String content) {
+    public SimpleMailMessage createMail(String subject, String content) {
         SimpleMailMessage message = new SimpleMailMessage(simpleMailMessage);
-        message.setText("Dear "+recipient.getName()+",\n"+content);
-        this.text = message.getText();
+        message.setText(String.format(message.getText(), recipient.getName(), content));
         message.setSubject(subject);
-        this.subject = subject;
-        message.setTo(recipient.getAddress());
+        message.setTo(recipient.getEmail());
         message.setFrom("briariy2010@yandex.ru");
-        this.simpleMailMessage = message;
+        return message;
     }
 
 

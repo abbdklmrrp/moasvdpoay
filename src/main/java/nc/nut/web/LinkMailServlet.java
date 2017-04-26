@@ -10,15 +10,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 
 @Controller
-public class LinkMailServlet  {
-   @RequestMapping(method = RequestMethod.GET,value={"/linkMailServlet"})
-   public String dispatch() {
-       return "mailForm";
-   }
+public class LinkMailServlet {
+    @RequestMapping(method = RequestMethod.GET, value = {"/linkMailServlet"})
+    public String dispatch() {
+        return "mailForm";
+    }
 
-    @RequestMapping(method = RequestMethod.GET,value={"/mail"})
+    @RequestMapping(method = RequestMethod.GET, value = {"/mail"})
     public String goMail() {
         return "mail";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = {"/registration"})
+    public String goChoose() {
+        return "chooseCompany";
     }
 
 
