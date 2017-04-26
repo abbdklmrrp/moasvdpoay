@@ -9,11 +9,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link href="<c:url value="/resources/css/basic.css"/>" rel="stylesheet"/>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script type="text/javascript">
-        google.charts.load('current', {'packages': ['line']});
-        google.charts.load('current', {'packages': ['table']});
+                google.charts.load('current', {'packages': ['line']});
+                google.charts.load('current', {'packages': ['table']});
 
         function getStatisticList() {
             var rowList = [];
@@ -57,9 +59,6 @@
             }
             data.addRows(dataList);
 
-            var item_data = $('#formWithRegionsAndDates').serialize();
-            console.log(item_data);
-
             var select = document.getElementById('sel1');
             var options = {
                 chart: {
@@ -78,31 +77,33 @@
             var chart = new google.charts.Line(document.getElementById('line_top_x'));
             chart.draw(data, google.charts.Line.convertOptions(options));
             var table = new google.visualization.Table(document.getElementById('table_div'));
-            table.draw(data, {showRowNumber: false, width: '100%', height: '300px'});
+            table.draw(data, {showRowNumber: false, width: '800px', height: '300px'});
         }
 
     </script>
 </head>
 <body>
 <form id="formWithRegionsAndDates">
-    <label>Choose region:</label>
-    <select id="sel1" name="region">
-        <c:forEach var="region" items="${regions}">
-            <option value="${region}">${region}</option>
-        </c:forEach>
-    </select>
+    <label>Choose region:
+        <select id="sel1" name="region">
+            <c:forEach var="region" items="${regions}">
+                <option value="${region}">${region}</option>
+            </c:forEach>
+        </select>
+    </label>
     <br/>
-    <label>Date Begin:</label>
-    <input type="date" name="beginDate"/>
+    <label>Date Begin:
+        <input type="date" name="beginDate"/>
+    </label>
     <br/>
-    <label>Date End:</label>
-    <input type="date" name="endDate"/>
+    <label>Date End:
+        <input type="date" name="endDate"/>
+    </label>
     <br/>
 </form>
 <button id="b1" onclick="drawChart()">Show</button>
 <span id="err" style="color: red"></span>
 <div id="line_top_x"></div>
-<br/>
 <div id="table_div"></div>
 </body>
 </html>

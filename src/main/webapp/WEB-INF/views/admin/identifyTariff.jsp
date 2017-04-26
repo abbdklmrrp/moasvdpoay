@@ -10,7 +10,7 @@
 <html>
 <head>
     <title>IDENTIFY TARIFF</title>
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <link href="<c:url value="/resources/css/basic.css"/>" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 </head>
 <body>
