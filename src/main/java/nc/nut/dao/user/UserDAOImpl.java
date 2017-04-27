@@ -44,6 +44,16 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public User getById(int id) {
+        return null;
+    }
+
+    @Override
+    public boolean update(User object) {
+        return false;
+    }
+
+    @Override
     public boolean save(User user) {
         if (!this.validateFields(user)) return false;
         else if (!this.isUnique(user)) return false;
@@ -67,13 +77,8 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(User object) {
         return false;
-    }
-
-    @Override
-    public User get(int id) {
-        return null;
     }
 
     @Override

@@ -24,7 +24,7 @@ public class ProductController {
     @Resource
     private ProductDao productDao;
 
-    @RequestMapping(value = {"addProduct"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"save"}, method = RequestMethod.GET)
     ModelAndView addProduct(ModelAndView mav) {
 
         List<ProductTypes> productTypes = productDao.findProductTypes();
@@ -40,7 +40,7 @@ public class ProductController {
     }
 
     //TODO: add modelAttribute, fix "typeId"
-    @RequestMapping(value = {"addProduct"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"save"}, method = RequestMethod.POST)
     String createProduct(
             @RequestParam(value = "productCategories") String category,
             @RequestParam(value = "duration") int duration,
@@ -55,14 +55,14 @@ public class ProductController {
         if (Objects.equals(type, "service")) {
 //            product.setCategoryId(categoryId);
         }
-        product.setDuration(duration);
+        product.setDurationInDays(duration);
 //        product.setTypeId(typeId);
         product.setNeedProcessing(needProcessing);
         product.setName(name);
         product.setDescription(description);
         product.setStatus(status);
 
-        productDao.addProduct(product);
+        productDao.save(product);
 
         return "admin/index";
     }

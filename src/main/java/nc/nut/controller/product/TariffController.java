@@ -26,11 +26,11 @@ public class TariffController {
 
         List<Product> tariffs = productDao.getAllFreeTariffs();
 
-        List<Product> servicesWI = productDao.getServices("Wired Internet");
-        List<Product> services2G = productDao.getServices("2G");
-        List<Product> services3G = productDao.getServices("3G");
-        List<Product> services4G = productDao.getServices("4G");
-        List<Product> servicesMC = productDao.getServices("Mobile communication");
+        List<Product> servicesWI = productDao.getAllServices("Wired Internet");
+        List<Product> services2G = productDao.getAllServices("2G");
+        List<Product> services3G = productDao.getAllServices("3G");
+        List<Product> services4G = productDao.getAllServices("4G");
+        List<Product> servicesMC = productDao.getAllServices("Mobile communication");
 
         model.addAttribute("servicesWI", servicesWI);
         model.addAttribute("services2G", services2G);
@@ -40,11 +40,11 @@ public class TariffController {
 
         model.addAttribute("tariffs", tariffs);
 
-        return "admin/identifyTariff";
+        return "admin/fillTariff";
     }
 
     //TODO: add modelAttribute, check "typeId"
-    @RequestMapping(value = {"identifyTariff"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"fillTariff"}, method = RequestMethod.POST)
     String identifyTariff(@RequestParam(value = "tariffs") int tariffs,
                           @RequestParam(value = "serviceWI") int serviceWI,
                           @RequestParam(value = "service2G") int service2G,
@@ -52,11 +52,11 @@ public class TariffController {
                           @RequestParam(value = "service4G") int service4G,
                           @RequestParam(value = "serviceMC") int serviceMC) {
 
-        productDao.identifyTariff(tariffs, serviceWI);
-        productDao.identifyTariff(tariffs, service2G);
-        productDao.identifyTariff(tariffs, service3G);
-        productDao.identifyTariff(tariffs, service4G);
-        productDao.identifyTariff(tariffs, serviceMC);
+        productDao.fillTariff(tariffs, serviceWI);
+        productDao.fillTariff(tariffs, service2G);
+        productDao.fillTariff(tariffs, service3G);
+        productDao.fillTariff(tariffs, service4G);
+        productDao.fillTariff(tariffs, serviceMC);
 
         return "admin/index";
     }

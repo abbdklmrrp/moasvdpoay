@@ -36,7 +36,7 @@ public class UserDetailsServiceProviderImpl implements UserDetailsServiceProvide
             return null;
         }
 
-        List<GrantedAuthority> auth = AuthorityUtils.createAuthorityList(findUser.getAuthorities());
+        List<GrantedAuthority> auth = AuthorityUtils.createAuthorityList(findUser.getAuthority());
 
         User user = new User(username, findUser.getPassword(), auth);
 

@@ -1,24 +1,31 @@
 package nc.nut.dao.product;
 
+import nc.nut.dao.interfaces.Dao;
+
 import java.util.List;
 
 /**
- * Created by Rysakova Anna on 23.04.2017.
+ * Created by Rysakova Anna , Alistratenko Nikita on 23.04.2017.
  */
-public interface ProductDao {
-    void addProduct(Product product);
+public interface ProductDao extends Dao<Product> {
+
+    List<Product> getByTypeId(int id);
+
+    List<Product> getByCategoryId(int id);
+
+    List<Product> getByProcessingStatus(int id);
 
     List<ProductTypes> findProductTypes();
 
     List<ProductCategories> findProductCategories();
 
-    List<Product> getServices();
+    List<Product> getAllServices();
 
-    List<Product> getTariffs();
+    List<Product> getAllTariffs();
 
-    List<Product> getServices(String categoryName);
+    List<Product> getAllServices(String categoryName);
 
     List<Product> getAllFreeTariffs();
 
-    void identifyTariff(int idTariff, int idService);
+    void fillTariff(int idTariff, int idService);
 }

@@ -1,13 +1,15 @@
 package nc.nut.dao.customer;
 
 /**
- * @author Moiseienko Petro
+ * @author Moiseienko Petro , Alistratenko Nikite
  * @since 24.04.2017.
  */
 public class Customer {
     private int id;
     private String name;
     private String secretKey;
+    private int invoice;
+
 
     public Customer(int id, String name, String secretKey) {
         this.id = id;
@@ -37,5 +39,13 @@ public class Customer {
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
+    }
+
+    public int getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(int invoice) {
+        this.invoice = invoice;
     }
 }
