@@ -10,77 +10,11 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link href="<c:url value="/resources/css/basic.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/resources/css/webGraph.css"/>" rel="stylesheet"/>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script type="text/javascript">
-                google.charts.load('current', {'packages': ['line']});
-                google.charts.load('current', {'packages': ['table']});
-
-        function getStatisticList() {
-            var rowList = [];
-            var list;
-            var len;
-            jQuery.ajax({
-                url: 'graphData',
-                type: "GET",
-                dataType: "json",
-                data: jQuery("#formWithRegionsAndDates").serialize(),
-                async: false,
-                success: function (response) {
-                    list = response;
-                    len = list.length;
-                },
-                error: function () {
-                    return null;
-                }
-            });
-
-            for (var i = 0; i < len; i++) {
-                var row = [];
-                row.push(new Date(list[i].year, list[i].month, list[i].day, 0, 0, 0, 0), list[i].countOfOrders, list[i].countOfComplaints);
-                rowList.push(row);
-            }
-            return rowList;
-        }
-
-        function drawChart() {
-
-            var data = new google.visualization.DataTable();
-            data.addColumn('date', 'Day');
-            data.addColumn('number', 'Orders');
-            data.addColumn('number', 'Complaints');
-
-
-            var dataList = getStatisticList();
-            if (dataList == null) {
-                $('#err').html("Error while sending request");
-                return;
-            }
-            data.addRows(dataList);
-
-            var select = document.getElementById('sel1');
-            var options = {
-                chart: {
-                    title: 'Statistic in ' + select.value,
-                    subtitle: 'NetCrooker'
-                },
-                width: 800,
-                height: 400,
-                axes: {
-                    x: {
-                        0: {side: 'top'}
-                    }
-                }
-            };
-
-            var chart = new google.charts.Line(document.getElementById('line_top_x'));
-            chart.draw(data, google.charts.Line.convertOptions(options));
-            var table = new google.visualization.Table(document.getElementById('table_div'));
-            table.draw(data, {showRowNumber: false, width: '800px', height: '300px'});
-        }
-
-    </script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="<c:url value="/resources/js/webGraph/ajaxData.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/js/webGraph/drawLines.js"/>"></script>
 </head>
 <body>
 <form id="formWithRegionsAndDates">
@@ -103,7 +37,11 @@
 </form>
 <button id="b1" onclick="drawChart()">Show</button>
 <span id="err" style="color: red"></span>
-<div id="line_top_x"></div>
-<div id="table_div"></div>
+<div class="center" id="line_top_x" style="width: 900px; height: 500px"></div>
+<div id="table_div">
+    <div class="center" id="table_page"></div>
+    <br/>
+    <div class="center" id="table_data"></div>
+</div>
 </body>
 </html>
