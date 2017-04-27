@@ -6,7 +6,7 @@ package nc.nut.dao.product;
 public class Product {
     private int id;
     private Integer categoryId;
-    private int duration;
+    private int durationInDays;
     private int typeId;
     private int needProcessing;
     private String name;
@@ -32,12 +32,12 @@ public class Product {
         this.categoryId = categoryId;
     }
 
-    public int getDuration() {
-        return duration;
+    public int getDurationInDays() {
+        return durationInDays;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void setDurationInDays(int durationInDays) {
+        this.durationInDays = durationInDays;
     }
 
     public int getTypeId() {

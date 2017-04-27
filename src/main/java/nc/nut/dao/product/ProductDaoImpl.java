@@ -45,20 +45,52 @@ public class ProductDaoImpl implements ProductDao {
     private Mailer mailer;
 
     @Override
-    public void addProduct(Product product) {
+    public boolean delete(Product product) {
+        return false;
+    }
+
+    @Override
+    public Product getById(int id) {
+        return null;
+    }
+
+    @Override
+    public List<Product> getByTypeId(int id) {
+        return null;
+    }
+
+    @Override
+    public List<Product> getByCategoryId(int id) {
+        return null;
+    }
+
+    @Override
+    public List<Product> getByProcessingStatus(int id) {
+        return null;
+    }
+
+    @Override
+    public boolean update(Product product) {
+        return false;
+    }
+
+    @Override
+    public boolean save(Product product) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", product.getId());
         params.addValue("typeId", product.getTypeId());
         params.addValue("categoryId", product.getCategoryId());
         params.addValue("nameProduct", product.getName());
-        params.addValue("duration", product.getDuration());
+        params.addValue("duration", product.getDurationInDays());
         params.addValue("needProcessing", product.getNeedProcessing());
         params.addValue("description", product.getDescription());
         params.addValue("status", product.getStatus());
 
-        jdbcTemplate.update(ADD_SERVICE, params);
+        int isUpdate = jdbcTemplate.update(ADD_SERVICE, params);
         List<User> users = userDAO.getAllClient();
         mailer.sendProposal(users, product.getDescription());
+
+        return isUpdate > 0;
 
     }
 
@@ -69,19 +101,19 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getServices() {
+    public List<Product> getAllServices() {
         List<Product> services = jdbcTemplate.query(FIND_SERVICES, productRowMapper);
         return services;
     }
 
     @Override
-    public List<Product> getTariffs() {
+    public List<Product> getAllTariffs() {
         List<Product> tariffs = jdbcTemplate.query(FIND_TARIFFS, productRowMapper);
         return tariffs;
     }
 
     @Override
-    public void identifyTariff(int idTariff, int idService) {
+    public void fillTariff(int idTariff, int idService) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("tariff_id", idTariff);
         params.addValue("service_id", idService);
@@ -95,7 +127,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getServices(String categoryName) {
+    public List<Product> getAllServices(String categoryName) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("categoryName", categoryName);
         List<Product> services = jdbcTemplate.query(FIND_ALL_SERVICES, params, (rs, rowNum) -> {
@@ -104,7 +136,7 @@ public class ProductDaoImpl implements ProductDao {
             product.setId(rs.getInt("ID"));
             product.setTypeId(rs.getInt("TYPE_ID"));
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
-            product.setDuration(rs.getInt("DURATION"));
+            product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
             product.setDescription(rs.getString("DESCRIPTION"));
             return product;
@@ -120,7 +152,7 @@ public class ProductDaoImpl implements ProductDao {
             product.setId(rs.getInt("ID"));
             product.setTypeId(rs.getInt("TYPE_ID"));
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
-            product.setDuration(rs.getInt("DURATION"));
+            product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
             product.setDescription(rs.getString("DESCRIPTION"));
             return product;

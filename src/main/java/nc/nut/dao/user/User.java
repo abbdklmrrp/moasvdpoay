@@ -13,7 +13,7 @@ public class User {
     private int placeId;
     private int customerId;
     private String password;
-    private String authorities;
+    private String authority;
     private int roleId;
     private int enable;
 
@@ -21,7 +21,7 @@ public class User {
     public User(String name, String password, String authorities) {
         this.name = name;
         this.password = password;
-        this.authorities = authorities;
+        this.authority = authorities;
     }
 
     public User() {
@@ -115,12 +115,12 @@ public class User {
         this.password = password;
     }
 
-    public String getAuthorities() {
-        return authorities;
+    public String getAuthority() {
+        return authority;
     }
 
     public void setAuthorities(String authorities) {
-        this.authorities = authorities;
+        this.authority = authorities;
     }
 
     @Override
@@ -128,7 +128,7 @@ public class User {
         return "User{" +
                 "name='" + name + '\'' +
                 ", password='" + password + '\'' +
-                ", authorities='" + authorities + '\'' +
+                ", authorities='" + authority + '\'' +
                 '}';
     }
 }

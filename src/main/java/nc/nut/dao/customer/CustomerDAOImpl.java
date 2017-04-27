@@ -1,5 +1,6 @@
 package nc.nut.dao.customer;
 
+import nc.nut.dao.user.User;
 import nc.nut.security.Md5PasswordEncoder;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -33,5 +34,45 @@ public class CustomerDAOImpl implements CustomerDAO {
             return new Customer(id, customerName, secret);
         });
         return customers.isEmpty() ? null : customers.get(0);
+    }
+
+    @Override
+    public boolean changeSecretKey(int customerId, String newSecretKey) {
+        return false;
+    }
+
+    @Override
+    public boolean changeInvoice(int customerId, int newInvoice) {
+        return false;
+    }
+
+    @Override
+    public boolean changeName(int customerId, String newName) {
+        return false;
+    }
+
+    @Override
+    public List<User> getAllUsers(int customerId) {
+        return null;
+    }
+
+    @Override
+    public Customer getById(int id) {
+        return null;
+    }
+
+    @Override
+    public boolean update(Customer object) {
+        return false;
+    }
+
+    @Override
+    public boolean save(Customer object) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(Customer object) {
+        return false;
     }
 }

@@ -23,7 +23,7 @@ public class ProductService {
         switch (typeId) {
             case 1:
                 product.setCategoryId(null);
-                productDao.addProduct(product);
+                productDao.save(product);
             case 2:
                 List<ProductCategories> productCategories = productDao.findProductCategories();
                 for (ProductCategories p : productCategories) {

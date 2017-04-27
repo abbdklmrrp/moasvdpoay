@@ -3,23 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nc.nut.dao.interfaces;
+package nc.nut.dao.complaint;
 
 
-import nc.nut.dao.entity.Complaint;
+import nc.nut.dao.interfaces.Dao;
 
 import java.util.List;
 
 /**
  * @author Alistratenko Nikita
  */
-public interface ComplaintDAO {
-
-    boolean save(Complaint complaint);
-
-    boolean delete(Complaint complaint);
-
-    Complaint getById(int id);
+public interface ComplaintDAO extends Dao<Complaint> {
 
     List<Complaint> getByCSRId(int id);
 

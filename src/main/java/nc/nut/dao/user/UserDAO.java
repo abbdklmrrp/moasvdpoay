@@ -1,20 +1,14 @@
 package nc.nut.dao.user;
 
+import nc.nut.dao.interfaces.Dao;
+
 import java.util.List;
 
 /**
  * Created by Rysakova Anna on 20.04.2017.
  */
-public interface UserDAO {
+public interface UserDAO extends Dao<User> {
     User findByUsername(String username);
-
-    boolean save(User user);
-
-    // false if not found
-    boolean delete(int id);
-
-    // null if not found
-    User get(int id);
 
     List<User> getAll();
 
