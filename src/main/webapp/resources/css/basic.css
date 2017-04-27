@@ -20,6 +20,12 @@ h2 {
     font-family: icon;
 }
 
+h6 {
+    color: #9D8E79;
+    text-align: left;
+    font-family: icon;
+}
+
 a {
     color: #10CE88;
     text-align: center;
