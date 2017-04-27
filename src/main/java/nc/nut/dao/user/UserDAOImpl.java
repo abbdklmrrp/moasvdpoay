@@ -1,4 +1,4 @@
-package nc.nut.user;
+package nc.nut.dao.user;
 
 import nc.nut.mail.Mailer;
 import nc.nut.security.Md5PasswordEncoder;

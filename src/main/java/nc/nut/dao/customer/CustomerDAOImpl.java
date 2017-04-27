@@ -1,4 +1,4 @@
-package nc.nut.customer;
+package nc.nut.dao.customer;
 
 import nc.nut.security.Md5PasswordEncoder;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

@@ -1,9 +1,9 @@
-package nc.nut.user;
+package nc.nut.dao.user;
 
 import java.util.List;
 
 /**
- * Created by Anna on 20.04.2017.
+ * Created by Rysakova Anna on 20.04.2017.
  */
 public interface UserDAO {
     User findByUsername(String username);

@@ -1,8 +1,8 @@
-package nc.nut.product;
+package nc.nut.dao.product;
 
+import nc.nut.dao.user.User;
+import nc.nut.dao.user.UserDAO;
 import nc.nut.mail.Mailer;
-import nc.nut.user.User;
-import nc.nut.user.UserDAO;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by Anna on 23.04.2017.
+ * Created by Rysakova Anna on 23.04.2017.
  */
 @Service
 public class ProductDaoImpl implements ProductDao {

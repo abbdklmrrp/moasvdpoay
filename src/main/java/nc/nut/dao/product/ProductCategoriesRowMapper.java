@@ -1,4 +1,4 @@
-package nc.nut.product;
+package nc.nut.dao.product;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by Anna on 24.04.2017.
+ * Created by Rysakova Anna on 24.04.2017.
  */
 @Component
 class ProductCategoriesRowMapper implements RowMapper<ProductCategories> {

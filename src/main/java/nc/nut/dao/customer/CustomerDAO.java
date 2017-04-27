@@ -1,4 +1,4 @@
-package nc.nut.customer;
+package nc.nut.dao.customer;
 
 /**
  * @author Moiseienko Petro

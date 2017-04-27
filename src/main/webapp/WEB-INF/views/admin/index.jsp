@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by Rysakova Anna.
 --%>
@@ -10,7 +11,7 @@
     <title>ADMIN</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <link href="<c:url value="/resources/css/basic.css"/>" rel="stylesheet"/>
 
 </head>
 <body>
