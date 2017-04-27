@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Anna on 23.04.2017.
@@ -24,7 +23,7 @@ public class ProductController {
     @Resource
     private ProductDao productDao;
 
-    @RequestMapping(value = {"save"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"addProduct"}, method = RequestMethod.GET)
     ModelAndView addProduct(ModelAndView mav) {
 
         List<ProductTypes> productTypes = productDao.findProductTypes();
@@ -40,11 +39,12 @@ public class ProductController {
     }
 
     //TODO: add modelAttribute, fix "typeId"
-    @RequestMapping(value = {"save"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"addProduct"}, method = RequestMethod.POST)
     String createProduct(
-            @RequestParam(value = "productCategories") String category,
+            @RequestParam(value = "productCategories") Integer categoryId,
             @RequestParam(value = "duration") int duration,
-            @RequestParam(value = "productTypes") String type,
+            @RequestParam(value = "productTypes") int typeId,
+//            @RequestParam(value = "other_reason") int other_reason,
             @RequestParam(value = "needProcessing") int needProcessing,
             @RequestParam(value = "name") String name,
             @RequestParam(value = "description") String description,
@@ -52,11 +52,11 @@ public class ProductController {
     ) {
 
         Product product = new Product();
-        if (Objects.equals(type, "service")) {
-//            product.setCategoryId(categoryId);
+        if (typeId == 2) {
+            product.setCategoryId(categoryId);
         }
         product.setDurationInDays(duration);
-//        product.setTypeId(typeId);
+        product.setTypeId(typeId);
         product.setNeedProcessing(needProcessing);
         product.setName(name);
         product.setDescription(description);
