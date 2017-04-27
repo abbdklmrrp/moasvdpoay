@@ -1,6 +1,7 @@
 package nc.nut.controller;
 
 import nc.nut.TestGraphStatisticData;
+import nc.nut.dao.complaint.ComplaintDAO;
 import nc.nut.dao.place.Place;
 import nc.nut.dao.place.PlaceDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 public class GraphController {
     @Autowired
     private PlaceDAO placeDAO;
+    @Autowired
+    private ComplaintDAO complaintDAO;
 
     @RequestMapping
     public String graph(Model model) {

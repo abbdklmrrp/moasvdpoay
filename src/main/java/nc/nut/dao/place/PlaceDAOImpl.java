@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Repository
 public class PlaceDAOImpl implements PlaceDAO {
-    private static String GET_ALL = "SELECT id, parent_id, name FROM Places";
+    private final static String GET_ALL = "SELECT id, parent_id, name FROM Places";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
