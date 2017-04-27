@@ -1,8 +1,8 @@
 package nc.nut.web;
 
+import nc.nut.dao.user.User;
+import nc.nut.dao.user.UserDAO;
 import nc.nut.googleMaps.ServiceGoogleMaps;
-import nc.nut.user.User;
-import nc.nut.user.UserDAO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

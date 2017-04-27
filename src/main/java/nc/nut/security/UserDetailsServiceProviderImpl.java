@@ -1,7 +1,6 @@
 package nc.nut.security;
 
-import com.google.common.base.Preconditions;
-import nc.nut.user.UserDAO;
+import nc.nut.dao.user.UserDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Rysakova Anna
@@ -26,23 +26,24 @@ public class UserDetailsServiceProviderImpl implements UserDetailsServiceProvide
 
     @Override
     public UserDetails provide(String username) throws UsernameNotFoundException {
-        Preconditions.checkArgument(username != null && !username.isEmpty());
+        if (Objects.nonNull(username)) {
+            logger.info("Providing user details for {}", username);
 
-        logger.info("Providing user details for {}", username);
+            nc.nut.dao.user.User findUser = userDAO.findByUsername(username);
 
-        nc.nut.user.User findUser = userDAO.findByUsername(username);
+            if (findUser == null) {
+                return null;
+            }
 
-        if (findUser == null) {
-            return null;
+            List<GrantedAuthority> auth = AuthorityUtils.createAuthorityList(findUser.getAuthority());
+
+            User user = new User(username, findUser.getPassword(), auth);
+
+            logger.info("Something found for {}", username);
+
+            return user;
         }
-
-        List<GrantedAuthority> auth = AuthorityUtils.createAuthorityList(findUser.getAuthorities());
-
-        User user = new User(username, findUser.getPassword(), auth);
-
-        logger.info("Something found for {}", username);
-
-        return user;
+        return null;
     }
 
 }

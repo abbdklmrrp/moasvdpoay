@@ -1,0 +1,13 @@
+CREATE OR REPLACE VIEW Product AS
+  SELECT
+    p.ID,
+    t.NAME type,
+    c.NAME category,
+    p.NAME,
+    p.DURATION,
+    p.NEED_PROCESSING,
+    p.DESCRIPTION,
+    p.STATUS
+  FROM PRODUCTS p
+    JOIN PRODUCT_TYPES t ON (p.TYPE_ID = t.ID)
+    JOIN PRODUCT_CATEGORIES c ON (p.CATEGORY_ID = c.ID);
