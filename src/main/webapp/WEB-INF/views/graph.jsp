@@ -21,7 +21,7 @@
     <label>Choose region:
         <select id="sel1" name="region">
             <c:forEach var="region" items="${regions}">
-                <option value="${region}">${region}</option>
+                <option value="${region.id}">${region.name}</option>
             </c:forEach>
         </select>
     </label>

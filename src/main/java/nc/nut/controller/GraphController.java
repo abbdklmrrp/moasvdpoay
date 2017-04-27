@@ -1,6 +1,9 @@
 package nc.nut.controller;
 
 import nc.nut.TestGraphStatisticData;
+import nc.nut.dao.place.Place;
+import nc.nut.dao.place.PlaceDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,16 +21,13 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping(value = "graph")
 public class GraphController {
+    @Autowired
+    private PlaceDAO placeDAO;
 
     @RequestMapping
     public String graph(Model model) {
-        List<String> regions = new ArrayList<>();
-        regions.add("Kiev");
-        regions.add("Chernigov");
-        regions.add("Vinnitsa");
-        regions.add("Lviv");
-        regions.add("Odessa");
-        model.addAttribute("regions", regions.stream().sorted().collect(Collectors.toList()));
+        List<Place> regions = placeDAO.getAll();
+        model.addAttribute("regions", regions);
         return "graph";
     }
 
