@@ -3,7 +3,7 @@ package nc.nut.controller.product;
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductCategories;
 import nc.nut.dao.product.ProductDao;
-import nc.nut.dao.product.ProductTypes;
+import nc.nut.services.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,33 +18,33 @@ import java.util.List;
  */
 @Controller
 @RequestMapping({"admin"})
-public class ProductController {
+public class ServiceController {
 
     @Resource
     private ProductDao productDao;
+    @Resource
+    private ProductService productService;
 
-    @RequestMapping(value = {"addProduct"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"addService"}, method = RequestMethod.GET)
     ModelAndView addProduct(ModelAndView mav) {
 
-        List<ProductTypes> productTypes = productDao.findProductTypes();
         List<ProductCategories> productCategories = productDao.findProductCategories();
 
-        mav.addObject("productTypes", productTypes);
         mav.addObject("productCategories", productCategories);
         mav.addObject("product", new Product());
 
-        mav.setViewName("admin/addProduct");
+        mav.setViewName("admin/addService");
 
         return mav;
     }
 
-    //TODO: add modelAttribute, fix "typeId"
-    @RequestMapping(value = {"addProduct"}, method = RequestMethod.POST)
+    //TODO: add modelAttribute
+    @RequestMapping(value = {"addService"}, method = RequestMethod.POST)
     String createProduct(
-            @RequestParam(value = "productCategories") Integer categoryId,
+            @RequestParam(value = "productCategories") int categoryId,
             @RequestParam(value = "duration") int duration,
-            @RequestParam(value = "productTypes") int typeId,
-//            @RequestParam(value = "other_reason") int other_reason,
+            @RequestParam(value = "newCategory") String newCategory,
+            @RequestParam(value = "newCategoryDesc") String newCategoryDesc,
             @RequestParam(value = "needProcessing") int needProcessing,
             @RequestParam(value = "name") String name,
             @RequestParam(value = "description") String description,
@@ -52,17 +52,16 @@ public class ProductController {
     ) {
 
         Product product = new Product();
-        if (typeId == 2) {
-            product.setCategoryId(categoryId);
-        }
+        int newCategoryId = productService.checkCategory(newCategory, newCategoryDesc);
+        int checkCategory = productService.ckeckIdCategory(categoryId, newCategoryId);
+        product.setCategoryId(checkCategory);
         product.setDurationInDays(duration);
-        product.setTypeId(typeId);
         product.setNeedProcessing(needProcessing);
         product.setName(name);
         product.setDescription(description);
         product.setStatus(status);
 
-        productDao.save(product);
+        productService.saveProduct(product);
 
         return "admin/index";
     }

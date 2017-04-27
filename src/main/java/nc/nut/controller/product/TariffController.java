@@ -21,6 +21,34 @@ public class TariffController {
     @Resource
     private ProductDao productDao;
 
+    @RequestMapping(value = {"addTariff"}, method = RequestMethod.POST)
+    String addTariff() {
+        return "admin/addTariff";
+    }
+
+    //TODO: add modelAttribute
+    @RequestMapping(value = {"addTariff"}, method = RequestMethod.POST)
+    String createProduct(
+            @RequestParam(value = "duration") int duration,
+            @RequestParam(value = "needProcessing") int needProcessing,
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "description") String description,
+            @RequestParam(value = "status") int status
+    ) {
+
+        Product product = new Product();
+        product.setDurationInDays(duration);
+        product.setNeedProcessing(needProcessing);
+        product.setName(name);
+        product.setDescription(description);
+        product.setStatus(status);
+
+        productDao.save(product);
+
+        return "admin/index";
+    }
+
+    //TODO : fix List of Services
     @RequestMapping(value = {"identifyTariffService"}, method = RequestMethod.GET)
     String identifyTariffService(Model model) {
 
@@ -43,7 +71,7 @@ public class TariffController {
         return "admin/fillTariff";
     }
 
-    //TODO: add modelAttribute, check "typeId"
+    //TODO: add modelAttribute
     @RequestMapping(value = {"fillTariff"}, method = RequestMethod.POST)
     String identifyTariff(@RequestParam(value = "tariffs") int tariffs,
                           @RequestParam(value = "serviceWI") int serviceWI,
@@ -60,6 +88,7 @@ public class TariffController {
 
         return "admin/index";
     }
+
 
 }
 
