@@ -4,14 +4,14 @@ package nc.nut.dao.product;
  * Created by Rysakova Anna on 23.04.2017.
  */
 public class Product {
-    private int id;
+    private Integer id;
     private Integer categoryId;
-    private int durationInDays;
-    private int typeId;
-    private int needProcessing;
+    private Integer durationInDays;
+    private ProductType productType;
+    private Integer needProcessing;
     private String name;
     private String description;
-    private int status;
+    private Integer status;
 
     public Product() {
     }
@@ -40,12 +40,12 @@ public class Product {
         this.durationInDays = durationInDays;
     }
 
-    public int getTypeId() {
-        return typeId;
+    public ProductType getTypeId() {
+        return productType;
     }
 
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
+    public void setTypeId(ProductType typeId) {
+        this.productType = typeId;
     }
 
     public int getNeedProcessing() {

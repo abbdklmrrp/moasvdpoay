@@ -13,6 +13,7 @@
 <div align="center">
     user page!
     <a href="<%=request.getContextPath()%>/doLogout">Logout</a>
+    <a href="<%=request.getContextPath()%>/user/orderService">OrderService</a
 </div>
 </body>
 </html>

@@ -32,4 +32,21 @@ public interface ProductDao extends Dao<Product> {
     boolean addCategory(ProductCategories categories);
 
     List<ProductCategories> findIdCategory(ProductCategories categories);
+
+    /**
+     * Method returns all services that are available in place.
+     * created by Yuliya Pedash
+     * @param placeId id of place
+     * @return all available services
+     */
+    List<Product> getAllAvailableServicesByPlace(Integer placeId);
+
+    /**
+     *
+     * @param categoryId
+     * @return
+     */
+
+    ProductCategories getProductCategoryById(Integer categoryId);
+
 }

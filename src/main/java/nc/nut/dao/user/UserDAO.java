@@ -17,4 +17,7 @@ public interface UserDAO extends Dao<User> {
     Integer findRole(String name);
 
     Integer findPlaceId(String name);
+
+    User findByEmail(String email);
+
 }

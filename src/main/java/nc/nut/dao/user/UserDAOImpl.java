@@ -20,8 +20,21 @@ public class UserDAOImpl implements UserDAO {
     private final static String SAVE_USER = "INSERT INTO USERS(NAME,SURNAME,EMAIL,PHONE,PASSWORD,ADDRESS,ROLE_ID,PLACE_ID,CUSTOMER_ID,ENABLE) " +
             "VALUES(:name,:surname,:email,:phone,:password, :address, :roleId, :placeId, :customerId, :enable)";
     private final static String FIND_PLACE_ID = "SELECT ID FROM PLACES WHERE NAME=:place";
-    private final static String FIND_BY_EMAIL = "SElECT EMAIL FROM USERS WHERE EMAIL=:email";
+    private final static String FIND_BY_EMAIL = "SELECT EMAIL FROM USERS WHERE EMAIL=:email";
     private final static String FIND_ALL_CLIENTS = "SELECT EMAIL,NAME FROM USERS WHERE ENABLE=1 AND CUSTOMER_ID IS NOT NULL";
+    private final static String SELECT_USER_BY_EMAIL_SQL = "SELECT" +
+            "  USERS.ID," +
+            "  USERS.NAME," +
+            "  USERS.SURNAME," +
+            "  USERS.EMAIL," +
+            "  USERS.PHONE," +
+            "  USERS.PASSWORD," +
+            "  USERS.ADDRESS," +
+            "  USERS.ROLE_ID," +
+            "  USERS.PLACE_ID," +
+            "  USERS.CUSTOMER_ID" +
+            "    FROM USERS" +
+            "  WHERE EMAIL=:email";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -137,5 +150,19 @@ public class UserDAOImpl implements UserDAO {
             return rs.getString("EMAIL");
         });
         return users.isEmpty();
+    }
+
+    /**
+     * This method finds user by his email
+     * created by Yuliya Pedash
+     *
+     * @param email email of user
+     * @return found user
+     */
+    @Override
+    public User findByEmail(String email) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("email", email);
+        return jdbcTemplate.queryForObject(SELECT_USER_BY_EMAIL_SQL, params, new UserRowMapper());
     }
 }

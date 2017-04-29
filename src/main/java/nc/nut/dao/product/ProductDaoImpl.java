@@ -36,7 +36,20 @@ public class ProductDaoImpl implements ProductDao {
     private final static String ADD_PRODUCT = "INSERT INTO PRODUCTS(TYPE_ID,CATEGORY_ID,NAME,DURATION," +
             "NEED_PROCESSING,DESCRIPTION,STATUS) VALUES(:typeId,:categoryId,:nameProduct,:duration," +
             ":needProcessing,:description,:status)";
-
+    private final static String SELECT_SERVICES_BY_PLACE_SQL ="SELECT\n" +
+            "  PRODUCTS.ID,\n" +
+            "  PRODUCTS.TYPE_ID,\n" +
+            "  PRODUCTS.CATEGORY_ID,\n" +
+            "  PRODUCTS.NAME,\n" +
+            "  PRODUCTS.DURATION,\n" +
+            "  PRODUCTS.NEED_PROCESSING,\n" +
+            "  PRODUCTS.STATUS,\n" +
+            "PRODUCTS.DESCRIPTION "+
+            "FROM PRODUCTS\n" +
+            "  JOIN PRICES ON PRICES.PRODUCT_ID =  products.ID\n" +
+            "WHERE PRICES.PLACE_ID = :place_id AND PRODUCTS.STATUS = 1 /*active status id*/ AND PRODUCTS.TYPE_ID = 2 /*service id*/";
+    private final static String SELECT_PRODUCT_CATEGORY_BY_ID_SQL = "SELECT ID, NAME, DESCRIPTION FROM PRODUCT_CATEGORIES\n" +
+            "WHERE ID = :id";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Resource
@@ -122,7 +135,15 @@ public class ProductDaoImpl implements ProductDao {
             Product product = new Product();
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setId(rs.getInt("ID"));
-            product.setTypeId(rs.getInt("TYPE_ID"));
+            Integer productType = rs.getInt("type_id");
+            switch (productType){
+                case(1):
+                    product.setTypeId(ProductType.Tariff);
+                    break;
+                case(2):
+                    product.setTypeId(ProductType.Service);
+                    break;
+            }
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
@@ -138,7 +159,15 @@ public class ProductDaoImpl implements ProductDao {
         List<Product> tariffs = jdbcTemplate.query(FIND_ALL_FREE_TARIFFS, (rs, rowNum) -> {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
-            product.setTypeId(rs.getInt("TYPE_ID"));
+            Integer productType = rs.getInt("type_id");
+            switch (productType){
+                case(1):
+                    product.setTypeId(ProductType.Tariff);
+                    break;
+                case(2):
+                    product.setTypeId(ProductType.Service);
+                    break;
+            }
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
@@ -176,5 +205,18 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public boolean update(Product product) {
         return false;
+    }
+    @Override
+    public List<Product> getAllAvailableServicesByPlace(Integer placeId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("place_id", placeId);
+        return jdbcTemplate.query(SELECT_SERVICES_BY_PLACE_SQL, params, new ProductRowMapper());
+    }
+
+    @Override
+    public ProductCategories getProductCategoryById(Integer categoryId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", categoryId);
+        return jdbcTemplate.queryForObject(SELECT_PRODUCT_CATEGORY_BY_ID_SQL, params, new ProductCategoriesRowMapper());
     }
 }
