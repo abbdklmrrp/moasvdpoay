@@ -50,6 +50,26 @@ public class ProductDaoImpl implements ProductDao {
             "WHERE PRICES.PLACE_ID = :place_id AND PRODUCTS.STATUS = 1 /*active status id*/ AND PRODUCTS.TYPE_ID = 2 /*service id*/";
     private final static String SELECT_PRODUCT_CATEGORY_BY_ID_SQL = "SELECT ID, NAME, DESCRIPTION FROM PRODUCT_CATEGORIES\n" +
             "WHERE ID = :id";
+    private final static String GET_CURRENT_USER_TARIFF_BY_USER_ID_SQL = "SELECT " +
+            "id, " +
+            "category_id, " +
+            "duration, " +
+            "type_id, " +
+            "need_processing, " +
+            "name, " +
+            "description, " +
+            "status FROM Products " +
+            "WHERE id = (SELECT product_id FROM Orders WHERE user_id = :userId AND current_status_id = 1/* id = 1 - active status */)";
+    private final static String GET_TARIFFS_BY_PLACE_SQL = "SELECT " +
+            "id, " +
+            "category_id, " +
+            "duration, " +
+            "type_id, " +
+            "need_processing, " +
+            "name, " +
+            "description, " +
+            "status FROM Products " +
+            "WHERE id IN (SELECT place_id FROM Prices WHERE product_id = :placeId) AND type_id = 1/*id = 1 - Tariff*/";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Resource
@@ -218,5 +238,31 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", categoryId);
         return jdbcTemplate.queryForObject(SELECT_PRODUCT_CATEGORY_BY_ID_SQL, params, new ProductCategoriesRowMapper());
+    }
+
+    /**
+     * Method returns current user`s tariff. If user hasn`t got tariff, method returns null.
+     *
+     * @param userId user Id.
+     * @return current user`s tariff.
+     */
+    @Override
+    public Product getCurrentUserTariff(Integer userId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", userId);
+        return jdbcTemplate.queryForObject(GET_CURRENT_USER_TARIFF_BY_USER_ID_SQL, params, new ProductRowMapper());
+    }
+
+    /**
+     * Method returns all tariffs are available in place with id from params. If there are no tariffs in this place, method returns empty list.
+     *
+     * @param placeId id of place.
+     * @return list of tariffs.
+     */
+    @Override
+    public List<Product> getAvailableTariffsByPlace(Integer placeId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("placeId", placeId);
+        return jdbcTemplate.query(GET_TARIFFS_BY_PLACE_SQL, params, new ProductRowMapper());
     }
 }
