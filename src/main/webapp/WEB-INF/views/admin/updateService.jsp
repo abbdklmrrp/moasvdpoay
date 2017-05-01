@@ -21,9 +21,9 @@
     <%--<script src="<c:url value="/resources/js/serviceTariff.js"/>"></script>--%>
 </head>
 <body>
-<form method="POST" modelAttribute="product" action="<%=request.getContextPath()%>/admin/addService">
+<form method="POST" modelAttribute="product" action="<%=request.getContextPath()%>/admin/updateService">
     <div class="login-form">
-        <h1>ENTER NEW PRODUCT</h1><br>
+        <%--<h1>SELECT PRODUCT</h1><br>--%>
 
         <%--<h6>Select product type</h6>--%>
         <%--<div class="form-group ">--%>
@@ -34,48 +34,28 @@
         <%--</select>--%>
         <%--</div>--%>
 
-        <c:if test="${not empty error}">
-            <span style="float:right ; color: #10CE88;">${error}</span>
-        </c:if>
 
-        <div id='categoryId'>
-            <div class="form-group ">
-                <h6>Select category</h6>
-                <select name="categoryId" class="form-control">
-                    <c:forEach var="category" items="${productCategories}">
-                        <option value="${category.id}">${category.name}</option>
-                    </c:forEach>
-                    <option value="">New category</option>
-                </select>
-            </div>
-        </div>
+        <%--<div id="serviceId">--%>
+        <%--<div class="form-group ">--%>
+        <%--<h6>Select product</h6>--%>
+        <%--<select name="id" class="form-control" >--%>
+        <%--<c:forEach var="service" items="${allServices}">--%>
+        <%--<option value="${service.id}">${service.name}</option>--%>
+        <%--</c:forEach>--%>
+        <%--</select>--%>
+        <%--</div>--%>
+        <%--</div>--%>
 
-        <div id="newCategory">
-            <div class="form-group ">
-                <h6>Enter new category</h6>
-                <input type="text" class="form-control" placeholder="New category " name="newCategory">
-                <i class="fa fa-user"></i>
-            </div>
-        </div>
-
-        <div id="newCategoryDesc">
-            <div class="form-group ">
-                <h6>Enter new category description</h6>
-                <input type="text" class="form-control" placeholder="New category description "
-                       name="newCategoryDesc">
-                <i class="fa fa-user"></i>
-            </div>
-        </div>
-
+        <h1>Fill or leave empty</h1>
         <div class="form-group ">
-            <h6>Enter name</h6>
-            <input type="text" class="form-control" placeholder="Name " id="Name" name="name">
+            <h6>Enter new name</h6>
+            <input type="text" class="form-control" placeholder="New name " id="Name" name="name">
             <i class="fa fa-user"></i>
         </div>
 
         <div class="form-group ">
             <h6>Enter description</h6>
-            <input type="text" class="form-control" placeholder="Description " id="Description" name="description">
+            <input type="text" class="form-control" placeholder="New description " id="Description" name="description">
             <i class="fa fa-user"></i>
         </div>
 

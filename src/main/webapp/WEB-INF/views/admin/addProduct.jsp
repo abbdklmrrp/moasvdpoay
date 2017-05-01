@@ -14,14 +14,14 @@
     <link href="<c:url value="/resources/css/basic.css"/>" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-        google.load("jquery", "1.4.4");
-    </script>
-    <script src="<c:url value="/resources/js/newCategoryService.js"/>"></script>
+    <%--<script type="text/javascript">--%>
+    <%--google.load("jquery", "1.4.4");--%>
+    <%--</script>--%>
+    <%--<script src="<c:url value="/resources/js/newCategoryService.js"/>"></script>--%>
     <%--<script src="<c:url value="/resources/js/serviceTariff.js"/>"></script>--%>
 </head>
 <body>
-<form method="POST" modelAttribute="product" action="<%=request.getContextPath()%>/admin/addService">
+<form method="POST" modelAttribute="product" action="<%=request.getContextPath()%>/admin/addProduct">
     <div class="login-form">
         <h1>ENTER NEW PRODUCT</h1><br>
 
@@ -38,34 +38,34 @@
             <span style="float:right ; color: #10CE88;">${error}</span>
         </c:if>
 
-        <div id='categoryId'>
-            <div class="form-group ">
-                <h6>Select category</h6>
-                <select name="categoryId" class="form-control">
-                    <c:forEach var="category" items="${productCategories}">
-                        <option value="${category.id}">${category.name}</option>
-                    </c:forEach>
-                    <option value="">New category</option>
-                </select>
-            </div>
-        </div>
+        <%--<div id='Block1' style='display: none;'>--%>
+        <%--<div class="form-group ">--%>
+        <%--<h6>Select category</h6>--%>
+        <%--<select name="categoryId" class="form-control" >--%>
+        <%--<c:forEach var="category" items="${productCategories}">--%>
+        <%--<option value="${category.id}">${category.name}</option>--%>
+        <%--</c:forEach>--%>
+        <%--<option value="">New category</option>--%>
+        <%--</select>--%>
+        <%--</div>--%>
+        <%--</div>--%>
 
-        <div id="newCategory">
-            <div class="form-group ">
-                <h6>Enter new category</h6>
-                <input type="text" class="form-control" placeholder="New category " name="newCategory">
-                <i class="fa fa-user"></i>
-            </div>
-        </div>
+        <%--<div id="newCategory">--%>
+        <%--<div class="form-group ">--%>
+        <%--<h6>Enter new category</h6>--%>
+        <%--<input type="text" class="form-control" placeholder="New category " name="newCategory">--%>
+        <%--<i class="fa fa-user"></i>--%>
+        <%--</div>--%>
+        <%--</div>--%>
 
-        <div id="newCategoryDesc">
-            <div class="form-group ">
-                <h6>Enter new category description</h6>
-                <input type="text" class="form-control" placeholder="New category description "
-                       name="newCategoryDesc">
-                <i class="fa fa-user"></i>
-            </div>
-        </div>
+        <%--<div id="newCategoryDesc">--%>
+        <%--<div class="form-group ">--%>
+        <%--<h6>Enter new category description</h6>--%>
+        <%--<input type="text" class="form-control" placeholder="New category description "--%>
+        <%--name="newCategoryDesc">--%>
+        <%--<i class="fa fa-user"></i>--%>
+        <%--</div>--%>
+        <%--</div>--%>
 
         <div class="form-group ">
             <h6>Enter name</h6>

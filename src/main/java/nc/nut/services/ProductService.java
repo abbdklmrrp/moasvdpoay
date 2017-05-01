@@ -8,6 +8,7 @@ import nc.nut.dao.price.PriceDao;
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductCategories;
 import nc.nut.dao.product.ProductDao;
+import nc.nut.dao.product.ProductType;
 import nc.nut.dao.user.User;
 import nc.nut.utils.ProductCatalogRow;
 import org.springframework.stereotype.Service;
@@ -22,39 +23,90 @@ import java.util.*;
 public class ProductService {
 
     @Resource
+    nc.nut.dao.order.OrderDao orderDao;
+    @Resource
     private ProductDao productDao;
     @Resource
     private PriceDao priceDao;
-    @Resource
-    nc.nut.dao.order.OrderDao orderDao;
 
-    //TODO validator -- uniq
-    public int getCategory(String name, String description) {
-        if (Objects.nonNull(name)) {
-            ProductCategories category = new ProductCategories();
-            category.setName(name);
-            category.setDescription(description);
-
-            List<ProductCategories> productCategories = productDao.findProductCategories();
-            int idCategory = 0;
-            for (ProductCategories pc : productCategories) {
-                if (Objects.equals(pc.getName().trim().toUpperCase(), name.trim().toUpperCase())) {
-                    idCategory = pc.getId();
-                } else {
-                    productDao.addCategory(category);
-                    idCategory = productDao.findIdCategory(category).get(0).getId();
-                }
-            }
-            return idCategory;
+    public Product getCategory(ProductCategories category, Product product) {
+        if (!category.getName().equals("")) {
+            productDao.addCategory(category);
+            int newCategoryId = productDao.findIdCategory(category);
+            product.setCategoryId(newCategoryId);
         }
-        return 0;
+        return product;
     }
 
-    public int checkIdCategory(int categoryID, int newCategory) {
-        if ((newCategory != 0) & (categoryID != newCategory)) {
-            return newCategory;
+    public void saveProduct(Product product) {
+        if (Objects.equals(product.getProductType(), ProductType.Tariff)) {
+            product.setCategoryId(null);
+            productDao.save(product);
         }
-        return categoryID;
+        if (Objects.equals(product.getProductType(), ProductType.Service)) {
+            productDao.save(product);
+        }
+    }
+
+    public void fillTariff(String service, int idTariff) {
+        String[] arr = service.split(",");
+        for (String a : arr) {
+            productDao.fillTariff(idTariff, Integer.parseInt(a));
+        }
+
+    }
+
+    public void updateFillTariff(String service, Product product) {
+        List<Product> oldServiceList = productDao.getServicesByTariff(product);
+        ArrayList<Integer> oldServiceIdList = new ArrayList<>();
+        for (Product p : oldServiceList) {
+            oldServiceIdList.add(p.getId());
+        }
+        String[] arr = service.split(",");
+        List newServiceList = Arrays.asList(arr);
+        oldServiceIdList.removeAll(newServiceList);
+        removeServiceFromTariff(oldServiceIdList, product);
+    }
+
+    public void updateTariffWithNewServices(String service, Product product) {
+        List<Product> oldServiceList = productDao.getServicesByTariff(product);
+        ArrayList<Integer> oldServiceIdList = new ArrayList<>();
+        for (Product p : oldServiceList) {
+            oldServiceIdList.add(p.getId());
+        }
+        String[] arr = service.split(",");
+        List newServiceList = Arrays.asList(arr);
+        newServiceList.removeAll(oldServiceIdList);
+        for (Object i : newServiceList) {
+            fillTariff((String) i, product.getId());
+        }
+    }
+
+    public void removeServiceFromTariff(List serviceIdList, Product product) {
+        for (Object s : serviceIdList) {
+            productDao.deleteServiceFromTariff(product.getId(), (Integer) s);
+        }
+    }
+
+    public void updateProduct(Product updateProduct) {
+        int productId = updateProduct.getId();
+        Product product = productDao.getById(productId);
+        if (!updateProduct.getName().equals("") & !updateProduct.getName().equals(product.getName())) {
+            product.setName(updateProduct.getName());
+        }
+        if (!updateProduct.getDescription().equals("") & !updateProduct.getDescription().equals(product.getDescription())) {
+            product.setDescription(updateProduct.getDescription());
+        }
+        if (updateProduct.getDurationInDays() != product.getDurationInDays()) {
+            product.setDurationInDays(updateProduct.getDurationInDays());
+        }
+        if (updateProduct.getNeedProcessing() != product.getNeedProcessing()) {
+            product.setNeedProcessing(updateProduct.getNeedProcessing());
+        }
+        if (updateProduct.getStatus() != product.getStatus()) {
+            product.setStatus(updateProduct.getStatus());
+        }
+        productDao.update(product);
     }
 
 

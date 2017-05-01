@@ -9,7 +9,7 @@ public class Product {
     private Integer id;
     private Integer categoryId;
     private Integer durationInDays;
-    private Integer productType;
+    private ProductType productType;
     private Integer needProcessing;
     private String name;
     private String description;
@@ -19,11 +19,11 @@ public class Product {
     public Product() {
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -35,27 +35,27 @@ public class Product {
         this.categoryId = categoryId;
     }
 
-    public Integer getDurationInDays() {
+    public int getDurationInDays() {
         return durationInDays;
     }
 
-    public void setDurationInDays(Integer durationInDays) {
+    public void setDurationInDays(int durationInDays) {
         this.durationInDays = durationInDays;
     }
 
-    public Integer getProductType() {
+    public ProductType getProductType() {
         return productType;
     }
 
-    public void setProductType(Integer productType) {
-        this.productType = productType;
+    public void setProductType(ProductType typeId) {
+        this.productType = typeId;
     }
 
-    public Integer getNeedProcessing() {
+    public int getNeedProcessing() {
         return needProcessing;
     }
 
-    public void setNeedProcessing(Integer needProcessing) {
+    public void setNeedProcessing(int needProcessing) {
         this.needProcessing = needProcessing;
     }
 
@@ -75,11 +75,11 @@ public class Product {
         this.description = description;
     }
 
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -90,6 +90,4 @@ public class Product {
     public void setBasePrice(BigDecimal basePrice) {
         this.basePrice = basePrice;
     }
-
-
 }

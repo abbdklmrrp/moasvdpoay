@@ -7,7 +7,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Rysakova Anna on 23.04.2017.
@@ -21,11 +24,29 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_SERVICES = "SELECT * FROM PRODUCTS WHERE TYPE_ID=2 ORDER BY ID";
     private final static String FIND_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 ORDER BY ID";
 
+    private final static String FIND_ALL_PRODUCTS = "SELECT ID,TYPE_ID,CATEGORY_ID,NAME,DURATION," +
+            "NEED_PROCESSING,DESCRIPTION,STATUS FROM PRODUCTS ORDER BY ID";
+
+    private final static String FIND_SERVICES_BY_TARIFF = "SELECT p.ID,p.CATEGORY_ID,p.NAME,p.DURATION,p.NEED_PROCESSING,p.DESCRIPTION,p.STATUS " +
+            "FROM PRODUCTS p JOIN TARIFF_SERVICES ts ON (p.ID=ts.SERVICE_ID) WHERE ts.TARIFF_ID=:tariffId";
+
     private final static String FIND_ALL_SERVICES = "SELECT prod.ID, prod.NAME, prod.DESCRIPTION,prod.DURATION,prod.NEED_PROCESSING,\n" +
             "prod.TYPE_ID,prod.CATEGORY_ID\n" +
             "FROM PRODUCTS prod JOIN PRODUCT_TYPES pTypes ON (prod.TYPE_ID=pTypes.ID)\n" +
             "JOIN PRODUCT_CATEGORIES pCategories ON (prod.CATEGORY_ID=pCategories.ID)\n" +
             "WHERE prod.STATUS=1 AND pTypes.name='Service' AND pCategories.name=:categoryName";
+
+    private final static String FIND_SERVICES_NOT_IN_TARIFF = "SELECT p.ID,p.CATEGORY_ID,p.NAME,p.DURATION,p.NEED_PROCESSING,p.DESCRIPTION,p.STATUS " +
+            "FROM PRODUCTS p" +
+            " WHERE p.ID NOT IN " +
+            "                  (SELECT ts.SERVICE_ID FROM TARIFF_SERVICES ts  " +
+            "                  WHERE ts.TARIFF_ID=:tariffId) AND p.TYPE_ID=2";
+
+    private final static String FIND_ALL_SERVICES_WITH_CATEGORY = "SELECT prod.ID, prod.NAME, prod.DESCRIPTION,prod.DURATION,prod.NEED_PROCESSING,\n" +
+            "prod.TYPE_ID,prod.CATEGORY_ID, pCategories.NAME as Category\n" +
+            "FROM PRODUCTS prod JOIN PRODUCT_TYPES pTypes ON (prod.TYPE_ID=pTypes.ID)\n" +
+            "JOIN PRODUCT_CATEGORIES pCategories ON (prod.CATEGORY_ID=pCategories.ID)\n" +
+            "WHERE prod.STATUS=1 AND pTypes.name='Service'";
 
     private final static String FIND_ALL_FREE_TARIFFS = "SELECT * FROM PRODUCTS p join PRODUCT_TYPES ptype ON(p.TYPE_ID=ptype.ID)\n" +
             "    LEFT JOIN TARIFF_SERVICES ts ON(p.ID=ts.TARIFF_ID)\n" +
@@ -72,12 +93,14 @@ public class ProductDaoImpl implements ProductDao {
             "description, " +
             "status FROM Products " +
             "WHERE id IN (SELECT place_id FROM Prices WHERE product_id = :placeId) AND type_id = 1/*id = 1 - Tariff*/";
+
+    private final static String DELETE_SERVICE_FROM_TARIFF = "DELETE FROM TARIFF_SERVICES " +
+            "WHERE TARIFF_ID=:idTariff AND SERVICE_ID=:idService ";
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Resource
     private ProductCategoriesRowMapper categoriesRowMapper;
-    @Resource
-    private ProductTypesRowMapper typesRowMapper;
     @Resource
     private ProductRowMapper productRowMapper;
     @Resource
@@ -137,15 +160,24 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<ProductCategories> findIdCategory(ProductCategories categories) {
-        List<ProductCategories> categoriesList = jdbcTemplate.query(FIND_CATEGORY, categoriesRowMapper);
-        return categoriesList;
+    public int findIdCategory(ProductCategories categories) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", categories.getName());
+        List<ProductCategories> categoriesList = jdbcTemplate.query(FIND_CATEGORY, params, (rs, rowNum) -> {
+            ProductCategories productCategories = new ProductCategories();
+            productCategories.setId(rs.getInt("ID"));
+            return productCategories;
+        });
+        return categoriesList.get(0).getId();
     }
 
     @Override
-    public List<ProductTypes> findProductTypes() {
-        List<ProductTypes> productTypes = jdbcTemplate.query(FIND_TYPES, typesRowMapper);
-        return productTypes;
+    public List<String> findProductTypes() {
+        List<String> tariffs = jdbcTemplate.query(FIND_TYPES, (rs, rowNum) -> {
+            String type = rs.getString("NAME");
+            return type;
+        });
+        return tariffs;
     }
 
     //TODO почему бы не использовать внешний класс ProductRowMapper?
@@ -157,8 +189,15 @@ public class ProductDaoImpl implements ProductDao {
             Product product = new Product();
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setId(rs.getInt("ID"));
-            Integer productType = rs.getInt("type_id");
-            product.setProductType(rs.getInt("type_id"));
+            Integer typeId = rs.getInt("TYPE_ID");
+            switch (typeId) {
+                case 1:
+                    product.setProductType(ProductType.Tariff);
+                    break;
+                case 2:
+                    product.setProductType(ProductType.Service);
+                    break;
+            }
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
@@ -176,7 +215,15 @@ public class ProductDaoImpl implements ProductDao {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
             Integer productType = rs.getInt("type_id");
-            product.setProductType(rs.getInt("type_id"));
+            Integer typeId = rs.getInt("TYPE_ID");
+            switch (typeId) {
+                case 1:
+                    product.setProductType(ProductType.Tariff);
+                    break;
+                case 2:
+                    product.setProductType(ProductType.Service);
+                    break;
+            }
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
@@ -254,5 +301,113 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("placeId", placeId);
         return jdbcTemplate.query(GET_TARIFFS_BY_PLACE_SQL, params, new ProductRowMapper());
+    }
+
+    @Override
+    public Map<String, List<Product>> getAllServicesWithCategory() {
+        Map<String, List<Product>> serviceMap = new HashMap<>();
+        List<Product> services = jdbcTemplate.query(FIND_ALL_SERVICES_WITH_CATEGORY, (rs, rowNum) -> {
+            Product product = new Product();
+            product.setCategoryId(rs.getInt("CATEGORY_ID"));
+            product.setId(rs.getInt("ID"));
+            Integer typeId = rs.getInt("TYPE_ID");
+            switch (typeId) {
+                case 1:
+                    product.setProductType(ProductType.Tariff);
+                    break;
+                case 2:
+                    product.setProductType(ProductType.Service);
+                    break;
+            }
+            product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
+            product.setDurationInDays(rs.getInt("DURATION"));
+            product.setName(rs.getString("NAME"));
+            product.setDescription(rs.getString("DESCRIPTION"));
+            String category = rs.getString("Category");
+            if (serviceMap.containsKey(category)) {
+                List<Product> serv = serviceMap.get(category);
+                serv.add(product);
+            } else {
+                List<Product> serv = new ArrayList<>();
+                serv.add(product);
+                serviceMap.put(category, serv);
+            }
+
+            return product;
+        });
+
+        return serviceMap;
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        List<Product> productList = jdbcTemplate.query(FIND_ALL_PRODUCTS, (rs, rowNum) -> {
+            Product product = new Product();
+            product.setId(rs.getInt("ID"));
+            Integer typeId = rs.getInt("TYPE_ID");
+            switch (typeId) {
+                case 1:
+                    product.setProductType(ProductType.Tariff);
+                    break;
+                case 2:
+                    product.setProductType(ProductType.Service);
+                    break;
+            }
+            product.setCategoryId(rs.getInt("CATEGORY_ID"));
+            product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
+            product.setDurationInDays(rs.getInt("DURATION"));
+            product.setName(rs.getString("NAME"));
+            product.setDescription(rs.getString("DESCRIPTION"));
+            product.setStatus(rs.getInt("STATUS"));
+            return product;
+        });
+        return productList;
+    }
+
+    @Override
+    public List<Product> getServicesByTariff(Product product) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("tariffId", product.getId());
+        List<Product> productList = jdbcTemplate.query(FIND_SERVICES_BY_TARIFF, params, (rs, rowNum) -> {
+            Product p = new Product();
+            p.setId(rs.getInt("ID"));
+            p.setProductType(ProductType.Service);
+            p.setCategoryId(rs.getInt("CATEGORY_ID"));
+            p.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
+            p.setDurationInDays(rs.getInt("DURATION"));
+            p.setName(rs.getString("NAME"));
+            p.setDescription(rs.getString("DESCRIPTION"));
+            p.setStatus(rs.getInt("STATUS"));
+            return p;
+        });
+        return productList;
+    }
+
+    @Override
+    public List<Product> getServicesNotInTariff(Product product) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("tariffId", product.getId());
+        List<Product> productList = jdbcTemplate.query(FIND_SERVICES_NOT_IN_TARIFF, params, (rs, rowNum) -> {
+            Product p = new Product();
+            p.setId(rs.getInt("ID"));
+            p.setProductType(ProductType.Service);
+            p.setCategoryId(rs.getInt("CATEGORY_ID"));
+            p.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
+            p.setDurationInDays(rs.getInt("DURATION"));
+            p.setName(rs.getString("NAME"));
+            p.setDescription(rs.getString("DESCRIPTION"));
+            p.setStatus(rs.getInt("STATUS"));
+            return p;
+        });
+        return productList;
+    }
+
+    @Override
+    public boolean deleteServiceFromTariff(int idTariff, int idService) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("idTariff", idTariff);
+        params.addValue("idService", idService);
+        int isDelete = jdbcTemplate.update(DELETE_SERVICE_FROM_TARIFF, params);
+        return isDelete > 0;
     }
 }
