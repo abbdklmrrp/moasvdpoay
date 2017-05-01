@@ -13,8 +13,9 @@ import java.util.List;
 @Repository
 public class ComplaintDAOImpl implements ComplaintDAO {
 
-    private final static String GET_ALL_BY_CSR_ID_SQL = "SELECT * FROM COMPLAINTS WHERE CSR_ID=:csr_id";
-    private final static String GET_ALL_BY_ORDER_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ORDER_ID=:order_id";
+    private final static String GET_ALL_BY_CSR_ID_SQL = "SELECT * FROM COMPLAINTS WHERE CSR_ID = :csr_id";
+    private final static String GET_ALL_BY_ORDER_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ORDER_ID = :order_id";
+    private final static String GET_BY_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ID = :id";
 
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -24,7 +25,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
 
     @Override
     public Complaint getById(int id) {
-        return null;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id",id);
+        return jdbcTemplate.queryForObject(GET_BY_ID_SQL,params,Complaint.class);
     }
 
     @Override

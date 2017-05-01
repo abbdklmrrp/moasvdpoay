@@ -12,23 +12,23 @@ import java.util.Calendar;
  */
 public class Complaint {
 
-    private int id;
-    private Calendar creation_date;
+    private Integer id;
+    private Calendar creationDate;
     private String description;
-    private String status;
-    private int csr_id;
-    private int order_id;
+    private ComplaintStatus status;
+    private Integer csrId;
+    private Integer orderId;
 
     public Complaint() {
     }
 
-    public Complaint(int id, Calendar creation_date, String description, String status, int csr_id, int order_id) {
+    public Complaint(int id, Calendar creationDate, String description, ComplaintStatus status, int csrId, int orderId) {
         this.id = id;
-        this.creation_date = creation_date;
+        this.creationDate = creationDate;
         this.description = description;
         this.status = status;
-        this.csr_id = csr_id;
-        this.order_id = order_id;
+        this.csrId = csrId;
+        this.orderId = orderId;
     }
 
     public int getId() {
@@ -39,12 +39,12 @@ public class Complaint {
         this.id = id;
     }
 
-    public Calendar getCreation_date() {
-        return creation_date;
+    public Calendar getCreationDate() {
+        return creationDate;
     }
 
-    public void setCreation_date(Calendar creation_date) {
-        this.creation_date = creation_date;
+    public void setCreationDate(Calendar creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getDescription() {
@@ -55,38 +55,38 @@ public class Complaint {
         this.description = description;
     }
 
-    public String getStatus() {
+    public ComplaintStatus getStatus() {
         return status;
     }
 
-    public void setStatus_id(String status) {
+    public void setStatus(ComplaintStatus status) {
         this.status = status;
     }
 
-    public int getCsr_id() {
-        return csr_id;
+    public int getCsrId() {
+        return csrId;
     }
 
-    public void setCsr_id(int csr_id) {
-        this.csr_id = csr_id;
+    public void setCsrId(int csrId) {
+        this.csrId = csrId;
     }
 
-    public int getOrder_id() {
-        return order_id;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     @Override
     public String toString() {
         return "Complaint{" + "id=" + id
-                + ", creation_date=" + creation_date
+                + ", creationDate=" + creationDate
                 + ", description=" + description
                 + ", status=" + status
-                + ", csr_id=" + csr_id
-                + ", order_id=" + order_id + '}';
+                + ", csrId=" + csrId
+                + ", orderId=" + orderId + '}';
     }
 
 }

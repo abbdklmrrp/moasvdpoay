@@ -12,19 +12,19 @@ import java.util.Calendar;
  */
 public class Planned_task {
 
-    private int id;
+    private Integer id;
     private String status;
-    private int order_id;
-    private Calendar action_date;
+    private Integer orderId;
+    private Calendar actionDate;
 
     public Planned_task() {
     }
 
-    public Planned_task(int id, String status, int order_id, Calendar action_date) {
+    public Planned_task(int id, String status, int orderId, Calendar actionDate) {
         this.id = id;
         this.status = status;
-        this.order_id = order_id;
-        this.action_date = action_date;
+        this.orderId = orderId;
+        this.actionDate = actionDate;
     }
 
     public int getId() {
@@ -43,28 +43,28 @@ public class Planned_task {
         this.status = status;
     }
 
-    public int getOrder_id() {
-        return order_id;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
-    public Calendar getAction_date() {
-        return action_date;
+    public Calendar getActionDate() {
+        return actionDate;
     }
 
-    public void setAction_date(Calendar action_date) {
-        this.action_date = action_date;
+    public void setActionDate(Calendar actionDate) {
+        this.actionDate = actionDate;
     }
 
     @Override
     public String toString() {
         return "Planned_task{" + "id=" + id
                 + ", status=" + status
-                + ", order_id=" + order_id
-                + ", action_date=" + action_date + '}';
+                + ", orderId=" + orderId
+                + ", actionDate=" + actionDate + '}';
     }
 
 }

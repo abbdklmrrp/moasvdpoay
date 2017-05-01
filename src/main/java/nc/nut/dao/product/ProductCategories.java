@@ -5,7 +5,7 @@ package nc.nut.dao.product;
  */
 public class ProductCategories {
 
-    private int id;
+    private Integer id;
     private String name;
     private String description;
 
