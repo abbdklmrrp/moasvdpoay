@@ -1,20 +1,18 @@
 package nc.nut.controller.product;
 
-import nc.nut.dao.order.Order;
 import nc.nut.dao.order.OrderDao;
-import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductDao;
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
 import nc.nut.security.SecurityAuthenticationHelper;
 import nc.nut.services.ProductService;
+import nc.nut.utils.ProductCatalogRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -36,15 +34,19 @@ public class ServiceOrderController {
     @Resource
     private OrderDao orderDao;
     @Resource
-    ProductService productService;
+    private ProductService productService;
     private Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
 
 
     @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
     Model showServices(Model model) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        Map<String, Map<Product, String>> categoriesWithProductsToShow = productService.getCategoriesWithProductsToShow(user);
-        model.addAttribute("categoriesProducts", categoriesWithProductsToShow);
+        Map<String, List<ProductCatalogRow>> categoriesWithProductsToShow = productService.getCategoriesWithProductsToShow(user);
+        if (categoriesWithProductsToShow.isEmpty()) {
+            model.addAttribute("msg", "Sorry! There are no products for you yet.");
+        } else {
+            model.addAttribute("categoriesProducts", categoriesWithProductsToShow);
+        }
         return model;
     }
 //

@@ -1,6 +1,5 @@
 package nc.nut.dao.price;
 
-import nc.nut.dao.entity.Price;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

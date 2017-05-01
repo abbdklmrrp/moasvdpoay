@@ -19,18 +19,10 @@ class ProductRowMapper implements RowMapper<Product> {
         product.setName(rs.getString("NAME"));
         product.setDescription(rs.getString("DESCRIPTION"));
         product.setStatus(rs.getInt("STATUS"));
-        Integer productType = rs.getInt("type_id");
-        switch (productType){
-            case(1):
-                product.setTypeId(ProductType.Tariff);
-                break;
-            case(2):
-                product.setTypeId(ProductType.Service);
-                break;
-        }
+        product.setBasePrice(rs.getBigDecimal("BASE_PRICE"));
         product.setCategoryId(rs.getInt("category_id"));
         product.setDurationInDays(rs.getInt("duration"));
-
+        product.setProductType(rs.getInt("type_id"));
         return product;
     }
 }

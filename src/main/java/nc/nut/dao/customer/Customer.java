@@ -1,5 +1,7 @@
 package nc.nut.dao.customer;
 
+import nc.nut.dao.entity.CustomerType;
+
 /**
  * @author Moiseienko Petro , Alistratenko Nikite
  * @since 24.04.2017.
@@ -9,6 +11,8 @@ public class Customer {
     private String name;
     private String secretKey;
     private int invoice;
+    private CustomerType customerType;
+
 
 
     public Customer(int id, String name, String secretKey) {
@@ -17,6 +21,13 @@ public class Customer {
         this.secretKey = secretKey;
     }
 
+    public CustomerType getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(CustomerType customerType) {
+        this.customerType = customerType;
+    }
     public int getId() {
         return id;
     }

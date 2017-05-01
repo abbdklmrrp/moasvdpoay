@@ -36,7 +36,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String ADD_PRODUCT = "INSERT INTO PRODUCTS(TYPE_ID,CATEGORY_ID,NAME,DURATION," +
             "NEED_PROCESSING,DESCRIPTION,STATUS) VALUES(:typeId,:categoryId,:nameProduct,:duration," +
             ":needProcessing,:description,:status)";
-    private final static String SELECT_SERVICES_BY_PLACE_SQL ="SELECT\n" +
+    private final static String SELECT_SERVICES_BY_PLACE_SQL = "SELECT\n" +
             "  PRODUCTS.ID,\n" +
             "  PRODUCTS.TYPE_ID,\n" +
             "  PRODUCTS.CATEGORY_ID,\n" +
@@ -44,7 +44,9 @@ public class ProductDaoImpl implements ProductDao {
             "  PRODUCTS.DURATION,\n" +
             "  PRODUCTS.NEED_PROCESSING,\n" +
             "  PRODUCTS.STATUS,\n" +
-            "PRODUCTS.DESCRIPTION "+
+            "PRODUCTS.DESCRIPTION, " +
+            "  PRODUCTS.BASE_PRICE,\n" +
+            "  PRODUCTS.CUSTOMER_TYPE_ID " +
             "FROM PRODUCTS\n" +
             "  JOIN PRICES ON PRICES.PRODUCT_ID =  products.ID\n" +
             "WHERE PRICES.PLACE_ID = :place_id AND PRODUCTS.STATUS = 1 /*active status id*/ AND PRODUCTS.TYPE_ID = 2 /*service id*/";
@@ -63,18 +65,17 @@ public class ProductDaoImpl implements ProductDao {
     @Resource
     private Mailer mailer;
 
-    //TODO
     @Override
     public boolean save(Product product) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("typeId", product.getTypeId());
+        params.addValue("typeId", product.getProductType());
         params.addValue("categoryId", product.getCategoryId());
         params.addValue("nameProduct", product.getName());
         params.addValue("duration", product.getDurationInDays());
         params.addValue("needProcessing", product.getNeedProcessing());
         params.addValue("description", product.getDescription());
         params.addValue("status", product.getStatus());
-
+        params.addValue("type_id", product.getProductType());
         int isUpdate = jdbcTemplate.update(ADD_PRODUCT, params);
 
         return isUpdate > 0;
@@ -127,6 +128,7 @@ public class ProductDaoImpl implements ProductDao {
         return productTypes;
     }
 
+    //TODO почему бы не использовать внешний класс ProductRowMapper?
     @Override
     public List<Product> getAllServices(String categoryName) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -136,14 +138,7 @@ public class ProductDaoImpl implements ProductDao {
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setId(rs.getInt("ID"));
             Integer productType = rs.getInt("type_id");
-            switch (productType){
-                case(1):
-                    product.setTypeId(ProductType.Tariff);
-                    break;
-                case(2):
-                    product.setTypeId(ProductType.Service);
-                    break;
-            }
+            product.setProductType(rs.getInt("type_id"));
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
@@ -154,20 +149,14 @@ public class ProductDaoImpl implements ProductDao {
         return services;
     }
 
+    //TODO почему бы не использовать внешний класс ProductRowMapper
     @Override
     public List<Product> getAllFreeTariffs() {
         List<Product> tariffs = jdbcTemplate.query(FIND_ALL_FREE_TARIFFS, (rs, rowNum) -> {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
             Integer productType = rs.getInt("type_id");
-            switch (productType){
-                case(1):
-                    product.setTypeId(ProductType.Tariff);
-                    break;
-                case(2):
-                    product.setTypeId(ProductType.Service);
-                    break;
-            }
+            product.setProductType(rs.getInt("type_id"));
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
@@ -206,6 +195,7 @@ public class ProductDaoImpl implements ProductDao {
     public boolean update(Product product) {
         return false;
     }
+
     @Override
     public List<Product> getAllAvailableServicesByPlace(Integer placeId) {
         MapSqlParameterSource params = new MapSqlParameterSource();

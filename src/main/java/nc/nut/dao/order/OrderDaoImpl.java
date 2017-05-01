@@ -15,11 +15,11 @@ public class OrderDaoImpl implements OrderDao {
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     //todo go from company
-    private final static String SELECT_BY_COMP_AND_PLACE ="SELECT\n" +
+    private final static String SELECT_BY_COMP_AND_PLACE_SQL = "SELECT\n" +
             "  ORDERS.ID,\n" +
             "  ORDERS.PRODUCT_ID,\n" +
             "  ORDERS.USER_ID,\n" +
-            "  ORDERS.CURRENT_STATUS_ID "+
+            "  ORDERS.CURRENT_STATUS_ID " +
             "FROM ORDERS\n" +
             "  INNER JOIN USERS ON USERS.ID = ORDERS.USER_ID\n" +
             "  INNER JOIN CUSTOMERS ON USERS.CUSTOMER_ID = CUSTOMERS.ID\n" +
@@ -63,6 +63,6 @@ public class OrderDaoImpl implements OrderDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("cust_id", customerId);
         params.addValue("place_id", placeId);
-        return jdbcTemplate.query(SELECT_BY_COMP_AND_PLACE, params, new OrderRowMapper());
+        return jdbcTemplate.query(SELECT_BY_COMP_AND_PLACE_SQL, params, new OrderRowMapper());
     }
 }

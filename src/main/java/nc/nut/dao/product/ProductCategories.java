@@ -1,5 +1,7 @@
 package nc.nut.dao.product;
 
+import java.util.Objects;
+
 /**
  * Created by Rysakova Anna on 24.04.2017.
  */
@@ -35,4 +37,20 @@ public class ProductCategories {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProductCategories)) return false;
+        ProductCategories that = (ProductCategories) o;
+        return getId() == that.getId() &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getDescription(), that.getDescription());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription());
+    }
+
 }

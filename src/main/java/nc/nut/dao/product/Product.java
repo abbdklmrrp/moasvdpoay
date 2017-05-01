@@ -1,5 +1,7 @@
 package nc.nut.dao.product;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Rysakova Anna on 23.04.2017.
  */
@@ -7,20 +9,21 @@ public class Product {
     private Integer id;
     private Integer categoryId;
     private Integer durationInDays;
-    private ProductType productType;
+    private Integer productType;
     private Integer needProcessing;
     private String name;
     private String description;
     private Integer status;
+    private BigDecimal basePrice;
 
     public Product() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -32,27 +35,27 @@ public class Product {
         this.categoryId = categoryId;
     }
 
-    public int getDurationInDays() {
+    public Integer getDurationInDays() {
         return durationInDays;
     }
 
-    public void setDurationInDays(int durationInDays) {
+    public void setDurationInDays(Integer durationInDays) {
         this.durationInDays = durationInDays;
     }
 
-    public ProductType getTypeId() {
+    public Integer getProductType() {
         return productType;
     }
 
-    public void setTypeId(ProductType typeId) {
-        this.productType = typeId;
+    public void setProductType(Integer productType) {
+        this.productType = productType;
     }
 
-    public int getNeedProcessing() {
+    public Integer getNeedProcessing() {
         return needProcessing;
     }
 
-    public void setNeedProcessing(int needProcessing) {
+    public void setNeedProcessing(Integer needProcessing) {
         this.needProcessing = needProcessing;
     }
 
@@ -72,11 +75,21 @@ public class Product {
         this.description = description;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
+
+    public BigDecimal getBasePrice() {
+        return basePrice;
+    }
+
+    public void setBasePrice(BigDecimal basePrice) {
+        this.basePrice = basePrice;
+    }
+
+
 }
