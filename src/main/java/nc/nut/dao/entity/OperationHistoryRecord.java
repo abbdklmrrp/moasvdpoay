@@ -12,18 +12,18 @@ import java.util.Calendar;
  */
 public class OperationHistoryRecord {
 
-    private int id;
-    private int order_id;
-    private Calendar operation_date;
+    private Integer id;
+    private Integer orderId;
+    private Calendar operationDate;
     private String status;
 
     public OperationHistoryRecord() {
     }
 
-    public OperationHistoryRecord(int id, int order_id, Calendar operation_date, String status) {
+    public OperationHistoryRecord(int id, int orderId, Calendar operationDate, String status) {
         this.id = id;
-        this.order_id = order_id;
-        this.operation_date = operation_date;
+        this.orderId = orderId;
+        this.operationDate = operationDate;
         this.status = status;
     }
 
@@ -35,20 +35,20 @@ public class OperationHistoryRecord {
         this.id = id;
     }
 
-    public int getOrder_id() {
-        return order_id;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
-    public Calendar getOperation_date() {
-        return operation_date;
+    public Calendar getOperationDate() {
+        return operationDate;
     }
 
-    public void setOperation_date(Calendar operation_date) {
-        this.operation_date = operation_date;
+    public void setOperationDate(Calendar operationDate) {
+        this.operationDate = operationDate;
     }
 
     public String getStatus() {
@@ -61,7 +61,7 @@ public class OperationHistoryRecord {
 
     @Override
     public String toString() {
-        return "OperationHistoryRecord{" + "id=" + id + ", order_id=" + order_id + ", operation_date=" + operation_date + ", status=" + status + '}';
+        return "OperationHistoryRecord{" + "id=" + id + ", orderId=" + orderId + ", operationDate=" + operationDate + ", status=" + status + '}';
     }
 
 }

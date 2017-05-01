@@ -12,7 +12,7 @@ class PriceRowMapper implements RowMapper<Price> {
     @Override
     public Price mapRow(ResultSet resultSet, int i) throws SQLException {
         Price price = new Price();
-        price.setPlace_id(resultSet.getInt("place_id"));
+        price.setPlaceId(resultSet.getInt("place_id"));
         price.setProduct_id(resultSet.getInt("product_id"));
         price.setPrice(resultSet.getBigDecimal("price"));
         return price;

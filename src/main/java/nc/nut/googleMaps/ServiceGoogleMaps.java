@@ -17,6 +17,7 @@ import java.io.IOException;
  */
 public class ServiceGoogleMaps {
     private static String apiKey = "AIzaSyBF2CMlYRcV-9zTHFND2m2InqbYdeyJz30";
+    private static Logger logger = LoggerFactory.getLogger(nc.nut.googleMaps.ServiceGoogleMaps.class);
 
     /**
      * Method gets region according to address from params and returns it.
@@ -26,8 +27,6 @@ public class ServiceGoogleMaps {
      * @return region of address from param.
      */
     public String getRegion(String address) {
-        Logger logger = LoggerFactory.getLogger(getClass());
-        Boolean regionExists = false;
         String region = null;
         GeoApiContext context = new GeoApiContext().setApiKey(apiKey);
         GeocodingResult[] results;
@@ -35,28 +34,37 @@ public class ServiceGoogleMaps {
             results = GeocodingApi.geocode(context, address).await();
             if (results != null && results.length != 0) {
                 // if it`s region
-                AddressComponent[] components = results[0].addressComponents;
-                for (int i = 0; i < components.length; i++) {
-                    AddressComponentType[] type = components[i].types;
-                    if (type[0].toString().equals("administrative_area_level_1")) {
-                        region = components[i].longName;
-                        regionExists = true;
-                        break;
-                    }
-                }
+                region = getAddressComponent(results, "administrative_area_level_1");
                 // if it`s city-region
-                if (!regionExists) {
-                    for (int i = 0; i < components.length; i++) {
-                        AddressComponentType[] type = components[i].types;
-                        if (type[0].toString().equals("administrative_area_level_2")) {
-                            region = components[i].longName;
-                            break;
-                        }
-                    }
+                if (region == null) {
+                    region = getAddressComponent(results, "administrative_area_level_2");
                 }
             }
         } catch (ApiException | InterruptedException | IOException e) {
             logger.error("Can`t find this address.", e);
+        }
+        return region;
+    }
+
+    /**
+     * Method returns part of address from GoogleMaps according to address component name from params.
+     * If addressComponentName is null, method returns null.
+     *
+     * @param geoResults           array of data about address from GoogleMaps
+     * @param addressComponentName component name of data from GoogleMaps
+     * @return part of address according to address component from params.
+     */
+    private String getAddressComponent(GeocodingResult[] geoResults, String addressComponentName) {
+        String region = null;
+        if (addressComponentName != null) {
+            AddressComponent[] components = geoResults[0].addressComponents;
+            for (int i = 0; i < components.length; i++) {
+                AddressComponentType[] type = components[i].types;
+                if (type[0].toString().equals(addressComponentName)) {
+                    region = components[i].longName;
+                    break;
+                }
+            }
         }
         return region;
     }
@@ -69,7 +77,6 @@ public class ServiceGoogleMaps {
      * @return formatted address.
      */
     public String getFormattedAddress(String address) {
-        Logger logger = LoggerFactory.getLogger(getClass());
         String formattedAddress = null;
         GeoApiContext context = new GeoApiContext().setApiKey(apiKey);
         GeocodingResult[] results;

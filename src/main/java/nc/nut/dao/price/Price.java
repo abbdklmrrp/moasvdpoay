@@ -12,25 +12,25 @@ import java.math.BigDecimal;
  */
 public class Price {
 
-    private int place_id;
-    private int product_id;
+    private Integer placeId;
+    private Integer product_id;
     private BigDecimal price;
 
     public Price() {
     }
 
-    public Price(int place_id, int product_id, BigDecimal price) {
-        this.place_id = place_id;
+    public Price(int placeId, int product_id, BigDecimal price) {
+        this.placeId = placeId;
         this.product_id = product_id;
         this.price = price;
     }
 
-    public int getPlace_id() {
-        return place_id;
+    public int getPlaceId() {
+        return placeId;
     }
 
-    public void setPlace_id(int place_id) {
-        this.place_id = place_id;
+    public void setPlaceId(int placeId) {
+        this.placeId = placeId;
     }
 
     public int getProduct_id() {
@@ -51,7 +51,7 @@ public class Price {
 
     @Override
     public String toString() {
-        return "Price{" + "place_id=" + place_id
+        return "Price{" + "placeId=" + placeId
                 + ", product_id=" + product_id
                 + ", price=" + price + '}';
     }

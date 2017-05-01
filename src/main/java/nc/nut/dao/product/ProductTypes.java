@@ -4,7 +4,7 @@ package nc.nut.dao.product;
  * Created by Rysakova Anna on 24.04.2017.
  */
 public class ProductTypes {
-    private int id;
+    private Integer id;
     private String name;
 
     public ProductTypes() {

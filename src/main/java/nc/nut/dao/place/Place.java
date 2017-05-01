@@ -3,23 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nc.nut.dao.entity;
+package nc.nut.dao.place;
 
 /**
  * @author Alistratenko Nikita
  */
 public class Place {
 
-    private int id;
-    private int parent_id;
+    private Integer id;
+    private Integer parentId;
     private String name;
 
     public Place() {
     }
 
-    public Place(int id, int parent_id, String name) {
+    public Place(int id, int parentId, String name) {
         this.id = id;
-        this.parent_id = parent_id;
+        this.parentId = parentId;
         this.name = name;
     }
 
@@ -31,12 +31,12 @@ public class Place {
         this.id = id;
     }
 
-    public int getParent_id() {
-        return parent_id;
+    public int getParentId() {
+        return parentId;
     }
 
-    public void setParent_id(int parent_id) {
-        this.parent_id = parent_id;
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
     }
 
     public String getName() {
@@ -49,7 +49,7 @@ public class Place {
 
     @Override
     public String toString() {
-        return "Place{" + "id=" + id + ", parent_id=" + parent_id + ", name=" + name + '}';
+        return "Place{" + "id=" + id + ", parentId=" + parentId + ", name=" + name + '}';
     }
 
 }

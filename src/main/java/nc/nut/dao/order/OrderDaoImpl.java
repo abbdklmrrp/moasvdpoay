@@ -31,7 +31,14 @@ public class OrderDaoImpl implements OrderDao {
             "      AND PRODUCTS.TYPE_ID = 2 /*service id*/\n";
     private final static String INSERT_ORDER = "INSERT INTO ORDERS (PRODUCT_ID, USER_ID, CURRENT_STATUS_ID) " +
             "VALUES (:product_id, :user_id, :cur_status_id)";
-
+    private final static String GET_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL = "SELECT id FROM Orders " +
+            "WHERE product_id = :productId " +
+            "AND user_id = :userId " +
+            "AND current_status_id = 1/*id = 1 - status active*/";
+    private final static String GET_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL = "SELECT id FROM Orders " +
+            "WHERE product_id = (SELECT id FROM Products WHERE name = :productName) " +
+            "AND user_id = :userId " +
+            "AND current_status_id = 1/*id = 1 - status active*/";
 
     @Override
     public Order getById(int id) {
@@ -64,5 +71,35 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("cust_id", customerId);
         params.addValue("place_id", placeId);
         return jdbcTemplate.query(SELECT_BY_COMP_AND_PLACE_SQL, params, new OrderRowMapper());
+    }
+
+    /**
+     * Method returns order id according to user id and product id with active status.
+     *
+     * @param userId id of user.
+     * @param productId id of product.
+     * @return id or order.
+     */
+    @Override
+    public Integer getOrderIdByUserIdAndProductId(Integer userId, Integer productId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", userId);
+        params.addValue("productId", productId);
+        return jdbcTemplate.queryForObject(GET_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
+    }
+
+    /**
+     * Method returns order id according to user id and product name with active status.
+     *
+     * @param userId id of user.
+     * @param productName name of product.
+     * @return id or order.
+     */
+    @Override
+    public Integer getOrderIdByUserIdAndProductName(Integer userId, String productName) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", userId);
+        params.addValue("productName", productName);
+        return jdbcTemplate.queryForObject(GET_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL, params, Integer.class);
     }
 }

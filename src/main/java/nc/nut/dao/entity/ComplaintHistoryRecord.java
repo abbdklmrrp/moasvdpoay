@@ -12,18 +12,18 @@ import java.util.Calendar;
  */
 public class ComplaintHistoryRecord {
 
-    private int id;
-    private int complaint_id;
-    private Calendar operation_date;
+    private Integer id;
+    private Integer complaintId;
+    private Calendar operationDate;
     private String status;
 
     public ComplaintHistoryRecord() {
     }
 
-    public ComplaintHistoryRecord(int id, int complaint_id, Calendar operation_date, String status) {
+    public ComplaintHistoryRecord(int id, int complaintId, Calendar operationDate, String status) {
         this.id = id;
-        this.complaint_id = complaint_id;
-        this.operation_date = operation_date;
+        this.complaintId = complaintId;
+        this.operationDate = operationDate;
         this.status = status;
     }
 
@@ -35,20 +35,20 @@ public class ComplaintHistoryRecord {
         this.id = id;
     }
 
-    public int getComplaint_id() {
-        return complaint_id;
+    public int getComplaintId() {
+        return complaintId;
     }
 
-    public void setComplaint_id(int complaint_id) {
-        this.complaint_id = complaint_id;
+    public void setComplaintId(int complaintId) {
+        this.complaintId = complaintId;
     }
 
-    public Calendar getOperation_date() {
-        return operation_date;
+    public Calendar getOperationDate() {
+        return operationDate;
     }
 
-    public void setOperation_date(Calendar operation_date) {
-        this.operation_date = operation_date;
+    public void setOperationDate(Calendar operationDate) {
+        this.operationDate = operationDate;
     }
 
     public String getStatus() {
@@ -61,7 +61,7 @@ public class ComplaintHistoryRecord {
 
     @Override
     public String toString() {
-        return "ComplaintHistoryRecord{" + "id=" + id + ", complaint_id=" + complaint_id + ", operation_date=" + operation_date + ", status=" + status + '}';
+        return "ComplaintHistoryRecord{" + "id=" + id + ", complaintId=" + complaintId + ", operationDate=" + operationDate + ", status=" + status + '}';
     }
 
 }

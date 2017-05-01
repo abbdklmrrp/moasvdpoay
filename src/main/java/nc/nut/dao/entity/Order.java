@@ -10,9 +10,9 @@ package nc.nut.dao.entity;
  */
 public class Order {
 
-    private int id;
-    private int product_id;
-    private int user_id;
+    private Integer id;
+    private Integer product_id;
+    private Integer user_id;
     private String current_status;
 
     public Order() {

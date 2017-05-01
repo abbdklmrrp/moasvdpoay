@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public class ProductCategories {
 
-    private int id;
+    private Integer id;
     private String name;
     private String description;
 

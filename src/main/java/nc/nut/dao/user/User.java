@@ -4,18 +4,18 @@ package nc.nut.dao.user;
  * @author Rysakova Anna
  */
 public class User {
-    private int id;
+    private Integer id;
     private String name;
     private String surname;
     private String email;
     private String phone;
     private String address;
-    private int placeId;
-    private int customerId;
+    private Integer placeId;
+    private Integer customerId;
     private String password;
     private String authority;
-    private int roleId;
-    private int enable;
+    private Integer roleId;
+    private Integer enable;
 
 
     public User(String name, String password, String authorities) {

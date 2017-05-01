@@ -7,12 +7,11 @@ import nc.nut.dao.entity.CustomerType;
  * @since 24.04.2017.
  */
 public class Customer {
-    private int id;
+    private Integer id;
     private String name;
     private String secretKey;
-    private int invoice;
     private CustomerType customerType;
-
+    private Integer invoice;
 
 
     public Customer(int id, String name, String secretKey) {
