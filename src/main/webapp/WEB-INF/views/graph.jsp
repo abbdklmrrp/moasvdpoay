@@ -9,12 +9,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
     <link href="<c:url value="/resources/css/webGraph.css"/>" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script type="text/javascript" src="<c:url value="/resources/js/webGraph/ajaxData.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/resources/js/webGraph/drawLines.js"/>"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
+    <script type="text/javascript" src="<c:url value="/resources/js/drawReport.js"/>"></script>
 </head>
 <body>
 <form id="formWithRegionsAndDates">
@@ -38,10 +38,15 @@
 <button id="b1" onclick="drawChart()">Show</button>
 <span id="err" style="color: red"></span>
 <div class="center" id="line_top_x" style="width: 900px; height: 500px"></div>
-<div id="table_div">
-    <div class="center" id="table_page"></div>
-    <br/>
-    <div class="center" id="table_data"></div>
-</div>
+<div id="table_div"></div>
+<%--<table id="table_id" class="display">--%>
+    <%--<thead>--%>
+    <%--<tr>--%>
+        <%--<th>Date</th>--%>
+        <%--<th>Orders</th>--%>
+        <%--<th>Complaints</th>--%>
+    <%--</tr>--%>
+    <%--</thead>--%>
+<%--</table>--%>
 </body>
 </html>

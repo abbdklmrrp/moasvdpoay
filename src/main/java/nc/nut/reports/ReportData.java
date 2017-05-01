@@ -41,4 +41,13 @@ public class ReportData {
     public void setOrdersCount(int ordersCount) {
         this.ordersCount = ordersCount;
     }
+
+    @Override
+    public String toString() {
+        return "ReportData{" +
+                "timePeriod='" + timePeriod + '\'' +
+                ", complaintsCount=" + complaintsCount +
+                ", ordersCount=" + ordersCount +
+                '}';
+    }
 }
