@@ -36,7 +36,7 @@
         <th>Need processing</th>
         <th>Description</th>
         <th>Status</th>
-        <th>View</th>
+        <th>Action</th>
     </tr>
     </thead>
 </table>
@@ -59,7 +59,7 @@
                     "mData": "id",
                     "bSortable": false,
                     "mRender": function (data) {
-                        return '<a class="btn btn-info btn-sm" href=${contextPath}/admin/getDetails?id=' + data + '>' + "Details" + '</a>';
+                        return '<a class="btn btn-info btn-sm" href=${contextPath}/admin/getDetails?id=' + data + '>' + "Edit" + '</a>';
                     }
                 }
             ],

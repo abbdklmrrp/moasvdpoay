@@ -38,6 +38,14 @@ public class ProductService {
         return product;
     }
 
+    public boolean checkEmptyNewCategory(ProductCategories categories) {
+        return !(!categories.getName().equals("") && categories.getDescription().equals(""));
+    }
+
+    public boolean checkEmptyFieldIfProduct(Product product) {
+        return !(product.getName().equals("") || product.getDescription().equals(""));
+    }
+
     public void saveProduct(Product product) {
         if (Objects.equals(product.getProductType(), ProductType.Tariff)) {
             product.setCategoryId(null);
@@ -53,7 +61,20 @@ public class ProductService {
         for (String a : arr) {
             productDao.fillTariff(idTariff, Integer.parseInt(a));
         }
+    }
 
+    public boolean checkUniqueCategoryServices(String services) {
+        String[] arr = services.split(",");
+        List<Product> allServices = productDao.getAllServices();
+        Set<Integer> serviceCategoryId = new HashSet<>();
+        for (String s : arr) {
+            for (Product p : allServices) {
+                if (Integer.parseInt(s) == p.getId()) {
+                    serviceCategoryId.add(p.getCategoryId());
+                }
+            }
+        }
+        return arr.length == serviceCategoryId.size();
     }
 
     public void updateFillTariff(String service, Product product) {
@@ -109,7 +130,6 @@ public class ProductService {
         productDao.update(product);
     }
 
-
     /*** This method takes user and returns all products that can be shown for him
      * on 'Order Service' page with goal to show user orders.
      * It firstly gets all the products that can be shown to user depending on his place
@@ -152,7 +172,6 @@ public class ProductService {
         return categoriesWithProducts;
     }
 
-
     /**
      * This method takes product and returns status for it.
      * If user does not have order for this product <code>Null</code> is returned.
@@ -172,5 +191,3 @@ public class ProductService {
 
     }
 }
-
-

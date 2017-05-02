@@ -50,11 +50,15 @@
         <%--</select>--%>
         <%--</div>--%>
 
-        <c:if test="${not empty error}">
-            <span style="float:right ; color: #10CE88;">${error}</span>
+        <c:if test="${not empty errors}">
+            <span style="float:right ; color: #10CE88;">${errors}</span>
         </c:if>
-        <fieldset>
+        <c:if test="${not empty errorUniqueCategory}">
+            <span style="float:right ; color: #10CE88;">${errorUniqueCategory}</span>
+        </c:if>
 
+        <fieldset>
+            <h6>All services</h6>
             <select name="allServices" id="select-from" multiple>
                 <c:forEach var="category" items="${allServices}">
                     <c:forEach var="categoryKey" items="${category.value}">
@@ -64,25 +68,38 @@
             </select>
 
             <a href="JavaScript:void(0);" id="btn-add">Add &raquo;</a>
-            <a href="JavaScript:void(0);" id="btn-remove">&laquo; Remove</a>
-
+            <h6>Selected services</h6>
             <select name="selectto" id="select-to" multiple="multiple">
             </select>
+            <a href="JavaScript:void(0);" id="btn-remove">&laquo; Remove</a>
 
         </fieldset>
 
         <%--<fieldset>--%>
-        <%--<legend>Форма</legend>--%>
-        <%--<ul id="sites">--%>
-        <%--<li>--%>
-        <%--<label>ФИО</label>--%>
-        <%--<input type="text" name="fio[]" />--%>
-        <%--</li>--%>
-        <%--</ul>--%>
-        <%--<input type="button" id="add" value="Add"/>--%>
+        <%--<h6>All services</h6>--%>
+        <%--<select name="categoriesID" id="categoriesID" multiple>--%>
+        <%--<c:forEach var="category" items="${allServices}">--%>
+        <%--<c:forEach var="categoryKey" items="${category.value}">--%>
+        <%--<option value="${categoryKey.id}">${category.key} : ${categoryKey.name}</option>--%>
+        <%--</c:forEach>--%>
+        <%--</c:forEach>--%>
+        <%--</select>--%>
+
+
+        <%--<h6>Selected services</h6>--%>
+        <%--<select name="selectto" id="selectto" multiple="multiple">--%>
+        <%--</select>--%>
+
+        <%--<a href="JavaScript:void(0);" id="btn-add">Add &raquo;</a>--%>
+
+        <%--<div id="selectedValuesId">--%>
+        <%--</div>--%>
+
         <%--</fieldset>--%>
 
         <button type="submit" class="log-btn">Save</button>
+        <br>
+        <h2><a href="${contextPath}/doLogout">Logout</a></h2>
     </div>
 </form>
 </body>

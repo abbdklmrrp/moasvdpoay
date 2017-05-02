@@ -82,6 +82,9 @@
             </select>
         </div>
         <button type="submit" class="log-btn">Save</button>
+        <br>
+        <h2><a href="${contextPath}/doLogout">Logout</a></h2>
+
     </div>
 </form>
 </body>
