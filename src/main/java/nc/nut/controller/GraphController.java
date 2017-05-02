@@ -43,11 +43,20 @@ public class GraphController {
                                          @RequestParam(name = "beginDate") String beginDate,
                                          @RequestParam(name = "endDate") String endDate) {
         List<ReportData> list = null;
+        List<ReportData> filteredList = null;
         try {
-            list = reportsService.getDataForReport(beginDate,endDate,region);
+            list = reportsService.getDataForReport(beginDate, endDate, region);
+            filteredList = list.stream()
+                    .filter((o) -> (o.getComplaintsCount() > 0 || o.getOrdersCount() > 0))
+                    .collect(Collectors.toList());
         } catch (ReportCreatingException e) {
             e.printStackTrace();
         }
-        return list;
+        if (!filteredList.isEmpty()){
+            return list;
+        }
+        else {
+            return filteredList;
+        }
     }
 }

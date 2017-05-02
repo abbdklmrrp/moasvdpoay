@@ -19,7 +19,7 @@
 <body>
 <form id="formWithRegionsAndDates">
     <label>Choose region:
-        <select id="sel1" name="region">
+        <select id="sel1" name="region" required>
             <c:forEach var="region" items="${regions}">
                 <option value="${region.id}">${region.name}</option>
             </c:forEach>
@@ -27,26 +27,20 @@
     </label>
     <br/>
     <label>Date Begin:
-        <input type="date" name="beginDate"/>
+        <input id="beginDate" type="date" name="beginDate" onchange="check()"/>
     </label>
     <br/>
     <label>Date End:
-        <input type="date" name="endDate"/>
+        <input id="endDate" type="date" name="endDate" onchange="check()"/>
     </label>
     <br/>
 </form>
-<button id="b1" onclick="drawChart()">Show report</button>
+<button id="b1" onclick="drawChart()" disabled="disabled">Show report</button>
+<%--<form action="<%=request.getContextPath()%>/download" method="get">--%>
+    <%--<button id="b2" type="submit">Download report</button>--%>
+<%--</form>--%>
 <span id="err" style="color: red"></span>
 <div class="center" id="line_top_x" style="width: 900px; height: 500px"></div>
 <div id="table_div"></div>
-<%--<table id="table_id" class="display">--%>
-    <%--<thead>--%>
-    <%--<tr>--%>
-        <%--<th>Date</th>--%>
-        <%--<th>Orders</th>--%>
-        <%--<th>Complaints</th>--%>
-    <%--</tr>--%>
-    <%--</thead>--%>
-<%--</table>--%>
 </body>
 </html>
