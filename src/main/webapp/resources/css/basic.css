@@ -44,6 +44,33 @@ a {
     margin: 50px auto;
 }
 
+.left-login{
+    float: left;
+    width: 350px;
+    height: 500px;
+    padding: 40px 30px;
+    background: rgba(235, 235, 205, 0.7);
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    margin-top: 65px;
+    margin-left: 200px;
+}
+
+.right-login{
+    float: right;
+    width: 350px;
+    height: 500px;
+    padding: 40px 30px;
+    background: rgba(235, 235, 205, 0.7);
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    margin-top: 65px;
+    margin-right: 200px;
+
+}
+
 .form-group {
     position: relative;
     margin-bottom: 15px;

@@ -80,4 +80,8 @@ public interface ProductDao extends Dao<Product> {
 
     boolean deleteById(int id);
 
+    List<Product> getProductsByUserId(int id);
+
+    List<Product> getActiveProductByUserId(Integer id);
+
 }

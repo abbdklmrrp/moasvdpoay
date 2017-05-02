@@ -76,7 +76,7 @@ public class OrderDaoImpl implements OrderDao {
     /**
      * Method returns order id according to user id and product id with active status.
      *
-     * @param userId id of user.
+     * @param userId    id of user.
      * @param productId id of product.
      * @return id or order.
      */
@@ -91,7 +91,7 @@ public class OrderDaoImpl implements OrderDao {
     /**
      * Method returns order id according to user id and product name with active status.
      *
-     * @param userId id of user.
+     * @param userId      id of user.
      * @param productName name of product.
      * @return id or order.
      */

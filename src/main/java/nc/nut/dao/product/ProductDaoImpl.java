@@ -104,6 +104,16 @@ public class ProductDaoImpl implements ProductDao {
 
     private final static String DELETE_BY_ID = "DELETE FROM  Products where id=:id";
 
+    private final static String FIND_PRODUCT_FOR_USER = "SELECT prod.ID as ID, prod.NAME as NAME," +
+            "prod.description as DESCRIPTION, prod.DURATION as duration " +
+            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
+            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
+            "WHERE ord.USER_ID = :id AND status.NAME != 'Deactivated'";
+    private final static String FIND_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID as ID, prod.NAME as NAME " +
+            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
+            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
+            "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Resource
@@ -440,5 +450,33 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("id", id);
         int isDelete = jdbcTemplate.update(DELETE_BY_ID, params);
         return isDelete > 0;
+    }
+
+    @Override
+    public List<Product> getProductsByUserId(int id) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        List<Product> products = jdbcTemplate.query(FIND_PRODUCT_FOR_USER, params, (rs, rowNum) -> {
+            Product product = new Product();
+            product.setId(rs.getInt("ID"));
+            product.setName(rs.getString("NAME"));
+            product.setDescription(rs.getString("DESCRIPTION"));
+            product.setDurationInDays(rs.getInt("DURATION"));
+            return product;
+        });
+        return products;
+    }
+
+    @Override
+    public List<Product> getActiveProductByUserId(Integer id) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        List<Product> products = jdbcTemplate.query(FIND_ACTIVE_PRODUCTS_FOR_USER, params, (rs, rowNum) -> {
+            Product product = new Product();
+            product.setId(rs.getInt("ID"));
+            product.setName(rs.getString("NAME"));
+            return product;
+        });
+        return products;
     }
 }

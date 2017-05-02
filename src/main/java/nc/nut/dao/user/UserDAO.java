@@ -12,12 +12,16 @@ public interface UserDAO extends Dao<User> {
 
     List<User> getAll();
 
-    List<User> getAllClient();
+    List<User> getAllClients();
 
     Integer findRole(String name);
 
     Integer findPlaceId(String name);
 
     User findByEmail(String email);
+
+    User getUserByPhone(String phone);
+
+    User getUserById(Integer id);
 
 }

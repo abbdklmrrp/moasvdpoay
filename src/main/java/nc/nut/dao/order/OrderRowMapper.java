@@ -20,7 +20,7 @@ public class OrderRowMapper implements RowMapper<Order> {
         int currentStatus = resultSet.getInt("CURRENT_STATUS_ID");
         switch(currentStatus){
             case (1):{
-                order.setCurrent_status_id(OperationStatus.Acitve);
+                order.setCurrent_status_id(OperationStatus.Active);
             }
             case (2):{
                 order.setCurrent_status_id(OperationStatus.Suspended);

@@ -15,25 +15,31 @@ import java.util.List;
  */
 @Service
 public class CustomerDAOImpl implements CustomerDAO {
-    private final static String FIND_COMPANY = "SELECT * FROM CUSTOMERS WHERE NAME=:customerName AND SECRET_KEY=:secretKey";
+    private final static String FIND_COMPANY = "SELECT ID,name,SECRET_KEY " +
+            "FROM CUSTOMERS " +
+            "WHERE NAME=:name AND SECRET_KEY=:secretKey";
+    private final static String SAVE_CUSTOMER = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY,TYPE_ID) " +
+            "VALUES(:name, :secretKey,:typeId)";
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     private Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 
     @Override
-    public Customer checkCustomer(String name, String secretKey) {
+    public Integer getCustomerId(String name, String secretKey) {
         String password = encoder.encode(secretKey);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("customerName", name);
+        params.addValue("name", name);
         params.addValue("secretKey", password);
         List<Customer> customers = jdbcTemplate.query(FIND_COMPANY, params, (rs, rowNum) -> {
             String customerName = rs.getString("NAME");
             String secret = rs.getString("SECRET_KEY");
-            int id = rs.getInt("ID");
+            Integer id = rs.getInt("ID");
             return new Customer(id, customerName, secret);
         });
-        return customers.isEmpty() ? null : customers.get(0);
+        return customers.isEmpty() ? null : customers.get(0).getId();
+       // return jdbcTemplate.queryForObject(FIND_COMPANY,params,Integer.class);
     }
 
     @Override
@@ -67,8 +73,17 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public boolean save(Customer object) {
-        return false;
+    public boolean save(Customer customer) {
+        String password = encoder.encode(customer.getSecretKey());
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", customer.getName());
+        params.addValue("secretKey", password);
+        switch (customer.getCustomerType()){
+            case Legal: params.addValue("typeId",1);
+            break;
+            case Individual:params.addValue("typeId",2);
+        }
+        return jdbcTemplate.update(SAVE_CUSTOMER, params)>0;
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Product {
     public Product() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -35,11 +35,11 @@ public class Product {
         this.categoryId = categoryId;
     }
 
-    public int getDurationInDays() {
+    public Integer getDurationInDays() {
         return durationInDays;
     }
 
-    public void setDurationInDays(int durationInDays) {
+    public void setDurationInDays(Integer durationInDays) {
         this.durationInDays = durationInDays;
     }
 
@@ -51,11 +51,11 @@ public class Product {
         this.productType = typeId;
     }
 
-    public int getNeedProcessing() {
+    public Integer getNeedProcessing() {
         return needProcessing;
     }
 
-    public void setNeedProcessing(int needProcessing) {
+    public void setNeedProcessing(Integer needProcessing) {
         this.needProcessing = needProcessing;
     }
 
@@ -75,11 +75,11 @@ public class Product {
         this.description = description;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
