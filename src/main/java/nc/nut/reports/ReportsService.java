@@ -21,7 +21,7 @@ public class ReportsService {
             "FROM OPERATIONS_HISTORY\n" +
             "  INNER JOIN ORDERS ON ORDERS.ID = OPERATIONS_HISTORY.ORDER_ID\n" +
             "  INNER JOIN USERS ON USERS.ID = ORDERS.USER_ID\n " +
-            "WHERE OPERATION_DATE BETWEEN TO_DATE(:date_begin, 'DD/MM/YYYY') AND TO_DATE(:date_end, 'DD/MM/YYYY')\n " +
+            "WHERE OPERATION_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD')\n " +
             "      AND USERS.PLACE_ID = :place_id\n " +
             "GROUP BY to_char(OPERATION_DATE, '<step>')";
     private final static String SELECT_NUMBER_OF_COMPLAINTS_FOR_TIME_PERIOD_BY_PLACE_SQL = "SELECT\n" +
@@ -30,7 +30,7 @@ public class ReportsService {
             "FROM COMPLAINTS\n" +
             "  INNER JOIN ORDERS ON ORDERS.ID = COMPLAINTS.ORDER_ID\n" +
             "  INNER JOIN USERS ON USERS.ID = ORDERS.USER_ID\n " +
-            "WHERE CREATING_DATE BETWEEN TO_DATE(:date_begin, 'DD/MM/YYYY') AND TO_DATE(:date_end, 'DD/MM/YYYY')\n" +
+            "WHERE CREATING_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD')\n" +
             "      AND USERS.PLACE_ID = :place_id\n " +
             "GROUP BY to_char(CREATING_DATE, '<step>')";
     private final static String dayPeriodPattern = "dd-MM-yyyy";
@@ -96,7 +96,7 @@ public class ReportsService {
     public List<ReportData> getDataForReport(String beginDateStr, String endDateStr, int placeId) throws ReportCreatingException {
         String stepPattern;
         final int PERIOD_TO_ADD;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dayPeriodPattern);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar beginDate = new GregorianCalendar();
         Calendar endDate = new GregorianCalendar();
         //todo determine which one is wrong for error msg

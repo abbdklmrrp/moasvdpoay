@@ -4,6 +4,7 @@ function drawChart() {
 
     var list = [];
     var len;
+    var isError = Boolean(false);
     jQuery.ajax({
         url: 'graph/graphData',
         type: "GET",
@@ -15,19 +16,21 @@ function drawChart() {
             len = list.length;
             if (len==0) {
                 $('#err').html("No data for this period");
-                return;
+                isError = Boolean(true);
             }
         },
-        error: function () {
+        error: function (response) {
             $('#err').html("Can't connect to the server");
-            return;
+            isError = Boolean(true);
         }
     });
-
+    if (isError){
+        return;
+    }
     var rowList = [];
     for (var i = 0; i < len; i++) {
         var row = [];
-        row.push(list[i].timePeriod, list[i].complaintsCount, list[i].ordersCount);
+        row.push(list[i].timePeriod, list[i].ordersCount, list[i].complaintsCount);
         rowList.push(row);
     }
 
@@ -68,41 +71,8 @@ function drawChart() {
         data: list,
         columns: [
             { data: 'timePeriod' },
-            { data: 'complaintsCount' },
-            { data: 'ordersCount' }
+            { data: 'ordersCount' },
+            { data: 'complaintsCount' }
         ]
     })
 }
-
-// function drawPageNumbers() {
-//     var count = getCountOfPages();
-//     console.log(count);
-//     var html = '<label id="pages">Pages</label>';
-//     for(var i=0;i<count;i++){
-//         var inc = i+1;
-//         html+='<button onclick=drawPageData('+i+')>'+ inc +'</button>';
-//     }
-//     $('#table_page').html(html);
-// }
-
-// function drawPageData(pageNumber) {
-//     drawPageNumbers();
-//     var list = getDataByPage(pageNumber);
-//     console.log(list);
-//     $('#table_data').html("");
-//     var html = '<table id="test">';
-//     html+='<tr>';
-//     html+='<th>Date</th>';
-//     html+='<th>Orders</th>';
-//     html+='<th>Complaints</th>';
-//     html+='</tr>';
-//     for(var i=0;i<list.length;i++){
-//         html+='<tr>';
-//         html+='<td>'+list[i][0].toDateString()+'</td>';
-//         html+='<td>'+list[i][1]+'</td>';
-//         html+='<td>'+list[i][2]+'</td>';
-//         html+='</tr>';
-//     }
-//     html+='</table>';
-//     $('#table_data').html(html);
-// }

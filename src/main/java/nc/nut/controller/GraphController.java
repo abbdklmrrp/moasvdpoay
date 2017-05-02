@@ -28,8 +28,6 @@ public class GraphController {
     @Autowired
     private PlaceDAO placeDAO;
     @Autowired
-    private ComplaintDAO complaintDAO;
-    @Autowired
     private ReportsService reportsService;
 
     @RequestMapping
@@ -42,23 +40,14 @@ public class GraphController {
     @RequestMapping(value = "/graphData")
     @ResponseBody
     public List<ReportData> getGraphData(@RequestParam(name = "region") int region,
-                                                     @RequestParam(name = "beginDate") String beginDate,
-                                                     @RequestParam(name = "endDate") String endDate) {
-        List<ReportData> list = new ArrayList<>();
-        Random random = new Random(3);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 30; j++) {
-                ReportData reportData = new ReportData("test"+i+j , random.nextInt(50 + i * 3), random.nextInt(50));
-                list.add(reportData);
-            }
+                                         @RequestParam(name = "beginDate") String beginDate,
+                                         @RequestParam(name = "endDate") String endDate) {
+        List<ReportData> list = null;
+        try {
+            list = reportsService.getDataForReport(beginDate,endDate,region);
+        } catch (ReportCreatingException e) {
+            e.printStackTrace();
         }
-//        List<ReportData> list = null;
-//        try {
-//            list = reportsService.getDataForReport(beginDate,endDate,region);
-//            System.out.println(list);
-//        } catch (ReportCreatingException e) {
-//            e.printStackTrace();
-//        }
         return list;
     }
 }

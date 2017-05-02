@@ -35,7 +35,7 @@
     </label>
     <br/>
 </form>
-<button id="b1" onclick="drawChart()">Show</button>
+<button id="b1" onclick="drawChart()">Show report</button>
 <span id="err" style="color: red"></span>
 <div class="center" id="line_top_x" style="width: 900px; height: 500px"></div>
 <div id="table_div"></div>
