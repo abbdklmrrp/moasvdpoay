@@ -6,7 +6,9 @@
 }
 
 body {
-    background: url("http://www.galaxiastudio.com/wp-content/uploads/2014/03/2252.jpg") #FF9000
+    background: url("http://www.galaxiastudio.com/wp-content/uploads/2014/03/2252.jpg") #FF9000;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {

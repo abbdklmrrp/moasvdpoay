@@ -78,4 +78,6 @@ public interface ProductDao extends Dao<Product> {
 
     boolean deleteServiceFromTariff(int idTariff, int idService);
 
+    boolean deleteById(int id);
+
 }

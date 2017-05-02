@@ -97,6 +97,8 @@ public class ProductDaoImpl implements ProductDao {
     private final static String DELETE_SERVICE_FROM_TARIFF = "DELETE FROM TARIFF_SERVICES " +
             "WHERE TARIFF_ID=:idTariff AND SERVICE_ID=:idService ";
 
+    private final static String DELETE_BY_ID = "DELETE FROM  Products where id=:id";
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Resource
@@ -408,6 +410,14 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("idTariff", idTariff);
         params.addValue("idService", idService);
         int isDelete = jdbcTemplate.update(DELETE_SERVICE_FROM_TARIFF, params);
+        return isDelete > 0;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        int isDelete = jdbcTemplate.update(DELETE_BY_ID, params);
         return isDelete > 0;
     }
 }
