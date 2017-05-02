@@ -1,16 +1,46 @@
-function check() {
-    var btn = document.getElementById('b1');
+$(document).ready(function () {
+    $('#btnShowReport').click(function () {
+        if(checkData()){
+            drawChartAndTable();
+        }
+    });
+    $('#btnDownloadReport').click(function () {
+        if(checkData()){
+            $('#formWithRegionsAndDates').submit();
+        }
+    });
+
+});
+
+function fillData() {
+    var btnShow = document.getElementById('btnShowReport');
+    var btnDownload = document.getElementById('btnDownloadReport');
     if ($('#beginDate').val() != '' && $('#endDate').val() != '') {
-        btn.removeAttribute("disabled");
+        btnShow.removeAttribute("disabled");
+        btnDownload.removeAttribute("disabled");
     }
     else {
-        btn.setAttribute("disabled", "disabled");
+        btnShow.setAttribute("disabled", "disabled");
+        btnDownload.setAttribute("disabled", "disabled");
     }
 }
+
+function checkData() {
+    var start = new Date($('#beginDate').val());
+    var end = new Date($('#endDate').val());
+    if ((end - start) < 0){
+        $('#err').html("Please, enter correct date period");
+        setTimeout("$('#err').empty()", 3000);
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 google.charts.load('current', {'packages': ['corechart']});
 
-function drawChart() {
-    $('#err').empty();
+function drawChartAndTable() {
     var list = [];
     var len;
     var isError = Boolean(false);
@@ -25,11 +55,13 @@ function drawChart() {
             len = list.length;
             if (len == 0) {
                 $('#err').html("No data for this period");
+                setTimeout("$('#err').empty()", 3000);
                 isError = Boolean(true);
             }
         },
         error: function (response) {
             $('#err').html("Can't connect to the server");
+            setTimeout("$('#err').empty()", 3000);
             isError = Boolean(true);
         }
     });
