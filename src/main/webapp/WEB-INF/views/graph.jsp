@@ -9,6 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
+    <title>Report</title>
     <link href="<c:url value="/resources/css/webGraph.css"/>" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -17,9 +18,9 @@
     <script type="text/javascript" src="<c:url value="/resources/js/drawReport.js"/>"></script>
 </head>
 <body>
-<form id="formWithRegionsAndDates">
+<form id="formWithRegionsAndDates" action="<%=request.getContextPath()%>/download" method="get">
     <label>Choose region:
-        <select id="sel1" name="region">
+        <select id="sel1" name="region" required>
             <c:forEach var="region" items="${regions}">
                 <option value="${region.id}">${region.name}</option>
             </c:forEach>
@@ -27,26 +28,19 @@
     </label>
     <br/>
     <label>Date Begin:
-        <input type="date" name="beginDate"/>
+        <input id="beginDate" type="date" name="beginDate" onchange="fillData()"/>
     </label>
     <br/>
     <label>Date End:
-        <input type="date" name="endDate"/>
+        <input id="endDate" type="date" name="endDate" onchange="fillData()"/>
     </label>
     <br/>
 </form>
-<button id="b1" onclick="drawChart()">Show</button>
+<button id="btnDownloadReport" disabled="disabled">Download report</button>
+<button id="btnShowReport" disabled="disabled">Show report</button>
+<br/>
 <span id="err" style="color: red"></span>
 <div class="center" id="line_top_x" style="width: 900px; height: 500px"></div>
 <div id="table_div"></div>
-<%--<table id="table_id" class="display">--%>
-    <%--<thead>--%>
-    <%--<tr>--%>
-        <%--<th>Date</th>--%>
-        <%--<th>Orders</th>--%>
-        <%--<th>Complaints</th>--%>
-    <%--</tr>--%>
-    <%--</thead>--%>
-<%--</table>--%>
 </body>
 </html>
