@@ -12,18 +12,16 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
     <link href="<c:url value="/resources/css/basic.css"/>" rel="stylesheet"/>
-
 </head>
 <body>
 <div class="login-form">
     <h1>ADMIN PAGE</h1>
     <div class="form-group "><br>
-        <h2><a href="${contextPath}/admin/addProduct">Create new tariff</a></h2><br>
+        <h2><a href="${contextPath}/admin/addTariff">Create new tariff</a></h2><br>
         <h2><a href="${contextPath}/admin/addService">Create new service</a></h2><br>
         <h2><a href="${contextPath}/admin/getAllProducts">View all products</a></h2><br>
-        <h2><a href="${contextPath}/admin/fillTariffService">Identify service to tariff</a></h2><br>
-        <h2><a href="${contextPath}/admin/updateService">Update service</a></h2><br>
-        <h2><a href="<%=request.getContextPath()%>/doLogout">Logout</a></h2><br>
+        <h2><a href="${contextPath}/admin/fillTariff">Fill tariff with services</a></h2><br>
+        <h2><a href="${contextPath}/doLogout">Logout</a></h2>
     </div>
 </div>
 </body>

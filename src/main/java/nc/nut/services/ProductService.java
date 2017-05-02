@@ -38,6 +38,14 @@ public class ProductService {
         return product;
     }
 
+    public boolean checkEmptyNewCategory(ProductCategories categories) {
+        return !(!categories.getName().equals("") && categories.getDescription().equals(""));
+    }
+
+    public boolean checkEmptyFieldIfProduct(Product product) {
+        return !(product.getName().equals("") || product.getDescription().equals(""));
+    }
+
     public void saveProduct(Product product) {
         if (Objects.equals(product.getProductType(), ProductType.Tariff)) {
             product.setCategoryId(null);
@@ -53,7 +61,20 @@ public class ProductService {
         for (String a : arr) {
             productDao.fillTariff(idTariff, Integer.parseInt(a));
         }
+    }
 
+    public boolean checkUniqueCategoryServices(String services) {
+        String[] arr = services.split(",");
+        List<Product> allServices = productDao.getAllServices();
+        Set<Integer> serviceCategoryId = new HashSet<>();
+        for (String s : arr) {
+            for (Product p : allServices) {
+                if (Integer.parseInt(s) == p.getId()) {
+                    serviceCategoryId.add(p.getCategoryId());
+                }
+            }
+        }
+        return arr.length == serviceCategoryId.size();
     }
 
     public void updateFillTariff(String service, Product product) {

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -32,17 +33,17 @@ public class AddProductController {
     private Logger logger = LoggerFactory.getLogger(AddProductController.class);
 
 
-    @RequestMapping(value = {"addProduct"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"addTariff"}, method = RequestMethod.GET)
     ModelAndView addProduct(ModelAndView mav) {
         mav.addObject("product", new Product());
-        mav.setViewName("admin/addProduct");
+        mav.setViewName("admin/addTariff");
         return mav;
     }
 
     @RequestMapping(value = {"addService"}, method = RequestMethod.GET)
-    ModelAndView addService(ModelAndView mav) {
-
+    ModelAndView addService(ModelAndView mav, HttpSession session) {
         List<ProductCategories> productCategories = productDao.findProductCategories();
+        session.setAttribute("productCategories", productCategories);
 //        List<String> productTypes = productDao.findProductTypes();
 //        mav.addObject("productTypes", productTypes);
         mav.addObject("productCategories", productCategories);
@@ -51,23 +52,40 @@ public class AddProductController {
         return mav;
     }
 
-    @RequestMapping(value = {"addProduct"}, method = RequestMethod.POST)
-    String createService(Product product
-    ) {
+    @RequestMapping(value = {"addTariff"}, method = RequestMethod.POST)
+    String createService(Product product, Model model) {
+
+        boolean checkEmptyTariff = productService.checkEmptyFieldIfProduct(product);
+        if (!checkEmptyTariff) {
+            model.addAttribute("errorEmptyProduct", " Please fill all fields");
+            return "admin/addTariff";
+        }
         product.setProductType(ProductType.Tariff);
         productService.saveProduct(product);
         return "admin/index";
     }
 
     @RequestMapping(value = {"addService"}, method = RequestMethod.POST)
-    String createService(Product product, Model model,
+    String createService(Product product, Model model, HttpSession session,
                          @RequestParam(value = "newCategory") String newCategory,
-                         @RequestParam(value = "newCategoryDesc") String newCategoryDesc
-    ) {
+                         @RequestParam(value = "newCategoryDesc") String newCategoryDesc) {
+
+        boolean checkEmptyService = productService.checkEmptyFieldIfProduct(product);
+        if (!checkEmptyService) {
+            model.addAttribute("errorEmptyProduct", " Please fill all fields");
+            model.addAttribute("productCategories", session.getAttribute("productCategories"));
+            return "admin/addService";
+        }
         product.setProductType(ProductType.Service);
         ProductCategories productCategories = new ProductCategories();
         productCategories.setName(newCategory);
         productCategories.setDescription(newCategoryDesc);
+        boolean checkEmptyCategory = productService.checkEmptyNewCategory(productCategories);
+        if (!checkEmptyCategory) {
+            model.addAttribute("errorEmptyProduct", " Please fill all fields");
+            model.addAttribute("productCategories", session.getAttribute("productCategories"));
+            return "admin/addService";
+        }
         try {
             product = productService.getCategory(productCategories, product);
         } catch (DuplicateKeyException e) {
@@ -78,17 +96,4 @@ public class AddProductController {
         productService.saveProduct(product);
         return "admin/index";
     }
-
-    @RequestMapping(value = {"viewAllProducts"}, method = RequestMethod.GET)
-    String viewAllProducts(Model model) {
-
-        List<Product> allServices = productDao.getAllServices();
-        List<Product> allTariffs = productDao.getAllTariffs();
-
-        model.addAttribute("allServices", allServices);
-        model.addAttribute("allTariffs", allTariffs);
-
-        return "admin/viewAllProducts";
-    }
-
 }

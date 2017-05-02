@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<form method="POST" name="Form" action="<%=request.getContextPath()%>/admin/updateTariff">
+<form method="POST" name="Form" action="${contextPath}/admin/updateTariff">
     <div class="login-form">
         <%--<h1>SELECT TARIFF</h1>--%>
         <%--<div class="form-group ">--%>
@@ -66,11 +66,11 @@
             </select>
         </div>
 
-        <c:if test="${not empty error}">
-            <span style="float:right ; color: #10CE88;">${error}</span>
+        <c:if test="${not empty errors}">
+            <span style="float:right ; color: #10CE88;">${errors}</span>
         </c:if>
         <fieldset>
-
+            <h6>All services</h6>
             <select name="allServices" id="select-from" multiple>
                 <c:forEach var="tariff" items="${servicesNotInTariff}">
                     <option value="${tariff.id}">${tariff.name}</option>
@@ -78,17 +78,21 @@
             </select>
 
             <a href="JavaScript:void(0);" id="btn-add">Add &raquo;</a>
-            <a href="JavaScript:void(0);" id="btn-remove">&laquo; Remove</a>
 
+            <h6>Selected services</h6>
             <select name="selectto" id="select-to" multiple="multiple">
                 <c:forEach var="tariff" items="${servicesByTariff}">
                     <option value="${tariff.id}">${tariff.name}</option>
                 </c:forEach>
             </select>
 
+            <a href="JavaScript:void(0);" id="btn-remove">&laquo; Remove</a>
+
         </fieldset>
 
         <button type="submit" class="log-btn">Save</button>
+        <br>
+        <h2><a href="${contextPath}/doLogout">Logout</a></h2>
     </div>
 </form>
 </body>

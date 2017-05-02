@@ -19,10 +19,11 @@ import java.util.Map;
 public class ProductDaoImpl implements ProductDao {
 
     private final static String FIND_ALL_CATEGORIES = "SELECT * FROM PRODUCT_CATEGORIES";
-    private final static String FIND_CATEGORY = "SELECT * FROM PRODUCT_CATEGORIES WHERE NAME=:name";
-    private final static String FIND_TYPES = "SELECT * FROM PRODUCT_TYPES";
+    private final static String FIND_CATEGORY = "SELECT ID FROM PRODUCT_CATEGORIES WHERE NAME=:name";
+    private final static String FIND_TYPES = "SELECT NAME FROM PRODUCT_TYPES";
     private final static String FIND_SERVICES = "SELECT * FROM PRODUCTS WHERE TYPE_ID=2 ORDER BY ID";
     private final static String FIND_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 ORDER BY ID";
+    private final static String FIND_PRODUCT_BY_ID = "SELECT * FROM PRODUCTS WHERE ID=:id";
 
     private final static String FIND_ALL_PRODUCTS = "SELECT ID,TYPE_ID,CATEGORY_ID,NAME,DURATION," +
             "NEED_PROCESSING,DESCRIPTION,STATUS FROM PRODUCTS ORDER BY ID";
@@ -49,8 +50,12 @@ public class ProductDaoImpl implements ProductDao {
             "WHERE prod.STATUS=1 AND pTypes.name='Service'";
 
     private final static String FIND_ALL_FREE_TARIFFS = "SELECT * FROM PRODUCTS p join PRODUCT_TYPES ptype ON(p.TYPE_ID=ptype.ID)\n" +
-            "    LEFT JOIN TARIFF_SERVICES ts ON(p.ID=ts.TARIFF_ID)\n" +
+            "LEFT JOIN TARIFF_SERVICES ts ON(p.ID=ts.TARIFF_ID)\n" +
             "WHERE ptype.name='Tariff' AND ts.TARIFF_ID IS NULL";
+
+    private final static String UPDATE_SERVICE = "UPDATE PRODUCTS SET NAME=:name," +
+            "DURATION=:duration,NEED_PROCESSING=:needProcessing," +
+            "DESCRIPTION=:description,STATUS=:status WHERE ID=:id";
 
     private final static String ADD_TARIFF_SERVICE = "INSERT INTO TARIFF_SERVICES VALUES(:tariff_id,:service_id)";
     private final static String ADD_CATEGORY = "INSERT INTO PRODUCT_CATEGORIES(NAME,DESCRIPTION) VALUES(:name,:description)";
@@ -111,16 +116,23 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public boolean save(Product product) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("typeId", product.getProductType());
+        ProductType type = product.getProductType();
+        switch (type) {
+            case Tariff:
+                params.addValue("typeId", 1);
+                break;
+            case Service:
+                params.addValue("typeId", 2);
+                break;
+        }
         params.addValue("categoryId", product.getCategoryId());
         params.addValue("nameProduct", product.getName());
         params.addValue("duration", product.getDurationInDays());
         params.addValue("needProcessing", product.getNeedProcessing());
         params.addValue("description", product.getDescription());
         params.addValue("status", product.getStatus());
-        params.addValue("type_id", product.getProductType());
-        int isUpdate = jdbcTemplate.update(ADD_PRODUCT, params);
 
+        int isUpdate = jdbcTemplate.update(ADD_PRODUCT, params);
         return isUpdate > 0;
 
     }
@@ -140,14 +152,14 @@ public class ProductDaoImpl implements ProductDao {
         return jdbcTemplate.query(FIND_TARIFFS, productRowMapper);
     }
 
-    //TODO boolean
     @Override
-    public void fillTariff(int idTariff, int idService) {
+    public boolean fillTariff(int idTariff, int idService) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("tariff_id", idTariff);
         params.addValue("service_id", idService);
-        int update = jdbcTemplate.update(ADD_TARIFF_SERVICE, params);
+        int isUpdate = jdbcTemplate.update(ADD_TARIFF_SERVICE, params);
 
+        return isUpdate > 0;
     }
 
     @Override
@@ -163,12 +175,12 @@ public class ProductDaoImpl implements ProductDao {
     public int findIdCategory(ProductCategories categories) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", categories.getName());
-        List<ProductCategories> categoriesList = jdbcTemplate.query(FIND_CATEGORY, params, (rs, rowNum) -> {
+        ProductCategories categoriesList = jdbcTemplate.queryForObject(FIND_CATEGORY, params, (rs, rowNum) -> {
             ProductCategories productCategories = new ProductCategories();
             productCategories.setId(rs.getInt("ID"));
             return productCategories;
         });
-        return categoriesList.get(0).getId();
+        return categoriesList.getId();
     }
 
     @Override
@@ -208,13 +220,11 @@ public class ProductDaoImpl implements ProductDao {
         return services;
     }
 
-    //TODO почему бы не использовать внешний класс ProductRowMapper
     @Override
     public List<Product> getAllFreeTariffs() {
         List<Product> tariffs = jdbcTemplate.query(FIND_ALL_FREE_TARIFFS, (rs, rowNum) -> {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
-            Integer productType = rs.getInt("type_id");
             Integer typeId = rs.getInt("TYPE_ID");
             switch (typeId) {
                 case 1:
@@ -240,7 +250,10 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product getById(int id) {
-        return null;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        Product product = jdbcTemplate.queryForObject(FIND_PRODUCT_BY_ID, params, productRowMapper);
+        return product;
     }
 
     @Override
@@ -260,7 +273,15 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public boolean update(Product product) {
-        return false;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", product.getName());
+        params.addValue("duration", product.getDurationInDays());
+        params.addValue("needProcessing", product.getNeedProcessing());
+        params.addValue("description", product.getDescription());
+        params.addValue("status", product.getStatus());
+        params.addValue("id", product.getId());
+        int isUpdate = jdbcTemplate.update(UPDATE_SERVICE, params);
+        return isUpdate > 0;
     }
 
     @Override

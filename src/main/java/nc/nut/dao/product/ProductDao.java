@@ -28,7 +28,7 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getAllFreeTariffs();
 
-    void fillTariff(int idTariff, int idService);
+    boolean fillTariff(int idTariff, int idService);
 
     boolean addCategory(ProductCategories categories);
 
