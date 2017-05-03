@@ -65,9 +65,8 @@ public class GraphController {
     public void downloadExcelDocument(HttpServletResponse response, @RequestParam(name = "region") int region,
                                       @RequestParam(name = "beginDate") String beginDate,
                                       @RequestParam(name = "endDate") String endDate) throws IOException {
-        //todo generate name from users's response
-        //todo get data from server
-        final String fileName = "sample.xlsx";
+        final String extension = ".xlsx";
+        final String fileName =  beginDate + endDate + extension;
         OutputStream outputStream = response.getOutputStream();
         ExcelReportCreator reportMaker = new ExcelReportCreator(fileName);
         response.setContentType("application/vnd.ms-excel");
