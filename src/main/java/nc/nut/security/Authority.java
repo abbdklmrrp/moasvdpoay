@@ -4,12 +4,42 @@ package nc.nut.security;
  * @author Rysakova Anna
  */
 public enum Authority {
-    USER("USER"),
+    //    USER("USER"),
+//    ADMIN("ADMIN"),
+//    PMG("PMG"),
+//    CSR("CSR");
     ADMIN("ADMIN"),
     PMG("PMG"),
-    CSR("CSR");
+    CSR("CSR"),
+    INDIVIDUAL("INDIVIDUAL"),
+    LEGAL("LEGAL"),
+    EMPLOYEE("EMPLOYEE");
 
     private final String auth;
+
+    public static Authority getAuthorityById(Integer id) {
+        switch (id) {
+            case (1):
+                return Authority.ADMIN;
+
+            case (2):
+                return Authority.PMG;
+
+            case (3):
+                return Authority.CSR;
+
+            case (4):
+                return Authority.INDIVIDUAL;
+
+            case (5):
+                return Authority.LEGAL;
+
+            case (6):
+                return Authority.EMPLOYEE;
+            default:
+                return null;
+        }
+    }
 
     Authority(String auth) {
         this.auth = auth;

@@ -31,11 +31,11 @@ public class Complaint {
         this.orderId = orderId;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -63,19 +63,19 @@ public class Complaint {
         this.status = status;
     }
 
-    public int getCsrId() {
+    public Integer getCsrId() {
         return csrId;
     }
 
-    public void setCsrId(int csrId) {
+    public void setCsrId(Integer csrId) {
         this.csrId = csrId;
     }
 
-    public int getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 

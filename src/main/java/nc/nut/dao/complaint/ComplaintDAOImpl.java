@@ -56,7 +56,14 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         params.addValue("orderId", object.getOrderId());
         params.addValue("csrId", object.getCsrId());
         params.addValue("creatingDate", object.getCreationDate());
-        params.addValue("statusId", object.getStatus());
+        switch (object.getStatus()){
+            case Send:params.addValue("statusId", 1);
+            break;
+            case InProcessing:params.addValue("statusId", 2);
+            break;
+            case Processed:params.addValue("statusId", 3);
+            break;
+        }
         params.addValue("description", object.getDescription());
         return jdbcTemplate.update(INSERT_COMPLAINT_SQL, params) > 0;
 

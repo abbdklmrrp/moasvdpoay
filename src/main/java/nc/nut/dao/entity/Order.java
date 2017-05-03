@@ -5,6 +5,8 @@
  */
 package nc.nut.dao.entity;
 
+import java.util.Objects;
+
 /**
  * @author Alistratenko Nikita
  */
@@ -25,27 +27,27 @@ public class Order {
         this.current_status = current_status;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getProduct_id() {
+    public Integer getProduct_id() {
         return product_id;
     }
 
-    public void setProduct_id(int product_id) {
+    public void setProduct_id(Integer product_id) {
         this.product_id = product_id;
     }
 
-    public int getUser_id() {
+    public Integer getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(Integer user_id) {
         this.user_id = user_id;
     }
 
@@ -65,4 +67,19 @@ public class Order {
                 + ", current_status=" + current_status + '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Order)) return false;
+        Order order = (Order) o;
+        return Objects.equals(getId(), order.getId()) &&
+                Objects.equals(getProduct_id(), order.getProduct_id()) &&
+                Objects.equals(getUser_id(), order.getUser_id()) &&
+                Objects.equals(getCurrent_status(), order.getCurrent_status());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getProduct_id(), getUser_id(), getCurrent_status());
+    }
 }

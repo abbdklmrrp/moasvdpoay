@@ -15,26 +15,16 @@
     <script src="${contextPath}/resources/js/user.type.js"></script>
 </head>
 <body>
-<form action="${contextPath}/signUp" method="post">
+<form action="${contextPath}/admin/signUpCoworker" method="post">
     <div class="login-form">
         <h1>Sign up</h1>
-        <div class="form-group ">
-            <select id="userType" name="userType" class="form-control" aria-required="true"
-                    onChange="Selected(this)">
-                <option value="INDIVIDUAL">Individual</option>
-                <option value="LEGAL">Legal Entity</option>
-            </select>
-        </div>
-        <div id='Block1' style='display: none;'>
-            <div class="form-group ">
-                <input type="text" class="form-control" placeholder="Company name " id="CompanyName" name="companyName">
-                <i class="fa fa-user"></i>
-            </div>
-            <div class="form-group ">
-                <input type="password" class="form-control" placeholder="Secret key" id="SecretKey" name="secretKey">
-                <i class="fa fa-lock"></i>
-            </div>
-        </div>
+       <div class="form-group">
+           <select id="userType" name="userType" class="form-control" aria-required="true">
+               <option value="ADMIN">Admin</option>
+               <option value="CSR">CSR</option>
+               <option value="PMG">PMG</option>
+           </select>
+       </div>
         <div class="form-group ">
             <input type="text" class="form-control" placeholder="First name " id="FirstName" name="firstName">
             <i class="fa fa-user"></i>

@@ -1,11 +1,13 @@
 package nc.nut.dao.product;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Created by Rysakova Anna on 23.04.2017.
  */
 public class Product {
+
     private Integer id;
     private Integer categoryId;
     private Integer durationInDays;
@@ -19,11 +21,11 @@ public class Product {
     public Product() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -35,11 +37,11 @@ public class Product {
         this.categoryId = categoryId;
     }
 
-    public int getDurationInDays() {
+    public Integer getDurationInDays() {
         return durationInDays;
     }
 
-    public void setDurationInDays(int durationInDays) {
+    public void setDurationInDays(Integer durationInDays) {
         this.durationInDays = durationInDays;
     }
 
@@ -51,11 +53,11 @@ public class Product {
         this.productType = typeId;
     }
 
-    public int getNeedProcessing() {
+    public Integer getNeedProcessing() {
         return needProcessing;
     }
 
-    public void setNeedProcessing(int needProcessing) {
+    public void setNeedProcessing(Integer needProcessing) {
         this.needProcessing = needProcessing;
     }
 
@@ -75,11 +77,11 @@ public class Product {
         this.description = description;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -90,4 +92,27 @@ public class Product {
     public void setBasePrice(BigDecimal basePrice) {
         this.basePrice = basePrice;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return Objects.equals(getId(), product.getId()) &&
+                Objects.equals(getCategoryId(), product.getCategoryId()) &&
+                Objects.equals(getDurationInDays(), product.getDurationInDays()) &&
+                Objects.equals(getProductType(), product.getProductType()) &&
+                Objects.equals(getNeedProcessing(), product.getNeedProcessing()) &&
+                Objects.equals(getName(), product.getName()) &&
+                Objects.equals(getDescription(), product.getDescription()) &&
+                Objects.equals(getStatus(), product.getStatus()) &&
+                Objects.equals(getBasePrice(), product.getBasePrice());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCategoryId(), getDurationInDays(), getProductType(), getNeedProcessing(), getName(), getDescription(), getStatus(), getBasePrice());
+    }
+
+
 }

@@ -10,7 +10,7 @@ import java.util.List;
  * @since 24.04.2017.
  */
 public interface CustomerDAO extends Dao<Customer> {
-    Customer checkCustomer(String name, String secretKey);
+    Integer getCustomerId(String name, String secretKey);
 
     boolean changeSecretKey(int customerId, String newSecretKey);
 

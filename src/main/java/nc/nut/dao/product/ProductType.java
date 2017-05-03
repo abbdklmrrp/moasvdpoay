@@ -15,4 +15,17 @@ public enum ProductType {
     public String getProductType() {
         return productType;
     }
+
+    public static ProductType getProductTypeByID(Integer id) {
+        switch (id) {
+            case (1):
+                return ProductType.Tariff;
+
+            case (2):
+                return ProductType.Service;
+            default:
+                return null;
+
+        }
+    }
 }
