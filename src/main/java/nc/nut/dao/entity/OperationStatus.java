@@ -22,7 +22,7 @@ public enum OperationStatus {
 
     public static Integer getIdByStatus(OperationStatus operationStatus) {
         switch (operationStatus) {
-            case Acitve:
+            case Active:
                 return 1;
             case Suspended:
                 return 2;
@@ -36,7 +36,7 @@ public enum OperationStatus {
     public static OperationStatus getOperationStatusByID(Integer id) {
         switch (id) {
             case 1:
-                return Acitve;
+                return Active;
 
             case 2:
                 return Suspended;

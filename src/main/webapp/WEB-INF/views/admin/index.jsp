@@ -18,6 +18,7 @@
 <div class="login-form">
     <h1>ADMIN PAGE</h1>
     <div class="form-group "><br>
+        <h2><a href="${contextPath}/admin/getAdminProfile">Profile</a></h2><br>
         <h2><a href="${contextPath}/admin/addTariff">Create new tariff</a></h2><br>
         <h2><a href="${contextPath}/admin/addService">Create new service</a></h2><br>
         <h2><a href="${contextPath}/admin/getAllProducts">View all products</a></h2><br>
