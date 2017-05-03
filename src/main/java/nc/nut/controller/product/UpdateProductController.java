@@ -46,7 +46,7 @@ public class UpdateProductController {
         return "admin/updateTariff";
     }
 
-    @RequestMapping(value = {"updateProduct"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"updateService"}, method = RequestMethod.POST)
     String updateService(Product product, HttpSession session) {
         Integer id = (Integer) session.getAttribute("productId");
         product.setId(id);
@@ -73,7 +73,7 @@ public class UpdateProductController {
                                          HttpServletRequest request,
                                          HttpSession session) {
 
-        ModelAndView mav = new ModelAndView("redirect:/admin/getDetails");
+        ModelAndView mav = new ModelAndView("redirect:/admin/getDetailsProduct");
         FlashMap outputFlashMap = RequestContextUtils.getOutputFlashMap(request);
         if (outputFlashMap != null) {
             if (exception instanceof MissingServletRequestParameterException) {

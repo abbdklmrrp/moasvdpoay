@@ -1,22 +1,18 @@
 package nc.nut.controller;
 
-import nc.nut.TestGraphStatisticData;
-import nc.nut.dao.complaint.ComplaintDAO;
 import nc.nut.dao.place.Place;
 import nc.nut.dao.place.PlaceDAO;
 import nc.nut.reports.ReportCreatingException;
 import nc.nut.reports.ReportData;
 import nc.nut.reports.ReportsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -52,10 +48,9 @@ public class GraphController {
         } catch (ReportCreatingException e) {
             e.printStackTrace();
         }
-        if (!filteredList.isEmpty()){
+        if (!filteredList.isEmpty()) {
             return list;
-        }
-        else {
+        } else {
             return filteredList;
         }
     }

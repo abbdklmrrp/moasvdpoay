@@ -27,6 +27,9 @@ public class Order {
         this.currentStatus = currentStatus;
     }
 
+    public Order() {
+    }
+
     public Integer getId() {
         return id;
     }
@@ -57,9 +60,6 @@ public class Order {
 
     public void setCurrentStatus(OperationStatus current_status) {
         this.currentStatus = current_status;
-    }
-
-    public Order() {
     }
 
     @Override

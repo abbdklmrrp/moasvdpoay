@@ -83,6 +83,14 @@
         </div>
 
         <div class="form-group ">
+            <h6>Customer type</h6>
+            <select name="customerTypeId" class="form-control" id="customerTypeId">
+                <option value="1">Legal</option>
+                <option value="2">Individual</option>
+            </select>
+        </div>
+
+        <div class="form-group ">
             <h6>Select duration in days</h6>
             <select name="durationInDays" class="form-control" id="durationInDays">
                 <option value="365">365</option>
