@@ -73,7 +73,7 @@ public class FillTariffController {
         }
         productService.fillTariff(services, tariffId);
 
-        return "admin/index";
+        return "redirect:/admin/index";
     }
 
     @ExceptionHandler({ServletRequestBindingException.class})

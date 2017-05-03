@@ -52,7 +52,7 @@ public class UpdateProductController {
         product.setId(id);
         productService.updateProduct(product);
         session.removeAttribute("productId");
-        return "admin/index";
+        return "redirect:/admin/index";
     }
 
     @RequestMapping(value = {"updateTariff"}, method = RequestMethod.POST)
@@ -65,7 +65,7 @@ public class UpdateProductController {
         productService.updateTariffWithNewServices(services, product);
         productService.updateProduct(product);
         session.removeAttribute("productId");
-        return "admin/index";
+        return "redirect:/admin/index";
     }
 
     @ExceptionHandler({Exception.class})
