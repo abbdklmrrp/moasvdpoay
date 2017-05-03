@@ -68,7 +68,7 @@ public class ServiceOrderController {
             order.setCurrentStatus(OperationStatus.InProcessing);
             msg = "Your order on " + productToOrder.getName() + " is in process.\n We will contact you later.";
         } else {
-            order.setCurrentStatus(OperationStatus.Acitve);
+            order.setCurrentStatus(OperationStatus.Active);
             msg = "Service " + productToOrder.getName() + " has been activated.\n Enjoy using it!";
 
         }

@@ -84,9 +84,9 @@ public class ReportsService {
 
         switch (PERIOD) {
             case (Calendar.DATE):
-                return (String.format("%02d", date.get(Calendar.DATE)) + "-" + String.format("%02d", date.get(Calendar.MONTH)) + "-" + String.format("%04d", date.get(Calendar.YEAR)));
+                return (String.format("%02d", date.get(Calendar.DATE)) + "-" + String.format("%02d", date.get(Calendar.MONTH) + 1) + "-" + String.format("%04d", date.get(Calendar.YEAR)));
             case (Calendar.MONTH):
-                return (String.format("%02d", date.get(Calendar.MONTH)) + "-" + String.format("%04d", date.get(Calendar.YEAR)));
+                return (String.format("%02d", date.get(Calendar.MONTH) + 1) + "-" + String.format("%04d", date.get(Calendar.YEAR)));
             case (Calendar.YEAR):
                 return String.format("%04d", date.get(Calendar.YEAR));
         }
