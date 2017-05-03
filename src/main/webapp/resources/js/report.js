@@ -45,7 +45,7 @@ function drawChartAndTable() {
     var len;
     var isError = Boolean(false);
     jQuery.ajax({
-        url: 'graph/graphData',
+        url: 'report/data',
         type: "GET",
         dataType: "json",
         data: jQuery("#formWithRegionsAndDates").serialize(),

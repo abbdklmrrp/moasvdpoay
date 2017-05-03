@@ -62,7 +62,7 @@ public class AddProductController {
         }
         product.setProductType(ProductType.Tariff);
         productService.saveProduct(product);
-        return "admin/index";
+        return "redirect:/admin/index";
     }
 
     @RequestMapping(value = {"addService"}, method = RequestMethod.POST)
@@ -94,6 +94,6 @@ public class AddProductController {
             return "admin/addService";
         }
         productService.saveProduct(product);
-        return "admin/index";
+        return "redirect:/admin/index";
     }
 }

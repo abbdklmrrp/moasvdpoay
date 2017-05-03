@@ -41,8 +41,8 @@ public class ViewProductController {
         return "admin/viewAllProducts";
     }
 
-    @RequestMapping(value = "getDetails", method = RequestMethod.GET)
-    public ModelAndView getDetails(@RequestParam(value = "id") int id,
+    @RequestMapping(value = "getDetailsProduct", method = RequestMethod.GET)
+    public ModelAndView getDetailsProduct(@RequestParam(value = "id") int id,
                                    ModelAndView mav,
                                    HttpSession session) {
 

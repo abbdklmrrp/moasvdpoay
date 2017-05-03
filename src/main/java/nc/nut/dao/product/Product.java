@@ -7,7 +7,6 @@ import java.util.Objects;
  * Created by Rysakova Anna on 23.04.2017.
  */
 public class Product {
-
     private Integer id;
     private Integer categoryId;
     private Integer durationInDays;
@@ -17,6 +16,7 @@ public class Product {
     private String description;
     private Integer status;
     private BigDecimal basePrice;
+    private Integer customerTypeId;
 
     public Product() {
     }
@@ -93,6 +93,14 @@ public class Product {
         this.basePrice = basePrice;
     }
 
+    public Integer getCustomerTypeId() {
+        return customerTypeId;
+    }
+
+    public void setCustomerTypeId(Integer customerTypeId) {
+        this.customerTypeId = customerTypeId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -113,6 +121,5 @@ public class Product {
     public int hashCode() {
         return Objects.hash(getId(), getCategoryId(), getDurationInDays(), getProductType(), getNeedProcessing(), getName(), getDescription(), getStatus(), getBasePrice());
     }
-
 
 }

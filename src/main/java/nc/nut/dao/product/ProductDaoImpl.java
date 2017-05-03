@@ -23,7 +23,6 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_TYPES = "SELECT NAME FROM PRODUCT_TYPES";
     private final static String FIND_SERVICES = "SELECT * FROM PRODUCTS WHERE TYPE_ID=2 ORDER BY ID";
     private final static String FIND_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 ORDER BY ID";
-    private final static String SELECT_BY_ID_SQL = "SELECT * FROM PRODUCTS WHERE ID = :id";
     private final static String FIND_PRODUCT_BY_ID = "SELECT * FROM PRODUCTS WHERE ID=:id";
 
     private final static String FIND_ALL_PRODUCTS = "SELECT ID,TYPE_ID,CATEGORY_ID,NAME,DURATION," +
@@ -60,8 +59,8 @@ public class ProductDaoImpl implements ProductDao {
 
     private final static String ADD_TARIFF_SERVICE = "INSERT INTO TARIFF_SERVICES VALUES(:tariff_id,:service_id)";
     private final static String ADD_CATEGORY = "INSERT INTO PRODUCT_CATEGORIES(NAME,DESCRIPTION) VALUES(:name,:description)";
-    private final static String ADD_PRODUCT = "INSERT INTO PRODUCTS(TYPE_ID,CATEGORY_ID,NAME,DURATION," +
-            "NEED_PROCESSING,DESCRIPTION,STATUS) VALUES(:typeId,:categoryId,:nameProduct,:duration," +
+    private final static String ADD_PRODUCT = "INSERT INTO PRODUCTS(TYPE_ID,CATEGORY_ID,NAME,DURATION,CUSTOMER_TYPE_ID," +
+            "NEED_PROCESSING,DESCRIPTION,STATUS) VALUES(:typeId,:categoryId,:nameProduct,:duration,:customerTypeId," +
             ":needProcessing,:description,:status)";
     private final static String SELECT_SERVICES_BY_PLACE_SQL = "SELECT\n" +
             "  PRODUCTS.ID,\n" +
@@ -159,6 +158,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("categoryId", product.getCategoryId());
         params.addValue("nameProduct", product.getName());
         params.addValue("duration", product.getDurationInDays());
+        params.addValue("customerTypeId", product.getCustomerTypeId());
         params.addValue("needProcessing", product.getNeedProcessing());
         params.addValue("description", product.getDescription());
         params.addValue("status", product.getStatus());
@@ -267,10 +267,9 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product getById(int id) {
-
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("id", id);
-        return jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, parameterSource, productRowMapper);
+        return jdbcTemplate.queryForObject(FIND_PRODUCT_BY_ID, parameterSource, productRowMapper);
     }
 
     @Override

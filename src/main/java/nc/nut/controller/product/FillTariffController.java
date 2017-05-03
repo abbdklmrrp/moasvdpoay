@@ -46,6 +46,9 @@ public class FillTariffController {
 //        List<ProductCategories> productCategories = productDao.findProductCategories();
         for (Map.Entry<String, List<Product>> s : allServices.entrySet()) {
             model.addAttribute(s.getKey(), s.getValue());
+            for (Product p : s.getValue()) {
+                System.out.println(s.getKey() + " " + p.getName());
+            }
         }
         model.addAttribute("tariffs", tariffs);
         model.addAttribute("allServices", allServices);
@@ -70,7 +73,7 @@ public class FillTariffController {
         }
         productService.fillTariff(services, tariffId);
 
-        return "admin/index";
+        return "redirect:/admin/index";
     }
 
     @ExceptionHandler({ServletRequestBindingException.class})

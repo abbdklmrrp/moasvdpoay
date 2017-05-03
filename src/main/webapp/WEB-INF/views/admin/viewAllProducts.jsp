@@ -53,6 +53,7 @@
                 {"mData": "productType"},
                 {"mData": "categoryId"},
                 {"mData": "durationInDays"},
+//                {"mData": "customerTypeId"},
                 {"mData": "needProcessing"},
                 {"mData": "description"},
                 {"mData": "status"},
@@ -60,7 +61,7 @@
                     "mData": "id",
                     "bSortable": false,
                     "mRender": function (data) {
-                        return '<a class="btn btn-info btn-sm" href=${contextPath}/admin/getDetails?id=' + data + '>' + "Edit" + '</a>';
+                        return '<a class="btn btn-info btn-sm" href=${contextPath}/admin/getDetailsProduct?id=' + data + '>' + "Edit" + '</a>';
                     }
                 }
             ],
