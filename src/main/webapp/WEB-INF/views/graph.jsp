@@ -18,7 +18,7 @@
     <script type="text/javascript" src="<c:url value="/resources/js/drawReport.js"/>"></script>
 </head>
 <body>
-<form id="formWithRegionsAndDates" action="<%=request.getContextPath()%>/download" method="get">
+<form id="formWithRegionsAndDates" action="<%=request.getContextPath()%>/report/download" method="get">
     <label>Choose region:
         <select id="sel1" name="region" required>
             <c:forEach var="region" items="${regions}">
