@@ -57,6 +57,19 @@ a {
     margin-left: 200px;
 }
 
+.left-hight-login{
+    float: left;
+    width: 350px;
+    height: 700px;
+    padding: 40px 30px;
+    background: rgba(235, 235, 205, 0.7);
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    margin-top: 65px;
+    margin-left: 200px;
+}
+
 .right-login{
     float: right;
     width: 350px;
