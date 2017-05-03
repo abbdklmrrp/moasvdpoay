@@ -66,7 +66,7 @@ public class ReportController {
                                       @RequestParam(name = "beginDate") String beginDate,
                                       @RequestParam(name = "endDate") String endDate) throws IOException {
         final String extension = ".xlsx";
-        final String fileName =  beginDate+"to" + endDate + extension;
+        final String fileName = beginDate + ":" + endDate + extension;
         OutputStream outputStream = response.getOutputStream();
         ExcelReportCreator reportMaker = new ExcelReportCreator(fileName);
         response.setContentType("application/vnd.ms-excel");
