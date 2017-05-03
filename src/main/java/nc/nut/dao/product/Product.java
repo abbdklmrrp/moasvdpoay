@@ -49,8 +49,8 @@ public class Product {
         return productType;
     }
 
-    public void setProductType(ProductType productType) {
-        this.productType = productType;
+    public void setProductType(ProductType typeId) {
+        this.productType = typeId;
     }
 
     public Integer getNeedProcessing() {

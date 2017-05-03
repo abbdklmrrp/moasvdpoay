@@ -3,6 +3,7 @@ package nc.nut.dao.product;
 import nc.nut.dao.interfaces.Dao;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Rysakova Anna , Alistratenko Nikita on 23.04.2017.
@@ -15,7 +16,7 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getByProcessingStatus(int id);
 
-    List<ProductTypes> findProductTypes();
+    List<String> findProductTypes();
 
     List<ProductCategories> findProductCategories();
 
@@ -27,11 +28,11 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getAllFreeTariffs();
 
-    void fillTariff(int idTariff, int idService);
+    boolean fillTariff(int idTariff, int idService);
 
     boolean addCategory(ProductCategories categories);
 
-    List<ProductCategories> findIdCategory(ProductCategories categories);
+    int findIdCategory(ProductCategories categories);
 
     /**
      * Method returns all services that are available in place.
@@ -72,5 +73,23 @@ public interface ProductDao extends Dao<Product> {
      * @return list of products with service type.
      */
     List<Product> getAllServicesByCurrentUserTarifff(Integer userId);
+
+
+    Map<String, List<Product>> getAllServicesWithCategory();
+//    List<Product> getAllServicesWithCategory();
+
+    List<Product> getAllProducts();
+
+    List<Product> getServicesByTariff(Product product);
+
+    List<Product> getServicesNotInTariff(Product product);
+
+    boolean deleteServiceFromTariff(int idTariff, int idService);
+
+    boolean deleteById(int id);
+
+    List<Product> getProductsByUserId(int id);
+
+    List<Product> getActiveProductByUserId(Integer id);
 
 }

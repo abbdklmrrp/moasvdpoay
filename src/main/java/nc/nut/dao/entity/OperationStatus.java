@@ -4,7 +4,7 @@ package nc.nut.dao.entity;
  * Created by Yuliya Pedash on 28.04.2017.
  */
 public enum OperationStatus {
-    Acitve("Active"),
+    Active("Active"),
     Suspended("Suspended"),
     Deactivated("Deactivated"),
     InProcessing("In processing"),

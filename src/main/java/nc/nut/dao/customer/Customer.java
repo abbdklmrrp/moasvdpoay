@@ -14,8 +14,13 @@ public class Customer {
     private Integer invoice;
 
 
-    public Customer(int id, String name, String secretKey) {
+    public Customer(Integer id, String name, String secretKey) {
         this.id = id;
+        this.name = name;
+        this.secretKey = secretKey;
+    }
+
+    public Customer(String name, String secretKey) {
         this.name = name;
         this.secretKey = secretKey;
     }
@@ -27,11 +32,12 @@ public class Customer {
     public void setCustomerType(CustomerType customerType) {
         this.customerType = customerType;
     }
-    public int getId() {
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -51,11 +57,11 @@ public class Customer {
         this.secretKey = secretKey;
     }
 
-    public int getInvoice() {
+    public Integer getInvoice() {
         return invoice;
     }
 
-    public void setInvoice(int invoice) {
+    public void setInvoice(Integer invoice) {
         this.invoice = invoice;
     }
 }

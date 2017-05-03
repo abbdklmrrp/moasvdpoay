@@ -38,7 +38,7 @@ public class ReportController {
         response.setHeader
                 ("Content-Disposition", "attachment; filename=" + fileName);
         try {
-            reportMaker.makeReport(reportsService.getDataForReport("01-01-2017", "01-06-2017", 2));
+            reportMaker.makeReport(reportsService.getDataForReport("2017-01-01", "2017-06-01", 2));
         } //todo add error handling
         catch (DocumentCreatingFailException e) {
             return;

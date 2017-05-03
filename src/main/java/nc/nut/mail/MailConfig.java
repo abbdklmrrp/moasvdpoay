@@ -29,10 +29,17 @@ public class MailConfig {
     String protocol;
     @Value("${mail.smtps.auth}")
     boolean auth;
+//    private Session session;
 
     @Bean(name = "mailSender")
     public JavaMailSenderImpl javaMailService() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+//        try {
+//            InitialContext initialContext=new InitialContext();
+//            session=(Session)initialContext.lookup("mail/netcracker");
+//        } catch (NamingException e) {
+//            e.printStackTrace();
+//        }
         javaMailSender.setHost(host);
         javaMailSender.setPort(port);
         javaMailSender.setProtocol(protocol);
@@ -44,6 +51,7 @@ public class MailConfig {
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
         javaMailSender.setJavaMailProperties(properties);
+//        javaMailSender.setSession(session);
         return javaMailSender;
     }
 

@@ -11,14 +11,30 @@
 <head>
     <title>Sign up</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link href="<c:url value="/resources/css/basic.css" />" rel="stylesheet"/>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <script src="${contextPath}/resources/js/user.type.js"></script>
 </head>
 <body>
-<form action="signUp" method="post">
+<form action="${contextPath}/signUp" method="post">
     <div class="login-form">
         <h1>Sign up</h1>
+        <div class="form-group ">
+            <select id="userType" name="userType" class="form-control" aria-required="true"
+                    onChange="Selected(this)">
+                <option value="INDIVIDUAL">Individual</option>
+                <option value="LEGAL">Legal Entity</option>
+            </select>
+        </div>
+        <div id='Block1' style='display: none;'>
+            <div class="form-group ">
+                <input type="text" class="form-control" placeholder="Company name " id="CompanyName" name="companyName">
+                <i class="fa fa-user"></i>
+            </div>
+            <div class="form-group ">
+                <input type="password" class="form-control" placeholder="Secret key" id="SecretKey" name="secretKey">
+                <i class="fa fa-lock"></i>
+            </div>
+        </div>
         <div class="form-group ">
             <input type="text" class="form-control" placeholder="First name " id="FirstName" name="firstName">
             <i class="fa fa-user"></i>

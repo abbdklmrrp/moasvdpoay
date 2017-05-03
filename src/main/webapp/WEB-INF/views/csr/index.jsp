@@ -8,11 +8,19 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>CSR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
 </head>
-<body bgcolor="#fff8dc">
-<div align="center">
-    CSR page!
-    <a href="<%=request.getContextPath()%>/doLogout">Logout</a>
+<body>
+<div class="login-form">
+    <h1>CSR PAGE</h1>
+    <div class="form-group "><br>
+        <h2><a href="<%=request.getContextPath()%>/doLogout">Logout</a></h2><br>
+        <h2><a href="${contextPath}/csr/getCreateCustomer">Create new customer</a></h2><br>
+        <h2><a href="${contextPath}/csr/getWriteComplaint">Write complaint</a></h2><br>
+        <h2><a href="${contextPath}/csr/getUsersPage">Users details</a></h2><br>
+        <h2><a href="${contextPath}/csr/registration">Create new user</a></h2>
+    </div>
 </div>
 </body>
 </html>

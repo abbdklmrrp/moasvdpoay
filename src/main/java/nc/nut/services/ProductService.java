@@ -8,6 +8,7 @@ import nc.nut.dao.price.PriceDao;
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductCategories;
 import nc.nut.dao.product.ProductDao;
+import nc.nut.dao.product.ProductType;
 import nc.nut.dao.user.User;
 import nc.nut.utils.ProductCatalogRow;
 import org.springframework.stereotype.Service;
@@ -22,41 +23,112 @@ import java.util.*;
 public class ProductService {
 
     @Resource
+    nc.nut.dao.order.OrderDao orderDao;
+    @Resource
     private ProductDao productDao;
     @Resource
     private PriceDao priceDao;
-    @Resource
-    nc.nut.dao.order.OrderDao orderDao;
 
-    //TODO validator -- uniq
-    public int getCategory(String name, String description) {
-        if (Objects.nonNull(name)) {
-            ProductCategories category = new ProductCategories();
-            category.setName(name);
-            category.setDescription(description);
+    public Product getCategory(ProductCategories category, Product product) {
+        if (!category.getName().equals("")) {
+            productDao.addCategory(category);
+            int newCategoryId = productDao.findIdCategory(category);
+            product.setCategoryId(newCategoryId);
+        }
+        return product;
+    }
 
-            List<ProductCategories> productCategories = productDao.findProductCategories();
-            int idCategory = 0;
-            for (ProductCategories pc : productCategories) {
-                if (Objects.equals(pc.getName().trim().toUpperCase(), name.trim().toUpperCase())) {
-                    idCategory = pc.getId();
-                } else {
-                    productDao.addCategory(category);
-                    idCategory = productDao.findIdCategory(category).get(0).getId();
+    public boolean checkEmptyNewCategory(ProductCategories categories) {
+        return !(!categories.getName().equals("") && categories.getDescription().equals(""));
+    }
+
+    public boolean checkEmptyFieldIfProduct(Product product) {
+        return !(product.getName().equals("") || product.getDescription().equals(""));
+    }
+
+    public void saveProduct(Product product) {
+        if (Objects.equals(product.getProductType(), ProductType.Tariff)) {
+            product.setCategoryId(null);
+            productDao.save(product);
+        }
+        if (Objects.equals(product.getProductType(), ProductType.Service)) {
+            productDao.save(product);
+        }
+    }
+
+    public void fillTariff(String service, int idTariff) {
+        String[] arr = service.split(",");
+        for (String a : arr) {
+            productDao.fillTariff(idTariff, Integer.parseInt(a));
+        }
+    }
+
+    public boolean checkUniqueCategoryServices(String services) {
+        String[] arr = services.split(",");
+        List<Product> allServices = productDao.getAllServices();
+        Set<Integer> serviceCategoryId = new HashSet<>();
+        for (String s : arr) {
+            for (Product p : allServices) {
+                if (Integer.parseInt(s) == p.getId()) {
+                    serviceCategoryId.add(p.getCategoryId());
                 }
             }
-            return idCategory;
         }
-        return 0;
+        return arr.length == serviceCategoryId.size();
     }
 
-    public int checkIdCategory(int categoryID, int newCategory) {
-        if ((newCategory != 0) & (categoryID != newCategory)) {
-            return newCategory;
+    public void updateFillTariff(String service, Product product) {
+        List<Product> oldServiceList = productDao.getServicesByTariff(product);
+        ArrayList<Integer> oldServiceIdList = new ArrayList<>();
+        for (Product p : oldServiceList) {
+            oldServiceIdList.add(p.getId());
         }
-        return categoryID;
+        String[] arr = service.split(",");
+        List newServiceList = Arrays.asList(arr);
+        oldServiceIdList.removeAll(newServiceList);
+        removeServiceFromTariff(oldServiceIdList, product);
     }
 
+    public void updateTariffWithNewServices(String service, Product product) {
+        List<Product> oldServiceList = productDao.getServicesByTariff(product);
+        ArrayList<Integer> oldServiceIdList = new ArrayList<>();
+        for (Product p : oldServiceList) {
+            oldServiceIdList.add(p.getId());
+        }
+        String[] arr = service.split(",");
+        List newServiceList = Arrays.asList(arr);
+        newServiceList.removeAll(oldServiceIdList);
+        for (Object i : newServiceList) {
+            fillTariff((String) i, product.getId());
+        }
+    }
+
+    public void removeServiceFromTariff(List serviceIdList, Product product) {
+        for (Object s : serviceIdList) {
+            productDao.deleteServiceFromTariff(product.getId(), (Integer) s);
+        }
+    }
+
+    public void updateProduct(Product updateProduct) {
+        int productId = updateProduct.getId();
+        Product product = productDao.getById(productId);
+        if (!updateProduct.getName().equals("") & !updateProduct.getName().equals(product.getName())) {
+            product.setName(updateProduct.getName());
+        }
+        if (!updateProduct.getDescription().equals("") & !updateProduct.getDescription().equals(product.getDescription())) {
+            product.setDescription(updateProduct.getDescription());
+        }
+        if (updateProduct.getDurationInDays() != product.getDurationInDays()) {
+            product.setDurationInDays(updateProduct.getDurationInDays());
+        }
+        if (updateProduct.getNeedProcessing() != product.getNeedProcessing()) {
+            product.setNeedProcessing(updateProduct.getNeedProcessing());
+        }
+        if (updateProduct.getStatus() != product.getStatus()) {
+            product.setStatus(updateProduct.getStatus());
+        }
+        productDao.update(product);
+    }
 
     /*** This method takes user and returns all products that can be shown for him
      * on 'Order Service' page with goal to show user orders.
@@ -110,7 +182,6 @@ public class ProductService {
         return categoriesWithProducts;
     }
 
-
     /**
      * This method takes product and returns status for it.
      * If user does not have order for this product <code>Null</code> is returned.
@@ -133,5 +204,3 @@ public class ProductService {
 
     }
 }
-
-

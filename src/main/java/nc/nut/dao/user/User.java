@@ -27,19 +27,19 @@ public class User {
     public User() {
     }
 
-    public int getEnable() {
+    public Integer getEnable() {
         return enable;
     }
 
-    public void setEnable(int enable) {
+    public void setEnable(Integer enable) {
         this.enable = enable;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -75,23 +75,23 @@ public class User {
         this.address = address;
     }
 
-    public int getPlaceId() {
+    public Integer getPlaceId() {
         return placeId;
     }
 
-    public void setPlaceId(int placeId) {
+    public void setPlaceId(Integer placeId) {
         this.placeId = placeId;
     }
 
-    public int getCustomerId() {
+    public Integer getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
     }
 
-    public int getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 

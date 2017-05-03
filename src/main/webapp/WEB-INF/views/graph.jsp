@@ -9,17 +9,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <title>Report</title>
     <link href="<c:url value="/resources/css/webGraph.css"/>" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script type="text/javascript" src="<c:url value="/resources/js/webGraph/ajaxData.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/resources/js/webGraph/drawLines.js"/>"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
+    <script type="text/javascript" src="<c:url value="/resources/js/drawReport.js"/>"></script>
 </head>
 <body>
-<form id="formWithRegionsAndDates">
+<form id="formWithRegionsAndDates" action="<%=request.getContextPath()%>/download" method="get">
     <label>Choose region:
-        <select id="sel1" name="region">
+        <select id="sel1" name="region" required>
             <c:forEach var="region" items="${regions}">
                 <option value="${region.id}">${region.name}</option>
             </c:forEach>
@@ -27,21 +28,19 @@
     </label>
     <br/>
     <label>Date Begin:
-        <input type="date" name="beginDate"/>
+        <input id="beginDate" type="date" name="beginDate" onchange="fillData()"/>
     </label>
     <br/>
     <label>Date End:
-        <input type="date" name="endDate"/>
+        <input id="endDate" type="date" name="endDate" onchange="fillData()"/>
     </label>
     <br/>
 </form>
-<button id="b1" onclick="drawChart()">Show</button>
+<button id="btnDownloadReport" disabled="disabled">Download report</button>
+<button id="btnShowReport" disabled="disabled">Show report</button>
+<br/>
 <span id="err" style="color: red"></span>
 <div class="center" id="line_top_x" style="width: 900px; height: 500px"></div>
-<div id="table_div">
-    <div class="center" id="table_page"></div>
-    <br/>
-    <div class="center" id="table_data"></div>
-</div>
+<div id="table_div"></div>
 </body>
 </html>
