@@ -14,8 +14,8 @@
     <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
 </head>
 <body>
-<form  id="details-form" action="${contextPath}/csr/save" method="post">
-<div class="left-login">
+<form  id="details-form"  action="${contextPath}/csr/editUser" method="post">
+<div class="left-hight-login">
     <div class="form-group form-group-lg">
         <label class="col-sm-2 control-label">Name</label><br>
         <div class="col-sm-10">

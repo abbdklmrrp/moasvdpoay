@@ -54,11 +54,11 @@ public class UsersDetailController {
 //        List<Product> products=productDao.getUnConnectedProducts(userId);
 //        ObjectMapper mapper = new ObjectMapper();
 //        model.addAttribute("productList",mapper.writeValueAsString(products));
-        return "csr/productsForUser";
+        return "csr/index";
     }
     @RequestMapping(value="viewOrders",method=RequestMethod.POST)
     public String viewOrders(Model model) throws IOException{
-        return"";
+        return "csr/index";
     }
     @RequestMapping(value="sendPassword",method=RequestMethod.POST)
     public String sendPassword(HttpSession session){

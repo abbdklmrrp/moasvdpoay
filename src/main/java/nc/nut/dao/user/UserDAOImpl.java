@@ -40,8 +40,6 @@ public class UserDAOImpl implements UserDAO {
             "  WHERE EMAIL=:email";
 
     private final static String FIND_BY_PHONE = "SELECT * FROM USERS WHERE PHONE=:phone";
-    private final static String UPDATE = "UPDATE USERS set name=:name, surname=:surname, email=:email, phone=:phone, address=:address where id=:id";
-
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -66,6 +64,11 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getById(int id) {
         return null;
+    }
+
+    @Override
+    public boolean update(User object) {
+        return false;
     }
 
     @Override
@@ -191,17 +194,5 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
-
-    @Override
-    public boolean update(User user) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("name", user.getName());
-        params.addValue("surname", user.getSurname());
-        params.addValue("email", user.getEmail());
-        params.addValue("phone", user.getPhone());
-        params.addValue("address", user.getAddress());
-        params.addValue("id", user.getId());
-        return jdbcTemplate.update(UPDATE, params) > 0;
-    }
 
 }
