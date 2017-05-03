@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping(value = "report")
-public class GraphController {
+public class ReportController {
     @Autowired
     private PlaceDAO placeDAO;
     @Autowired
@@ -36,7 +36,7 @@ public class GraphController {
     public String graph(Model model) {
         List<Place> regions = placeDAO.getAll();
         model.addAttribute("regions", regions);
-        return "graph";
+        return "report";
     }
 
     @RequestMapping(value = "/data")

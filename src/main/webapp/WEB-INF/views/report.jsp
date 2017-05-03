@@ -15,7 +15,7 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
-    <script type="text/javascript" src="<c:url value="/resources/js/drawReport.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/js/report.js"/>"></script>
 </head>
 <body>
 <form id="formWithRegionsAndDates" action="<%=request.getContextPath()%>/report/download" method="get">
