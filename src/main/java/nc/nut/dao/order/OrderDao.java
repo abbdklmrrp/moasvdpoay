@@ -11,27 +11,37 @@ public interface OrderDao extends Dao<Order> {
     /**
      * This method returns all orders by one customer's users in one city.
      * created by Yuliya Pedash
-     * @param customerId
-     * @param placeId
-     * @return
+     *
+     * @param customerId id of customer
+     * @param placeId id of place
+     * @return list of Orders
      */
-    public List<Order> getOrdersByCustomerIdAndPlaceId(long customerId, long placeId);
+    List<Order> getOrdersByCustomerIdAndPlaceId(long customerId, long placeId);
 
     /**
      * Method returns order id according to user id and product id with active status.
      *
-     * @param userId id of user.
+     * @param userId    id of user.
      * @param productId id of product.
      * @return id or order.
      */
-    public Integer getOrderIdByUserIdAndProductId(Integer userId, Integer productId);
+    Integer getOrderIdByUserIdAndProductId(Integer userId, Integer productId);
 
     /**
      * Method returns order id according to user id and product name with active status.
      *
-     * @param userId id of user.
+     * @param userId      id of user.
      * @param productName name of product.
      * @return id or order.
      */
-    public Integer getOrderIdByUserIdAndProductName(Integer userId, String productName);
+    Integer getOrderIdByUserIdAndProductName(Integer userId, String productName);
+
+    /**
+     * Set 'Deactivated' status for order of product for user.
+     *
+     * @param productId id of product to deactivate
+     * @param userId    id of user
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     */
+    boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId);
 }

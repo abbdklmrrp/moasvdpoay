@@ -5,6 +5,8 @@
  */
 package nc.nut.dao.place;
 
+import java.util.Objects;
+
 /**
  * @author Alistratenko Nikita
  */
@@ -52,4 +54,18 @@ public class Place {
         return "Place{" + "id=" + id + ", parentId=" + parentId + ", name=" + name + '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Place)) return false;
+        Place place = (Place) o;
+        return Objects.equals(getId(), place.getId()) &&
+                Objects.equals(getParentId(), place.getParentId()) &&
+                Objects.equals(getName(), place.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getParentId(), getName());
+    }
 }

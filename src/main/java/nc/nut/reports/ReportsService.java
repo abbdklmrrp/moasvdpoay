@@ -96,16 +96,19 @@ public class ReportsService {
     public List<ReportData> getDataForReport(String beginDateStr, String endDateStr, int placeId) throws ReportCreatingException {
         String stepPattern;
         final int PERIOD_TO_ADD;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dayPeriodPattern);
+        //      SimpleDateFormat simpleDateFormatFromJS = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormatForBD = new SimpleDateFormat(dayPeriodPattern);
         Calendar beginDate = new GregorianCalendar();
         Calendar endDate = new GregorianCalendar();
         //todo determine which one is wrong for error msg
         try {
-            beginDate.setTime(simpleDateFormat.parse(beginDateStr));
-            endDate.setTime(simpleDateFormat.parse(endDateStr));
+            beginDate.setTime(simpleDateFormatForBD.parse(beginDateStr));
+            endDate.setTime(simpleDateFormatForBD.parse(endDateStr));
         } catch (ParseException e) {
             throw new ReportCreatingException("Unable to parse begin or end date.");
         }
+        beginDateStr = simpleDateFormatForBD.format(beginDate);
+        endDateStr = simpleDateFormatForBD.format(endDate);
         long daysDifference = ChronoUnit.DAYS.between(beginDate.toInstant(), endDate.toInstant());
         if (daysDifference < 30 * 2) {
             stepPattern = dayPeriodPattern;

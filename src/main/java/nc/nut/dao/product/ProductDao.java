@@ -42,9 +42,9 @@ public interface ProductDao extends Dao<Product> {
     List<Product> getAllAvailableServicesByPlace(Integer placeId);
 
     /**
-     *
-     * @param categoryId
-     * @return
+     * Gets category of product by id
+     * @param categoryId id of category
+     * @return ProductCategory
      */
 
     ProductCategories getProductCategoryById(Integer categoryId);
@@ -55,7 +55,7 @@ public interface ProductDao extends Dao<Product> {
      * @param userId user Id.
      * @return current user`s tariff.
      */
-    public Product getCurrentUserTariff(Integer userId);
+    Product getCurrentUserTariff(Integer userId);
 
     /**
      * Method returns all tariffs are available in place with id from params. If there are no tariffs in this place, method returns empty list.
@@ -63,6 +63,14 @@ public interface ProductDao extends Dao<Product> {
      * @param placeId id of place.
      * @return list of tariffs.
      */
-    public List<Product> getAvailableTariffsByPlace(Integer placeId);
+    List<Product> getAvailableTariffsByPlace(Integer placeId);
+
+    /**
+     * This method returns all services that are included in current user's Tariff.
+     *
+     * @param userId id of user
+     * @return list of products with service type.
+     */
+    List<Product> getAllServicesByCurrentUserTarifff(Integer userId);
 
 }

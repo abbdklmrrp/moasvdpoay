@@ -5,6 +5,8 @@
  */
 package nc.nut.dao.entity;
 
+import java.util.Objects;
+
 /**
  * @author Alistratenko Nikita
  */
@@ -65,4 +67,19 @@ public class Order {
                 + ", current_status=" + current_status + '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Order)) return false;
+        Order order = (Order) o;
+        return Objects.equals(getId(), order.getId()) &&
+                Objects.equals(getProduct_id(), order.getProduct_id()) &&
+                Objects.equals(getUser_id(), order.getUser_id()) &&
+                Objects.equals(getCurrent_status(), order.getCurrent_status());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getProduct_id(), getUser_id(), getCurrent_status());
+    }
 }

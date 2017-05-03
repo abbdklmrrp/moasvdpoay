@@ -10,17 +10,22 @@
 <html>
 <head>
     <title>Order Service</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
 <div align="center" style="margin: 20px;">
-    <h1>Product Catalog</h1>
+    <h1>Services Catalog</h1>
     <c:choose>
-    <c:when test="${msg} != null">
+    <c:when test="${not empty msg}">
         <h3>${msg}</h3>
     </c:when>
     <c:otherwise>
+    <h3></h3>
 
-    <table border="1">
+    <table border="1" class="table table-striped table-hover">
+        <c:if test="${not empty resultMsg}">
+            <h3>${resultMsg}</h3>
+        </c:if>
         <tr>
             <th>Name</th>
             <th>Description</th>
@@ -37,8 +42,33 @@
                     <td>${productRow.product.name}</td>
                     <td>${productRow.product.description}</td>
                     <td>${productRow.product.durationInDays}</td>
-                    <td>${productRow.status}</td>
-                    <td>${productRow.price.price}</td>
+                    <c:choose><c:when test="${empty productRow.price.price}">
+                        <td>${productRow.product.basePrice}</td>
+                    </c:when>
+                        <c:otherwise>
+                            <td>${productRow.price.price}</td>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose><c:when test="${empty productRow.status}">
+                        <td class="success">
+                            <form method="POST" action="<%=request.getContextPath()%>/user/ordered">
+                                <input type="hidden" value="${productRow.product.id}" name="product_id">
+                                <input type="Submit" value="Activate">
+                            </form>
+                        </td>
+                    </c:when>
+                        <c:when test="${ productRow.status== 'Active'}">
+                            <td class="danger">
+                                <form method="POST" action="<%=request.getContextPath()%>/user/deactivate">
+                                    <input type="hidden" value="${productRow.product.id}" name="product_id">
+                                    <input type="Submit" value="Deactivate">
+                                </form>
+                            </td>
+                        </c:when>
+                        <c:otherwise>
+                            <td>${productRow.status}</td>
+                        </c:otherwise>
+                    </c:choose>
                 </tr>
             </c:forEach>
         </c:forEach>

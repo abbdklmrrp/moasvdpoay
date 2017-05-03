@@ -18,20 +18,7 @@ public class OrderRowMapper implements RowMapper<Order> {
         order.setProductId(resultSet.getInt("product_id"));
         order.setUserId(resultSet.getInt("user_id"));
         int currentStatus = resultSet.getInt("CURRENT_STATUS_ID");
-        switch(currentStatus){
-            case (1):{
-                order.setCurrent_status_id(OperationStatus.Acitve);
-            }
-            case (2):{
-                order.setCurrent_status_id(OperationStatus.Suspended);
-            }
-            case (3):{
-                order.setCurrent_status_id(OperationStatus.Deactivated);
-            }
-            case (4):{
-                order.setCurrent_status_id(OperationStatus.InProcessing);
-            }
-        }
+        order.setCurrentStatus(OperationStatus.getOperationStatusByID(currentStatus));
         return order;
     }
 }

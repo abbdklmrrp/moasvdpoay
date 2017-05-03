@@ -6,6 +6,7 @@
 package nc.nut.dao.price;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * @author Alistratenko Nikita
@@ -56,4 +57,18 @@ public class Price {
                 + ", price=" + price + '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Price)) return false;
+        Price price1 = (Price) o;
+        return Objects.equals(getPlaceId(), price1.getPlaceId()) &&
+                Objects.equals(getProduct_id(), price1.getProduct_id()) &&
+                Objects.equals(getPrice(), price1.getPrice());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPlaceId(), getProduct_id(), getPrice());
+    }
 }

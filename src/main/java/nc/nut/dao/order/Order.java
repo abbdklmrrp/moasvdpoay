@@ -7,6 +7,8 @@ package nc.nut.dao.order;
 
 import nc.nut.dao.entity.OperationStatus;
 
+import java.util.Objects;
+
 /**
  * @author Alistratenko Nikita
  */
@@ -53,7 +55,7 @@ public class Order {
         return currentStatus;
     }
 
-    public void setCurrent_status_id(OperationStatus current_status) {
+    public void setCurrentStatus(OperationStatus current_status) {
         this.currentStatus = current_status;
     }
 
@@ -68,4 +70,19 @@ public class Order {
                 + ", currentStatus=" + currentStatus + '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Order)) return false;
+        Order order = (Order) o;
+        return Objects.equals(getId(), order.getId()) &&
+                Objects.equals(getProductId(), order.getProductId()) &&
+                Objects.equals(getUserId(), order.getUserId()) &&
+                getCurrentStatus() == order.getCurrentStatus();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getProductId(), getUserId(), getCurrentStatus());
+    }
 }

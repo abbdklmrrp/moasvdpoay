@@ -20,7 +20,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_TYPES = "SELECT * FROM PRODUCT_TYPES";
     private final static String FIND_SERVICES = "SELECT * FROM PRODUCTS WHERE TYPE_ID=2 ORDER BY ID";
     private final static String FIND_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 ORDER BY ID";
-
+    private final static String SELECT_BY_ID_SQL = "SELECT * FROM PRODUCTS WHERE ID = :id";
     private final static String FIND_ALL_SERVICES = "SELECT prod.ID, prod.NAME, prod.DESCRIPTION,prod.DURATION,prod.NEED_PROCESSING,\n" +
             "prod.TYPE_ID,prod.CATEGORY_ID\n" +
             "FROM PRODUCTS prod JOIN PRODUCT_TYPES pTypes ON (prod.TYPE_ID=pTypes.ID)\n" +
@@ -72,6 +72,24 @@ public class ProductDaoImpl implements ProductDao {
             "description, " +
             "status FROM Products " +
             "WHERE id IN (SELECT place_id FROM Prices WHERE product_id = :placeId) AND type_id = 1/*id = 1 - Tariff*/";
+    private final static String SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL = "SELECT\n" +
+            "  p2.ID,\n" +
+            "  p2.NAME,\n" +
+            "  p2.DESCRIPTION,\n" +
+            "  p2.TYPE_ID,\n" +
+            "  p2.CATEGORY_ID,\n" +
+            "  p2.DURATION,\n" +
+            "  p2.NEED_PROCESSING,\n" +
+            "  p2.DESCRIPTION,\n" +
+            "  p2.STATUS,\n" +
+            "  p2.BASE_PRICE\n " +
+            "FROM PRODUCTS p1\n" +
+            "  JOIN ORDERS ON ORDERS.PRODUCT_ID = p1.ID\n" +
+            "                 AND ORDERS.USER_ID = :id\n" +
+            "                 AND p1.TYPE_ID = 1\n" +
+            "  JOIN TARIFF_SERVICES\n" +
+            "    ON p1.ID = TARIFF_SERVICES.TARIFF_ID\n" +
+            "  JOIN PRODUCTS p2 ON p2.ID = TARIFF_SERVICES.SERVICE_ID";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Resource
@@ -158,7 +176,7 @@ public class ProductDaoImpl implements ProductDao {
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setId(rs.getInt("ID"));
             Integer productType = rs.getInt("type_id");
-            product.setProductType(rs.getInt("type_id"));
+            product.setProductType(ProductType.getProductTypeByID(rs.getInt("type_id")));
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
@@ -176,7 +194,7 @@ public class ProductDaoImpl implements ProductDao {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
             Integer productType = rs.getInt("type_id");
-            product.setProductType(rs.getInt("type_id"));
+            product.setProductType(ProductType.getProductTypeByID(rs.getInt("type_id")));
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
@@ -193,7 +211,10 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product getById(int id) {
-        return null;
+
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("id", id);
+        return jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, parameterSource, productRowMapper);
     }
 
     @Override
@@ -254,5 +275,12 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("placeId", placeId);
         return jdbcTemplate.query(GET_TARIFFS_BY_PLACE_SQL, params, new ProductRowMapper());
+    }
+
+    public List<Product> getAllServicesByCurrentUserTarifff(Integer userId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", userId);
+        return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL, params, new ProductRowMapper());
+
     }
 }

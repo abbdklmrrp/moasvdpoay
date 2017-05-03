@@ -1,5 +1,6 @@
 package nc.nut.dao.order;
 
+import nc.nut.dao.entity.OperationStatus;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,10 @@ public class OrderDaoImpl implements OrderDao {
             "WHERE PLACES.ID = :place_id AND USERS.CUSTOMER_ID = :cust_id\n" +
             "      AND ORDERS.CURRENT_STATUS_ID <> 3 /*deactivated status id*/\n" +
             "      AND PRODUCTS.TYPE_ID = 2 /*service id*/\n";
+    private final static String DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT = "UPDATE ORDERS " +
+            "SET CURRENT_STATUS_ID = 3 /*deactivated operation status id*/ " +
+            "WHERE PRODUCT_ID = :product_id " +
+            "      AND USER_ID = :user_id";
     private final static String INSERT_ORDER = "INSERT INTO ORDERS (PRODUCT_ID, USER_ID, CURRENT_STATUS_ID) " +
             "VALUES (:product_id, :user_id, :cur_status_id)";
     private final static String GET_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL = "SELECT id FROM Orders " +
@@ -39,6 +44,7 @@ public class OrderDaoImpl implements OrderDao {
             "WHERE product_id = (SELECT id FROM Products WHERE name = :productName) " +
             "AND user_id = :userId " +
             "AND current_status_id = 1/*id = 1 - status active*/";
+    private final static String DELETE_ORDER_BY_ID_SQL = "DELETE FROM ORDERS WHERE ID = :id;";
 
     @Override
     public Order getById(int id) {
@@ -56,13 +62,15 @@ public class OrderDaoImpl implements OrderDao {
         MapSqlParameterSource paramsForStatus = new MapSqlParameterSource();
         paramsForOrder.addValue("product_id", order.getProductId());
         paramsForOrder.addValue("user_id", order.getUserId());
-        paramsForOrder.addValue("cur_status_id", order.getCurrentStatus());
+        paramsForOrder.addValue("cur_status_id", OperationStatus.getIdByStatus(order.getCurrentStatus()));
         return jdbcTemplate.update(INSERT_ORDER, paramsForOrder) > 0;
     }
 
     @Override
-    public boolean delete(Order object) {
-        return false;
+    public boolean delete(Order order) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", order.getId());
+        return jdbcTemplate.update(DELETE_ORDER_BY_ID_SQL, params) > 0;
     }
 
     @Override
@@ -76,7 +84,7 @@ public class OrderDaoImpl implements OrderDao {
     /**
      * Method returns order id according to user id and product id with active status.
      *
-     * @param userId id of user.
+     * @param userId    id of user.
      * @param productId id of product.
      * @return id or order.
      */
@@ -91,7 +99,7 @@ public class OrderDaoImpl implements OrderDao {
     /**
      * Method returns order id according to user id and product name with active status.
      *
-     * @param userId id of user.
+     * @param userId      id of user.
      * @param productName name of product.
      * @return id or order.
      */
@@ -101,5 +109,13 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("userId", userId);
         params.addValue("productName", productName);
         return jdbcTemplate.queryForObject(GET_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL, params, Integer.class);
+    }
+
+    @Override
+    public boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("product_id", productId);
+        params.addValue("user_id", userId);
+        return jdbcTemplate.update(DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT, params) > 0;
     }
 }

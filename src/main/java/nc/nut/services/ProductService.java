@@ -78,10 +78,18 @@ public class ProductService {
     public Map<String, List<ProductCatalogRow>> getCategoriesWithProductsToShow(User user) {
         List<Order> ordersByUsersCompanyAndPlace = orderDao.getOrdersByCustomerIdAndPlaceId(user.getCustomerId(),
                 user.getPlaceId());
-        //todo change orders configuration depending on user role(for legal does not depend on place at all)
-        List<Product> productsToShowWithoutStatuses = productDao.getAllAvailableServicesByPlace(user.getPlaceId());
+        //todo probably change if when enum Authority will be used
+        List<Product> productsToShowWithoutStatuses;
+        int roleId = user.getRoleId();
+        switch (roleId) {
+            case (4):
+                productsToShowWithoutStatuses = productDao.getAllAvailableServicesByPlace(user.getPlaceId());
+                break;
+            default:
+                productsToShowWithoutStatuses = productDao.getAllServices();
+        }
         Map<String, List<ProductCatalogRow>> categoriesWithProducts = new HashMap<>();
-
+        List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTarifff(user.getId());
         for (Product product : productsToShowWithoutStatuses) {
             String categoryName = productDao.getProductCategoryById(product.getCategoryId()).getName();
             if (!categoriesWithProducts.containsKey(categoryName)) {
@@ -89,10 +97,12 @@ public class ProductService {
                 categoriesWithProducts.put(categoryName, allProductCatalogRowsForCategory);
             }
             List<ProductCatalogRow> allProductCatalogRowsForCategory = categoriesWithProducts.get(categoryName);
-            OperationStatus operationStatus = getStatusForProduct(product, ordersByUsersCompanyAndPlace);
+            OperationStatus operationStatus = getStatusForProduct(product, ordersByUsersCompanyAndPlace, servicesOfCurrentUserTariff);
             String status = operationStatus == null ? null : operationStatus.getStatus();
-            //todo change price configuration depending on user role
-            Price price = priceDao.getPriceByProductIdAndPlaceId(product.getId(), user.getPlaceId());
+            Price price = null;
+            if (roleId == 4) {
+                price = priceDao.getPriceByProductIdAndPlaceId(product.getId(), user.getPlaceId());
+            }
             ProductCatalogRow productCatalogRow = new ProductCatalogRow(product, status, price);
             allProductCatalogRowsForCategory.add(productCatalogRow);
 
@@ -110,11 +120,14 @@ public class ProductService {
      * @param ordersByUser orders
      * @return operation status
      */
-    private OperationStatus getStatusForProduct(Product product, List<Order> ordersByUser) {
+    private OperationStatus getStatusForProduct(Product product, List<Order> ordersByUser, List<Product> servicesIncludedInTariff) {
         for (Order order : ordersByUser) {
             if (order.getProductId().equals(product.getId())) {
                 return order.getCurrentStatus();
             }
+        }
+        if (servicesIncludedInTariff.contains(product)) {
+            return OperationStatus.InTariff;
         }
         return null;
 

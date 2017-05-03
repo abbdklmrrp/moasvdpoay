@@ -1,15 +1,17 @@
 package nc.nut.dao.product;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Created by Rysakova Anna on 23.04.2017.
  */
 public class Product {
+
     private Integer id;
     private Integer categoryId;
     private Integer durationInDays;
-    private Integer productType;
+    private ProductType productType;
     private Integer needProcessing;
     private String name;
     private String description;
@@ -43,11 +45,11 @@ public class Product {
         this.durationInDays = durationInDays;
     }
 
-    public Integer getProductType() {
+    public ProductType getProductType() {
         return productType;
     }
 
-    public void setProductType(Integer productType) {
+    public void setProductType(ProductType productType) {
         this.productType = productType;
     }
 
@@ -89,6 +91,27 @@ public class Product {
 
     public void setBasePrice(BigDecimal basePrice) {
         this.basePrice = basePrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return Objects.equals(getId(), product.getId()) &&
+                Objects.equals(getCategoryId(), product.getCategoryId()) &&
+                Objects.equals(getDurationInDays(), product.getDurationInDays()) &&
+                Objects.equals(getProductType(), product.getProductType()) &&
+                Objects.equals(getNeedProcessing(), product.getNeedProcessing()) &&
+                Objects.equals(getName(), product.getName()) &&
+                Objects.equals(getDescription(), product.getDescription()) &&
+                Objects.equals(getStatus(), product.getStatus()) &&
+                Objects.equals(getBasePrice(), product.getBasePrice());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCategoryId(), getDurationInDays(), getProductType(), getNeedProcessing(), getName(), getDescription(), getStatus(), getBasePrice());
     }
 
 
