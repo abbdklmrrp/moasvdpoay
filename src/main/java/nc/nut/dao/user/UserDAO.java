@@ -24,4 +24,5 @@ public interface UserDAO extends Dao<User> {
 
     User getUserById(Integer id);
 
+    boolean update(User user);
 }
