@@ -23,6 +23,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_TYPES = "SELECT NAME FROM PRODUCT_TYPES";
     private final static String FIND_SERVICES = "SELECT * FROM PRODUCTS WHERE TYPE_ID=2 ORDER BY ID";
     private final static String FIND_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 ORDER BY ID";
+    private final static String FIND_ENABLED_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 AND STATUS=1 ORDER BY ID";
     private final static String FIND_PRODUCT_BY_ID = "SELECT * FROM PRODUCTS WHERE ID=:id";
 
     private final static String FIND_ALL_PRODUCTS = "SELECT ID,TYPE_ID,CATEGORY_ID,NAME,DURATION," +
@@ -120,7 +121,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String DELETE_SERVICE_FROM_TARIFF = "DELETE FROM TARIFF_SERVICES " +
             "WHERE TARIFF_ID=:idTariff AND SERVICE_ID=:idService ";
 
-    private final static String DELETE_BY_ID = "DELETE FROM  Products where id=:id";
+    private final static String DISABLE_TARIFF = "Update Products set status=0 where id=:id";
 
     private final static String FIND_PRODUCT_FOR_USER = "SELECT prod.ID as ID, prod.NAME as NAME," +
             "prod.description as DESCRIPTION, prod.DURATION as duration " +
@@ -181,6 +182,11 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> getAllTariffs() {
         return jdbcTemplate.query(FIND_TARIFFS, productRowMapper);
+    }
+
+    @Override
+    public List<Product> getAllEnabledTariffs() {
+        return jdbcTemplate.query(FIND_ENABLED_TARIFFS, productRowMapper);
     }
 
     @Override
@@ -449,10 +455,10 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public boolean deleteById(int id) {
+    public boolean disableTariffByID(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        int isDelete = jdbcTemplate.update(DELETE_BY_ID, params);
+        int isDelete = jdbcTemplate.update(DISABLE_TARIFF, params);
         return isDelete > 0;
     }
 

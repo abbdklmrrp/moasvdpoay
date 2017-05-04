@@ -31,7 +31,7 @@ public class DeleteTariffController {
 
     @RequestMapping(value = "deleteTariff", method = RequestMethod.GET)
     public String getTariff(Model model) {
-        List<Product> products = productDao.getAllTariffs();
+        List<Product> products = productDao.getAllEnabledTariffs();
         model.addAttribute("productList", products);
         return "admin/deleteTariff";
     }
@@ -39,7 +39,7 @@ public class DeleteTariffController {
     @RequestMapping(value = "deleteTariff", method = RequestMethod.POST)
     public ModelAndView deleteTariff(@RequestParam(value = "tariff", required = false) Integer tariffID) {
         if (tariffID != null) {
-            productDao.deleteById(tariffID);
+            productDao.disableTariffByID(tariffID);
         }
         return new ModelAndView("redirect:/admin/deleteTariff");
     }
