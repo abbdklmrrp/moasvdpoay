@@ -205,11 +205,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.oracle</groupId>-->
-            <!--<artifactId>ojdbc14</artifactId>-->
-            <!--<version>10.2.0.4.0</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc14</artifactId>
+            <version>10.2.0.4.0</version>
+        </dependency>
 
         <dependency>
             <groupId>commons-dbcp</groupId>
@@ -217,17 +217,17 @@
             <version>1.2.2</version>
         </dependency>
 
-        <dependency>
-        <groupId>com.oracle.jdbc</groupId>
-        <artifactId>ojdbc7</artifactId>
-        <version>12.1.0.2</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>com.oracle.jdbc</groupId>-->
+        <!--<artifactId>ojdbc7</artifactId>-->
+        <!--<version>12.1.0.2</version>-->
+        <!--</dependency>-->
 
-        <dependency>
-        <groupId>com.oracle.jdbc</groupId>
-        <artifactId>ucp</artifactId>
-        <version>12.1.0.2</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>com.oracle.jdbc</groupId>-->
+        <!--<artifactId>ucp</artifactId>-->
+        <!--<version>12.1.0.2</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.google.maps</groupId>

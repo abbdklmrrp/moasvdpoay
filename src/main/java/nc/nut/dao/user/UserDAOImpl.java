@@ -94,9 +94,8 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public boolean save(User user) {
-        if (!this.validateFields(user)) return false;
-        else if (!this.isUnique(user)) return false;
-        else {
+        if (!this.validateFields(user)||!this.isUnique(user)){ return false;
+        } else {
             MapSqlParameterSource params = new MapSqlParameterSource();
             String encodePassword = encoder.encode(user.getPassword());
             params.addValue("name", user.getName());
