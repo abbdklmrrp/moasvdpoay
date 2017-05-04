@@ -40,11 +40,13 @@ public class UserDAOImpl implements UserDAO {
             "  WHERE EMAIL=:email";
 
     private final static String FIND_BY_PHONE = "SELECT * FROM USERS WHERE PHONE=:phone";
+
+    private final static String UPDATE_USER = "UPDATE USERS " +
+            "SET NAME=:name, SURNAME=:surname, PHONE=:phone, ADDRESS=:address, PLACE_ID=:placeId " +
+            "WHERE ID=:id";
+    private final static String FIND_USER_BY_ID = "SELECT * FROM USERS WHERE ID=:id";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
-
-    @Resource
-    private Mailer mailer;
 
     private Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 
@@ -66,11 +68,30 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
+    /**
+     * @param user
+     * @return
+     * @author Moiseienko Petro
+     */
     @Override
-    public boolean update(User object) {
-        return false;
+    public boolean update(User user) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", user.getName());
+        params.addValue("surname", user.getSurname());
+        params.addValue("phone", user.getPhone());
+        params.addValue("address", user.getAddress());
+        params.addValue("placeId", user.getPlaceId());
+        params.addValue("id", user.getId());
+        int rows = jdbcTemplate.update(UPDATE_USER, params);
+        return rows > 0;
+
     }
 
+    /**
+     * @param user
+     * @return
+     * @author Moisienko Petro
+     */
     @Override
     public boolean save(User user) {
         if (!this.validateFields(user)) return false;
@@ -123,6 +144,10 @@ public class UserDAOImpl implements UserDAO {
         return id.isEmpty() ? null : id.get(0);
     }
 
+    /**
+     * @return
+     * @author Moiseienko Petro
+     */
     @Override
     public List<User> getAllClients() {
         List<User> clients = jdbcTemplate.query(FIND_ALL_CLIENTS, (rs, rowNum) -> {
@@ -174,6 +199,11 @@ public class UserDAOImpl implements UserDAO {
         return jdbcTemplate.queryForObject(SELECT_USER_BY_EMAIL_SQL, params, new UserRowMapper());
     }
 
+    /**
+     * @param phone
+     * @return
+     * @author Moisienko Petro
+     */
     @Override
     public User getUserByPhone(String phone) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -189,9 +219,15 @@ public class UserDAOImpl implements UserDAO {
         return users.isEmpty() ? null : users.get(0);
     }
 
+    /**
+     * @param id
+     * @return
+     * @author Moiseienko Petro
+     */
     @Override
     public User getUserById(Integer id) {
-        return null;
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        return jdbcTemplate.queryForObject(FIND_USER_BY_ID, params, new UserRowMapper());
     }
 
 

@@ -13,7 +13,7 @@
     <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
 </head>
 <body>
-<form  id="details-form" action="${contextPath}/csr/editProfile" method="post">
+<form  id="details-form" modelAttribute="user" action="${contextPath}/csr/editProfile" method="post">
     <div class="login-form">
         <div class="form-group form-group-lg">
             <label class="col-sm-2 control-label">Name</label><br>

@@ -41,7 +41,7 @@ public class UserComplaintController {
     @RequestMapping(value = "/getComplaint", method = RequestMethod.GET)
     public String getComplaint(Model model) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        List<Product> products = productDao.getActiveProductByUserId(user.getId());
+        List<Product> products = productDao.getActiveProductsByUserId(user.getId());
         model.addAttribute("productList", products);
         return "user/writeComplaint";
     }
@@ -51,10 +51,10 @@ public class UserComplaintController {
                                  @RequestParam(value = "description") String description) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Integer orderId = orderDAO.getOrderIdByUserIdAndProductId(user.getId(), productId);
+        Calendar calendar = Calendar.getInstance();
         Complaint complaint = new Complaint();
         complaint.setOrderId(orderId);
         complaint.setStatus(ComplaintStatus.InProcessing);
-        Calendar calendar = Calendar.getInstance();
         complaint.setCreationDate(calendar);
         complaint.setDescription(description);
         boolean success = complaintDAO.save(complaint);

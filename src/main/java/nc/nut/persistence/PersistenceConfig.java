@@ -14,8 +14,8 @@ import javax.sql.DataSource;
  * Created by Rysakova Anna on 20.04.2017.
  */
 @Configuration
-@PropertySource("classpath:db/oracle.properties")
-//@PropertySource("classpath:ANN_DB.properties")
+//@PropertySource("classpath:db/oracle.properties")
+@PropertySource("classpath:ANN_DB.properties")
 public class PersistenceConfig {
     @Value("${datasource.driver-class-name}")
     private String driver;
@@ -28,15 +28,15 @@ public class PersistenceConfig {
 
     @Bean(name = "dataSource")
     public DataSource dataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        BasicDataSource dataSource = new BasicDataSource();
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driver);
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
-        dataSource.setInitialSize(5);
-        dataSource.setMinIdle(10);
-        dataSource.setMaxIdle(15);
+//        dataSource.setInitialSize(5);
+//        dataSource.setMinIdle(10);
+//        dataSource.setMaxIdle(15);
 
         return dataSource;
     }

@@ -593,6 +593,11 @@ public class ProductDaoImpl implements ProductDao {
         return isDelete > 0;
     }
 
+    /**
+     * @author Moiseienko Petro
+     * @param id
+     * @return
+     */
     @Override
     public List<Product> getProductsByUserId(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -608,10 +613,14 @@ public class ProductDaoImpl implements ProductDao {
         return products;
     }
 
+    /**
+     * @author Moiseienko Petro
+     * @param id
+     * @return
+     */
     @Override
-    public List<Product> getActiveProductByUserId(Integer id) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
+    public List<Product> getActiveProductsByUserId(Integer id) {
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         List<Product> products = jdbcTemplate.query(FIND_ACTIVE_PRODUCTS_FOR_USER, params, (rs, rowNum) -> {
             Product product = new Product();
             product.setId(rs.getInt("ID"));

@@ -92,7 +92,7 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getProductsByUserId(int id);
 
-    List<Product> getActiveProductByUserId(Integer id);
+    List<Product> getActiveProductsByUserId(Integer id);
 
     /**
      * Method update status of current tariff of user on Deactivate.
