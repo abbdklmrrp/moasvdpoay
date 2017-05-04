@@ -1,11 +1,11 @@
 $(document).ready(function () {
     $('#btnShowReport').click(function () {
-        if(checkData()){
+        if(checkDate()){
             drawChartAndTable();
         }
     });
     $('#btnDownloadReport').click(function () {
-        if(checkData()){
+        if(checkDate()){
             $('#formWithRegionsAndDates').submit();
         }
     });
@@ -25,17 +25,23 @@ function fillData() {
     }
 }
 
-function checkData() {
+function checkDate() {
     var start = new Date($('#beginDate').val());
     var end = new Date($('#endDate').val());
     if ((end - start) < 0){
-        $('#err').html("Please, enter correct date period");
-        setTimeout("$('#err').empty()", 3000);
+        showError("Please, enter correct date period");
         return false;
     }
     else {
         return true;
     }
+}
+
+function showError(message) {
+    $('#err').html(message);
+    setTimeout("$('#err').empty()", 5000);
+    $('#line_top_x').empty();
+    $('#table_div').empty();
 }
 
 google.charts.load('current', {'packages': ['corechart']});
@@ -55,8 +61,7 @@ function drawChartAndTable() {
             len = list.length;
         },
         error: function () {
-            $('#err').html("Can't connect to the server");
-            setTimeout("$('#err').empty()", 3000);
+            showError("Can't connect to the server");
             isError = Boolean(true);
         }
     });
@@ -78,10 +83,11 @@ function drawChartAndTable() {
     data.addRows(rowList);
     var select = document.getElementById('sel1');
     var options = {
-        chart: {
-            title: 'Statistic in ' + select.value,
-            subtitle: 'NetCrooker'
-        },
+        //if graph type change back to line
+        // chart: {
+        //     title: 'Statistic in ' + select.value,
+        //     subtitle: 'Jcompany'
+        // },
         legend: {position: 'bottom'},
         axes: {
             x: {
