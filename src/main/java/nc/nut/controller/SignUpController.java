@@ -4,6 +4,7 @@ package nc.nut.controller;
 import nc.nut.dao.customer.Customer;
 import nc.nut.dao.customer.CustomerDAO;
 import nc.nut.dao.entity.CustomerType;
+import nc.nut.dao.user.Role;
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
 import nc.nut.googleMaps.ServiceGoogleMaps;
@@ -76,7 +77,7 @@ public class SignUpController {
                                  @RequestParam(value = "building") String building) {
         User user = getUser(name, surname, email, password, phone, city, street, building);
         int roleId = userDAO.findRole(userType);
-        user.setRoleId(roleId);
+        user.setRole(Role.getRoleById(roleId));
         boolean success = userDAO.save(user);
         if (!success) {
             return "admin/createCoworker";
@@ -114,7 +115,7 @@ public class SignUpController {
         } else {
             int roleId = userDAO.findRole(userType);
             user.setCustomerId(customerId);
-            user.setRoleId(roleId);
+            user.setRole(Role.getRoleById(roleId));
         }
         boolean success = userDAO.save(user);
         if (!success) {

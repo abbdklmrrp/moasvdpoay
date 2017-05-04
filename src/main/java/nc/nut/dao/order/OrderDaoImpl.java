@@ -1,6 +1,5 @@
 package nc.nut.dao.order;
 
-import nc.nut.dao.entity.OperationStatus;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -62,7 +61,7 @@ public class OrderDaoImpl implements OrderDao {
         MapSqlParameterSource paramsForStatus = new MapSqlParameterSource();
         paramsForOrder.addValue("product_id", order.getProductId());
         paramsForOrder.addValue("user_id", order.getUserId());
-        paramsForOrder.addValue("cur_status_id", OperationStatus.getIdByStatus(order.getCurrentStatus()));
+        paramsForOrder.addValue("cur_status_id", order.getCurrentStatus().getId());
         return jdbcTemplate.update(INSERT_ORDER, paramsForOrder) > 0;
     }
 

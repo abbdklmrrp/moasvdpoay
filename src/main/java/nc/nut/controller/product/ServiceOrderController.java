@@ -47,7 +47,7 @@ public class ServiceOrderController {
     @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
     Model showServices(Model model) {
         currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        Map<String, List<ProductCatalogRow>> categoriesWithProductsToShow = productService.getCategoriesWithProductsToShow(currentUser);
+        Map<String, List<ProductCatalogRow>> categoriesWithProductsToShow = productService.getCategoriesWithProductsForUser(currentUser);
         if (categoriesWithProductsToShow.isEmpty()) {
             model.addAttribute("msg", "Sorry! There are no products for you yet.");
         } else {

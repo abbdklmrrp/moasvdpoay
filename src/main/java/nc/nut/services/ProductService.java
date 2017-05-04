@@ -9,6 +9,7 @@ import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductCategories;
 import nc.nut.dao.product.ProductDao;
 import nc.nut.dao.product.ProductType;
+import nc.nut.dao.user.Role;
 import nc.nut.dao.user.User;
 import nc.nut.utils.ProductCatalogRow;
 import org.springframework.stereotype.Service;
@@ -130,7 +131,8 @@ public class ProductService {
         productDao.update(product);
     }
 
-    /*** This method takes user and returns all products that can be shown for him
+    /**
+     *  This method takes user and returns all products that can be shown for him
      * on 'Order Service' page with goal to show user orders.
      * It firstly gets all the products that can be shown to user depending on his place
      * for individual user or all products for legal user.
@@ -147,19 +149,13 @@ public class ProductService {
      * @param user user
      * @return Map with Key - catogry name, Value - row that represents data that should b shown to user
      */
-    public Map<String, List<ProductCatalogRow>> getCategoriesWithProductsToShow(User user) {
+    public Map<String, List<ProductCatalogRow>> getCategoriesWithProductsForUser(User user) {
         List<Order> ordersByUsersCompanyAndPlace = orderDao.getOrdersByCustomerIdAndPlaceId(user.getCustomerId(),
                 user.getPlaceId());
-        //todo probably change if when enum Authority will be used
         List<Product> productsToShowWithoutStatuses;
-        int roleId = user.getRoleId();
-        switch (roleId) {
-            case (4):
-                productsToShowWithoutStatuses = productDao.getAllAvailableServicesByPlace(user.getPlaceId());
-                break;
-            default:
-                productsToShowWithoutStatuses = productDao.getAllServices();
-        }
+        productsToShowWithoutStatuses = user.getRole() == Role.Individual ?
+                productDao.getAllAvailableServicesByPlace(user.getPlaceId()) :
+                productDao.getAllServices();
         Map<String, List<ProductCatalogRow>> categoriesWithProducts = new HashMap<>();
         List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTarifff(user.getId());
         for (Product product : productsToShowWithoutStatuses) {
@@ -170,9 +166,9 @@ public class ProductService {
             }
             List<ProductCatalogRow> allProductCatalogRowsForCategory = categoriesWithProducts.get(categoryName);
             OperationStatus operationStatus = getStatusForProduct(product, ordersByUsersCompanyAndPlace, servicesOfCurrentUserTariff);
-            String status = operationStatus == null ? null : operationStatus.getStatus();
+            String status = operationStatus == null ? null : operationStatus.name();
             Price price = null;
-            if (roleId == 4) {
+            if (user.getRole() == Role.Individual) {
                 price = priceDao.getPriceByProductIdAndPlaceId(product.getId(), user.getPlaceId());
             }
             ProductCatalogRow productCatalogRow = new ProductCatalogRow(product, status, price);
@@ -185,7 +181,7 @@ public class ProductService {
     /**
      * This method takes product and returns status for it.
      * If user does not have order for this product <code>Null</code> is returned.
-     * Helper method for {@link #getCategoriesWithProductsToShow(User)}
+     * Helper method for {@link #getCategoriesWithProductsForUser(User)}
      *
      * @param product      Product object
      * @param ordersByUser orders

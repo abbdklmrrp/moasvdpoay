@@ -233,7 +233,7 @@ public class ProductDaoImpl implements ProductDao {
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setId(rs.getInt("ID"));
             Integer productType = rs.getInt("type_id");
-            product.setProductType(ProductType.getProductTypeByID(rs.getInt("type_id")));
+            product.setProductType(ProductType.getProductTypeById(rs.getInt("type_id")));
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
@@ -250,7 +250,7 @@ public class ProductDaoImpl implements ProductDao {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
             Integer productType = rs.getInt("type_id");
-            product.setProductType(ProductType.getProductTypeByID(rs.getInt("type_id")));
+            product.setProductType(ProductType.getProductTypeById(rs.getInt("type_id")));
             product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));

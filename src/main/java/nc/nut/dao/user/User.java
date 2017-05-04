@@ -14,7 +14,7 @@ public class User {
     private Integer customerId;
     private String password;
     private String authority;
-    private Integer roleId;
+    private Role role;
     private Integer enable;
 
 
@@ -91,12 +91,12 @@ public class User {
         this.customerId = customerId;
     }
 
-    public Integer getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getName() {

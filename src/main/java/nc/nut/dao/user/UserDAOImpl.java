@@ -97,7 +97,7 @@ public class UserDAOImpl implements UserDAO {
             params.addValue("email", user.getEmail());
             params.addValue("phone", user.getPhone());
             params.addValue("password", encodePassword);
-            params.addValue("roleId", user.getRoleId());
+            params.addValue("roleId", user.getRole().getId());
             params.addValue("placeId", user.getPlaceId());
             params.addValue("customerId", user.getCustomerId());
             params.addValue("address", user.getAddress());
@@ -154,7 +154,7 @@ public class UserDAOImpl implements UserDAO {
 
     private boolean validateFields(User user) {
         if (user.getSurname().isEmpty()) return false;
-        else if (user.getRoleId() == 0) return false;
+        else if (user.getRole().getId() == 0) return false;
         else if (user.getPhone().isEmpty()) return false;
         else if (user.getName().isEmpty()) return false;
         else if (user.getPassword().isEmpty()) return false;
