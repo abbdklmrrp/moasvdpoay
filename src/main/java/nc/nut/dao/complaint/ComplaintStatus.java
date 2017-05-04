@@ -29,7 +29,7 @@ public enum ComplaintStatus {
     public static ComplaintStatus getOperationStatusById(Integer id) {
         ComplaintStatus[] complaintStatuses = values();
         for (ComplaintStatus complaintStatus : complaintStatuses) {
-            if (complaintStatus.getId()==id) {
+            if (complaintStatus.getId() == id) {
                 return complaintStatus;
             }
         }

@@ -1,11 +1,13 @@
 $(document).ready(function () {
     $('#btnShowReport').click(function () {
-        if(checkDate()){
+        if (checkDate()) {
+            cleanErrors()
             drawChartAndTable();
         }
     });
     $('#btnDownloadReport').click(function () {
-        if(checkDate()){
+        if (checkDate()) {
+            cleanErrors();
             $('#formWithRegionsAndDates').submit();
         }
     });
@@ -28,7 +30,7 @@ function fillData() {
 function checkDate() {
     var start = new Date($('#beginDate').val());
     var end = new Date($('#endDate').val());
-    if ((end - start) < 0){
+    if ((end - start) < 0) {
         showError("Please, enter correct date period");
         return false;
     }
@@ -39,9 +41,12 @@ function checkDate() {
 
 function showError(message) {
     $('#err').html(message);
-    setTimeout("$('#err').empty()", 5000);
     $('#line_top_x').empty();
     $('#table_div').empty();
+}
+
+function cleanErrors() {
+    $('#err').empty();
 }
 
 google.charts.load('current', {'packages': ['corechart']});

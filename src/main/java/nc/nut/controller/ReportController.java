@@ -7,6 +7,8 @@ import nc.nut.reports.ReportData;
 import nc.nut.reports.ReportsService;
 import nc.nut.reports.excel.DocumentCreatingFailException;
 import nc.nut.reports.excel.ExcelReportCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Revniuk Aleksandr
@@ -31,6 +32,8 @@ public class ReportController {
     private PlaceDAO placeDAO;
     @Autowired
     private ReportsService reportsService;
+
+    private static Logger logger = LoggerFactory.getLogger(ReportController.class);
 
     @RequestMapping
     public String graph(Model model) {
@@ -45,20 +48,12 @@ public class ReportController {
                                          @RequestParam(name = "beginDate") String beginDate,
                                          @RequestParam(name = "endDate") String endDate) {
         List<ReportData> list = null;
-        List<ReportData> filteredList = null;
         try {
             list = reportsService.getDataForReport(beginDate, endDate, region);
-            filteredList = list.stream()
-                    .filter((o) -> (o.getComplaintsCount() > 0 || o.getOrdersCount() > 0))
-                    .collect(Collectors.toList());
         } catch (ReportCreatingException e) {
-            e.printStackTrace();
+            logger.error("Can't get report data for web graph", e);
         }
-        if (!filteredList.isEmpty()) {
-            return list;
-        } else {
-            return filteredList;
-        }
+        return list;
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)

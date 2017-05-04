@@ -21,6 +21,8 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     private final static String GET_BY_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ID = :id";
     private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints(ORDER_ID,CSR_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
             "VALUES(:orderId,:csrId,:creatingDate,:statusId,:description)";
+    private final static String UPDATE_STATUS_ID_SQL = "UPDATE COMPLAINTS SET STATUS_ID = :statusId WHERE ID = :id";
+    private final static String UPDATE_DESCRIPTION_SQL = "UPDATE COMPLAINTS SET DESCRIPTION = :description WHERE ID = :id";
     private final static String GET_ALL_BY_PLACE_ID_SQL = "SELECT " +
             "   COMPLAINTS.ID, \n" +
             "   COMPLAINTS.ORDER_ID, \n" +
@@ -40,8 +42,12 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     @Resource
     private ComplaintRowMapper complaintRowMapper;
 
-    private static Logger logger = LoggerFactory.getLogger(ComplaintDAOImpl.class);
-
+    /**
+     * This method returns complaint by id.
+     *
+     * @param id id of complaint
+     * @return complaint
+     */
     @Override
     public Complaint getById(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -54,6 +60,12 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * This method save complaint.
+     *
+     * @param object object of complaint
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     */
     @Override
     public boolean save(Complaint object) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -101,12 +113,19 @@ public class ComplaintDAOImpl implements ComplaintDAO {
 
     @Override
     public boolean changeStatus(int complaintId, int statusId) {
-        return false;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("statusId", statusId);
+        params.addValue("id", complaintId);
+        return jdbcTemplate.update(UPDATE_STATUS_ID_SQL, params) > 0;
     }
+
 
     @Override
     public boolean changeDescription(int complaintId, String description) {
-        return false;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("description", description);
+        params.addValue("id", complaintId);
+        return jdbcTemplate.update(UPDATE_DESCRIPTION_SQL, params) > 0;
     }
 
 }
