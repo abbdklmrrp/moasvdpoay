@@ -23,17 +23,7 @@ public class ComplaintRowMapper implements RowMapper<Complaint> {
         resultSet.getDate("CREATING_DATE", calendar);
         complaint.setCreationDate(calendar);
         Integer statusId = resultSet.getInt("STATUS_ID");
-        switch (statusId) {
-            case (1):
-                complaint.setStatus(ComplaintStatus.Send);
-                break;
-            case (2):
-                complaint.setStatus(ComplaintStatus.InProcessing);
-                break;
-            case (3):
-                complaint.setStatus(ComplaintStatus.Processed);
-                break;
-        }
+        complaint.setStatus(ComplaintStatus.getOperationStatusById(statusId));
         complaint.setDescription(resultSet.getString("DESCRIPTION"));
         return complaint;
     }

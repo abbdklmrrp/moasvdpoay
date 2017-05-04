@@ -42,7 +42,7 @@ google.charts.load('current', {'packages': ['corechart']});
 
 function drawChartAndTable() {
     var list = [];
-    var len;
+    var len = 0;
     var isError = Boolean(false);
     jQuery.ajax({
         url: 'report/data',
@@ -53,13 +53,8 @@ function drawChartAndTable() {
         success: function (response) {
             list = response;
             len = list.length;
-            if (len == 0) {
-                $('#err').html("No data for this period");
-                setTimeout("$('#err').empty()", 3000);
-                isError = Boolean(true);
-            }
         },
-        error: function (response) {
+        error: function () {
             $('#err').html("Can't connect to the server");
             setTimeout("$('#err').empty()", 3000);
             isError = Boolean(true);

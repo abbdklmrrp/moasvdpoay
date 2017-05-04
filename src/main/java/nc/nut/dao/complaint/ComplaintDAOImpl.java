@@ -1,5 +1,7 @@
 package nc.nut.dao.complaint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -38,16 +40,18 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     @Resource
     private ComplaintRowMapper complaintRowMapper;
 
+    private static Logger logger = LoggerFactory.getLogger(ComplaintDAOImpl.class);
+
     @Override
     public Complaint getById(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        return jdbcTemplate.queryForObject(GET_BY_ID_SQL, params, Complaint.class);
+        return jdbcTemplate.queryForObject(GET_BY_ID_SQL, params, complaintRowMapper);
     }
 
     @Override
     public boolean update(Complaint object) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -56,14 +60,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         params.addValue("orderId", object.getOrderId());
         params.addValue("csrId", object.getCsrId());
         params.addValue("creatingDate", object.getCreationDate());
-        switch (object.getStatus()){
-            case Send:params.addValue("statusId", 1);
-            break;
-            case InProcessing:params.addValue("statusId", 2);
-            break;
-            case Processed:params.addValue("statusId", 3);
-            break;
-        }
+        params.addValue("statusId", object.getStatus().getId());
         params.addValue("description", object.getDescription());
         return jdbcTemplate.update(INSERT_COMPLAINT_SQL, params) > 0;
 
@@ -71,7 +68,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
 
     @Override
     public boolean delete(Complaint object) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -112,8 +109,4 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return false;
     }
 
-    @Override
-    public List<Complaint> getDateInterval(int startYear, int startMonth, int endYear, int endMonth) {
-        return null;
-    }
 }

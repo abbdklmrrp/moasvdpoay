@@ -27,6 +27,4 @@ public interface ComplaintDAO extends Dao<Complaint> {
 
     boolean changeDescription(int complaintId, String description);
 
-    List<Complaint> getDateInterval(int startYear, int startMonth, int endYear, int endMonth);
-
 }
