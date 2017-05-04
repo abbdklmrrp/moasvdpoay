@@ -1,12 +1,20 @@
 package nc.nut.dao.product;
 
+import jdk.nashorn.internal.runtime.regexp.joni.constants.TargetInfo;
 import nc.nut.dao.user.UserDAO;
 import nc.nut.mail.Mailer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,17 +96,21 @@ public class ProductDaoImpl implements ProductDao {
             "name, " +
             "description, " +
             "status FROM Products " +
-            "WHERE id = (SELECT product_id FROM Orders WHERE user_id = :userId AND current_status_id = 1/* id = 1 - active status */)";
+            "WHERE id IN (SELECT product_id FROM Orders WHERE user_id = :userId AND current_status_id = 1/* id = 1 - active status */) " +
+            "AND type_id = 1/*id = 1 - tariff*/";
     private final static String GET_TARIFFS_BY_PLACE_SQL = "SELECT " +
-            "id, " +
-            "category_id, " +
-            "duration, " +
-            "type_id, " +
-            "need_processing, " +
-            "name, " +
-            "description, " +
-            "status FROM Products " +
-            "WHERE id IN (SELECT place_id FROM Prices WHERE product_id = :placeId) AND type_id = 1/*id = 1 - Tariff*/";
+            "prod.id, " +
+            "prod.category_id, " +
+            "prod.duration, " +
+            "prod.type_id, " +
+            "prod.need_processing, " +
+            "prod.name, " +
+            "prod.description, " +
+            "prod.status," +
+            "Prices.price base_price FROM Products prod " +
+            "JOIN Prices ON Prices.product_id = prod.id " +
+            "WHERE Prices.place_id = :placeId " +
+            "AND prod.type_id = 1/*id = 1 - Tariff*/";
     private final static String SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL = "SELECT\n" +
             "  p2.ID,\n" +
             "  p2.NAME,\n" +
@@ -132,7 +144,47 @@ public class ProductDaoImpl implements ProductDao {
             "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
             " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
             "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
+    private final static String DEACTIVATE_TARIFF_OF_USER_SQL = "UPDATE Orders SET current_status_id = 3/*id = 3 - deactivated*/" +
+            "WHERE user_id = :userId " +
+            "AND product_id = :productId " +
+            "AND current_status_id = 1/* id = 1 - active*/";
+    private final static String GET_TARIFFS_FOR_CUSTOMERS_SQL = "SELECT "+
+            "id, " +
+            "category_id, " +
+            "duration, " +
+            "type_id, " +
+            "need_processing, " +
+            "name, " +
+            "description, " +
+            "status, base_price FROM Products " +
+            "WHERE customer_type_id = 1 /*id = 1 - Legal */";
+    private final static String GET_CURRENT_CUSTOMER_TARIFF_BY_CUSTOMER_ID_SQL = "SELECT " +
+            "id, " +
+            "category_id, " +
+            "duration, " +
+            "type_id, " +
+            "need_processing, " +
+            "name, " +
+            "description, " +
+            "status FROM Products " +
+            "WHERE id IN (SELECT product_id FROM Orders " +
+            "WHERE user_id IN (SELECT id FROM Users WHERE customer_id = :customerId AND role_id = 5) " +
+            "AND current_status_id = 1/* id = 1 - active status */)" +
+            "AND type_id = 1";
+    private final static String GET_SERVICES_OF_TARIFF_SQL = "SELECT " +
+            "id, " +
+            "category_id, " +
+            "duration, " +
+            "type_id, " +
+            "need_processing, " +
+            "name, " +
+            "description, " +
+            "status FROM Products " +
+            "WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariffId)";
 
+    @Autowired
+    @Qualifier("dataSource")
+    private DataSource dataSource;
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Resource
@@ -346,6 +398,85 @@ public class ProductDaoImpl implements ProductDao {
         return jdbcTemplate.query(GET_TARIFFS_BY_PLACE_SQL, params, new ProductRowMapper());
     }
 
+    /**
+     * Method update status of current tariff of user on Deactivate.
+     *
+     * @param userId user id.
+     * @param tariffId tariff id.
+     * @return status of deactivation.
+     */
+    @Override
+    public Boolean deactivateTariff(Integer userId, Integer tariffId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", userId);
+        params.addValue("tariffId", tariffId);
+        return (jdbcTemplate.update(DEACTIVATE_TARIFF_OF_USER_SQL, params) == 1);
+    }
+
+    /**
+     * Method returns all tariffs are available for customers. If there are no tariffs in this place, method returns empty list.
+     *
+     * @return list of tariffs.
+     */
+    @Override
+    public List<Product> getAvailableTariffsForCustomers() {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        return jdbcTemplate.query(GET_TARIFFS_FOR_CUSTOMERS_SQL, params, new ProductRowMapper());
+    }
+
+    /**
+     * Method creates order for activation new tariff for user with id from params.
+     * If user has already had tariff, old tariff will be deactivated.
+     *
+     * @param userId id of user.
+     * @param tariffId id of tariff.
+     * @return status of operation.
+     */
+    @Override
+    public Boolean activateTariff(Integer userId, Integer tariffId) {
+        Boolean statusOperation = false;
+        try {
+            Connection conn = dataSource.getConnection();
+            CallableStatement proc = conn.prepareCall("{ call activateTariff(?,?,?) }");
+            proc.setInt(1, userId);
+            proc.setInt(2, tariffId);
+            proc.registerOutParameter(3, Types.VARCHAR);
+            proc.execute();
+            statusOperation = ("success".equals(proc.getString(3)) ? true : false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return statusOperation;
+    }
+
+    /**
+     * Method returns tariff of customer according to customer id from params.
+     * If no such customer or customer doesn`t have active tariff, method returns null.
+     *
+     * @param customerId id of customer.
+     * @return tariff of customer.
+     */
+    @Override
+    public Product getCurrentCustomerTariff(Integer customerId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("customerId", customerId);
+        return jdbcTemplate.queryForObject(GET_CURRENT_CUSTOMER_TARIFF_BY_CUSTOMER_ID_SQL, params, new ProductRowMapper());
+    }
+
+    /**
+     * Method returns list of services are in tariff with id from params.
+     * If no tariff with such id or no services, method returns empty list.
+     *
+     * @param tariffId id of tariff.
+     * @return list of services.
+     */
+    @Override
+    public List<Product> getServicesOfTariff(Integer tariffId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("tariffId", tariffId);
+        return jdbcTemplate.query(GET_SERVICES_OF_TARIFF_SQL, params, new ProductRowMapper());
+    }
+
     @Override
     public Map<String, List<Product>> getAllServicesWithCategory() {
         Map<String, List<Product>> serviceMap = new HashMap<>();
@@ -494,6 +625,7 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", userId);
         return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL, params, new ProductRowMapper());
-
     }
+
+
 }
