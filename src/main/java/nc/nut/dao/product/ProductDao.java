@@ -22,6 +22,7 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getAllServices();
 
+
     List<Product> getAllTariffs();
 
     List<Product> getAllEnabledTariffs();
@@ -45,7 +46,7 @@ public interface ProductDao extends Dao<Product> {
     List<Product> getAllAvailableServicesByPlace(Integer placeId);
 
     /**
-     * Gets category of product by id
+     * Gets category of admin by id
      * @param categoryId id of category
      * @return ProductCategory
      */

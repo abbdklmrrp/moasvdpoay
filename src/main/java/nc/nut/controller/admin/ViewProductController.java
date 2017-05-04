@@ -1,4 +1,4 @@
-package nc.nut.controller.product;
+package nc.nut.controller.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nc.nut.dao.product.Product;
@@ -31,7 +31,7 @@ public class ViewProductController {
 
     @Resource
     private ProductService productService;
-    private Logger logger = LoggerFactory.getLogger(AddProductController.class);
+    private Logger logger = LoggerFactory.getLogger(ViewProductController.class);
 
     @RequestMapping(value = "getAllProducts", method = RequestMethod.GET)
     public String getAllProducts(Model model) throws IOException {

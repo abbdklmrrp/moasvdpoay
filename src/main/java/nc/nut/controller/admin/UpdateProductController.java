@@ -1,4 +1,4 @@
-package nc.nut.controller.product;
+package nc.nut.controller.admin;
 
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductDao;
@@ -59,12 +59,19 @@ public class UpdateProductController {
     String updateTariff(Product product,
                         @RequestParam(value = "selectto") String services,
                         Model model, HttpSession session) {
+
+        String[] servicesId = services.split(",");
         Integer id = (Integer) session.getAttribute("productId");
         product.setId(id);
-        productService.updateFillTariff(services, product);
-        productService.updateTariffWithNewServices(services, product);
+
+        productService.updateFillTariff(servicesId, product);
+        productService.updateTariffWithNewServices(servicesId, product);
         productService.updateProduct(product);
+
         session.removeAttribute("productId");
+        session.removeAttribute("servicesByTariff");
+        session.removeAttribute("servicesNotInTariff");
+
         return "redirect:/admin/index";
     }
 
