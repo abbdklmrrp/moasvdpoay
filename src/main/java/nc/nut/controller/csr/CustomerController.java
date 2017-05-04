@@ -3,7 +3,6 @@ package nc.nut.controller.csr;
 
 import nc.nut.dao.customer.Customer;
 import nc.nut.dao.customer.CustomerDAO;
-import nc.nut.dao.entity.CustomerType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,17 +22,19 @@ public class CustomerController {
     private CustomerDAO customerDAO;
 
     @RequestMapping(value = {"getCreateCustomer"}, method = RequestMethod.GET)
-    String getCreateCustomer() {
+    public String getCreateCustomer() {
         return "csr/createCustomer";
     }
 
     @RequestMapping(value = {"createCustomer"}, method = RequestMethod.POST)
-    String createCustomer(@RequestParam(value = "companyName") String companyName,
-                          @RequestParam(value = "secretKey") String secretKey) {
+    public String createCustomer(@RequestParam(value = "companyName") String companyName,
+                                 @RequestParam(value = "secretKey") String secretKey) {
         Customer customer = new Customer(companyName, secretKey);
-        customer.setCustomerType(CustomerType.Legal);
-        customerDAO.save(customer);
-        return "csr/index";
+        boolean success = customerDAO.save(customer);
+        if (success) {
+            return "csr/index";
+        }
+        return "csr/createCustomer";
     }
 
 

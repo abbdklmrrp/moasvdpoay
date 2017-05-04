@@ -1,11 +1,11 @@
 package nc.nut.services;
 
-import nc.nut.dao.product.Product;
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * @author Moiseienko Petro
@@ -19,19 +19,19 @@ public class UserService {
 
     public boolean updateUser(User user) {
         User defaultUser = userDAO.getUserById(user.getId());
-        if (!user.getName().equals("") & !user.getName().equals(defaultUser.getName())) {
+        if (!user.getName().isEmpty() && !user.getName().equals(defaultUser.getName())) {
             defaultUser.setName(user.getName());
         }
-        if (!user.getSurname().equals("") & !user.getSurname().equals(defaultUser.getSurname())) {
+        if (!user.getSurname().isEmpty() && !user.getSurname().equals(defaultUser.getSurname())) {
             defaultUser.setSurname(user.getSurname());
         }
-        if (!user.getPhone().equals("") & !user.getPhone().equals(defaultUser.getPhone())) {
+        if (!user.getPhone().isEmpty() && !user.getPhone().equals(defaultUser.getPhone())) {
             defaultUser.setPhone(user.getPhone());
         }
-        if (!user.getAddress().equals("") & !user.getAddress().equals(defaultUser.getAddress())) {
+        if (!user.getAddress().isEmpty() && !user.getAddress().equals(defaultUser.getAddress())) {
             defaultUser.setAddress(user.getAddress());
         }
-        if (user.getPlaceId() != defaultUser.getPlaceId()) {
+        if (!Objects.equals(user.getPlaceId(), defaultUser.getPlaceId())) {
             defaultUser.setPlaceId(user.getPlaceId());
         }
         return userDAO.update(defaultUser);

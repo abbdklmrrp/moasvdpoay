@@ -15,7 +15,7 @@
     <script class="cssdeck" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 </head>
 <body>
-<form action="${contextPath}/csr/createCustomer" method="post">
+<form action="${contextPath}/csr/createCustomer" modelAttribute="customer" method="post">
     <div class="login-form">
         <h2>Create new customer</h2>
             <div class="form-group ">
