@@ -1,4 +1,4 @@
-package nc.nut.utils;
+package nc.nut.dto;
 
 import nc.nut.dao.price.Price;
 import nc.nut.dao.product.Product;
@@ -6,13 +6,13 @@ import nc.nut.dao.product.Product;
 /**
  * Created by Yuliya Pedash on 29.04.2017.
  */
-public class ProductCatalogRow {
+public class ProductCatalogRowDTO {
 
     private final Product product;
     private final String status;
     private final Price price;
 
-    public ProductCatalogRow(Product product, String status, Price price) {
+    public ProductCatalogRowDTO(Product product, String status, Price price) {
         this.product = product;
         this.status = status;
         this.price = price;

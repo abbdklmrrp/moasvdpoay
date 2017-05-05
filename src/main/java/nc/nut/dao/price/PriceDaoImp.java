@@ -25,6 +25,7 @@ public class PriceDaoImp implements PriceDao {
     public boolean update(Price object) {
         return false;
     }
+
     @Override
     public boolean save(Price object) {
         return false;
@@ -36,7 +37,7 @@ public class PriceDaoImp implements PriceDao {
     }
 
     @Override
-    public Price getPriceByProductIdAndPlaceId(int productId, long placeId) {
+    public Price getPriceByProductIdAndPlaceId(Integer productId, Integer placeId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("product_id", productId);
         params.addValue("place_id", placeId);

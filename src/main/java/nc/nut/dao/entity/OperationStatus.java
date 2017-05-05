@@ -1,5 +1,8 @@
 package nc.nut.dao.entity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Objects;
 
 /**
@@ -9,9 +12,9 @@ public enum OperationStatus {
     Active(1, "Active"),
     Suspended(2, "Suspended"),
     Deactivated(3, "Deactivated"),
-    InProcessing(4, "In Processing"),
-    InTariff(5, "In Tariff");
-
+    InProcessing(4, "In Processing");
+    private static Logger logger = LoggerFactory.getLogger(CustomerType.class);
+    private static String WRONG_ID_ERROR_MSG = "Wrong id: ";
     private Integer id;
     private String name;
 
@@ -42,14 +45,15 @@ public enum OperationStatus {
      * @param id id operation status
      * @return OperationStatus object  or <code>null</code> if object by this id is not found
      */
-    public static OperationStatus getOperationStatusById(Integer id) {
+    public static OperationStatus getOperationStatusFromId(Integer id) {
         OperationStatus[] operationStatuses = values();
         for (OperationStatus operationStatus : operationStatuses) {
             if (Objects.equals(operationStatus.getId(), id)) {
                 return operationStatus;
             }
         }
-        return null;
+        logger.error(WRONG_ID_ERROR_MSG + id);
+        throw new IllegalArgumentException(WRONG_ID_ERROR_MSG + id);
     }
 
 

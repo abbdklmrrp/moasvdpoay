@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('#btnShowReport').click(function () {
         if (checkDate()) {
-            cleanErrors()
+            cleanErrors();
             drawChartAndTable();
         }
     });
@@ -66,7 +66,7 @@ function drawChartAndTable() {
             len = list.length;
         },
         error: function () {
-            showError("Can't connect to the server");
+            showError("Error on the server");
             isError = Boolean(true);
         }
     });

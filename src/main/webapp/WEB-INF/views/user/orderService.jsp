@@ -30,8 +30,8 @@
             <th>Name</th>
             <th>Description</th>
             <th>Duration(days)</th>
-            <th>Status</th>
             <th>Price</th>
+            <th>Statuse</th>
         </tr>
         <c:forEach var="categoriesProducts" items="${categoriesProducts}">
             <tr>
@@ -42,17 +42,11 @@
                     <td>${productRow.product.name}</td>
                     <td>${productRow.product.description}</td>
                     <td>${productRow.product.durationInDays}</td>
-                    <c:choose><c:when test="${empty productRow.price.price}">
-                        <td>${productRow.product.basePrice}</td>
-                    </c:when>
-                        <c:otherwise>
-                            <td>${productRow.price.price}</td>
-                        </c:otherwise>
-                    </c:choose>
+                    <td>${productRow.price.price}</td>
                     <c:choose><c:when test="${empty productRow.status}">
                         <td class="success">
                             <form method="POST" action="<%=request.getContextPath()%>/user/ordered">
-                                <input type="hidden" value="${productRow.product.id}" name="product_id">
+                                <input type="hidden" value="${productRow.product.id}" name="productId">
                                 <input type="Submit" value="Activate">
                             </form>
                         </td>
@@ -60,7 +54,7 @@
                         <c:when test="${ productRow.status== 'Active'}">
                             <td class="danger">
                                 <form method="POST" action="<%=request.getContextPath()%>/user/deactivate">
-                                    <input type="hidden" value="${productRow.product.id}" name="product_id">
+                                    <input type="hidden" value="${productRow.product.id}" name="productId">
                                     <input type="Submit" value="Deactivate">
                                 </form>
                             </td>

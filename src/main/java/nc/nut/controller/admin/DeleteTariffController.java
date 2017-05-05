@@ -24,7 +24,7 @@ public class DeleteTariffController {
     @Resource
     private ProductDao productDao;
 
-    private Logger logger = LoggerFactory.getLogger(AddProductController.class);
+    private Logger logger = LoggerFactory.getLogger(DeleteTariffController.class);
 
     @RequestMapping(value = "deleteTariff", method = RequestMethod.GET)
     public String getTariff(Model model) {

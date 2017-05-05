@@ -1,5 +1,7 @@
 package nc.nut.dao.product;
 
+import nc.nut.dao.entity.CustomerType;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -11,12 +13,12 @@ public class Product {
     private Integer categoryId;
     private Integer durationInDays;
     private ProductType productType;
-    private Integer needProcessing;
+    private ProcessingStrategy processingStrategy;
     private String name;
     private String description;
-    private Integer status;
+    private ProductStatus status;
     private BigDecimal basePrice;
-    private Integer customerTypeId;
+    private CustomerType customerType;
 
     public Product() {
     }
@@ -53,13 +55,6 @@ public class Product {
         this.productType = typeId;
     }
 
-    public Integer getNeedProcessing() {
-        return needProcessing;
-    }
-
-    public void setNeedProcessing(Integer needProcessing) {
-        this.needProcessing = needProcessing;
-    }
 
     public String getName() {
         return name;
@@ -77,13 +72,6 @@ public class Product {
         this.description = description;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 
     public BigDecimal getBasePrice() {
         return basePrice;
@@ -93,12 +81,28 @@ public class Product {
         this.basePrice = basePrice;
     }
 
-    public Integer getCustomerTypeId() {
-        return customerTypeId;
+    public ProcessingStrategy getProcessingStrategy() {
+        return processingStrategy;
     }
 
-    public void setCustomerTypeId(Integer customerTypeId) {
-        this.customerTypeId = customerTypeId;
+    public void setProcessingStrategy(ProcessingStrategy processingStrategy) {
+        this.processingStrategy = processingStrategy;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
+    }
+
+    public CustomerType getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(CustomerType customerType) {
+        this.customerType = customerType;
     }
 
     @Override
@@ -106,24 +110,16 @@ public class Product {
         if (this == o) return true;
         if (!(o instanceof Product)) return false;
         Product product = (Product) o;
-        return Objects.equals(getId(), product.getId()) &&
-                Objects.equals(getCategoryId(), product.getCategoryId()) &&
-                Objects.equals(getDurationInDays(), product.getDurationInDays()) &&
-                Objects.equals(getProductType(), product.getProductType()) &&
-                Objects.equals(getNeedProcessing(), product.getNeedProcessing()) &&
-                Objects.equals(getName(), product.getName()) &&
-                Objects.equals(getDescription(), product.getDescription()) &&
-                Objects.equals(getStatus(), product.getStatus()) &&
-                Objects.equals(getBasePrice(), product.getBasePrice());
+        return Objects.equals(getId(), product.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCategoryId(), getDurationInDays(), getProductType(), getNeedProcessing(), getName(), getDescription(), getStatus(), getBasePrice());
+        return Objects.hash(getId());
     }
 
     @Override
     public String toString() {
-        return new StringBuilder().append("Product{").append("id=").append(id).append(", categoryId=").append(categoryId).append(", durationInDays=").append(durationInDays).append(", productType=").append(productType).append(", needProcessing=").append(needProcessing).append(", name='").append(name).append('\'').append(", description='").append(description).append('\'').append(", status=").append(status).append(", basePrice=").append(basePrice).append(", customerTypeId=").append(customerTypeId).append('}').toString();
+        return new StringBuilder().append("Product{").append("id=").append(id).append(", categoryId=").append(categoryId).append(", durationInDays=").append(durationInDays).append(", productType=").append(productType).append(", needProcessing=").append(processingStrategy).append(", name='").append(name).append('\'').append(", description='").append(description).append('\'').append(", status=").append(status).append(", basePrice=").append(basePrice).append(", customerTypeId=").append(customerType).append('}').toString();
     }
 }

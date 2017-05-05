@@ -216,8 +216,8 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("categoryId", product.getCategoryId());
         params.addValue("nameProduct", product.getName());
         params.addValue("duration", product.getDurationInDays());
-        params.addValue("customerTypeId", product.getCustomerTypeId());
-        params.addValue("needProcessing", product.getNeedProcessing());
+        params.addValue("customerTypeId", product.getCustomerType().getId());
+        params.addValue("needProcessing", product.getProcessingStrategy().getId());
         params.addValue("description", product.getDescription());
         params.addValue("status", product.getStatus());
 
@@ -332,11 +332,17 @@ public class ProductDaoImpl implements ProductDao {
             Product product = new Product();
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setId(rs.getInt("ID"));
-            product.setProductType(ProductType.getProductTypeById(rs.getInt("TYPE_ID")));
-            product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
+            Integer productType = rs.getInt("type_id");
+            product.setProductType(ProductType.getProductTypeFromId(rs.getInt("type_id")));
+            product.setProductType(ProductType.getProductTypeFromId(rs.getInt("TYPE_ID")));
+            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(rs.getInt("NEED_PROCESSING")));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
             product.setDescription(rs.getString("DESCRIPTION"));
+            Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
+            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
+            Integer statusId = rs.getInt("STATUS");
+            product.setStatus(ProductStatus.getProductStatusFromId(statusId));
             return product;
         });
 
@@ -348,11 +354,15 @@ public class ProductDaoImpl implements ProductDao {
         List<Product> tariffs = jdbcTemplate.query(FIND_ALL_FREE_TARIFFS, (rs, rowNum) -> {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
-            product.setProductType(ProductType.getProductTypeById(rs.getInt("TYPE_ID")));
-            product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
+            Integer productType = rs.getInt("type_id");
+            product.setProductType(ProductType.getProductTypeFromId(rs.getInt("type_id")));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
             product.setDescription(rs.getString("DESCRIPTION"));
+            Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
+            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
+            Integer statusId = rs.getInt("STATUS");
+            product.setStatus(ProductStatus.getProductStatusFromId(statusId));
             return product;
         });
         return tariffs;
@@ -402,7 +412,7 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", product.getName());
         params.addValue("duration", product.getDurationInDays());
-        params.addValue("needProcessing", product.getNeedProcessing());
+        params.addValue("needProcessing", product.getProcessingStrategy().getId());
         params.addValue("description", product.getDescription());
         params.addValue("status", product.getStatus());
         params.addValue("id", product.getId());
@@ -511,7 +521,11 @@ public class ProductDaoImpl implements ProductDao {
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setId(rs.getInt("ID"));
             product.setProductType(ProductType.Service);
-            product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
+            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(rs.getInt("NEED_PROCESSING")));
+            Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
+            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
+            Integer statusId = rs.getInt("STATUS");
+            product.setStatus(ProductStatus.getProductStatusFromId(statusId));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
             product.setDescription(rs.getString("DESCRIPTION"));
@@ -541,13 +555,16 @@ public class ProductDaoImpl implements ProductDao {
         List<Product> productList = jdbcTemplate.query(FIND_ALL_PRODUCTS, (rs, rowNum) -> {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
-            product.setProductType(ProductType.getProductTypeById(rs.getInt("TYPE_ID")));
+            product.setProductType(ProductType.getProductTypeFromId(rs.getInt("TYPE_ID")));
+            Integer typeId = rs.getInt("TYPE_ID");
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
-            product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
             product.setDescription(rs.getString("DESCRIPTION"));
-            product.setStatus(rs.getInt("STATUS"));
+            Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
+            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
+            Integer statusId = rs.getInt("STATUS");
+            product.setStatus(ProductStatus.getProductStatusFromId(statusId));
             return product;
         });
         return productList;
@@ -568,11 +585,13 @@ public class ProductDaoImpl implements ProductDao {
             p.setId(rs.getInt("ID"));
             p.setProductType(ProductType.Service);
             p.setCategoryId(rs.getInt("CATEGORY_ID"));
-            p.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
             p.setDurationInDays(rs.getInt("DURATION"));
             p.setName(rs.getString("NAME"));
             p.setDescription(rs.getString("DESCRIPTION"));
-            p.setStatus(rs.getInt("STATUS"));
+            Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
+            p.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
+            Integer statusId = rs.getInt("STATUS");
+            p.setStatus(ProductStatus.getProductStatusFromId(statusId));
             return p;
         });
         return productList;

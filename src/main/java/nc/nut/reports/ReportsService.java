@@ -1,5 +1,7 @@
 package nc.nut.reports;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.*;
  */
 @Service
 public class ReportsService {
+    private static Logger logger = LoggerFactory.getLogger(ReportsService.class);
     private final static String SELECT_NUMBERS_OF_ORDERS_FOR_TIME_PERIODS_BY_PLACE_SQL = "SELECT\n" +
             "  COUNT(*)                          COUNT,\n" +
             "  to_char(OPERATION_DATE, '<step>') TIME_PERIOD\n " +
@@ -35,9 +38,10 @@ public class ReportsService {
             "WHERE CREATING_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD')\n" +
             "          AND (USERS.PLACE_ID = :place_id OR PLACES.PARENT_ID = :place_id) " +
             "GROUP BY to_char(CREATING_DATE, '<step>')";
-    private final static String dayPeriodPattern = "dd-MM-yyyy";
-    private final static String monthPeriodPattern = "MM-yyyy";
-    private final static String yearPeriodPattern = "yyyy";
+    private final static String DAY_PERIOD_PATTERN = "dd-MM-yyyy";
+    private final static String MONTH_PERIOD_PATTERN = "MM-yyyy";
+    private final static String YEAR_PERIOD_PATTERN = "yyyy";
+    //todo change regex
     private final static String REGEX = "<step>";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -55,7 +59,6 @@ public class ReportsService {
         params.addValue("date_begin", dateBeginStr);
         params.addValue("date_end", dateEndStr);
         params.addValue("place_id", placeId);
-        //   params.addValue("step", stepPattern);
         String selectResSQL = selectSql.replaceAll(REGEX, stepPattern);
         return jdbcTemplate.query(selectResSQL, params, rs -> {
             Map<String, Integer> mapRet = new HashMap<>();
@@ -106,17 +109,18 @@ public class ReportsService {
             beginDate.setTime(simpleDateFormat.parse(beginDateStr));
             endDate.setTime(simpleDateFormat.parse(endDateStr));
         } catch (ParseException e) {
-            throw new ReportCreatingException("Unable to parse begin or end date.");
+            logger.error(String.format("Unable to parse beginDate(%s) or endDate(%s) strings", beginDateStr, endDateStr));
+            throw new ReportCreatingException("Unable to parse begin or end date");
         }
         long daysDifference = ChronoUnit.DAYS.between(beginDate.toInstant(), endDate.toInstant());
         if (daysDifference < 30 * 2) {
-            stepPattern = dayPeriodPattern;
+            stepPattern = DAY_PERIOD_PATTERN;
             PERIOD_TO_ADD = Calendar.DATE;
         } else if (daysDifference < 30 * 36) {
-            stepPattern = monthPeriodPattern;
+            stepPattern = MONTH_PERIOD_PATTERN;
             PERIOD_TO_ADD = Calendar.MONTH;
         } else {
-            stepPattern = yearPeriodPattern;
+            stepPattern = YEAR_PERIOD_PATTERN;
             PERIOD_TO_ADD = Calendar.YEAR;
         }
         Map<String, Integer> orderData = getOrdersReportsDataMap(beginDateStr, endDateStr, placeId, stepPattern);
