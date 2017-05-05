@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * Created by Anna on 26.04.2017.
+ * Created by Rysakova Anna on 26.04.2017.
  */
 @Service
 public class ProductService {

@@ -1,6 +1,5 @@
-package nc.nut.controller.product;
+package nc.nut.controller.admin;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductDao;
 import org.slf4j.Logger;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
