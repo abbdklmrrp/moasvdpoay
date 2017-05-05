@@ -13,7 +13,7 @@ class PriceRowMapper implements RowMapper<Price> {
     public Price mapRow(ResultSet resultSet, int i) throws SQLException {
         Price price = new Price();
         price.setPlaceId(resultSet.getInt("place_id"));
-        price.setProduct_id(resultSet.getInt("product_id"));
+        price.setProductId(resultSet.getInt("product_id"));
         price.setPrice(resultSet.getBigDecimal("price"));
         return price;
     }

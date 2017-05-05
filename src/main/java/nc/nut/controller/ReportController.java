@@ -31,6 +31,10 @@ public class ReportController {
     private PlaceDAO placeDAO;
     @Autowired
     private ReportsService reportsService;
+    private static final String EXTENSION = ".xlsx";
+    private static final String XLSX_CONTENT_TYPE = "application/vnd.ms-excel";
+    private static final String HEADER_VAR1 = "Content-Disposition";
+    private static final String HEADER_VAR2 = "attachment; filename=";
 
     @RequestMapping
     public String graph(Model model) {
@@ -65,13 +69,12 @@ public class ReportController {
     public void downloadExcelDocument(HttpServletResponse response, @RequestParam(name = "region") int region,
                                       @RequestParam(name = "beginDate") String beginDate,
                                       @RequestParam(name = "endDate") String endDate) throws IOException {
-        final String extension = ".xlsx";
-        final String fileName = beginDate + ":" + endDate + extension;
+        final String fileName = beginDate + ":" + endDate + EXTENSION;
         OutputStream outputStream = response.getOutputStream();
         ExcelReportCreator reportMaker = new ExcelReportCreator(fileName);
-        response.setContentType("application/vnd.ms-excel");
+        response.setContentType(XLSX_CONTENT_TYPE);
         response.setHeader
-                ("Content-Disposition", "attachment; filename=" + fileName);
+                (HEADER_VAR1, HEADER_VAR2 + fileName);
         try {
             reportMaker.makeReport(reportsService.getDataForReport(beginDate, endDate, region));
         } //todo add error handling
@@ -83,6 +86,7 @@ public class ReportController {
 
         }
         reportMaker.getExcelWorkbook().write(outputStream);
+        //todo make without deleting document
         reportMaker.getXlsDocWorker().getExcelReportFile().delete();
         outputStream.close();
     }

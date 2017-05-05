@@ -1,5 +1,9 @@
 package nc.nut.dao.user;
 
+import nc.nut.dao.product.ProductStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Objects;
 
 /**
@@ -15,6 +19,8 @@ public enum Role {
 
     private Integer id;
     private String name;
+    private static Logger logger = LoggerFactory.getLogger(ProductStatus.class);
+    private static String WRONG_ID_ERROR_MSG = "Wrong id: ";
 
     Role(Integer id, String name) {
         this.id = id;
@@ -33,15 +39,16 @@ public enum Role {
      * This method gets <code>Role</code> object by id
      *
      * @param id id of role
-     * @return Role object  or <code>null</code> if object by this id is not found
+     * @return Role object
      */
-    public static Role getRoleById(Integer id) {
+    public static Role getRoleFromId(Integer id) {
         Role[] roles = values();
         for (Role role : roles) {
             if (Objects.equals(role.getId(), id)) {
                 return role;
             }
         }
-        return null;
+        logger.error(WRONG_ID_ERROR_MSG + id);
+        throw new IllegalArgumentException(WRONG_ID_ERROR_MSG + id);
     }
 }

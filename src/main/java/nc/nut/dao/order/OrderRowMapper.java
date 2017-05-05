@@ -18,7 +18,7 @@ public class OrderRowMapper implements RowMapper<Order> {
         order.setProductId(resultSet.getInt("product_id"));
         order.setUserId(resultSet.getInt("user_id"));
         int currentStatus = resultSet.getInt("CURRENT_STATUS_ID");
-        order.setCurrentStatus(OperationStatus.getOperationStatusById(currentStatus));
+        order.setCurrentStatus(OperationStatus.getOperationStatusFromId(currentStatus));
         return order;
     }
 }

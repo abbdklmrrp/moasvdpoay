@@ -15,14 +15,16 @@ class ProductRowMapper implements RowMapper<Product> {
     public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
         Product product = new Product();
         product.setId(rs.getInt("ID"));
-        product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
         product.setName(rs.getString("NAME"));
         product.setDescription(rs.getString("DESCRIPTION"));
-        product.setStatus(rs.getInt("STATUS"));
+        Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
+        product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
+        Integer statusId = rs.getInt("STATUS");
+        product.setStatus(ProductStatus.getProductStatusFromId(statusId));
         product.setBasePrice(rs.getBigDecimal("BASE_PRICE"));
         product.setCategoryId(rs.getInt("category_id"));
         product.setDurationInDays(rs.getInt("duration"));
-        product.setProductType(ProductType.getProductTypeById(rs.getInt("type_id")));
+        product.setProductType(ProductType.getProductTypeFromId(rs.getInt("type_id")));
         return product;
     }
 }

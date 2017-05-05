@@ -14,15 +14,15 @@ import java.util.Objects;
 public class Price {
 
     private Integer placeId;
-    private Integer product_id;
+    private Integer productId;
     private BigDecimal price;
 
     public Price() {
     }
 
-    public Price(int placeId, int product_id, BigDecimal price) {
+    public Price(Integer placeId, Integer productId, BigDecimal price) {
         this.placeId = placeId;
-        this.product_id = product_id;
+        this.productId = productId;
         this.price = price;
     }
 
@@ -34,12 +34,12 @@ public class Price {
         this.placeId = placeId;
     }
 
-    public Integer getProduct_id() {
-        return product_id;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setProduct_id(Integer product_id) {
-        this.product_id = product_id;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
     public BigDecimal getPrice() {
@@ -53,7 +53,7 @@ public class Price {
     @Override
     public String toString() {
         return "Price{" + "placeId=" + placeId
-                + ", product_id=" + product_id
+                + ", productId=" + productId
                 + ", price=" + price + '}';
     }
 
@@ -63,12 +63,12 @@ public class Price {
         if (!(o instanceof Price)) return false;
         Price price1 = (Price) o;
         return Objects.equals(getPlaceId(), price1.getPlaceId()) &&
-                Objects.equals(getProduct_id(), price1.getProduct_id()) &&
+                Objects.equals(getProductId(), price1.getProductId()) &&
                 Objects.equals(getPrice(), price1.getPrice());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPlaceId(), getProduct_id(), getPrice());
+        return Objects.hash(getPlaceId(), getProductId(), getPrice());
     }
 }

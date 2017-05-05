@@ -77,7 +77,7 @@ public class SignUpController {
                                  @RequestParam(value = "building") String building) {
         User user = getUser(name, surname, email, password, phone, city, street, building);
         int roleId = userDAO.findRole(userType);
-        user.setRole(Role.getRoleById(roleId));
+        user.setRole(Role.getRoleFromId(roleId));
         boolean success = userDAO.save(user);
         if (!success) {
             return "admin/createCoworker";
@@ -104,7 +104,7 @@ public class SignUpController {
         User user = getUser(name, surname, email, password, phone, city, street, building);
         if (userType.equals("INDIVIDUAL")) {
             customer = new Customer(email, password);
-            customer.setCustomerType(CustomerType.Individual);
+            customer.setCustomerType(CustomerType.Residential);
             customerDAO.save(customer);
             customerId = customerDAO.getCustomerId(email, password);
         } else if ("LEGAL".equals(userType)) {
@@ -115,7 +115,7 @@ public class SignUpController {
         } else {
             int roleId = userDAO.findRole(userType);
             user.setCustomerId(customerId);
-            user.setRole(Role.getRoleById(roleId));
+            user.setRole(Role.getRoleFromId(roleId));
         }
         boolean success = userDAO.save(user);
         if (!success) {

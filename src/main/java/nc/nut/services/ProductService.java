@@ -1,7 +1,6 @@
 package nc.nut.services;
 
 
-import nc.nut.dao.entity.OperationStatus;
 import nc.nut.dao.order.Order;
 import nc.nut.dao.price.Price;
 import nc.nut.dao.price.PriceDao;
@@ -11,7 +10,7 @@ import nc.nut.dao.product.ProductDao;
 import nc.nut.dao.product.ProductType;
 import nc.nut.dao.user.Role;
 import nc.nut.dao.user.User;
-import nc.nut.utils.ProductCatalogRow;
+import nc.nut.dto.ProductCatalogRowDTO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -122,8 +121,8 @@ public class ProductService {
         if (updateProduct.getDurationInDays() != product.getDurationInDays()) {
             product.setDurationInDays(updateProduct.getDurationInDays());
         }
-        if (updateProduct.getNeedProcessing() != product.getNeedProcessing()) {
-            product.setNeedProcessing(updateProduct.getNeedProcessing());
+        if (updateProduct.getProcessingStrategy() != product.getProcessingStrategy()) {
+            product.setProcessingStrategy(updateProduct.getProcessingStrategy());
         }
         if (updateProduct.getStatus() != product.getStatus()) {
             product.setStatus(updateProduct.getStatus());
@@ -132,69 +131,72 @@ public class ProductService {
     }
 
     /**
-     *  This method takes user and returns all products that can be shown for him
-     * on 'Order Service' page with goal to show user orders.
+     * This method takes user and returns all products that can be applied to this user sorted
+     * by categories.
      * It firstly gets all the products that can be shown to user depending on his place
-     * for individual user or all products for legal user.
+     * for Residential user or all products for Business user.
+     * For more details about user types see: {@link Role}
      * Then it gets all orders by this users customer's representatives.
      * Then it sorts all products by categories and determines status for
      * every product for current user.
-     * Status can be:
-     * 'Active' if user order status for this product is Active,
-     * 'In process' if user's order status for this product is 'In Process',
-     * 'Suspended' if user's  order status for this product is 'Suspended',
-     * 'In Tariff' if user has this service in one of his statuses
+     * For more details about statuses  see: {@link nc.nut.dao.entity.OperationStatus}
+     * Besides statuses included in {@link nc.nut.dao.entity.OperationStatus} in current
+     * business case statue can also be:
+     * 'In Tariff' if user has this service in one of his tariffs
      * <code>Null</code> if user doesn't have order for this product or user's order status for this product is 'Deactivated'
      * created by Yuliya Pedash.
+     *
      * @param user user
-     * @return Map with Key - catogry name, Value - row that represents data that should b shown to user
+     * @return Map with Key - category name, Value - data transfer object
+     * @see ProductCatalogRowDTO
      */
-    public Map<String, List<ProductCatalogRow>> getCategoriesWithProductsForUser(User user) {
-        List<Order> ordersByUsersCompanyAndPlace = orderDao.getOrdersByCustomerIdAndPlaceId(user.getCustomerId(),
+    public Map<String, List<ProductCatalogRowDTO>> getCategoriesWithProductsForUser(User user) {
+        List<Order> orders = orderDao.getOrdersByCustomerIdAndPlaceId(user.getCustomerId(),
                 user.getPlaceId());
-        List<Product> productsToShowWithoutStatuses;
-        productsToShowWithoutStatuses = user.getRole() == Role.Individual ?
+        List<Product> productWithoutStatuses = user.getRole() == Role.Individual ?
                 productDao.getAllAvailableServicesByPlace(user.getPlaceId()) :
                 productDao.getAllServices();
-        Map<String, List<ProductCatalogRow>> categoriesWithProducts = new HashMap<>();
+        Map<String, List<ProductCatalogRowDTO>> categoriesWithProducts = new HashMap<>();
         List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTarifff(user.getId());
-        for (Product product : productsToShowWithoutStatuses) {
+        for (Product product : productWithoutStatuses) {
             String categoryName = productDao.getProductCategoryById(product.getCategoryId()).getName();
             if (!categoriesWithProducts.containsKey(categoryName)) {
-                List<ProductCatalogRow> allProductCatalogRowsForCategory = new ArrayList<>();
-                categoriesWithProducts.put(categoryName, allProductCatalogRowsForCategory);
+                categoriesWithProducts.put(categoryName, new ArrayList<>());
             }
-            List<ProductCatalogRow> allProductCatalogRowsForCategory = categoriesWithProducts.get(categoryName);
-            OperationStatus operationStatus = getStatusForProduct(product, ordersByUsersCompanyAndPlace, servicesOfCurrentUserTariff);
-            String status = operationStatus == null ? null : operationStatus.name();
+            List<ProductCatalogRowDTO> allProductCatalogRowsForCategoryDTO = categoriesWithProducts.get(categoryName);
+            String status = getStatusForProductAsString(product, orders, servicesOfCurrentUserTariff);
             Price price = null;
             if (user.getRole() == Role.Individual) {
                 price = priceDao.getPriceByProductIdAndPlaceId(product.getId(), user.getPlaceId());
+            } else {
+                price = new Price(null, product.getId(), product.getBasePrice());
             }
-            ProductCatalogRow productCatalogRow = new ProductCatalogRow(product, status, price);
-            allProductCatalogRowsForCategory.add(productCatalogRow);
+            ProductCatalogRowDTO productCatalogRowDTO = new ProductCatalogRowDTO(product, status, price);
+            allProductCatalogRowsForCategoryDTO.add(productCatalogRowDTO);
 
         }
         return categoriesWithProducts;
     }
 
     /**
-     * This method takes product and returns status for it.
+     * This method takes product and returns status for it as String
      * If user does not have order for this product <code>Null</code> is returned.
+     * If user has this product in his tariff <code>String</code> with value "In Tariff" returned.
      * Helper method for {@link #getCategoriesWithProductsForUser(User)}
      *
-     * @param product      Product object
-     * @param ordersByUser orders
-     * @return operation status
+     * @param product                  Product object
+     * @param ordersByUser             orders
+     * @param servicesIncludedInTariff list with services included in user current tariff
+     * @return String value of operation status
      */
-    private OperationStatus getStatusForProduct(Product product, List<Order> ordersByUser, List<Product> servicesIncludedInTariff) {
+    private String getStatusForProductAsString(Product product, List<Order> ordersByUser, List<Product> servicesIncludedInTariff) {
         for (Order order : ordersByUser) {
             if (order.getProductId().equals(product.getId())) {
-                return order.getCurrentStatus();
+                return order.getCurrentStatus().getName();
             }
         }
         if (servicesIncludedInTariff.contains(product)) {
-            return OperationStatus.InTariff;
+            return "In Tariff";
         }
         return null;
 

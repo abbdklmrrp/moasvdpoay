@@ -14,6 +14,7 @@ import java.util.Objects;
  */
 public class Order {
 
+
     private Integer id;
     private Integer productId;
     private Integer userId;
@@ -63,26 +64,24 @@ public class Order {
     }
 
     @Override
-    public String toString() {
-        return "Order{" + "id=" + id
-                + ", productId=" + productId
-                + ", userId=" + userId
-                + ", currentStatus=" + currentStatus + '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Order)) return false;
         Order order = (Order) o;
-        return Objects.equals(getId(), order.getId()) &&
-                Objects.equals(getProductId(), order.getProductId()) &&
-                Objects.equals(getUserId(), order.getUserId()) &&
-                getCurrentStatus() == order.getCurrentStatus();
+        return Objects.equals(getId(), order.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getProductId(), getUserId(), getCurrentStatus());
+        return Objects.hash(getId());
+    }
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", userId=" + userId +
+                ", currentStatus=" + currentStatus +
+                '}';
     }
 }

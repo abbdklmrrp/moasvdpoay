@@ -79,9 +79,9 @@ public class CustomerDAOImpl implements CustomerDAO {
         params.addValue("name", customer.getName());
         params.addValue("secretKey", password);
         switch (customer.getCustomerType()){
-            case Legal: params.addValue("typeId",1);
+            case Business: params.addValue("typeId",1);
             break;
-            case Individual:params.addValue("typeId",2);
+            case Residential:params.addValue("typeId",2);
         }
         return jdbcTemplate.update(SAVE_CUSTOMER, params)>0;
     }

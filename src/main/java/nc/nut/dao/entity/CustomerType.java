@@ -1,14 +1,19 @@
 package nc.nut.dao.entity;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Objects;
 
 /**
  * Created by Yuliya Pedash on 29.04.2017.
  */
 public enum CustomerType {
-    Legal(1, "Legal"),
-    Individual(2, "Individual");
-
+    Business(1, "Business"),
+    Residential(2, "Residential");
+    private static Logger logger = LoggerFactory.getLogger(CustomerType.class);
+    private static String WRONG_ID_ERROR_MSG = "Wrong id: ";
     private Integer id;
     private String name;
 
@@ -31,13 +36,14 @@ public enum CustomerType {
      * @param id id of customer type
      * @return CustomerType object or <code>null</code> if object by this id is not found
      */
-    public static CustomerType getCustomerTypeById(Integer id) {
+    public static CustomerType getCustomerTypeFromId(Integer id) {
         CustomerType[] customerTypes = values();
         for (CustomerType customerType : customerTypes) {
             if (Objects.equals(customerType.getId(), id)) {
                 return customerType;
             }
         }
-        return null;
+        logger.error(WRONG_ID_ERROR_MSG + id);
+        throw new IllegalArgumentException(WRONG_ID_ERROR_MSG + id);
     }
 }

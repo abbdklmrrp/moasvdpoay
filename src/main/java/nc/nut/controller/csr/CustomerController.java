@@ -31,7 +31,7 @@ public class CustomerController {
     String createCustomer(@RequestParam(value = "companyName") String companyName,
                           @RequestParam(value = "secretKey") String secretKey) {
         Customer customer = new Customer(companyName, secretKey);
-        customer.setCustomerType(CustomerType.Legal);
+        customer.setCustomerType(CustomerType.Business);
         customerDAO.save(customer);
         return "csr/index";
     }
