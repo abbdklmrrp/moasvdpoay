@@ -122,4 +122,8 @@ public class Product {
         return Objects.hash(getId(), getCategoryId(), getDurationInDays(), getProductType(), getNeedProcessing(), getName(), getDescription(), getStatus(), getBasePrice());
     }
 
+    @Override
+    public String toString() {
+        return new StringBuilder().append("Product{").append("id=").append(id).append(", categoryId=").append(categoryId).append(", durationInDays=").append(durationInDays).append(", productType=").append(productType).append(", needProcessing=").append(needProcessing).append(", name='").append(name).append('\'').append(", description='").append(description).append('\'').append(", status=").append(status).append(", basePrice=").append(basePrice).append(", customerTypeId=").append(customerTypeId).append('}').toString();
+    }
 }

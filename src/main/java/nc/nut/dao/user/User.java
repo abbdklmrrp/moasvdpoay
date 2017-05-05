@@ -125,10 +125,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", authorities='" + authority + '\'' +
-                '}';
+        return new StringBuilder().append("User{").append("name='").append(name).append('\'').append(", password='").append(password).append('\'').append(", authorities='").append(authority).append('\'').append('}').toString();
     }
 }

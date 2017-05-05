@@ -64,10 +64,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" + "id=" + id
-                + ", productId=" + productId
-                + ", userId=" + userId
-                + ", currentStatus=" + currentStatus + '}';
+        return new StringBuilder().append("Order{").append("id=").append(id).append(", productId=").append(productId).append(", userId=").append(userId).append(", currentStatus=").append(currentStatus).append('}').toString();
     }
 
     @Override

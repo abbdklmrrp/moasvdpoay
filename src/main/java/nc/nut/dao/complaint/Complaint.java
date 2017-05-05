@@ -81,12 +81,7 @@ public class Complaint {
 
     @Override
     public String toString() {
-        return "Complaint{" + "id=" + id
-                + ", creationDate=" + creationDate
-                + ", description=" + description
-                + ", status=" + status
-                + ", csrId=" + csrId
-                + ", orderId=" + orderId + '}';
+        return new StringBuilder().append("Complaint{").append("id=").append(id).append(", creationDate=").append(creationDate).append(", description=").append(description).append(", status=").append(status).append(", csrId=").append(csrId).append(", orderId=").append(orderId).append('}').toString();
     }
 
 }
