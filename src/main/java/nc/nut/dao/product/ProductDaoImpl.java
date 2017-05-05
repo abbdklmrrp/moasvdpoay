@@ -86,7 +86,7 @@ public class ProductDaoImpl implements ProductDao {
             "WHERE PRICES.PLACE_ID = :place_id AND PRODUCTS.STATUS = 1 /*active status id*/ AND PRODUCTS.TYPE_ID = 2 /*service id*/";
     private final static String SELECT_PRODUCT_CATEGORY_BY_ID_SQL = "SELECT ID, NAME, DESCRIPTION FROM PRODUCT_CATEGORIES\n" +
             "WHERE ID = :id";
-    private final static String GET_CURRENT_USER_TARIFF_BY_USER_ID_SQL = "SELECT " +
+    private final static String SELECT_CURRENT_USER_TARIFF_BY_USER_ID_SQL = "SELECT " +
             "id, " +
             "category_id, " +
             "duration, " +
@@ -95,9 +95,9 @@ public class ProductDaoImpl implements ProductDao {
             "name, " +
             "description, " +
             "status FROM Products " +
-            "WHERE id IN (SELECT product_id FROM Orders WHERE user_id = :userId AND current_status_id = 1/* id = 1 - active status */) " +
-            "AND type_id = 1/*id = 1 - tariff*/";
-    private final static String GET_TARIFFS_BY_PLACE_SQL = "SELECT " +
+            "WHERE id IN (SELECT product_id FROM Orders WHERE user_id = :userId AND current_status_id = 1/* Active */) " +
+            "AND type_id = 1/* Tariff */";
+    private final static String SELECT_TARIFFS_BY_PLACE_SQL = "SELECT " +
             "prod.id, " +
             "prod.category_id, " +
             "prod.duration, " +
@@ -109,7 +109,7 @@ public class ProductDaoImpl implements ProductDao {
             "Prices.price base_price FROM Products prod " +
             "JOIN Prices ON Prices.product_id = prod.id " +
             "WHERE Prices.place_id = :placeId " +
-            "AND prod.type_id = 1/*id = 1 - Tariff*/";
+            "AND prod.type_id = 1/* Tariff */";
     private final static String SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL = "SELECT\n" +
             "  p2.ID,\n" +
             "  p2.NAME,\n" +
@@ -146,8 +146,8 @@ public class ProductDaoImpl implements ProductDao {
     private final static String DEACTIVATE_TARIFF_OF_USER_SQL = "UPDATE Orders SET current_status_id = 3/*id = 3 - deactivated*/" +
             "WHERE user_id = :userId " +
             "AND product_id = :productId " +
-            "AND current_status_id = 1/* id = 1 - active*/";
-    private final static String GET_TARIFFS_FOR_CUSTOMERS_SQL = "SELECT " +
+            "AND current_status_id = 1/* Active*/";
+    private final static String SELECT_TARIFFS_FOR_CUSTOMERS_SQL = "SELECT " +
             "id, " +
             "category_id, " +
             "duration, " +
@@ -156,8 +156,8 @@ public class ProductDaoImpl implements ProductDao {
             "name, " +
             "description, " +
             "status, base_price FROM Products " +
-            "WHERE customer_type_id = 1 /*id = 1 - Legal */";
-    private final static String GET_CURRENT_CUSTOMER_TARIFF_BY_CUSTOMER_ID_SQL = "SELECT " +
+            "WHERE customer_type_id = 1 /* Legal */";
+    private final static String SELECT_CURRENT_CUSTOMER_TARIFF_BY_CUSTOMER_ID_SQL = "SELECT " +
             "id, " +
             "category_id, " +
             "duration, " +
@@ -168,9 +168,9 @@ public class ProductDaoImpl implements ProductDao {
             "status FROM Products " +
             "WHERE id IN (SELECT product_id FROM Orders " +
             "WHERE user_id IN (SELECT id FROM Users WHERE customer_id = :customerId AND role_id = 5) " +
-            "AND current_status_id = 1/* id = 1 - active status */)" +
+            "AND current_status_id = 1/* Active */)" +
             "AND type_id = 1";
-    private final static String GET_SERVICES_OF_TARIFF_SQL = "SELECT " +
+    private final static String SELECT_SERVICES_OF_TARIFF_SQL = "SELECT " +
             "id, " +
             "category_id, " +
             "duration, " +
@@ -425,37 +425,27 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
-     * Method returns current user`s tariff. If user hasn`t got tariff, method returns null.
-     *
-     * @param userId user Id.
-     * @return current user`s tariff.
+     * {@inheritDoc}
      */
     @Override
     public Product getCurrentUserTariff(Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
-        return jdbcTemplate.queryForObject(GET_CURRENT_USER_TARIFF_BY_USER_ID_SQL, params, new ProductRowMapper());
+        return jdbcTemplate.queryForObject(SELECT_CURRENT_USER_TARIFF_BY_USER_ID_SQL, params, new ProductRowMapper());
     }
 
     /**
-     * Method returns all tariffs are available in place with id from params. If there are no tariffs in this place, method returns empty list.
-     *
-     * @param placeId id of place.
-     * @return list of tariffs.
+     * {@inheritDoc}
      */
     @Override
     public List<Product> getAvailableTariffsByPlace(Integer placeId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("placeId", placeId);
-        return jdbcTemplate.query(GET_TARIFFS_BY_PLACE_SQL, params, new ProductRowMapper());
+        return jdbcTemplate.query(SELECT_TARIFFS_BY_PLACE_SQL, params, new ProductRowMapper());
     }
 
     /**
-     * Method update status of current tariff of user on Deactivate.
-     *
-     * @param userId   user id.
-     * @param tariffId tariff id.
-     * @return status of deactivation.
+     * {@inheritDoc}
      */
     @Override
     public Boolean deactivateTariff(Integer userId, Integer tariffId) {
@@ -466,27 +456,19 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
-     * Method returns all tariffs are available for customers. If there are no tariffs in this place, method returns empty list.
-     *
-     * @return list of tariffs.
+     * {@inheritDoc}
      */
     @Override
     public List<Product> getAvailableTariffsForCustomers() {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        return jdbcTemplate.query(GET_TARIFFS_FOR_CUSTOMERS_SQL, params, new ProductRowMapper());
+        return jdbcTemplate.query(SELECT_TARIFFS_FOR_CUSTOMERS_SQL, params, new ProductRowMapper());
     }
 
     /**
-     * Method creates order for activation new tariff for user with id from params.
-     * If user has already had tariff, old tariff will be deactivated.
-     *
-     * @param userId   id of user.
-     * @param tariffId id of tariff.
-     * @return status of operation.
+     * {@inheritDoc}
      */
     @Override
-    public Boolean activateTariff(Integer userId, Integer tariffId) {
-        Boolean statusOperation = false;
+    public boolean activateTariff(Integer userId, Integer tariffId) {
         try {
             Connection conn = dataSource.getConnection();
             CallableStatement proc = conn.prepareCall("{ call activateTariff(?,?,?) }");
@@ -494,39 +476,31 @@ public class ProductDaoImpl implements ProductDao {
             proc.setInt(2, tariffId);
             proc.registerOutParameter(3, Types.VARCHAR);
             proc.execute();
-            statusOperation = ("success".equals(proc.getString(3)) ? true : false);
+            return "success".equals(proc.getString(3));
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return statusOperation;
+        return false;
     }
 
     /**
-     * Method returns tariff of customer according to customer id from params.
-     * If no such customer or customer doesn`t have active tariff, method returns null.
-     *
-     * @param customerId id of customer.
-     * @return tariff of customer.
+     * {@inheritDoc}
      */
     @Override
     public Product getCurrentCustomerTariff(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("customerId", customerId);
-        return jdbcTemplate.queryForObject(GET_CURRENT_CUSTOMER_TARIFF_BY_CUSTOMER_ID_SQL, params, new ProductRowMapper());
+        return jdbcTemplate.queryForObject(SELECT_CURRENT_CUSTOMER_TARIFF_BY_CUSTOMER_ID_SQL, params, new ProductRowMapper());
     }
 
     /**
-     * Method returns list of services are in tariff with id from params.
-     * If no tariff with such id or no services, method returns empty list.
-     *
-     * @param tariffId id of tariff.
-     * @return list of services.
+     * {@inheritDoc}
      */
     @Override
     public List<Product> getServicesOfTariff(Integer tariffId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("tariffId", tariffId);
-        return jdbcTemplate.query(GET_SERVICES_OF_TARIFF_SQL, params, new ProductRowMapper());
+        return jdbcTemplate.query(SELECT_SERVICES_OF_TARIFF_SQL, params, new ProductRowMapper());
     }
 
     @Override
@@ -678,7 +652,7 @@ public class ProductDaoImpl implements ProductDao {
         return products;
     }
 
-    public List<Product> getAllServicesByCurrentUserTarifff(Integer userId) {
+    public List<Product> getAllServicesByCurrentUserTariff(Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", userId);
         return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL, params, new ProductRowMapper());

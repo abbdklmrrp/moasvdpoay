@@ -23,7 +23,7 @@ public interface OrderDao extends Dao<Order> {
      *
      * @param userId    id of user.
      * @param productId id of product.
-     * @return id or order.
+     * @return id of order.
      */
     Integer getOrderIdByUserIdAndProductId(Integer userId, Integer productId);
 
@@ -32,7 +32,7 @@ public interface OrderDao extends Dao<Order> {
      *
      * @param userId      id of user.
      * @param productName name of product.
-     * @return id or order.
+     * @return id of order.
      */
     Integer getOrderIdByUserIdAndProductName(Integer userId, String productName);
 
