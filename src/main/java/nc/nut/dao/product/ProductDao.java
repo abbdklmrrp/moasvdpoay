@@ -75,7 +75,7 @@ public interface ProductDao extends Dao<Product> {
      * @param userId id of user
      * @return list of products with service type.
      */
-    List<Product> getAllServicesByCurrentUserTarifff(Integer userId);
+    List<Product> getAllServicesByCurrentUserTariff(Integer userId);
 
 
     Map<String, List<Product>> getAllServicesWithCategory();
@@ -128,7 +128,7 @@ public interface ProductDao extends Dao<Product> {
      * @param tariffId id of tariff.
      * @return status of operation.
      */
-    public Boolean activateTariff(Integer userId, Integer tariffId);
+    public boolean activateTariff(Integer userId, Integer tariffId);
 
     /**
      * Method returns list of services are in tariff with id from params.
