@@ -2,10 +2,12 @@ package nc.nut.services;
 
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
+import nc.nut.googleMaps.ServiceGoogleMaps;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * @author Moiseienko Petro
@@ -15,6 +17,8 @@ import java.util.Objects;
 public class UserService {
     @Resource
     private UserDAO userDAO;
+    @Resource
+    private ServiceGoogleMaps serviceGoogleMaps;
 
 
     public boolean updateUser(User user) {
@@ -35,5 +39,56 @@ public class UserService {
             defaultUser.setPlaceId(user.getPlaceId());
         }
         return userDAO.update(defaultUser);
+    }
+
+    public boolean save(User user) {
+        String place=serviceGoogleMaps.getRegion(user.getAddress());
+        Integer placeId = userDAO.findPlaceId(place);
+        user.setPlaceId(placeId);
+        boolean success = userDAO.save(user);
+        // todo send email with registration info
+        return success;
+    }
+
+    public boolean saveWithGeneratePassword(User user) {
+        String password=passwordGenerator();
+        user.setPassword(password);
+        String place=serviceGoogleMaps.getRegion(user.getAddress());
+        Integer placeId = userDAO.findPlaceId(place);
+        user.setPlaceId(placeId);
+        System.out.println(serviceGoogleMaps.getFormattedAddress(user.getAddress()));
+        boolean success=userDAO.save(user);
+        //todo send email with registration info and new password
+        return success;
+    }
+
+    private String passwordGenerator() {
+        StringBuilder password = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 8; i++) {
+            char next = 0;
+            int range = 10;
+
+            switch (random.nextInt(3)) {
+                case 0: {
+                    next = '0';
+                    range = 10;
+                }
+                break;
+                case 1: {
+                    next = 'a';
+                    range = 26;
+                }
+                break;
+                case 2: {
+                    next = 'A';
+                    range = 26;
+                }
+                break;
+            }
+
+            password.append((char) ((random.nextInt(range)) + next));
+        }
+        return password.toString();
     }
 }

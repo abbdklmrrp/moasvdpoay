@@ -67,23 +67,13 @@ public class UsersDetailController {
 
     @RequestMapping(value = "getDetails", method = RequestMethod.GET)
     public ModelAndView getDetails(@RequestParam(value = "id") int id, HttpSession session) throws IOException {
-        User user;
         ModelAndView model = new ModelAndView();
         for (User user1 : clients) {
             if (user1.getId() == id) {
-                user = user1;
-                String[] address = user.getAddress().split(", ");
-                model.addObject("name", user.getName());
-                model.addObject("surname", user.getSurname());
-                model.addObject("email", user.getEmail());
-                model.addObject("phone", user.getPhone());
-                model.addObject("city", address[0]);
-                model.addObject("street", address[1]);
-                model.addObject("building", address[2]);
-                session.setAttribute("userId", user.getId());
+                session.setAttribute("userId", id);
                 model.setViewName("csr/userPage");
+                model.addObject("user", user1);
                 return model;
-
             }
         }
         model.setViewName("csr/users");
