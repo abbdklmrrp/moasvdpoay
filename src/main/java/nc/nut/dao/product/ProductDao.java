@@ -22,6 +22,7 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getAllServices();
 
+
     List<Product> getAllTariffs();
 
     List<Product> getAllEnabledTariffs();
@@ -45,7 +46,7 @@ public interface ProductDao extends Dao<Product> {
     List<Product> getAllAvailableServicesByPlace(Integer placeId);
 
     /**
-     * Gets category of product by id
+     * Gets category of admin by id
      * @param categoryId id of category
      * @return ProductCategory
      */
@@ -74,7 +75,7 @@ public interface ProductDao extends Dao<Product> {
      * @param userId id of user
      * @return list of products with service type.
      */
-    List<Product> getAllServicesByCurrentUserTarifff(Integer userId);
+    List<Product> getAllServicesByCurrentUserTariff(Integer userId);
 
 
     Map<String, List<Product>> getAllServicesWithCategory();
@@ -92,6 +93,50 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getProductsByUserId(int id);
 
-    List<Product> getActiveProductByUserId(Integer id);
+    List<Product> getActiveProductsByUserId(Integer id);
+
+    /**
+     * Method update status of current tariff of user on Deactivate.
+     *
+     * @param userId user id.
+     * @param tariffId tariff id.
+     * @return status of deactivation.
+     */
+    public Boolean deactivateTariff(Integer userId, Integer tariffId);
+
+    /**
+     * Method returns all tariffs are available for customers. If there are no tariffs in this place, method returns empty list.
+     *
+     * @return list of tariffs.
+     */
+    public List<Product> getAvailableTariffsForCustomers();
+
+    /**
+     * Method returns tariff of customer according to customer id from params.
+     * If no such customer or customer doesn`t have active tariff, method returns null.
+     *
+     * @param customerId id of customer.
+     * @return tariff of customer.
+     */
+    public Product getCurrentCustomerTariff(Integer customerId);
+
+    /**
+     * Method creates order for activation new tariff for user with id from params.
+     * If user has already had tariff, old tariff will be deactivated.
+     *
+     * @param userId id of user.
+     * @param tariffId id of tariff.
+     * @return status of operation.
+     */
+    public boolean activateTariff(Integer userId, Integer tariffId);
+
+    /**
+     * Method returns list of services are in tariff with id from params.
+     * If no tariff with such id or no services, method returns empty list.
+     *
+     * @param tariffId id of tariff.
+     * @return list of services.
+     */
+    public List<Product> getServicesOfTariff(Integer tariffId);
 
 }

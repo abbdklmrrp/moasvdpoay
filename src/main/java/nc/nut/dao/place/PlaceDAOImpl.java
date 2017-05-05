@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.List;
+
 /**
  * @author Revniuk Aleksandr
  */
@@ -19,6 +20,6 @@ public class PlaceDAOImpl implements PlaceDAO {
 
     @Override
     public List<Place> getAll() {
-        return jdbcTemplate.query(GET_ALL_SQL,placeRowMapper);
+        return jdbcTemplate.query(GET_ALL_SQL, placeRowMapper);
     }
 }

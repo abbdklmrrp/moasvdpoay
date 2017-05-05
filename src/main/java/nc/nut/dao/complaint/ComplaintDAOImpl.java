@@ -1,5 +1,7 @@
 package nc.nut.dao.complaint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -19,6 +21,8 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     private final static String GET_BY_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ID = :id";
     private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints(ORDER_ID,CSR_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
             "VALUES(:orderId,:csrId,:creatingDate,:statusId,:description)";
+    private final static String UPDATE_STATUS_ID_SQL = "UPDATE COMPLAINTS SET STATUS_ID = :statusId WHERE ID = :id";
+    private final static String UPDATE_DESCRIPTION_SQL = "UPDATE COMPLAINTS SET DESCRIPTION = :description WHERE ID = :id";
     private final static String GET_ALL_BY_PLACE_ID_SQL = "SELECT " +
             "   COMPLAINTS.ID, \n" +
             "   COMPLAINTS.ORDER_ID, \n" +
@@ -38,32 +42,37 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     @Resource
     private ComplaintRowMapper complaintRowMapper;
 
+    /**
+     * This method returns complaint by id.
+     *
+     * @param id id of complaint
+     * @return complaint
+     */
     @Override
     public Complaint getById(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        return jdbcTemplate.queryForObject(GET_BY_ID_SQL, params, Complaint.class);
+        return jdbcTemplate.queryForObject(GET_BY_ID_SQL, params, complaintRowMapper);
     }
 
     @Override
     public boolean update(Complaint object) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * This method save complaint.
+     *
+     * @param object object of complaint
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     */
     @Override
     public boolean save(Complaint object) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("orderId", object.getOrderId());
         params.addValue("csrId", object.getCsrId());
         params.addValue("creatingDate", object.getCreationDate());
-        switch (object.getStatus()){
-            case Send:params.addValue("statusId", 1);
-            break;
-            case InProcessing:params.addValue("statusId", 2);
-            break;
-            case Processed:params.addValue("statusId", 3);
-            break;
-        }
+        params.addValue("statusId", object.getStatus().getId());
         params.addValue("description", object.getDescription());
         return jdbcTemplate.update(INSERT_COMPLAINT_SQL, params) > 0;
 
@@ -71,7 +80,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
 
     @Override
     public boolean delete(Complaint object) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -104,16 +113,19 @@ public class ComplaintDAOImpl implements ComplaintDAO {
 
     @Override
     public boolean changeStatus(int complaintId, int statusId) {
-        return false;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("statusId", statusId);
+        params.addValue("id", complaintId);
+        return jdbcTemplate.update(UPDATE_STATUS_ID_SQL, params) > 0;
     }
+
 
     @Override
     public boolean changeDescription(int complaintId, String description) {
-        return false;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("description", description);
+        params.addValue("id", complaintId);
+        return jdbcTemplate.update(UPDATE_DESCRIPTION_SQL, params) > 0;
     }
 
-    @Override
-    public List<Complaint> getDateInterval(int startYear, int startMonth, int endYear, int endMonth) {
-        return null;
-    }
 }

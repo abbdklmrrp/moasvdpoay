@@ -61,7 +61,7 @@ public class OperationHistoryRecord {
 
     @Override
     public String toString() {
-        return "OperationHistoryRecord{" + "id=" + id + ", orderId=" + orderId + ", operationDate=" + operationDate + ", status=" + status + '}';
+        return new StringBuilder().append("OperationHistoryRecord{").append("id=").append(id).append(", orderId=").append(orderId).append(", operationDate=").append(operationDate).append(", status=").append(status).append('}').toString();
     }
 
 }

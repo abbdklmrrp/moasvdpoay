@@ -15,11 +15,11 @@ import java.util.List;
  */
 @Service
 public class CustomerDAOImpl implements CustomerDAO {
-    private final static String FIND_COMPANY = "SELECT ID,name,SECRET_KEY " +
+    private final static String FIND_COMPANY_SQL = "SELECT ID " +
             "FROM CUSTOMERS " +
             "WHERE NAME=:name AND SECRET_KEY=:secretKey";
-    private final static String SAVE_CUSTOMER = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY,TYPE_ID) " +
-            "VALUES(:name, :secretKey,:typeId)";
+    private final static String SAVE_CUSTOMER_SQL = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY) " +
+             "VALUES(:name, :secretKey)";
 
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -32,14 +32,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", name);
         params.addValue("secretKey", password);
-        List<Customer> customers = jdbcTemplate.query(FIND_COMPANY, params, (rs, rowNum) -> {
-            String customerName = rs.getString("NAME");
-            String secret = rs.getString("SECRET_KEY");
-            Integer id = rs.getInt("ID");
-            return new Customer(id, customerName, secret);
-        });
-        return customers.isEmpty() ? null : customers.get(0).getId();
-       // return jdbcTemplate.queryForObject(FIND_COMPANY,params,Integer.class);
+        return jdbcTemplate.queryForObject(FIND_COMPANY_SQL,params,Integer.class);
     }
 
     @Override
@@ -78,12 +71,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", customer.getName());
         params.addValue("secretKey", password);
-        switch (customer.getCustomerType()){
-            case Business: params.addValue("typeId",1);
-            break;
-            case Residential:params.addValue("typeId",2);
-        }
-        return jdbcTemplate.update(SAVE_CUSTOMER, params)>0;
+        return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params)>0;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package nc.nut.controller.product;
+package nc.nut.controller.admin;
 
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductDao;
@@ -46,9 +46,6 @@ public class FillTariffController {
 //        List<ProductCategories> productCategories = productDao.findProductCategories();
         for (Map.Entry<String, List<Product>> s : allServices.entrySet()) {
             model.addAttribute(s.getKey(), s.getValue());
-            for (Product p : s.getValue()) {
-                System.out.println(s.getKey() + " " + p.getName());
-            }
         }
         model.addAttribute("tariffs", tariffs);
         model.addAttribute("allServices", allServices);
@@ -64,14 +61,15 @@ public class FillTariffController {
                           @RequestParam(value = "selectto") String services,
                           Model model, HttpSession session) {
 
-        boolean checkUniqueCategoryServices = productService.checkUniqueCategoryServices(services);
+        String[] servicesId = services.split(",");
+        boolean checkUniqueCategoryServices = productService.checkUniqueCategoryServices(servicesId);
         if (!checkUniqueCategoryServices) {
             model.addAttribute("tariffs", session.getAttribute("tariffs"));
             model.addAttribute("allServices", session.getAttribute("allServices"));
             model.addAttribute("errorUniqueCategory", "Duplicate category");
             return "admin/fillTariff";
         }
-        productService.fillTariff(services, tariffId);
+        productService.fillTariff(servicesId, tariffId);
 
         return "redirect:/admin/index";
     }

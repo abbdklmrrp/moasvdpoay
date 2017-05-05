@@ -64,6 +64,11 @@ public class Order {
     }
 
     @Override
+    public String toString() {
+        return new StringBuilder().append("Order{").append("id=").append(id).append(", productId=").append(productId).append(", userId=").append(userId).append(", currentStatus=").append(currentStatus).append('}').toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Order)) return false;
@@ -75,13 +80,5 @@ public class Order {
     public int hashCode() {
         return Objects.hash(getId());
     }
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", productId=" + productId +
-                ", userId=" + userId +
-                ", currentStatus=" + currentStatus +
-                '}';
-    }
+
 }

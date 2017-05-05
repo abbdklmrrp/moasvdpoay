@@ -1,4 +1,4 @@
-package nc.nut.controller.product;
+package nc.nut.controller.user;
 
 import nc.nut.dao.entity.OperationStatus;
 import nc.nut.dao.order.Order;

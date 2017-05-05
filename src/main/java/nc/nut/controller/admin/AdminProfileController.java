@@ -25,20 +25,21 @@ public class AdminProfileController {
     @Resource
     private UserDAO userDAO;
     @Resource
-    UserService userService;
+    private UserService userService;
     private Integer userId;
-    private ServiceGoogleMaps googleMaps = new ServiceGoogleMaps();
+    @Resource
+    private ServiceGoogleMaps googleMaps;
 
-    @RequestMapping(value = "/getAdminProfile",method = RequestMethod.GET)
-    private ModelAndView getCsrProfile() {
+    @RequestMapping(value = "/getAdminProfile", method = RequestMethod.GET)
+    public ModelAndView getCsrProfile() {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         ModelAndView model = new ModelAndView();
         userId = user.getId();
+        String[] address = user.getAddress().split(", ");
         model.addObject("name", user.getName());
         model.addObject("surname", user.getSurname());
         model.addObject("email", user.getEmail());
         model.addObject("phone", user.getPhone());
-        String[] address = user.getAddress().split(", ");
         model.addObject("city", address[0]);
         model.addObject("street", address[1]);
         model.addObject("building", address[2]);
@@ -47,22 +48,14 @@ public class AdminProfileController {
     }
 
     @RequestMapping(value = "/editAdminProfile", method = RequestMethod.POST)
-    public String editProfile(@RequestParam(value = "name") String name,
-                              @RequestParam(value = "surname") String surname,
-                              @RequestParam(value = "email") String email,
-                              @RequestParam(value = "phone") String phone,
+    public String editProfile(User user,
                               @RequestParam(value = "city") String city,
                               @RequestParam(value = "street") String street,
                               @RequestParam(value = "building") String building) {
-        User user = new User();
-        user.setName(name);
-        user.setSurname(surname);
-        user.setPhone(phone);
-        user.setEmail(email);
         String address = city + ", " + street + ", " + building;
-        user.setAddress(address);
         String place = googleMaps.getRegion(address);
         Integer placeId = userDAO.findPlaceId(place);
+        user.setAddress(address);
         user.setPlaceId(placeId);
         user.setId(userId);
         boolean b = userService.updateUser(user);

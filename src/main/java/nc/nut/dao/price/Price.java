@@ -52,9 +52,7 @@ public class Price {
 
     @Override
     public String toString() {
-        return "Price{" + "placeId=" + placeId
-                + ", productId=" + productId
-                + ", price=" + price + '}';
+        return new StringBuilder().append("Price{").append("placeId=").append(placeId).append(", product_id=").append(product_id).append(", price=").append(price).append('}').toString();
     }
 
     @Override

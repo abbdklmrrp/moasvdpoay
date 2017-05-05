@@ -4,10 +4,6 @@ package nc.nut.security;
  * @author Rysakova Anna
  */
 public enum Authority {
-    //    USER("USER"),
-//    ADMIN("ADMIN"),
-//    PMG("PMG"),
-//    CSR("CSR");
     ADMIN("ADMIN"),
     PMG("PMG"),
     CSR("CSR"),

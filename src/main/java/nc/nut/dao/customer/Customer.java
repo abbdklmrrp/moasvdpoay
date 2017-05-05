@@ -64,4 +64,9 @@ public class Customer {
     public void setInvoice(Integer invoice) {
         this.invoice = invoice;
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append("Customer{").append("id=").append(id).append(", name='").append(name).append('\'').append(", secretKey='").append(secretKey).append('\'').append(", customerType=").append(customerType).append(", invoice=").append(invoice).append('}').toString();
+    }
 }

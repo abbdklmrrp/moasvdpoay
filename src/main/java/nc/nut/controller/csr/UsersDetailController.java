@@ -28,63 +28,65 @@ public class UsersDetailController {
     @Resource
     private UserDAO userDAO;
     @Resource
-    private ProductDao productDao;
+    private ObjectMapper objectMapper;
 
     private List<User> clients;
 
     @RequestMapping(value = "getUsersPage", method = RequestMethod.GET)
     public String getUsers(Model model) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        clients=userDAO.getAllClients();
-        model.addAttribute("userList",mapper.writeValueAsString(clients));
+        clients = userDAO.getAllClients();
+        model.addAttribute("userList", objectMapper.writeValueAsString(clients));
         return "csr/users";
     }
 
 
-    @RequestMapping(value = "save",method=RequestMethod.POST)
-    public String editUser(HttpSession session){
-
+    @RequestMapping(value = "save", method = RequestMethod.POST)
+    public String editUser(HttpSession session) {
         session.removeAttribute("userId");
         return "csr/index";
     }
 
-    @RequestMapping(value = "addProduct",method=RequestMethod.POST)
-    public String addProduct(HttpSession session,Model model)throws  IOException{
+    @RequestMapping(value = "addProduct", method = RequestMethod.POST)
+    public String addProduct(HttpSession session, Model model) throws IOException {
 //        int userId=(int)session.getAttribute("userId");
 //        List<Product> products=productDao.getUnConnectedProducts(userId);
 //        ObjectMapper mapper = new ObjectMapper();
 //        model.addAttribute("productList",mapper.writeValueAsString(products));
         return "csr/index";
     }
-    @RequestMapping(value="viewOrders",method=RequestMethod.POST)
-    public String viewOrders(Model model) throws IOException{
-        return "csr/index";
-    }
-    @RequestMapping(value="sendPassword",method=RequestMethod.POST)
-    public String sendPassword(HttpSession session){
+
+    @RequestMapping(value = "viewOrders", method = RequestMethod.POST)
+    public String viewOrders(Model model) throws IOException {
         return "csr/index";
     }
 
-    @RequestMapping(value="getDetails",method =RequestMethod.GET)
-    public ModelAndView getDetails(@RequestParam(value="id") int id, HttpSession session) throws IOException{
+    @RequestMapping(value = "sendPassword", method = RequestMethod.POST)
+    public String sendPassword(HttpSession session) {
+        return "csr/index";
+    }
+
+    @RequestMapping(value = "getDetails", method = RequestMethod.GET)
+    public ModelAndView getDetails(@RequestParam(value = "id") int id, HttpSession session) throws IOException {
         User user;
-        ModelAndView model=new ModelAndView("csr/userPage");
-        for(User user1:clients){
-            if(user1.getId()==id){
-                user=user1;
-                model.addObject("name",user.getName());
-                model.addObject("surname",user.getSurname());
-                model.addObject("email",user.getEmail());
-                model.addObject("phone",user.getPhone());
-                String[] address=user.getAddress().split(", ");
-                model.addObject("city",address[0]);
-                model.addObject("street",address[1]);
-                model.addObject("building",address[2]);
-                session.setAttribute("userId",user.getId());
-                break;
+        ModelAndView model = new ModelAndView();
+        for (User user1 : clients) {
+            if (user1.getId() == id) {
+                user = user1;
+                String[] address = user.getAddress().split(", ");
+                model.addObject("name", user.getName());
+                model.addObject("surname", user.getSurname());
+                model.addObject("email", user.getEmail());
+                model.addObject("phone", user.getPhone());
+                model.addObject("city", address[0]);
+                model.addObject("street", address[1]);
+                model.addObject("building", address[2]);
+                session.setAttribute("userId", user.getId());
+                model.setViewName("csr/userPage");
+                return model;
 
             }
         }
+        model.setViewName("csr/users");
         return model;
     }
 

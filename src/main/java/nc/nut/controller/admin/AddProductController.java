@@ -1,9 +1,8 @@
-package nc.nut.controller.product;
+package nc.nut.controller.admin;
 
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductCategories;
 import nc.nut.dao.product.ProductDao;
-import nc.nut.dao.product.ProductType;
 import nc.nut.services.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,9 +59,8 @@ public class AddProductController {
             model.addAttribute("errorEmptyProduct", " Please fill all fields");
             return "admin/addTariff";
         }
-        product.setProductType(ProductType.Tariff);
         productService.saveProduct(product);
-        return "redirect:/admin/index";
+        return "redirect:/admin/fillTariff";
     }
 
     @RequestMapping(value = {"addService"}, method = RequestMethod.POST)
@@ -76,7 +74,6 @@ public class AddProductController {
             model.addAttribute("productCategories", session.getAttribute("productCategories"));
             return "admin/addService";
         }
-        product.setProductType(ProductType.Service);
         ProductCategories productCategories = new ProductCategories();
         productCategories.setName(newCategory);
         productCategories.setDescription(newCategoryDesc);

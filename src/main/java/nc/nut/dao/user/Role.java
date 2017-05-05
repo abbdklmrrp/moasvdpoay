@@ -51,4 +51,14 @@ public enum Role {
         logger.error(WRONG_ID_ERROR_MSG + id);
         throw new IllegalArgumentException(WRONG_ID_ERROR_MSG + id);
     }
+
+    public static Role getRoleByName(String name){
+        Role[]roles=values();
+        for(Role role:roles){
+            if(Objects.equals(role.getName(),name)){
+                return role;
+            }
+        }
+        return null;
+    }
 }

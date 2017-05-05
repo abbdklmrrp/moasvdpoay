@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * Created by Anna on 26.04.2017.
+ * Created by Rysakova Anna on 26.04.2017.
  */
 @Service
 public class ProductService {
@@ -29,6 +29,13 @@ public class ProductService {
     @Resource
     private PriceDao priceDao;
 
+    /**
+     * Rysakova Anna
+     *
+     * @param category
+     * @param product
+     * @return
+     */
     public Product getCategory(ProductCategories category, Product product) {
         if (!category.getName().equals("")) {
             productDao.addCategory(category);
@@ -38,77 +45,125 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * Rysakova Anna
+     *
+     * @param categories
+     * @return
+     */
     public boolean checkEmptyNewCategory(ProductCategories categories) {
         return !(!categories.getName().equals("") && categories.getDescription().equals(""));
     }
 
+    /**
+     * Rysakova Anna
+     *
+     * @param product
+     * @return
+     */
     public boolean checkEmptyFieldIfProduct(Product product) {
         return !(product.getName().equals("") || product.getDescription().equals(""));
     }
 
+    /**
+     * Rysakova Anna
+     *
+     * @param product
+     */
     public void saveProduct(Product product) {
-        if (Objects.equals(product.getProductType(), ProductType.Tariff)) {
+        if (product.getProductType() == ProductType.Tariff) {
             product.setCategoryId(null);
             productDao.save(product);
         }
-        if (Objects.equals(product.getProductType(), ProductType.Service)) {
+        if (product.getProductType() == ProductType.Service) {
             productDao.save(product);
         }
     }
 
-    public void fillTariff(String service, int idTariff) {
-        String[] arr = service.split(",");
-        for (String a : arr) {
-            productDao.fillTariff(idTariff, Integer.parseInt(a));
+    /**
+     * Rysakova Anna
+     *
+     * @param servicesId
+     * @param idTariff
+     */
+    public void fillTariff(String[] servicesId, int idTariff) {
+        for (String o : servicesId) {
+            productDao.fillTariff(idTariff, Integer.parseInt(o));
         }
     }
 
-    public boolean checkUniqueCategoryServices(String services) {
-        String[] arr = services.split(",");
+    /**
+     * Rysakova Anna
+     *
+     * @param servicesId
+     * @return
+     */
+    public boolean checkUniqueCategoryServices(String[] servicesId) {
         List<Product> allServices = productDao.getAllServices();
         Set<Integer> serviceCategoryId = new HashSet<>();
-        for (String s : arr) {
+        for (String o : servicesId) {
             for (Product p : allServices) {
-                if (Integer.parseInt(s) == p.getId()) {
+                System.out.println("p = " + p.getId() + " o " + o);
+                if (Integer.parseInt(o) == p.getId()) {
                     serviceCategoryId.add(p.getCategoryId());
                 }
             }
         }
-        return arr.length == serviceCategoryId.size();
+        return servicesId.length == serviceCategoryId.size();
     }
 
-    public void updateFillTariff(String service, Product product) {
+    /**
+     * Rysakova Anna
+     *
+     * @param servicesId
+     * @param product
+     */
+    public void updateFillTariff(String[] servicesId, Product product) {
         List<Product> oldServiceList = productDao.getServicesByTariff(product);
         ArrayList<Integer> oldServiceIdList = new ArrayList<>();
         for (Product p : oldServiceList) {
             oldServiceIdList.add(p.getId());
         }
-        String[] arr = service.split(",");
-        List newServiceList = Arrays.asList(arr);
-        oldServiceIdList.removeAll(newServiceList);
+        List newServicesId = Arrays.asList(servicesId);
+        oldServiceIdList.removeAll(newServicesId);
         removeServiceFromTariff(oldServiceIdList, product);
     }
 
-    public void updateTariffWithNewServices(String service, Product product) {
+    /**
+     * Rysakova Anna
+     *
+     * @param servicesId
+     * @param product
+     */
+    public void updateTariffWithNewServices(String[] servicesId, Product product) {
         List<Product> oldServiceList = productDao.getServicesByTariff(product);
         ArrayList<Integer> oldServiceIdList = new ArrayList<>();
         for (Product p : oldServiceList) {
             oldServiceIdList.add(p.getId());
         }
-        String[] arr = service.split(",");
-        List newServiceList = Arrays.asList(arr);
-        newServiceList.removeAll(oldServiceIdList);
-        for (Object i : newServiceList) {
-            fillTariff((String) i, product.getId());
+        List newServicesId = Arrays.asList(servicesId);
+        newServicesId.removeAll(oldServiceIdList);
+        fillTariff(servicesId, product.getId());
+
+    }
+
+    /**
+     * Rysakova Anna
+     *
+     * @param serviceIdList
+     * @param product
+     */
+    private void removeServiceFromTariff(List serviceIdList, Product product) {
+        for (Object o : serviceIdList) {
+            productDao.deleteServiceFromTariff(product.getId(), (Integer) o);
         }
     }
 
-    public void removeServiceFromTariff(List serviceIdList, Product product) {
-        for (Object s : serviceIdList) {
-            productDao.deleteServiceFromTariff(product.getId(), (Integer) s);
-        }
-    }
-
+    /**
+     * Rysakova Anna
+     *
+     * @param updateProduct
+     */
     public void updateProduct(Product updateProduct) {
         int productId = updateProduct.getId();
         Product product = productDao.getById(productId);
@@ -118,13 +173,14 @@ public class ProductService {
         if (!updateProduct.getDescription().equals("") & !updateProduct.getDescription().equals(product.getDescription())) {
             product.setDescription(updateProduct.getDescription());
         }
-        if (updateProduct.getDurationInDays() != product.getDurationInDays()) {
+        if (!Objects.equals(updateProduct.getDurationInDays(), product.getDurationInDays())) {
             product.setDurationInDays(updateProduct.getDurationInDays());
         }
+
         if (updateProduct.getProcessingStrategy() != product.getProcessingStrategy()) {
             product.setProcessingStrategy(updateProduct.getProcessingStrategy());
         }
-        if (updateProduct.getStatus() != product.getStatus()) {
+        if (!Objects.equals(updateProduct.getStatus(), product.getStatus())) {
             product.setStatus(updateProduct.getStatus());
         }
         productDao.update(product);

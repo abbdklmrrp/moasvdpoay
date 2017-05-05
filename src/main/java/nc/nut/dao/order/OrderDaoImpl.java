@@ -35,14 +35,14 @@ public class OrderDaoImpl implements OrderDao {
             "      AND USER_ID = :user_id";
     private final static String INSERT_ORDER = "INSERT INTO ORDERS (PRODUCT_ID, USER_ID, CURRENT_STATUS_ID) " +
             "VALUES (:product_id, :user_id, :cur_status_id)";
-    private final static String GET_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL = "SELECT id FROM Orders " +
+    private final static String SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL = "SELECT id FROM Orders " +
             "WHERE product_id = :productId " +
             "AND user_id = :userId " +
-            "AND current_status_id = 1/*id = 1 - status active*/";
-    private final static String GET_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL = "SELECT id FROM Orders " +
-            "WHERE product_id = (SELECT id FROM Products WHERE name = :productName) " +
+            "AND current_status_id = 1/* Active */";
+    private final static String SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL = "SELECT id FROM Orders " +
+            "WHERE product_id IN (SELECT id FROM Products WHERE name = :productName) " +
             "AND user_id = :userId " +
-            "AND current_status_id = 1/*id = 1 - status active*/";
+            "AND current_status_id = 1/* Active */";
     private final static String DELETE_ORDER_BY_ID_SQL = "DELETE FROM ORDERS WHERE ID = :id;";
 
     @Override
@@ -81,33 +81,25 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     /**
-     * Method returns order id according to user id and product id with active status.
-     *
-     * @param userId    id of user.
-     * @param productId id of product.
-     * @return id or order.
+     * {@inheritDoc}
      */
     @Override
     public Integer getOrderIdByUserIdAndProductId(Integer userId, Integer productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
         params.addValue("productId", productId);
-        return jdbcTemplate.queryForObject(GET_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
     }
 
     /**
-     * Method returns order id according to user id and product name with active status.
-     *
-     * @param userId      id of user.
-     * @param productName name of product.
-     * @return id or order.
+     * {@inheritDoc}
      */
     @Override
     public Integer getOrderIdByUserIdAndProductName(Integer userId, String productName) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
         params.addValue("productName", productName);
-        return jdbcTemplate.queryForObject(GET_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL, params, Integer.class);
     }
 
     @Override

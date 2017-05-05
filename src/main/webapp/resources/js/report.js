@@ -1,11 +1,13 @@
 $(document).ready(function () {
     $('#btnShowReport').click(function () {
-        if(checkData()){
+        if (checkDate()) {
+            cleanErrors()
             drawChartAndTable();
         }
     });
     $('#btnDownloadReport').click(function () {
-        if(checkData()){
+        if (checkDate()) {
+            cleanErrors();
             $('#formWithRegionsAndDates').submit();
         }
     });
@@ -25,12 +27,11 @@ function fillData() {
     }
 }
 
-function checkData() {
+function checkDate() {
     var start = new Date($('#beginDate').val());
     var end = new Date($('#endDate').val());
-    if ((end - start) < 0){
-        $('#err').html("Please, enter correct date period");
-        setTimeout("$('#err').empty()", 3000);
+    if ((end - start) < 0) {
+        showError("Please, enter correct date period");
         return false;
     }
     else {
@@ -38,11 +39,21 @@ function checkData() {
     }
 }
 
+function showError(message) {
+    $('#err').html(message);
+    $('#line_top_x').empty();
+    $('#table_div').empty();
+}
+
+function cleanErrors() {
+    $('#err').empty();
+}
+
 google.charts.load('current', {'packages': ['corechart']});
 
 function drawChartAndTable() {
     var list = [];
-    var len;
+    var len = 0;
     var isError = Boolean(false);
     jQuery.ajax({
         url: 'report/data',
@@ -53,15 +64,9 @@ function drawChartAndTable() {
         success: function (response) {
             list = response;
             len = list.length;
-            if (len == 0) {
-                $('#err').html("No data for this period");
-                setTimeout("$('#err').empty()", 3000);
-                isError = Boolean(true);
-            }
         },
-        error: function (response) {
-            $('#err').html("Can't connect to the server");
-            setTimeout("$('#err').empty()", 3000);
+        error: function () {
+            showError("Can't connect to the server");
             isError = Boolean(true);
         }
     });
@@ -83,10 +88,11 @@ function drawChartAndTable() {
     data.addRows(rowList);
     var select = document.getElementById('sel1');
     var options = {
-        chart: {
-            title: 'Statistic in ' + select.value,
-            subtitle: 'NetCrooker'
-        },
+        //if graph type change back to line
+        // chart: {
+        //     title: 'Statistic in ' + select.value,
+        //     subtitle: 'Jcompany'
+        // },
         legend: {position: 'bottom'},
         axes: {
             x: {

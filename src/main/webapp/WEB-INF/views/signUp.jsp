@@ -15,7 +15,7 @@
     <script src="${contextPath}/resources/js/user.type.js"></script>
 </head>
 <body>
-<form action="${contextPath}/signUp" method="post">
+<form action="${contextPath}/signUp" modelAttribute="user" method="post">
     <div class="login-form">
         <h1>Sign up</h1>
         <div class="form-group ">

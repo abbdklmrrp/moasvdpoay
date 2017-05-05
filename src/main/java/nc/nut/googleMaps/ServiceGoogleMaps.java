@@ -8,13 +8,14 @@ import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
 /**
  * @author Anton Bulgakov
  * @since 21.04.2017
- */
+ */@Service
 public class ServiceGoogleMaps {
     private static String apiKey = "AIzaSyBF2CMlYRcV-9zTHFND2m2InqbYdeyJz30";
     private static Logger logger = LoggerFactory.getLogger(nc.nut.googleMaps.ServiceGoogleMaps.class);

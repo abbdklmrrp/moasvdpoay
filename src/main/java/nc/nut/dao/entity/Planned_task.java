@@ -61,10 +61,7 @@ public class Planned_task {
 
     @Override
     public String toString() {
-        return "Planned_task{" + "id=" + id
-                + ", status=" + status
-                + ", orderId=" + orderId
-                + ", actionDate=" + actionDate + '}';
+        return new StringBuilder().append("Planned_task{").append("id=").append(id).append(", status=").append(status).append(", orderId=").append(orderId).append(", actionDate=").append(actionDate).append('}').toString();
     }
 
 }
