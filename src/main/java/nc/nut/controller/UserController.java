@@ -1,6 +1,7 @@
 package nc.nut.controller;
 
-import nc.nut.dao.user.*;
+import nc.nut.controller.admin.AddProductController;
+import nc.nut.dao.user.UserDAO;
 import nc.nut.security.SecurityAuthenticationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class UserController {
     @Resource
     UserDAO dao;
 
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
+    private Logger logger = LoggerFactory.getLogger(AddProductController.class);
 
     private
     @RequestMapping({"index"})

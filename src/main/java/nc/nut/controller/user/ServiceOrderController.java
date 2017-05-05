@@ -1,4 +1,4 @@
-package nc.nut.controller.product;
+package nc.nut.controller.user;
 
 import nc.nut.dao.entity.OperationStatus;
 import nc.nut.dao.order.Order;
@@ -88,9 +88,9 @@ public class ServiceOrderController {
         boolean wasDeactivated = orderDao.deactivateOrderOfUserForProduct(Integer.valueOf(productId), currentUser.getId());
         String message;
         if (wasDeactivated) {
-            message = "This product for you was deactivated.";
+            message = "This admin for you was deactivated.";
         } else {
-            message = "Mistake while deactivating this product for you! Please, try again.";
+            message = "Mistake while deactivating this admin for you! Please, try again.";
             model.addAttribute("msg", message);
             return "user/result";
         }
