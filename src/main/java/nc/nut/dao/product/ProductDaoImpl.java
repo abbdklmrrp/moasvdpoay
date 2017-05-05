@@ -677,8 +677,8 @@ public class ProductDaoImpl implements ProductDao {
         });
         return products;
     }
-
-    public List<Product> getAllServicesByCurrentUserTarifff(Integer userId) {
+    @Override
+    public List<Product> getAllServicesByCurrentUserTariff(Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", userId);
         return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL, params, new ProductRowMapper());

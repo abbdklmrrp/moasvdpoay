@@ -75,7 +75,7 @@ public interface ProductDao extends Dao<Product> {
      * @param userId id of user
      * @return list of products with service type.
      */
-    List<Product> getAllServicesByCurrentUserTarifff(Integer userId);
+    List<Product> getAllServicesByCurrentUserTariff(Integer userId);
 
 
     Map<String, List<Product>> getAllServicesWithCategory();
