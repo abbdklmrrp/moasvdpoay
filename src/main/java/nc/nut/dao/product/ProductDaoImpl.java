@@ -334,8 +334,8 @@ public class ProductDaoImpl implements ProductDao {
             product.setId(rs.getInt("ID"));
             Integer productType = rs.getInt("type_id");
             product.setProductType(ProductType.getProductTypeFromId(rs.getInt("type_id")));
-            product.setProductType(ProductType.getProductTypeById(rs.getInt("TYPE_ID")));
-            product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
+            product.setProductType(ProductType.getProductTypeFromId(rs.getInt("TYPE_ID")));
+            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(rs.getInt("NEED_PROCESSING")));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
             product.setDescription(rs.getString("DESCRIPTION"));
@@ -521,7 +521,7 @@ public class ProductDaoImpl implements ProductDao {
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setId(rs.getInt("ID"));
             product.setProductType(ProductType.Service);
-            product.setNeedProcessing(rs.getInt("NEED_PROCESSING"));
+            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(rs.getInt("NEED_PROCESSING")));
             Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
             product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
             Integer statusId = rs.getInt("STATUS");
@@ -555,7 +555,7 @@ public class ProductDaoImpl implements ProductDao {
         List<Product> productList = jdbcTemplate.query(FIND_ALL_PRODUCTS, (rs, rowNum) -> {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
-            product.setProductType(ProductType.getProductTypeById(rs.getInt("TYPE_ID")));
+            product.setProductType(ProductType.getProductTypeFromId(rs.getInt("TYPE_ID")));
             Integer typeId = rs.getInt("TYPE_ID");
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setDurationInDays(rs.getInt("DURATION"));

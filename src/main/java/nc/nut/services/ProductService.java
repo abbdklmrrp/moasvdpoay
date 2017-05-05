@@ -213,7 +213,7 @@ public class ProductService {
                 productDao.getAllAvailableServicesByPlace(user.getPlaceId()) :
                 productDao.getAllServices();
         Map<String, List<ProductCatalogRowDTO>> categoriesWithProducts = new HashMap<>();
-        List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTarifff(user.getId());
+        List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTariff(user.getId());
         for (Product product : productWithoutStatuses) {
             String categoryName = productDao.getProductCategoryById(product.getCategoryId()).getName();
             if (!categoriesWithProducts.containsKey(categoryName)) {
