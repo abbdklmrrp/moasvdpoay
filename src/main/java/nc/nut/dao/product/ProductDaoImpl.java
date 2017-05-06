@@ -51,10 +51,14 @@ public class ProductDaoImpl implements ProductDao {
             "                  (SELECT ts.SERVICE_ID FROM TARIFF_SERVICES ts  " +
             "                  WHERE ts.TARIFF_ID=:tariffId) AND p.TYPE_ID=2";
 
-    private final static String FIND_ALL_SERVICES_WITH_CATEGORY = "SELECT prod.ID, prod.NAME, prod.DESCRIPTION,prod.DURATION,prod.NEED_PROCESSING,\n" +
-            "prod.CATEGORY_ID, pCategories.NAME as Category\n" +
-            "FROM PRODUCTS prod JOIN PRODUCT_TYPES pTypes ON (prod.TYPE_ID=pTypes.ID)\n" +
-            "JOIN PRODUCT_CATEGORIES pCategories ON (prod.CATEGORY_ID=pCategories.ID)\n" +
+    private final static String FIND_ALL_SERVICES_WITH_CATEGORY = "SELECT " +
+            "prod.ID, " +
+            "prod.NAME, " +
+            "prod.CATEGORY_ID, " +
+            "pCategories.NAME as Category " +
+            "FROM PRODUCTS prod " +
+            "JOIN PRODUCT_TYPES pTypes ON (prod.TYPE_ID=pTypes.ID) " +
+            "JOIN PRODUCT_CATEGORIES pCategories ON (prod.CATEGORY_ID=pCategories.ID) " +
             "WHERE prod.STATUS=1 AND pTypes.name='Service'";
 
     private final static String FIND_ALL_FREE_TARIFFS = "SELECT * FROM PRODUCTS p join PRODUCT_TYPES ptype ON(p.TYPE_ID=ptype.ID)\n" +
@@ -132,14 +136,14 @@ public class ProductDaoImpl implements ProductDao {
     private final static String DELETE_SERVICE_FROM_TARIFF = "DELETE FROM TARIFF_SERVICES " +
             "WHERE TARIFF_ID=:idTariff AND SERVICE_ID=:idService ";
 
-    private final static String DISABLE_TARIFF = "Update Products set status=0 where id=:id";
+    private final static String DISABLE_TARIFF = "UPDATE Products SET status=0 WHERE id=:id";
 
-    private final static String FIND_PRODUCT_FOR_USER = "SELECT prod.ID as ID, prod.NAME as NAME," +
-            "prod.description as DESCRIPTION, prod.DURATION as duration " +
+    private final static String FIND_PRODUCT_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME," +
+            "prod.description AS DESCRIPTION, prod.DURATION AS duration " +
             "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
             " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
             "WHERE ord.USER_ID = :id AND status.NAME != 'Deactivated'";
-    private final static String FIND_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID as ID, prod.NAME as NAME " +
+    private final static String FIND_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME " +
             "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
             " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
             "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
@@ -520,16 +524,8 @@ public class ProductDaoImpl implements ProductDao {
             Product product = new Product();
             product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setId(rs.getInt("ID"));
-            product.setProductType(ProductType.Service);
-            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(rs.getInt("NEED_PROCESSING")));
-            Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
-            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
-            Integer statusId = rs.getInt("STATUS");
-            product.setStatus(ProductStatus.getProductStatusFromId(statusId));
-            product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
-            product.setDescription(rs.getString("DESCRIPTION"));
-            String category = rs.getString("Category");
+            String category = rs.getString("CATEGORY");
             if (serviceMap.containsKey(category)) {
                 List<Product> serv = serviceMap.get(category);
                 serv.add(product);
@@ -635,9 +631,9 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
-     * @author Moiseienko Petro
      * @param id
      * @return
+     * @author Moiseienko Petro
      */
     @Override
     public List<Product> getProductsByUserId(int id) {
@@ -655,9 +651,9 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
-     * @author Moiseienko Petro
      * @param id
      * @return
+     * @author Moiseienko Petro
      */
     @Override
     public List<Product> getActiveProductsByUserId(Integer id) {
