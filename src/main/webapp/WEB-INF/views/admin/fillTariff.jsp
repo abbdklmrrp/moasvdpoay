@@ -55,8 +55,6 @@
             </select>
             <a href="JavaScript:void(0);" id="btn-remove">&laquo; Remove</a>
 
-            <%--<div id="selectedValuesId" >--%>
-            <%--</div>--%>
             <button type="submit" class="log-btn" id="submit">Save</button>
 
         </fieldset>
@@ -65,23 +63,3 @@
 </form>
 </body>
 </html>
-
-
-<%--<div class="form-group ">--%>
-<%--<select name="productCategories" class="form-control" id="productCategories">--%>
-<%--<c:forEach var="allServices" items="${allServices}">--%>
-<%--<option value="${allServices.key}">${allServices.key}</option>--%>
-<%--</c:forEach>--%>
-<%--</select>--%>
-<%--</div>--%>
-
-<%--<div class="form-group ">--%>
-<%--<label>Select service</label>--%>
-<%--<select name="allServices[]" class="form-control" id="allServices">--%>
-<%--<c:forEach var="category" items="${allServices}">--%>
-<%--<c:forEach var="categoryKey" items="${category.value}">--%>
-<%--<option value="${categoryKey.id}">${categoryKey.name}</option>--%>
-<%--</c:forEach>--%>
-<%--</c:forEach>--%>
-<%--</select>--%>
-<%--</div>--%>

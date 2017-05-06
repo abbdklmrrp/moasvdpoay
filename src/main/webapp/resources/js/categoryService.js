@@ -39,7 +39,7 @@ $(document).ready(function () {
     $('#btn-add').click(function () {
         $('#selectto option:selected').each(function () {
             $('#selectedService').append("<option value='" + $(this).val() + "' selected>" + $(this).text() + "</option>");
-            $(this).remove();
+            $('#selectto').empty();
         });
     });
     $('#btn-remove').click(function () {
