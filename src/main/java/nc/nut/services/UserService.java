@@ -23,6 +23,8 @@ public class UserService {
 
     public boolean updateUser(User user) {
         User defaultUser = userDAO.getUserById(user.getId());
+        String formatAddress=serviceGoogleMaps.getFormattedAddress(user.getAddress());
+        user.setAddress(formatAddress);
         if (!user.getName().isEmpty() && !user.getName().equals(defaultUser.getName())) {
             defaultUser.setName(user.getName());
         }
@@ -34,30 +36,33 @@ public class UserService {
         }
         if (!user.getAddress().isEmpty() && !user.getAddress().equals(defaultUser.getAddress())) {
             defaultUser.setAddress(user.getAddress());
-        }
-        if (!Objects.equals(user.getPlaceId(), defaultUser.getPlaceId())) {
-            defaultUser.setPlaceId(user.getPlaceId());
+            if (!Objects.equals(user.getPlaceId(), defaultUser.getPlaceId())) {
+                defaultUser.setPlaceId(user.getPlaceId());
+            }
         }
         return userDAO.update(defaultUser);
     }
 
     public boolean save(User user) {
-        String place=serviceGoogleMaps.getRegion(user.getAddress());
+        String place = serviceGoogleMaps.getRegion(user.getAddress());
         Integer placeId = userDAO.findPlaceId(place);
         user.setPlaceId(placeId);
+        String address = user.getAddress();
+        user.setAddress(serviceGoogleMaps.getFormattedAddress(address));
         boolean success = userDAO.save(user);
         // todo send email with registration info
         return success;
     }
 
     public boolean saveWithGeneratePassword(User user) {
-        String password=passwordGenerator();
+        String password = passwordGenerator();
         user.setPassword(password);
-        String place=serviceGoogleMaps.getRegion(user.getAddress());
+        String place = serviceGoogleMaps.getRegion(user.getAddress());
         Integer placeId = userDAO.findPlaceId(place);
         user.setPlaceId(placeId);
-        System.out.println(serviceGoogleMaps.getFormattedAddress(user.getAddress()));
-        boolean success=userDAO.save(user);
+        String address = user.getAddress();
+        user.setAddress(serviceGoogleMaps.getFormattedAddress(address));
+        boolean success = userDAO.save(user);
         //todo send email with registration info and new password
         return success;
     }

@@ -1,5 +1,6 @@
 package nc.nut.persistence;
 
+import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +9,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 /**
  * Created by Rysakova Anna on 20.04.2017.
@@ -26,8 +30,23 @@ public class PersistenceConfig {
     @Value("${datasource.password}")
     private String password;
 
+
     @Bean(name = "dataSource")
     public DataSource dataSource() {
+/*        for glassfish connection pool
+        DataSource dataSource= null;
+        try {
+            dataSource = new OracleConnectionPoolDataSource();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            InitialContext initContext = new InitialContext();
+            dataSource = (DataSource) initContext.lookup("jdbc/ConnectionPool");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }*/
+
         BasicDataSource dataSource = new BasicDataSource();
 //        DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driver);
