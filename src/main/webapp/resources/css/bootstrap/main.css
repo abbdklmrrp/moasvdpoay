@@ -960,12 +960,12 @@ ul.rss li::before {
   content: "\f09e";
 }
 #footer {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 3px;
+  padding-bottom: 3px;
   color: #bdc3c7;
-  bottom: 0;
-  position: absolute;
   width: 100%;
+  bottom: 0;
+  position: fixed;
 }
 ul.social {
   list-style: none;
@@ -1086,5 +1086,13 @@ ul.faq li > div h3 {
 }
 
 footer .container {
+  text-align: center;
+}
+
+#tableServiceCatalog tr th {
+   text-align: center;
+ }
+
+#tableServiceCatalog tr td {
   text-align: center;
 }
