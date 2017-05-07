@@ -51,7 +51,7 @@ public class ServiceOrderController {
     private final static String PRODUCT_WAS_DEACTIVATED_MSG = "This product for you was deactivated.";
 
     @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
-    Model showServices(Model model) {
+    String showServices(Model model) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user id : " + currentUser.getId());
         Map<String, List<ProductCatalogRowDTO>> categoriesWithProductsToShow = productService.getCategoriesWithProductsForUser(currentUser);
@@ -61,7 +61,7 @@ public class ServiceOrderController {
         } else {
             model.addAttribute("categoriesProducts", categoriesWithProductsToShow);
         }
-        return model;
+        return "newPages/user/residential/Services";
     }
 
     @RequestMapping(value = {"/ordered"}, method = RequestMethod.POST)
