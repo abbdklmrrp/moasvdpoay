@@ -21,6 +21,7 @@ import java.util.List;
  * @since 04.05.2017.
  */
 @Controller
+@RequestMapping({"csr","user"})
 public class TariffsController {
 
     @Resource
@@ -32,7 +33,7 @@ public class TariffsController {
 
     private static Logger logger = LoggerFactory.getLogger(TariffsController.class);
 
-    @RequestMapping(value = {"individual/tariffs"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"residential/tariffs"}, method = RequestMethod.GET)
     public String showTariffsForUser(Model model) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user: {}",currentUser.toString());
@@ -43,10 +44,10 @@ public class TariffsController {
             model.addAttribute("currentTariff", currentTariff);
         }
         model.addAttribute("tariffsByPlace", tariffsByPlace);
-        return "redirect:/individual/tariffs";
+        return "redirect:/residential/tariffs";
     }
 
-    @RequestMapping(value = {"legal/tariffs"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"business/tariffs"}, method = RequestMethod.GET)
     public String showTariffsForCustomer(Model model) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Product currentTariff = productDao.getCurrentCustomerTariff(currentUser.getCustomerId());
@@ -55,7 +56,7 @@ public class TariffsController {
             model.addAttribute("currentTariff", currentTariff);
         }
         model.addAttribute("tariffsByPlace", tariffsForCustomers);
-        return "redirect:/legal/tariffs";
+        return "redirect:/business/tariffs";
     }
 
     @RequestMapping(value = {"/activateTariff"}, method = RequestMethod.POST, produces = {"text/html;charset=UTF-8"})

@@ -90,29 +90,27 @@ public class ProductDaoImpl implements ProductDao {
             "WHERE PRICES.PLACE_ID = :place_id AND PRODUCTS.STATUS = 1 /*active status id*/ AND PRODUCTS.TYPE_ID = 2 /*service id*/";
     private final static String SELECT_PRODUCT_CATEGORY_BY_ID_SQL = "SELECT ID, NAME, DESCRIPTION FROM PRODUCT_CATEGORIES\n" +
             "WHERE ID = :id";
-    private final static String SELECT_CURRENT_USER_TARIFF_BY_USER_ID_SQL = "SELECT " +
-            "id, " +
-            "category_id, " +
-            "duration, " +
-            "type_id, " +
-            "need_processing, " +
-            "name, " +
-            "description, " +
-            "status FROM Products " +
-            "WHERE id IN (SELECT product_id FROM Orders WHERE user_id = :userId AND current_status_id = 1/* Active */) " +
-            "AND type_id = 1/* Tariff */";
-    private final static String SELECT_TARIFFS_BY_PLACE_SQL = "SELECT " +
-            "prod.id, " +
-            "prod.category_id, " +
-            "prod.duration, " +
-            "prod.type_id, " +
-            "prod.need_processing, " +
-            "prod.name, " +
-            "prod.description, " +
-            "prod.status," +
-            "Prices.price base_price FROM Products prod " +
-            "JOIN Prices ON Prices.product_id = prod.id " +
-            "WHERE Prices.place_id = :placeId " +
+    private final static String SELECT_CURRENT_USER_TARIFF_BY_USER_ID_SQL = "SELECT\n" +
+            " id,\n" +
+            " duration,\n" +
+            " type_id,\n" +
+            " need_processing,\n" +
+            " name,\n" +
+            " description,\n" +
+            " status FROM Products\n" +
+            " WHERE id IN (SELECT product_id FROM Orders WHERE user_id = :userId AND current_status_id = 1/* Active */)\n" +
+            " AND type_id = 1/* Tariff */";
+    private final static String SELECT_TARIFFS_BY_PLACE_SQL = "SELECT \n" +
+            "prod.id, \n" +
+            "prod.duration, \n" +
+            "prod.type_id, \n" +
+            "prod.need_processing, \n" +
+            "prod.name, \n" +
+            "prod.description, \n" +
+            "prod.status,\n" +
+            "Prices.price base_price FROM Products prod \n" +
+            "JOIN Prices ON Prices.product_id = prod.id \n" +
+            "WHERE Prices.place_id = :placeId \n" +
             "AND prod.type_id = 1/* Tariff */";
     private final static String SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL = "SELECT\n" +
             "  p2.ID,\n" +
@@ -172,7 +170,7 @@ public class ProductDaoImpl implements ProductDao {
             "status FROM Products " +
             "WHERE id IN (SELECT product_id FROM Orders " +
             "WHERE user_id IN (SELECT id FROM Users WHERE customer_id = :customerId AND role_id = 5) " +
-            "AND current_status_id = 1/* Active */)" +
+            "AND current_status_id = 1/* Active */) " +
             "AND type_id = 1";
     private final static String SELECT_SERVICES_OF_TARIFF_SQL = "SELECT " +
             "id, " +
