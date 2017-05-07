@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../includes/head.jsp" %>
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
@@ -46,5 +45,14 @@
     </form>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
+<script>
+    function initialize() {
+
+        var input = document.getElementById('address');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
 </body>
 </html>

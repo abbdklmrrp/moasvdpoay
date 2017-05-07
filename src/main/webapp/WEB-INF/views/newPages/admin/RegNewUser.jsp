@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="../includes/head.jsp" %>
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">

@@ -2,7 +2,9 @@
 <%@ include file="../includes/head.jsp" %>
 <html>
 <head>
-    <title>My orders</title>
+    <jsp:include page="../includes/head.jsp">
+        <jsp:param name="tittle" value="My orders"/>
+    </jsp:include>
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp"/>
