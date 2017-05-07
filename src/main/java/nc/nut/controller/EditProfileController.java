@@ -9,6 +9,7 @@ import nc.nut.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -38,7 +39,7 @@ public class EditProfileController {
     public ModelAndView getProfile() {
         System.out.println("hey");
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        ModelAndView model = new ModelAndView("profile");
+        ModelAndView model = new ModelAndView();
         model.addObject("user", user);
         String urlBegin;
         if (roleMap==null) {
@@ -48,7 +49,9 @@ public class EditProfileController {
             roleMap.put(Role.PMG, "pmg");
         }
         urlBegin = roleMap.getOrDefault(user.getRole(), "user");
+        String view = "newPages/"+urlBegin+"/Profile";//Revniuk for new page
         model.addObject("pattern", urlBegin);
+        model.setViewName(view);//Revniuk
         return model;
     }
 
