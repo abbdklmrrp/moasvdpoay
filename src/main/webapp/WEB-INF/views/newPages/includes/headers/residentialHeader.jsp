@@ -17,6 +17,7 @@
                 <li><a href="">Tariffs</a></li>
                 <li><a href="">Services</a></li>
                 <li><a href="">Write to support</a></li>
+                <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>
             </ul>
         </div>
     </div>

@@ -13,6 +13,7 @@
                 <li><a href="profile.jsp">Profile</a></li>
                 <li><a href="../../employee/Orders.jsp">Orders</a></li>
                 <li><a href="../../employee/WriteToSupport.jsp">Write to support</a></li>
+                <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>
             </ul>
         </div>
     </div>

@@ -32,6 +32,7 @@
                         <li><a href="">New customer</a></li>
                     </ul>
                 </li>
+                <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>
             </ul>
         </div>
     </div>

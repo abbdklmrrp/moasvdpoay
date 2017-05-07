@@ -23,6 +23,7 @@
                     </ul>
                 </li>
                 <li><a href="">Statistics</a></li>
+                <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>
             </ul>
         </div>
     </div>

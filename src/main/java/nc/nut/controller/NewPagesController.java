@@ -10,6 +10,6 @@ public class NewPagesController {
 
     @RequestMapping
     public String getTemplate() {
-        return "newPages/template";
+        return "newPages/admin/Profile";
     }
 }

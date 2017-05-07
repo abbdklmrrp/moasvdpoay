@@ -1,3 +1,10 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: aleksandr
+  Date: 05.05.17
+  Time: 17:39
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <footer id="footer" class="midnight-blue">
     <div class="container">
