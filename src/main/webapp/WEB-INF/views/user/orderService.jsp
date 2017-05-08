@@ -10,7 +10,12 @@
 <html>
 <head>
     <title>Order Service</title>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="<c:url value="/resources/css/sweet-alert.css"/>" rel="stylesheet">
+    <script type="text/javascript" src="<c:url value="${contextPath}/resources/js/orderService.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="${contextPath}/resources/js/sweet-alert.min.js"/>"></script>
+
 </head>
 <body>
 <div align="center" style="margin: 20px;">
@@ -31,7 +36,7 @@
             <th>Description</th>
             <th>Duration(days)</th>
             <th>Price</th>
-            <th>Statuse</th>
+            <th>Status</th>
         </tr>
         <c:forEach var="categoriesProducts" items="${categoriesProducts}">
             <tr>
@@ -44,20 +49,14 @@
                     <td>${productRow.product.durationInDays}</td>
                     <td>${productRow.price.price}</td>
                     <c:choose><c:when test="${empty productRow.status}">
-                        <td class="success">
-                            <form method="POST" action="<%=request.getContextPath()%>/user/ordered">
-                                <input type="hidden" value="${productRow.product.id}" name="productId">
-                                <input type="Submit" value="Activate">
-                            </form>
-                        </td>
+                        <td id="${productRow.product.id}">
+                            <input type="button" class="btn btn-success"
+                                   onclick="activateService(${productRow.product.id})" value="Activate"></td>
                     </c:when>
                         <c:when test="${ productRow.status== 'Active'}">
-                            <td class="danger">
-                                <form method="POST" action="<%=request.getContextPath()%>/user/deactivate">
-                                    <input type="hidden" value="${productRow.product.id}" name="productId">
-                                    <input type="Submit" value="Deactivate">
-                                </form>
-                            </td>
+                            <td id="${productRow.product.id}">
+                                <input type="button" class="btn btn-danger"
+                                       onclick="deactivateService(${productRow.product.id})" value="Deactivate"></td>
                         </c:when>
                         <c:otherwise>
                             <td>${productRow.status}</td>

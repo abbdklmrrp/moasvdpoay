@@ -1,6 +1,7 @@
 package nc.nut.dao.order;
 
 import nc.nut.dao.interfaces.Dao;
+import nc.nut.dto.OrdersRowDTO;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface OrderDao extends Dao<Order> {
      * created by Yuliya Pedash
      *
      * @param customerId id of customer
-     * @param placeId id of place
+     * @param placeId    id of place
      * @return list of Orders
      */
     List<Order> getOrdersByCustomerIdAndPlaceId(long customerId, long placeId);
@@ -44,4 +45,22 @@ public interface OrderDao extends Dao<Order> {
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
     boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId);
+
+    /**
+     * This method returns order by user for particular product.
+     *
+     * @param userId    id of user
+     * @param productId id of product
+     * @return Order object
+     */
+    Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId);
+
+    /**
+     * This method returns DTO object for order row.
+     *
+     * @param userId id of user
+     * @return OrdersRowDTO object
+     * @see OrdersRowDTO for details
+     */
+    List<OrdersRowDTO> getOrderRowsByUserId(int userId);
 }
