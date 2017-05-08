@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -44,11 +45,9 @@ public class ServiceOrderController {
     private static Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
 
     private final static String NO_PRODUCTS_FOR_YOU_MSG = "Sorry! There are no products for you yet.";
-    private final static String ORDER_IN_PROCESS_MSG = "Your order on %s is in process.\n We will contact you later.";
-    private final static String SERVICE_WAS_ACTIVATED_MSG = "Service %s has been activated.\n Enjoy using it!";
-    private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing your order. Please, try again in 15 minutes!";
-    private final static String ERROR_DEACTIVATING_ORDER_MSG = "Sorry, error while deactivating this product for you! Please, try again.";
-    private final static String PRODUCT_WAS_DEACTIVATED_MSG = "This product for you was deactivated.";
+    private final static String ORDER_IN_PROCESS_MSG = "Your order on %s is in process. We will contact you later.";
+    private final static String SERVICE_WAS_ACTIVATED_MSG = "Service %s has been activated. Enjoy using it!";
+    private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing your order. Please, try again!";
 
     @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
     String showServices(Model model) {
@@ -64,13 +63,14 @@ public class ServiceOrderController {
         return "newPages/user/residential/Services";
     }
 
-    @RequestMapping(value = {"/ordered"}, method = RequestMethod.POST)
-    public String processOrder(Model model, @RequestParam(value = "product_id") String productId) {
-        Product chosenProduct = productDao.getById(Integer.valueOf(productId));
+    @RequestMapping(value = {"/activateService"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String activateService(@RequestParam Integer serviceId) {
+        Product chosenProduct = productDao.getById(serviceId);
         Order order = new Order();
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         String msg;
-        order.setProductId(Integer.valueOf(productId));
+        order.setProductId(serviceId);
         order.setUserId(currentUser.getId());
         if (chosenProduct.getProcessingStrategy() == ProcessingStrategy.NeedsProcessing) {
             order.setCurrentStatus(OperationStatus.InProcessing);
@@ -80,30 +80,36 @@ public class ServiceOrderController {
             msg = String.format(SERVICE_WAS_ACTIVATED_MSG, chosenProduct.getName());
 
         }
-        if (!orderDao.save(order)) {
-            model.addAttribute("msg", ERROR_PLACING_ORDER_MSG);
+        boolean isActivated = orderDao.save(order);
+        if (!isActivated) {
+            msg = ERROR_PLACING_ORDER_MSG;
             logger.warn("Error while placing order: " + order.toString());
-            return "user/result";
+            //     return "user/result";
         }
-        model.addAttribute("resultMsg", msg);
-        return "redirect:orderService";
+        //      model.addAttribute("resultMsg", msg);
+        return msg;
     }
 
-    @RequestMapping(value = {"/deactivate"}, method = RequestMethod.POST)
-    public String deactivateOrder(Model model, @RequestParam(value = "product_id") String productId) {
+    @RequestMapping(value = {"/getNewOrder"}, method = RequestMethod.GET)
+    @ResponseBody
+    public Order getNewOrder(@RequestParam Integer serviceId) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        boolean wasDeactivated = orderDao.deactivateOrderOfUserForProduct(Integer.valueOf(productId), currentUser.getId());
-        String message;
-        if (wasDeactivated) {
-            message = PRODUCT_WAS_DEACTIVATED_MSG;
-        } else {
-            model.addAttribute("msg", ERROR_DEACTIVATING_ORDER_MSG);
-            logger.error(String.format("Error while deactivating order(product_id : %s, user_id: %d)", productId,
+        return orderDao.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
+    }
+
+    @RequestMapping(value = {"/deactivateService"}, method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public String deactivateOrder(@RequestParam Integer serviceId) {
+        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        boolean wasDeactivated = orderDao.deactivateOrderOfUserForProduct(Integer.valueOf(serviceId), currentUser.getId());
+        //  String message;
+        if (!wasDeactivated) {
+            logger.error(String.format("Error while deactivating order(product_id : %s, user_id: %d)", serviceId,
                     currentUser.getId()));
-            return "user/result";
+            return "fail";
         }
-        model.addAttribute("resultMsg", message);
-        return "redirect:orderService";
+        //  model.addAttribute("resultMsg", message);
+        return "success";
 
     }
 

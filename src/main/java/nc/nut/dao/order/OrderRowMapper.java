@@ -3,6 +3,7 @@ package nc.nut.dao.order;
 
 import nc.nut.dao.entity.OperationStatus;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 /**
  * Created by Yuliya Pedash on 27.04.2017.
  */
+@Component
 public class OrderRowMapper implements RowMapper<Order> {
     @Override
     public Order mapRow(ResultSet resultSet, int i) throws SQLException {

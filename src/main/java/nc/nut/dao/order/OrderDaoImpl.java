@@ -1,5 +1,6 @@
 package nc.nut.dao.order;
 
+import nc.nut.dto.OrdersRowDTO;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,9 @@ import java.util.List;
 public class OrderDaoImpl implements OrderDao {
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
-    //todo go from company
-    private final static String SELECT_BY_COMP_AND_PLACE_SQL = "SELECT\n" +
+    @Resource
+    private OrderRowMapper orderRowMapper;
+    private final static String SELECT_ORDERS_BY_CUST_ID_SQL = "SELECT\n" +
             "  ORDERS.ID,\n" +
             "  ORDERS.PRODUCT_ID,\n" +
             "  ORDERS.USER_ID,\n" +
@@ -23,10 +25,9 @@ public class OrderDaoImpl implements OrderDao {
             "FROM ORDERS\n" +
             "  INNER JOIN USERS ON USERS.ID = ORDERS.USER_ID\n" +
             "  INNER JOIN CUSTOMERS ON USERS.CUSTOMER_ID = CUSTOMERS.ID\n" +
-            "  INNER JOIN PLACES ON USERS.PLACE_ID = PLACES.ID\n" +
             "  INNER JOIN OPERATION_STATUS ON ORDERS.CURRENT_STATUS_ID = OPERATION_STATUS.ID\n" +
             "  INNER JOIN PRODUCTS ON PRODUCTS.ID = ORDERS.PRODUCT_ID " +
-            "WHERE PLACES.ID = :place_id AND USERS.CUSTOMER_ID = :cust_id\n" +
+            "WHERE USERS.CUSTOMER_ID = :cust_id\n" +
             "      AND ORDERS.CURRENT_STATUS_ID <> 3 /*deactivated status id*/\n" +
             "      AND PRODUCTS.TYPE_ID = 2 /*service id*/\n";
     private final static String DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT = "UPDATE ORDERS " +
@@ -44,6 +45,29 @@ public class OrderDaoImpl implements OrderDao {
             "AND user_id = :userId " +
             "AND current_status_id = 1/* Active */";
     private final static String DELETE_ORDER_BY_ID_SQL = "DELETE FROM ORDERS WHERE ID = :id;";
+    private final static String SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL = "SELECT * FROM ORDERS WHERE\n" +
+            "  PRODUCT_ID = :product_id\n" +
+            "  AND USER_ID = :user_id\n " +
+            "AND CURRENT_STATUS_ID <> 3 /*Deactivated status*/";
+    private final static String SELECT_ORDERS_DTO_BY_USER_ID_SQL = "SELECT\n" +
+            "    p.id,\n " +
+            "  p.NAME,\n" +
+            "  p.TYPE_ID,\n" +
+            "  p.DURATION,\n" +
+            "  p.DESCRIPTION,\n" +
+            "  op_his.OPERATION_DATE,\n" +
+            "  o.CURRENT_STATUS_ID\n " +
+            "FROM ORDERS o\n" +
+            "  JOIN\n" +
+            "  (\n" +
+            "    SELECT\n" +
+            "      OPERATION_DATE,\n" +
+            "      ORDER_ID\n" +
+            "    FROM OPERATIONS_HISTORY\n" +
+            "    WHERE ID IN ( SELECT MIN(ID) FROM OPERATIONS_HISTORY GROUP BY ORDER_ID)\n" +
+            "  ) op_his ON op_his.ORDER_ID = o.ID\n" +
+            "  JOIN PRODUCTS p ON p.ID = o.PRODUCT_ID\n " +
+            "WHERE o.CURRENT_STATUS_ID <> 3 AND o.USER_ID = :id";
 
     @Override
     public Order getById(int id) {
@@ -72,12 +96,10 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.update(DELETE_ORDER_BY_ID_SQL, params) > 0;
     }
 
-    @Override
-    public List<Order> getOrdersByCustomerIdAndPlaceId(long customerId, long placeId) {
+    public List<Order> getOrdersByCustomerId(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("cust_id", customerId);
-        params.addValue("place_id", placeId);
-        return jdbcTemplate.query(SELECT_BY_COMP_AND_PLACE_SQL, params, new OrderRowMapper());
+        return jdbcTemplate.query(SELECT_ORDERS_BY_CUST_ID_SQL, params, new OrderRowMapper());
     }
 
     /**
@@ -102,6 +124,9 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -109,4 +134,23 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("user_id", userId);
         return jdbcTemplate.update(DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT, params) > 0;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("user_id", userId);
+        params.addValue("product_id", productId);
+        return jdbcTemplate.queryForObject(SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL, params, orderRowMapper);
+    }
+
+    @Override
+    public List<OrdersRowDTO> getOrderRowsByUserId(int userId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", userId);
+        return jdbcTemplate.query(SELECT_ORDERS_DTO_BY_USER_ID_SQL, params, new OrdersRowDTORowMapper());
+    }
+
 }
