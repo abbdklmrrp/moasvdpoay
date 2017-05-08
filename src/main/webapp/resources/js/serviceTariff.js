@@ -1,12 +1,12 @@
-function Selected(a) {
-    var label = a.value;
-    if (label == "Service") {
-        var d = document.getElementById("Block1");
-        d.style.display = 'block';
-    } else {
-        document.getElementById("Block1").style.display = 'none';
+    function Selected(a) {
+        var label = a.value;
+        if (label == "Service") {
+            var d = document.getElementById("Block1");
+            d.style.display = 'block';
+        } else {
+            document.getElementById("Block1").style.display = 'none';
+        }
     }
-
     /**
      * Method shows in modal window all services of tariff.
      *
@@ -44,6 +44,9 @@ function Selected(a) {
             success: function (status) {
                 if (status == "success") {
                     swal("Success", "Tariff was activated!", "success");
+                    var respContent = "";
+                    respContent += "<input type=\"button\" onclick=\"deactivateTariff(" + tariffId + ")\" value=\"Deactivate\" class=\"btn btn-danger\">";
+                    $("#" + tariffId).html(respContent);
                 } else {
                     swal("Can`t activate", "Please try again later.");
                 }
@@ -68,6 +71,9 @@ function Selected(a) {
             success: function (status) {
                 if (status == "success") {
                     swal("Success", "Tariff was deactivated!", "success");
+                    var respContent = "";
+                    respContent += "<input type=\"button\" onclick=\"dactivateTariff(" + tariffId + ")\" value=\"Deactivate\" class=\"btn btn-success\">";
+                    $("#" + tariffId).html(respContent);
                 } else {
                     swal("Can`t deactivate", "Please try again later.");
                 }
@@ -78,5 +84,3 @@ function Selected(a) {
         });
         event.preventDefault();
     }
-
-}

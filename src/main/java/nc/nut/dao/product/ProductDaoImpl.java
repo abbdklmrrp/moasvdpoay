@@ -2,6 +2,8 @@ package nc.nut.dao.product;
 
 import nc.nut.dao.user.UserDAO;
 import nc.nut.mail.Mailer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -24,6 +26,8 @@ import java.util.Map;
  */
 @Service
 public class ProductDaoImpl implements ProductDao {
+
+    private static Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
 
     private final static String FIND_ALL_CATEGORIES = "SELECT * FROM PRODUCT_CATEGORIES";
     private final static String FIND_CATEGORY = "SELECT ID FROM PRODUCT_CATEGORIES WHERE NAME=:name";
@@ -90,15 +94,17 @@ public class ProductDaoImpl implements ProductDao {
             "WHERE PRICES.PLACE_ID = :place_id AND PRODUCTS.STATUS = 1 /*active status id*/ AND PRODUCTS.TYPE_ID = 2 /*service id*/";
     private final static String SELECT_PRODUCT_CATEGORY_BY_ID_SQL = "SELECT ID, NAME, DESCRIPTION FROM PRODUCT_CATEGORIES\n" +
             "WHERE ID = :id";
-    private final static String SELECT_CURRENT_USER_TARIFF_BY_USER_ID_SQL = "SELECT\n" +
-            " id,\n" +
-            " duration,\n" +
-            " type_id,\n" +
-            " need_processing,\n" +
-            " name,\n" +
-            " description,\n" +
-            " status FROM Products\n" +
-            " WHERE id IN (SELECT product_id FROM Orders WHERE user_id = :userId AND current_status_id = 1/* Active */)\n" +
+    private final static String SELECT_CURRENT_USER_TARIFF_BY_USER_ID_SQL = "SELECT " +
+            " id," +
+            " duration," +
+            " type_id," +
+            " need_processing," +
+            " name," +
+            " description," +
+            " status," +
+            " base_price " +
+            "FROM Products" +
+            " WHERE id IN (SELECT product_id FROM Orders WHERE user_id = :userId AND current_status_id = 1/* Active */)" +
             " AND type_id = 1/* Tariff */";
     private final static String SELECT_TARIFFS_BY_PLACE_SQL = "SELECT \n" +
             "prod.id, \n" +
@@ -108,7 +114,9 @@ public class ProductDaoImpl implements ProductDao {
             "prod.name, \n" +
             "prod.description, \n" +
             "prod.status,\n" +
-            "Prices.price base_price FROM Products prod \n" +
+            "prod.category_id,\n" +
+            "Prices.price base_price \n" +
+            "FROM Products prod \n" +
             "JOIN Prices ON Prices.product_id = prod.id \n" +
             "WHERE Prices.place_id = :placeId \n" +
             "AND prod.type_id = 1/* Tariff */";
@@ -158,7 +166,7 @@ public class ProductDaoImpl implements ProductDao {
             "name, " +
             "description, " +
             "status, base_price FROM Products " +
-            "WHERE customer_type_id = 1 /* Legal */";
+            "WHERE customer_type_id = 1 /* Business */";
     private final static String SELECT_CURRENT_CUSTOMER_TARIFF_BY_CUSTOMER_ID_SQL = "SELECT " +
             "id, " +
             "category_id, " +
@@ -173,14 +181,15 @@ public class ProductDaoImpl implements ProductDao {
             "AND current_status_id = 1/* Active */) " +
             "AND type_id = 1";
     private final static String SELECT_SERVICES_OF_TARIFF_SQL = "SELECT " +
-            "id, " +
-            "category_id, " +
-            "duration, " +
-            "type_id, " +
-            "need_processing, " +
-            "name, " +
-            "description, " +
-            "status FROM Products " +
+            " id, " +
+            " category_id, " +
+            " duration, " +
+            " type_id, " +
+            " need_processing, " +
+            " name, " +
+            " description, " +
+            " status," +
+            " base_price FROM Products " +
             "WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariffId)";
 
     @Autowired
@@ -196,6 +205,8 @@ public class ProductDaoImpl implements ProductDao {
     private UserDAO userDAO;
     @Resource
     private Mailer mailer;
+    @Resource
+    private TariffRowMapper tariffRowMapper;
 
     /**
      * Rysakova Anna
@@ -443,7 +454,12 @@ public class ProductDaoImpl implements ProductDao {
     public Product getCurrentUserTariff(Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
-        return jdbcTemplate.queryForObject(SELECT_CURRENT_USER_TARIFF_BY_USER_ID_SQL, params, new ProductRowMapper());
+        try {
+            return jdbcTemplate.queryForObject(SELECT_CURRENT_USER_TARIFF_BY_USER_ID_SQL, params, tariffRowMapper);
+        } catch (Exception e){
+            logger.debug("User doesn`t have tariff.",userId);
+            return null;
+        }
     }
 
     /**
@@ -453,7 +469,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> getAvailableTariffsByPlace(Integer placeId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("placeId", placeId);
-        return jdbcTemplate.query(SELECT_TARIFFS_BY_PLACE_SQL, params, new ProductRowMapper());
+        return jdbcTemplate.query(SELECT_TARIFFS_BY_PLACE_SQL, params, tariffRowMapper);
     }
 
     /**
@@ -473,7 +489,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> getAvailableTariffsForCustomers() {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        return jdbcTemplate.query(SELECT_TARIFFS_FOR_CUSTOMERS_SQL, params, new ProductRowMapper());
+        return jdbcTemplate.query(SELECT_TARIFFS_FOR_CUSTOMERS_SQL, params, tariffRowMapper);
     }
 
     /**
@@ -490,7 +506,7 @@ public class ProductDaoImpl implements ProductDao {
             proc.execute();
             return "success".equals(proc.getString(3));
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Exception during activation tariff",e);
         }
         return false;
     }
@@ -502,7 +518,12 @@ public class ProductDaoImpl implements ProductDao {
     public Product getCurrentCustomerTariff(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("customerId", customerId);
-        return jdbcTemplate.queryForObject(SELECT_CURRENT_CUSTOMER_TARIFF_BY_CUSTOMER_ID_SQL, params, new ProductRowMapper());
+        try {
+            return jdbcTemplate.queryForObject(SELECT_CURRENT_CUSTOMER_TARIFF_BY_CUSTOMER_ID_SQL, params, tariffRowMapper);
+        } catch (Exception e){
+            logger.debug("User doesn`t have tariff.");
+            return null;
+        }
     }
 
     /**

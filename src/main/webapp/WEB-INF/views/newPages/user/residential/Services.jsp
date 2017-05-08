@@ -5,10 +5,6 @@
     <jsp:include page="../../includes/head.jsp">
         <jsp:param name="tittle" value="Services"/>
     </jsp:include>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <link href="<c:url value="/resources/css/sweet-alert.css"/>" rel="stylesheet">
-    <script type="text/javascript" src="<c:url value="${contextPath}/resources/js/orderService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="${contextPath}/resources/js/sweet-alert.min.js"/>"></script>
 </head>
 <body>
 <jsp:include page="../../includes/headers/residentialHeader.jsp"/>
@@ -23,7 +19,7 @@
             </c:when>
             <c:otherwise>
             <h3></h3>
-            <table border="1" class="table table-striped table-hover">
+            <table border="1" class="table table-striped table-hover" id="tableServiceCatalog">
                 <c:if test="${not empty resultMsg}">
                     <h3>${resultMsg}</h3>
                 </c:if>
@@ -62,9 +58,9 @@
                     </c:forEach>
                 </c:forEach>
             </table>
-        </div>
         </c:otherwise>
         </c:choose>
+        </div>
         <div class="col-md-2"></div>
     </div>
 </div>

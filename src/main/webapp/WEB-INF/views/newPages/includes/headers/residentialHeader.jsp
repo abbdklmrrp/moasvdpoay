@@ -14,7 +14,7 @@
             <ul class="nav navbar-nav ">
                 <li><a href="">Profile</a></li>
                 <li><a href="">Orders</a></li>
-                <li><a href="">Tariffs</a></li>
+                <li><a href="<%=request.getContextPath()%>/user/residential/tariffs">Tariffs</a></li>
                 <li><a href="<%=request.getContextPath()%>/user/orderService">Services</a></li>
                 <li><a href="${contextPath}/user/getComplaint">Write to support</a></li>
                 <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>

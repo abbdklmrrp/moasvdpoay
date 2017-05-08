@@ -13,8 +13,8 @@ import javax.sql.DataSource;
  * Created by Rysakova Anna on 20.04.2017.
  */
 @Configuration
-//@PropertySource("classpath:db/oracle.properties")
-@PropertySource("classpath:ANN_DB.properties")
+@PropertySource("classpath:db/oracle.properties")
+//@PropertySource("classpath:ANN_DB.properties")
 public class PersistenceConfig {
     @Value("${datasource.driver-class-name}")
     private String driver;

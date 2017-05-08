@@ -35,7 +35,7 @@ public class IndexController {
         if (isCSR) {
             return "redirect:/csr/index";
         } else {
-            return "redirect:/user/index";
+            return "newPages/user/residential/Profile";
         }
     }
 }
