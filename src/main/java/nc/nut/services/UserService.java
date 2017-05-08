@@ -34,12 +34,12 @@ public class UserService {
         if (!user.getPhone().isEmpty() && !user.getPhone().equals(defaultUser.getPhone())) {
             defaultUser.setPhone(user.getPhone());
         }
-        if (!user.getAddress().isEmpty() && !user.getAddress().equals(defaultUser.getAddress())) {
-            defaultUser.setAddress(user.getAddress());
-            if (!Objects.equals(user.getPlaceId(), defaultUser.getPlaceId())) {
-                defaultUser.setPlaceId(user.getPlaceId());
-            }
-        }
+//        if (!user.getAddress().isEmpty() && !user.getAddress().equals(defaultUser.getAddress())) {
+//            defaultUser.setAddress(user.getAddress());
+//            if (!Objects.equals(user.getPlaceId(), defaultUser.getPlaceId())) {
+//                defaultUser.setPlaceId(user.getPlaceId());
+//            }
+//        }
         return userDAO.update(defaultUser);
     }
 

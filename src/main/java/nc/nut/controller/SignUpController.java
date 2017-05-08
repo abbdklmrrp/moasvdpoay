@@ -51,7 +51,7 @@ public class SignUpController {
 
     @RequestMapping(value = "registrationFromAdmin", method = RequestMethod.GET)
     public ModelAndView registrationFromAdmin() {
-        ModelAndView model = new ModelAndView("admin/createCoworker");
+        ModelAndView model = new ModelAndView("newPages/admin/RegNewUser");
         model.addObject("user", new User());
         return model;
     }

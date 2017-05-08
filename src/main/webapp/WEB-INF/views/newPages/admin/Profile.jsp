@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
@@ -44,13 +45,13 @@
             <div class="form-group form-group-lg hide change-pass">
                 <label class="col-sm-4 control-label">New password</label><br>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" name="newPassword" id="newPassword" minlength="8" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"><br>
+                    <input type="password" class="form-control" name="newPassword" id="newPassword" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"><br>
                 </div>
             </div>
             <div class="form-group form-group-lg hide change-pass">
                 <label class="col-sm-4 control-label">Confirm password</label><br>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" minlength="8" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"><br>
+                    <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"><br>
                 </div>
             </div>
             <div class="row hide" id="save-profile">
