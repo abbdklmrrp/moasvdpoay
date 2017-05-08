@@ -63,7 +63,7 @@ public class ComplaintController {
         complaint.setOrderId(orderId);
         complaint.setCreationDate(calendar);
         complaint.setDescription(description);
-        complaint.setCsrId(user.getId());
+        complaint.setPmgId(user.getId());
         complaint.setStatus(ComplaintStatus.InProcessing);
         boolean success = complaintDAO.save(complaint);
         if (success) {

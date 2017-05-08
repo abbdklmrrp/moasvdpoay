@@ -14,13 +14,13 @@
                 <label class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-10">
                     <input style="border-bottom-width: 0;" type="text" class="form-control disabled" name="name"
-                           id="name" value=${user.name} required><br>
+                           id="name" value=${user.name} required maxlength="16"><br>
                 </div>
             </div>
             <div class="form-group form-group-lg">
                 <label class="col-sm-2 control-label">Surname</label><br>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="surname" id="surname" value=${user.surname} required><br>
+                    <input type="text" class="form-control" name="surname" id="surname" value=${user.surname} required maxlength="16"><br>
                 </div>
             </div>
             <div class="form-group form-group-lg">
@@ -32,7 +32,7 @@
             <div class="form-group form-group-lg">
                 <label class="col-sm-2 control-label">Phone</label><br>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="phone" id="phone" value=${user.phone} required><br>
+                    <input type="text" class="form-control" name="phone" id="phone" value=${user.phone} required maxlength="12"><br>
                 </div>
             </div>
             <div class="form-group form-group-lg">
@@ -44,13 +44,13 @@
             <div class="form-group form-group-lg hide change-pass">
                 <label class="col-sm-4 control-label">New password</label><br>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" name="newPassword" id="newPassword"><br>
+                    <input type="password" class="form-control" name="newPassword" id="newPassword" minlength="8" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"><br>
                 </div>
             </div>
             <div class="form-group form-group-lg hide change-pass">
                 <label class="col-sm-4 control-label">Confirm password</label><br>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" name="confirmPassword" id="confirmPassword"><br>
+                    <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" minlength="8" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"><br>
                 </div>
             </div>
             <div class="row hide" id="save-profile">
