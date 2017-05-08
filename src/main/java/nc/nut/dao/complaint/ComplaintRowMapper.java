@@ -18,7 +18,7 @@ public class ComplaintRowMapper implements RowMapper<Complaint> {
         Complaint complaint = new Complaint();
         complaint.setId(resultSet.getInt("ID"));
         complaint.setOrderId(resultSet.getInt("ORDER_ID"));
-        complaint.setCsrId(resultSet.getInt("CSR_ID"));
+        complaint.setPmgId(resultSet.getInt("PMG_ID"));
         Calendar calendar = new GregorianCalendar();
         resultSet.getDate("CREATING_DATE", calendar);
         complaint.setCreationDate(calendar);
