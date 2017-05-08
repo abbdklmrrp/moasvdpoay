@@ -5,6 +5,10 @@
     <jsp:include page="../../includes/head.jsp">
         <jsp:param name="tittle" value="Services"/>
     </jsp:include>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link href="<c:url value="/resources/css/sweet-alert.css"/>" rel="stylesheet">
+    <script type="text/javascript" src="<c:url value="${contextPath}/resources/js/orderService.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="${contextPath}/resources/js/sweet-alert.min.js"/>"></script>
 </head>
 <body>
 <jsp:include page="../../includes/headers/residentialHeader.jsp"/>
@@ -19,7 +23,7 @@
             </c:when>
             <c:otherwise>
             <h3></h3>
-            <table border="1" class="table table-striped table-hover" id="tableServiceCatalog">
+            <table border="1" class="table table-striped table-hover">
                 <c:if test="${not empty resultMsg}">
                     <h3>${resultMsg}</h3>
                 </c:if>
@@ -32,7 +36,7 @@
                 </tr>
                 <c:forEach var="categoriesProducts" items="${categoriesProducts}">
                     <tr>
-                        <td colspan="5" style="text-align: center"><strong> ${categoriesProducts.key}</strong></td>
+                        <td colspan="5"><strong> ${categoriesProducts.key}</strong></td>
                     </tr>
                     <c:forEach var="productRow" items="${categoriesProducts.value}">
                         <tr>
@@ -41,20 +45,14 @@
                             <td>${productRow.product.durationInDays}</td>
                             <td>${productRow.price.price}</td>
                             <c:choose><c:when test="${empty productRow.status}">
-                                <td class="success">
-                                    <form method="POST" action="<%=request.getContextPath()%>/user/ordered" style="margin: 0px">
-                                        <input type="hidden" value="${productRow.product.id}" name="productId">
-                                        <input type="Submit" value="Activate" class="btn btn-primary">
-                                    </form>
-                                </td>
+                                <td id="${productRow.product.id}">
+                                    <input type="button" class="btn btn-success"
+                                           onclick="activateService(${productRow.product.id})" value="Activate"></td>
                             </c:when>
                                 <c:when test="${ productRow.status== 'Active'}">
-                                    <td class="danger">
-                                        <form method="POST" action="<%=request.getContextPath()%>/user/deactivate" style="margin: 0px">
-                                            <input type="hidden" value="${productRow.product.id}" name="productId">
-                                            <input type="Submit" value="Deactivate" class="btn btn-primary">
-                                        </form>
-                                    </td>
+                                    <td id="${productRow.product.id}">
+                                        <input type="button" class="btn btn-danger"
+                                               onclick="deactivateService(${productRow.product.id})" value="Deactivate"></td>
                                 </c:when>
                                 <c:otherwise>
                                     <td>${productRow.status}</td>

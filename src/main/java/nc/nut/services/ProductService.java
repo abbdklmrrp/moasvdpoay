@@ -207,8 +207,7 @@ public class ProductService {
      * @see ProductCatalogRowDTO
      */
     public Map<String, List<ProductCatalogRowDTO>> getCategoriesWithProductsForUser(User user) {
-        List<Order> orders = orderDao.getOrdersByCustomerIdAndPlaceId(user.getCustomerId(),
-                user.getPlaceId());
+        List<Order> orders = orderDao.getOrdersByCustomerId(user.getCustomerId());
         List<Product> productWithoutStatuses = user.getRole() == Role.Individual ?
                 productDao.getAllAvailableServicesByPlace(user.getPlaceId()) :
                 productDao.getAllServices();

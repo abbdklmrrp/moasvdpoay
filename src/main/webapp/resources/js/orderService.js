@@ -7,7 +7,7 @@ function activateService(serviceId) {
         data: {serviceId: serviceId},
         type: "POST",
         dataType: 'text',
-        async: false,
+      //  async: false,
         success: function (resultMsg) {
             swal(resultMsg);
             setNewProductStatus(serviceId)

@@ -17,7 +17,7 @@ public class OrderDaoImpl implements OrderDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Resource
     private OrderRowMapper orderRowMapper;
-    private final static String SELECT_BY_COMP_AND_PLACE_SQL = "SELECT\n" +
+    private final static String SELECT_ORDERS_BY_CUST_ID_SQL = "SELECT\n" +
             "  ORDERS.ID,\n" +
             "  ORDERS.PRODUCT_ID,\n" +
             "  ORDERS.USER_ID,\n" +
@@ -25,10 +25,9 @@ public class OrderDaoImpl implements OrderDao {
             "FROM ORDERS\n" +
             "  INNER JOIN USERS ON USERS.ID = ORDERS.USER_ID\n" +
             "  INNER JOIN CUSTOMERS ON USERS.CUSTOMER_ID = CUSTOMERS.ID\n" +
-            "  INNER JOIN PLACES ON USERS.PLACE_ID = PLACES.ID\n" +
             "  INNER JOIN OPERATION_STATUS ON ORDERS.CURRENT_STATUS_ID = OPERATION_STATUS.ID\n" +
             "  INNER JOIN PRODUCTS ON PRODUCTS.ID = ORDERS.PRODUCT_ID " +
-            "WHERE PLACES.ID = :place_id AND USERS.CUSTOMER_ID = :cust_id\n" +
+            "WHERE USERS.CUSTOMER_ID = :cust_id\n" +
             "      AND ORDERS.CURRENT_STATUS_ID <> 3 /*deactivated status id*/\n" +
             "      AND PRODUCTS.TYPE_ID = 2 /*service id*/\n";
     private final static String DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT = "UPDATE ORDERS " +
@@ -97,12 +96,10 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.update(DELETE_ORDER_BY_ID_SQL, params) > 0;
     }
 
-    @Override
-    public List<Order> getOrdersByCustomerIdAndPlaceId(long customerId, long placeId) {
+    public List<Order> getOrdersByCustomerId(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("cust_id", customerId);
-        params.addValue("place_id", placeId);
-        return jdbcTemplate.query(SELECT_BY_COMP_AND_PLACE_SQL, params, new OrderRowMapper());
+        return jdbcTemplate.query(SELECT_ORDERS_BY_CUST_ID_SQL, params, new OrderRowMapper());
     }
 
     /**

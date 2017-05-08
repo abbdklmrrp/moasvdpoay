@@ -10,14 +10,13 @@ import java.util.List;
  */
 public interface OrderDao extends Dao<Order> {
     /**
-     * This method returns all orders by one customer's users in one city.
+     * This method returns all orders by one customer's users.
      * created by Yuliya Pedash
      *
      * @param customerId id of customer
-     * @param placeId    id of place
      * @return list of Orders
      */
-    List<Order> getOrdersByCustomerIdAndPlaceId(long customerId, long placeId);
+    List<Order> getOrdersByCustomerId(Integer customerId);
 
     /**
      * Method returns order id according to user id and product id with active status.
