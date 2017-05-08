@@ -20,16 +20,31 @@
 // });
 
 $(document).ready(function () {
+    var currentService;
 
+    $('#categoriesID').change(function () {
+        currentService = this.value;
+
+        // get
+        $.ajax({
+            url: "/services/tariffs/" + this.value + ".json", success: function (result) {
+                $('#selectto').empty();
+
+                for (var i = 0; i < result.length; i++) {
+                    $('<option/>').val(result[i].id).attr('id', result[i].id).html(result[i].name).appendTo('#selectto');
+                }
+            }
+        });
+    });
     $('#btn-add').click(function () {
-        $('#select-from option:selected').each(function () {
-            $('#select-to').append("<option value='" + $(this).val() + "'>" + $(this).text() + "</option>");
-            $(this).remove();
+        $('#selectto option:selected').each(function () {
+            $('#selectedService').append("<option value='" + $(this).val() + "' selected>" + $(this).text() + "</option>");
+            $('#selectto').empty();
         });
     });
     $('#btn-remove').click(function () {
-        $('#select-to option:selected').each(function () {
-            $('#select-from').append("<option value='" + $(this).val() + "'>" + $(this).text() + "</option>");
+        $('#selectedService option:selected').each(function () {
+            $('#selectto').append("<option value='" + $(this).val() + "'>" + $(this).text() + "</option>");
             $(this).remove();
         });
     });

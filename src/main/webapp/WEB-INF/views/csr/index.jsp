@@ -15,11 +15,11 @@
 <div class="login-form">
     <h1>CSR PAGE</h1>
     <div class="form-group "><br>
-        <h2><a href="${contextPath}/csr/getCsrProfile">Profile</a></h2><br>
+        <h2><a href="${contextPath}/csr/getProfile">Profile</a></h2><br>
         <h2><a href="${contextPath}/csr/getCreateCustomer">Create new customer</a></h2><br>
         <h2><a href="${contextPath}/csr/getWriteComplaint">Write complaint</a></h2><br>
         <h2><a href="${contextPath}/csr/getUsersPage">Users details</a></h2><br>
-        <h2><a href="${contextPath}/csr/registration">Create new user</a></h2><br>
+        <h2><a href="${contextPath}/csr/registrationFromCsr">Create new user</a></h2><br>
         <h2><a href="<%=request.getContextPath()%>/doLogout">Logout</a></h2><br>
     </div>
 </div>

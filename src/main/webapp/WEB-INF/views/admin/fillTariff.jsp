@@ -19,8 +19,7 @@
     <script src="<c:url value="/resources/js/categoryService.js"/>"></script>
 </head>
 <body>
-
-<form method="POST" name="Form" action="<%=request.getContextPath()%>/admin/fillTariff">
+<form action="/admin/fillTariff" method="post">
     <div class="login-form">
         <h1>SELECT SERVICES</h1>
         <div class="form-group ">
@@ -31,25 +30,6 @@
             </select>
         </div>
 
-        <%--<div class="form-group ">--%>
-        <%--<select name="productCategories" class="form-control" id="productCategories">--%>
-        <%--<c:forEach var="allServices" items="${allServices}">--%>
-        <%--<option value="${allServices.key}">${allServices.key}</option>--%>
-        <%--</c:forEach>--%>
-        <%--</select>--%>
-        <%--</div>--%>
-
-        <%--<div class="form-group ">--%>
-        <%--<label>Select service</label>--%>
-        <%--<select name="allServices[]" class="form-control" id="allServices">--%>
-        <%--<c:forEach var="category" items="${allServices}">--%>
-        <%--<c:forEach var="categoryKey" items="${category.value}">--%>
-        <%--<option value="${categoryKey.id}">${categoryKey.name}</option>--%>
-        <%--</c:forEach>--%>
-        <%--</c:forEach>--%>
-        <%--</select>--%>
-        <%--</div>--%>
-
         <c:if test="${not empty errors}">
             <span style="float:right ; color: #10CE88;">${errors}</span>
         </c:if>
@@ -59,47 +39,26 @@
 
         <fieldset>
             <h6>All services</h6>
-            <select name="allServices" id="select-from" multiple>
+            <select name="categoriesID" id="categoriesID" multiple>
                 <c:forEach var="category" items="${allServices}">
-                    <c:forEach var="categoryKey" items="${category.value}">
-                        <option value="${categoryKey.id}">${category.key} : ${categoryKey.name}</option>
-                    </c:forEach>
+                    <option value="${category.name}">${category.name}</option>
                 </c:forEach>
             </select>
 
-            <a href="JavaScript:void(0);" id="btn-add">Add &raquo;</a>
             <h6>Selected services</h6>
-            <select name="selectto" id="select-to" multiple="multiple">
+            <select name="selectto" id="selectto" multiple="multiple">
+            </select>
+
+            <a href="JavaScript:void(0);" id="btn-add">Add&raquo;</a>
+            <h6>Selected services</h6>
+            <select name="selectedService" id="selectedService" multiple="multiple">
             </select>
             <a href="JavaScript:void(0);" id="btn-remove">&laquo; Remove</a>
 
+            <button type="submit" class="log-btn" id="submit">Save</button>
+
         </fieldset>
 
-        <%--<fieldset>--%>
-        <%--<h6>All services</h6>--%>
-        <%--<select name="categoriesID" id="categoriesID" multiple>--%>
-        <%--<c:forEach var="category" items="${allServices}">--%>
-        <%--<c:forEach var="categoryKey" items="${category.value}">--%>
-        <%--<option value="${categoryKey.id}">${category.key} : ${categoryKey.name}</option>--%>
-        <%--</c:forEach>--%>
-        <%--</c:forEach>--%>
-        <%--</select>--%>
-
-
-        <%--<h6>Selected services</h6>--%>
-        <%--<select name="selectto" id="selectto" multiple="multiple">--%>
-        <%--</select>--%>
-
-        <%--<a href="JavaScript:void(0);" id="btn-add">Add &raquo;</a>--%>
-
-        <%--<div id="selectedValuesId">--%>
-        <%--</div>--%>
-
-        <%--</fieldset>--%>
-
-        <button type="submit" class="log-btn">Save</button>
-        <br>
-        <h2><a href="${contextPath}/doLogout">Logout</a></h2>
     </div>
 </form>
 </body>

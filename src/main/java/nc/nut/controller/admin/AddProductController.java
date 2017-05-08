@@ -53,7 +53,7 @@ public class AddProductController {
 
     @RequestMapping(value = {"addTariff"}, method = RequestMethod.POST)
     String createService(Product product, Model model) {
-
+        System.out.println(product.getName());
         boolean checkEmptyTariff = productService.checkEmptyFieldIfProduct(product);
         if (!checkEmptyTariff) {
             model.addAttribute("errorEmptyProduct", " Please fill all fields");

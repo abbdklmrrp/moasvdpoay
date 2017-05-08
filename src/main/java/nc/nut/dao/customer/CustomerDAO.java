@@ -20,4 +20,6 @@ public interface CustomerDAO extends Dao<Customer> {
 
     List<User> getAllUsers(int customerId);
 
+    List<String> getAllBusinessCustomersName();
+
 }

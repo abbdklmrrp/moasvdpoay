@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
     <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
     <script src="${contextPath}/resources/js/user.type.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhhghVMdW1rIbJCJupKdngdNk0k5JwaQE&libraries=places"></script>
+
 </head>
 <body>
 <form action="${contextPath}/signUp" modelAttribute="user" method="post">
@@ -36,31 +38,23 @@
             </div>
         </div>
         <div class="form-group ">
-            <input type="text" class="form-control" placeholder="First name " id="FirstName" name="firstName">
+            <input type="text" class="form-control" placeholder="First name " id="name" name="name">
             <i class="fa fa-user"></i>
         </div>
         <div class="form-group ">
-            <input type="text" class="form-control" placeholder="Last Name " id="LastName" name="lastName">
+            <input type="text" class="form-control" placeholder="Last Name " id="surname" name="surname">
             <i class="fa fa-user"></i>
         </div>
         <div class="form-group ">
-            <input type="text" class="form-control" placeholder="Email " id="Email" name="email">
+            <input type="text" class="form-control" placeholder="Email " id="email" name="email">
             <i class="fa fa-user"></i>
         </div>
         <div class="form-group ">
-            <input type="text" class="form-control" placeholder="Phone number " id="Phone number" name="phoneNumber">
+            <input type="text" class="form-control" placeholder="Phone number " id="phone" name="phone">
             <i class="fa fa-user"></i>
         </div>
         <div class="form-group ">
-            <input type="text" class="form-control" placeholder="City " id="City" name="city">
-            <i class="fa fa-user"></i>
-        </div>
-        <div class="form-group ">
-            <input type="text" class="form-control" placeholder="Street " id="Street" name="street">
-            <i class="fa fa-user"></i>
-        </div>
-        <div class="form-group ">
-            <input type="text" class="form-control" placeholder="Building " id="Building" name="building">
+            <input type="text" class="form-control" placeholder="Address" id="address" name="address">
             <i class="fa fa-user"></i>
         </div>
         <div class="form-group log-status">
@@ -71,5 +65,14 @@
     </div>
 </form>
 <script class="cssdeck" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script>
+    function initialize() {
+
+        var input = document.getElementById('address');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
 </body>
 </html>

@@ -21,6 +21,9 @@ public class CustomerDAOImpl implements CustomerDAO {
     private final static String SAVE_CUSTOMER_SQL = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY) " +
              "VALUES(:name, :secretKey)";
 
+    private final static String SELECT_BUSINESS_CUSTOMERS="SELECT NAME FROM CUSTOMERS\n" +
+            "WHERE ID NOT IN (SELECT CUSTOMER_ID FROM USERS WHERE ROLE_ID=4)";
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -77,5 +80,11 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public boolean delete(Customer object) {
         return false;
+    }
+
+    @Override
+    public List<String> getAllBusinessCustomersName() {
+        List<String> customers=jdbcTemplate.query(SELECT_BUSINESS_CUSTOMERS,(rs,rowNum)-> rs.getString("name"));
+        return customers;
     }
 }
