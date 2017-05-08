@@ -21,7 +21,7 @@ import java.util.List;
  * @since 04.05.2017.
  */
 @Controller
-@RequestMapping({"csr","user"})
+@RequestMapping({"", "csr", "user"})
 public class TariffsController {
 
     @Resource
@@ -36,15 +36,15 @@ public class TariffsController {
     @RequestMapping(value = {"residential/tariffs"}, method = RequestMethod.GET)
     public String showTariffsForUser(Model model) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        logger.debug("Current user: {}",currentUser.toString());
+        logger.debug("Current user: {}", currentUser.toString());
         Product currentTariff = productDao.getCurrentUserTariff(currentUser.getId());
-        logger.debug("Current tariff of user: {}",currentTariff.toString());
         List<Product> tariffsByPlace = productDao.getAvailableTariffsByPlace(currentUser.getPlaceId());
         if (currentTariff != null) {
+            logger.debug("Current tariff of user: {}", currentTariff.toString());
             model.addAttribute("currentTariff", currentTariff);
         }
         model.addAttribute("tariffsByPlace", tariffsByPlace);
-        return "redirect:/residential/tariffs";
+        return "newPages/user/residential/Tariffs";
     }
 
     @RequestMapping(value = {"business/tariffs"}, method = RequestMethod.GET)
@@ -56,10 +56,10 @@ public class TariffsController {
             model.addAttribute("currentTariff", currentTariff);
         }
         model.addAttribute("tariffsByPlace", tariffsForCustomers);
-        return "redirect:/business/tariffs";
+        return "newPages/user/business/Tariffs";
     }
 
-    @RequestMapping(value = {"/activateTariff"}, method = RequestMethod.POST, produces = {"text/html;charset=UTF-8"})
+    @RequestMapping(value = {"residential/activateTariff", "business/activateTariff"}, method = RequestMethod.POST, produces = {"text/html;charset=UTF-8"})
     public String activateTariff(@RequestParam Integer tariffId) {
         logger.debug("Method activateTariff param tariffId: {}", tariffId);
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
@@ -69,7 +69,7 @@ public class TariffsController {
         return statusOperation ? "Success" : "Fail";
     }
 
-    @RequestMapping(value = {"/deactivateTariff"}, method = RequestMethod.POST, produces = {"text/html;charset=UTF-8"})
+    @RequestMapping(value = {"residential/deactivateTariff", "business/deactivateTariff"}, method = RequestMethod.POST, produces = {"text/html;charset=UTF-8"})
     public String deactivateTariff(@RequestParam Integer tariffId) {
         logger.debug("Method deactivateTariff param tariffId: {}", tariffId);
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
@@ -79,7 +79,7 @@ public class TariffsController {
         return statusOperation ? "Success" : "Fail";
     }
 
-    @RequestMapping(value = {"/showServicesOfTariff"}, method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = {"residential/showServicesOfTariff", "business/showServicesOfTariff"}, method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     public List<Product> showServicesOfTariff(@RequestParam Integer tariffId) {
         logger.debug("Method showServicesOfTariff param tariffId: {}", tariffId);
         List<Product> servicesOfTariff = productDao.getServicesOfTariff(tariffId);

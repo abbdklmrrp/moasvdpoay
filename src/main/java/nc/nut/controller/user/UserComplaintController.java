@@ -43,7 +43,7 @@ public class UserComplaintController {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         List<Product> products = productDao.getActiveProductsByUserId(user.getId());
         model.addAttribute("productList", products);
-        return "user/writeComplaint";
+        return "newPages/user/residential/WriteToSupport";
     }
 
     @RequestMapping(value = "/writeComplaint", method = RequestMethod.POST)
@@ -61,6 +61,6 @@ public class UserComplaintController {
         if (success) {
             return "user/index";
         }
-        return "user/writeComplaint";
+        return "newPages/user/residential/WriteToSupport";
     }
 }

@@ -20,7 +20,7 @@ public interface ComplaintDAO extends Dao<Complaint> {
      * @param id id of CSR
      * @return list of complaints
      */
-    List<Complaint> getByCSRId(int id);
+    List<Complaint> getByPMGId(int id);
 
     /**
      * This method returns all complaints by concrete order.
