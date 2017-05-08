@@ -25,6 +25,10 @@ public class Customer {
         this.secretKey = secretKey;
     }
 
+    public Customer(){
+
+    }
+
     public CustomerType getCustomerType() {
         return customerType;
     }
