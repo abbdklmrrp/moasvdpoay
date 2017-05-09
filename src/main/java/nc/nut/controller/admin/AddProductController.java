@@ -26,22 +26,24 @@ public class AddProductController {
     private ProductDao productDao;
     @Resource
     private ProductService productService;
-    private Logger logger = LoggerFactory.getLogger(AddProductController.class);
+
+    private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
+
     private final static String ERROR_WRONG_FIELDS = "Please, check the correctness of the input data";
     private final static String ERROR_EXIST_OF_CATEGORY = "Category already exists";
 
     // maybe ename also add to mav?
     @RequestMapping(value = {"addTariff"}, method = RequestMethod.GET)
-    ModelAndView addProduct(ModelAndView mav) {
+    public ModelAndView addProduct(ModelAndView mav) {
         mav.addObject("product", new Product());
         mav.setViewName("admin/addTariff");
         return mav;
     }
 
-    // combine tariff & services?
     @RequestMapping(value = {"addService"}, method = RequestMethod.GET)
     public ModelAndView addService(ModelAndView mav) {
         List<ProductCategories> productCategories = productDao.findProductCategories();
+        logger.debug("Get all service's categories");
         mav.addObject("productCategories", productCategories);
         mav.addObject("product", new Product());
         mav.addObject("newProductCategories", new ProductCategories());
@@ -53,12 +55,15 @@ public class AddProductController {
     public ModelAndView createService(Product product, ModelAndView mav) {
         product.setProductType(ProductType.Tariff);
         boolean isEmptyFieldsOfTariff = productService.isEmptyFieldOfProduct(product);
+        logger.debug("Check that the incoming tariff fields are not empty {} ", isEmptyFieldsOfTariff);
         if (isEmptyFieldsOfTariff) {
+            logger.error("Incoming request has empty fields");
             mav.addObject("errorEmptyFields", ERROR_WRONG_FIELDS);
             mav.setViewName("admin/addTariff");
             return mav;
         }
-        productDao.save(product);
+        boolean isSave = productDao.save(product);
+        logger.debug("Save product was success {} ", isSave);
         mav.setViewName("redirect:/admin/fillTariff");
         return mav;
     }
@@ -69,24 +74,30 @@ public class AddProductController {
                                       Product product) {
         product.setProductType(ProductType.Service);
         boolean isEmptyFieldsOfService = productService.isEmptyFieldOfProduct(product);
+        logger.debug("Check that the incoming tariff fields are not empty {} ", isEmptyFieldsOfService);
         boolean isEmptyFieldsOfNewCategory = productService.isEmptyFieldsOfNewCategory(productCategory);
+        logger.debug("Check that the incoming new category fields are not empty {} ", isEmptyFieldsOfNewCategory);
 
         if (isEmptyFieldsOfService || isEmptyFieldsOfNewCategory) {
             mav.addObject("errorEmptyFields", ERROR_WRONG_FIELDS);
+            logger.error("Incoming request has empty fields");
             List<ProductCategories> productCategories = productDao.findProductCategories();
+            logger.debug("Get all service's categories");
             mav.addObject("productCategories", productCategories);
             mav.setViewName("admin/addService");
             return mav;
         }
         try {
             product = productService.getCategory(productCategory, product);
+            logger.debug("Set category for tariff {} ",product.getCategoryId());
         } catch (DuplicateKeyException e) {
             logger.error(ERROR_EXIST_OF_CATEGORY, e);
             mav.addObject("errorExistCategory", ERROR_EXIST_OF_CATEGORY);
             mav.setViewName("admin/addService");
             return mav;
         }
-        productDao.save(product);
+        boolean isSave = productDao.save(product);
+        logger.debug("Save product was success {} ", isSave);
         mav.setViewName("redirect:/admin/index");
         return mav;
     }
