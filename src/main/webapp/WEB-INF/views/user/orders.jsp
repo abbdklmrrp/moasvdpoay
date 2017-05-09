@@ -14,7 +14,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
-<h1>Orders</h1>
+<h1 style="text-align: center">Orders</h1>
 <table border="1" class="table table-striped table-hover">
     <tr>
         <td>Name</td>

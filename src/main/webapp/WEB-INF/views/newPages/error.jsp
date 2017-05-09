@@ -7,7 +7,8 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="includes/zaglushka.jsp"/>
-<jsp:include page="includes/footer.jsp"/>
+    <jsp:include page="includes/headers/emptyHeader.jsp"/>
+    <jsp:include page="includes/zaglushka.jsp"/>
+    <jsp:include page="includes/footer.jsp"/>
 </body>
 </html>
