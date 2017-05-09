@@ -113,9 +113,6 @@
                     <th class="col-xs-2" data-grid-header="action">
                         Action
                     </th>
-                    <%--<th class="col-xs-6" data-grid-header="status">--%>
-                    <%--Status--%>
-                    <%--</th>--%>
                 </tr>
                 </thead>
                 <tbody>

@@ -34,14 +34,15 @@ public class UserDAOImpl implements UserDAO {
             "  USERS.ADDRESS," +
             "  USERS.ROLE_ID," +
             "  USERS.PLACE_ID," +
-            "  USERS.CUSTOMER_ID" +
+            "  USERS.CUSTOMER_ID," +
+            "  USERS.ENABLE" +
             "    FROM USERS" +
             "  WHERE EMAIL=:email";
 
     private final static String FIND_BY_PHONE = "SELECT * FROM USERS WHERE PHONE=:phone";
 
     private final static String UPDATE_USER = "UPDATE USERS " +
-            "SET NAME=:name, SURNAME=:surname, PHONE=:phone " +
+            "SET NAME=:name, SURNAME=:surname, PHONE=:phone, ENABLE= :enable " +
             "WHERE ID=:id";
     private final static String FIND_USER_BY_ID = "SELECT * FROM USERS WHERE ID=:id";
     private final static String SELECT_LIMITED_USERS ="select *\n" +
@@ -66,6 +67,26 @@ public class UserDAOImpl implements UserDAO {
             " OR email like :pattern " +
             " OR phone like :pattern " +
             " OR address like :pattern )";
+
+    private static final String SELECT_ALL_COUNT="Select count(ID)\n"+
+        "  from Users " +
+        "WHERE name like :pattern " +
+        " OR surname like :pattern " +
+        " OR email like :pattern " +
+        " OR phone like :pattern " +
+        " OR address like :pattern ";
+
+    private static final String SELECT_LIMITED_ALL_USERS="select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from USERS " +
+            " Where name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern " +
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -103,6 +124,7 @@ public class UserDAOImpl implements UserDAO {
 //        params.addValue("address", user.getAddress());
 //        params.addValue("placeId", user.getPlaceId());
         params.addValue("id", user.getId());
+        params.addValue("enable",user.getEnable());
         int rows = jdbcTemplate.update(UPDATE_USER, params);
         return rows > 0;
 
@@ -267,6 +289,26 @@ public class UserDAOImpl implements UserDAO {
         MapSqlParameterSource params=new MapSqlParameterSource();
         params.addValue("start",start);
         params.addValue("length",rownum);
+        params.addValue("pattern","%"+search+"%");
+        return jdbcTemplate.query(sql,params, new UserRowMapper());
+    }
+
+    @Override
+    public Integer getCountAllUsersWithSearch(String search) {
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("pattern","%"+search+"%");
+        return jdbcTemplate.queryForObject(SELECT_ALL_COUNT,params,Integer.class);
+    }
+
+    @Override
+    public List<User> getLimitedQuantityAllUsers(int start, int length, String sort, String search) {
+        if(sort.isEmpty()){
+            sort="ID";
+        }
+        String sql=String.format(SELECT_LIMITED_ALL_USERS, sort);
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("start",start);
+        params.addValue("length",length);
         params.addValue("pattern","%"+search+"%");
         return jdbcTemplate.query(sql,params, new UserRowMapper());
     }

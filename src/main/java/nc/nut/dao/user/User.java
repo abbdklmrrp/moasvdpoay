@@ -1,5 +1,7 @@
 package nc.nut.dao.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author Rysakova Anna
  */
@@ -14,6 +16,7 @@ public class User {
     private Integer customerId;
     private String password;
     private String authority;
+    @JsonProperty("role_id")
     private Role role;
     private Integer enable;
 

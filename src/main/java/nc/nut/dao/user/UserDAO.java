@@ -30,4 +30,8 @@ public interface UserDAO extends Dao<User> {
 
     List<User> getLimitedQuantityUsers(int start, int length,String sort, String search);
 
+    Integer getCountAllUsersWithSearch(String search);
+
+    List<User> getLimitedQuantityAllUsers(int start, int length,String sort, String search);
+
 }
