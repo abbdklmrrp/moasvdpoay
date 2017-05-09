@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">City</label><br>
+                <label class="col-sm-2 control-label">Address</label><br>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" name="address" id="address" value="${user.address}" required><br>
                 </div>
@@ -68,7 +68,7 @@
 </div>
 <jsp:include page="../includes/footer.jsp"/>
 <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhhghVMdW1rIbJCJupKdngdNk0k5JwaQE&libraries=places"></script>
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhhghVMdW1rIbJCJupKdngdNk0k5JwaQE&libraries=places&language=en"></script>
 <script>
     $(document).ready(function () {
         $('#btn-edit-personal-info').click(function () {
