@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -59,24 +60,26 @@ public class TariffsController {
         return "newPages/user/business/Tariffs";
     }
 
-    @RequestMapping(value = {"residential/activateTariff", "business/activateTariff"}, method = RequestMethod.POST, produces = {"text/html;charset=UTF-8"})
+    @RequestMapping(value = {"residential/activateTariff", "business/activateTariff"}, method = RequestMethod.POST)
+    @ResponseBody
     public String activateTariff(@RequestParam Integer tariffId) {
         logger.debug("Method activateTariff param tariffId: {}", tariffId);
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user: {}", currentUser.toString());
         Boolean statusOperation = productDao.activateTariff(currentUser.getId(), tariffId);
         logger.debug("Status activation of tariff: {}", statusOperation);
-        return statusOperation ? "Success" : "Fail";
+        return statusOperation ? "success" : "fail";
     }
 
-    @RequestMapping(value = {"residential/deactivateTariff", "business/deactivateTariff"}, method = RequestMethod.POST, produces = {"text/html;charset=UTF-8"})
+    @RequestMapping(value = {"residential/deactivateTariff", "business/deactivateTariff"}, method = RequestMethod.POST)
+    @ResponseBody
     public String deactivateTariff(@RequestParam Integer tariffId) {
         logger.debug("Method deactivateTariff param tariffId: {}", tariffId);
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user: {}", currentUser.toString());
         Boolean statusOperation = productDao.deactivateTariff(currentUser.getId(), tariffId);
         logger.debug("Status deactivation of tariff: {}", statusOperation);
-        return statusOperation ? "Success" : "Fail";
+        return statusOperation ? "success" : "fail";
     }
 
     @RequestMapping(value = {"residential/showServicesOfTariff", "business/showServicesOfTariff"}, method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})

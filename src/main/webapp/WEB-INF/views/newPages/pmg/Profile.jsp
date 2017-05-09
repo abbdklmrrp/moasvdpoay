@@ -8,7 +8,7 @@
 <body>
 <jsp:include page="../includes/headers/pmgHeader.jsp"/>
 <div class="container">
-
+    <jsp:include page="../includes/Profile.jsp"/>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
