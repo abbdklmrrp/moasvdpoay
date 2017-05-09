@@ -93,7 +93,7 @@ public interface ProductDao extends Dao<Product> {
 
     boolean deleteServiceFromTariff(int idTariff, Integer[] idServicesArray);
 
-    boolean disableTariffByID(int id);
+    boolean disableProductByID(int id);
 
     List<Product> getProductsByUserId(int id);
 

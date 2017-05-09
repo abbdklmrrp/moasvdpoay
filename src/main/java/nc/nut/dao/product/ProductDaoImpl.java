@@ -168,7 +168,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String DELETE_SERVICE_FROM_TARIFF = "DELETE FROM TARIFF_SERVICES " +
             "WHERE TARIFF_ID=:idTariff AND SERVICE_ID=:idService ";
 
-    private final static String DISABLE_TARIFF = "UPDATE Products SET status=0 WHERE id=:id";
+    private final static String DISABLE_PRODUCT = "UPDATE Products SET status=0 WHERE id=:id";
 
     private final static String FIND_PRODUCT_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME," +
             "prod.description AS DESCRIPTION, prod.DURATION AS duration " +
@@ -700,12 +700,16 @@ public class ProductDaoImpl implements ProductDao {
         return batchUpdate.length != 0;
     }
 
+    /**
+     * @param productID
+     * @return status of updating
+     * @author Nikita Alistratenko
+     */
     @Override
-    public boolean disableTariffByID(int id) {
+    public boolean disableProductByID(int productID) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
-        int isDelete = jdbcTemplate.update(DISABLE_TARIFF, params);
-        return isDelete > 0;
+        params.addValue("id", productID);
+        return jdbcTemplate.update(DISABLE_PRODUCT, params) > 0;
     }
 
     /**

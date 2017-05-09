@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -64,6 +65,21 @@ public class ViewProductController {
             }
         }
         return mav;
+    }
+
+    /**
+     * @author Nikita Alistratenko
+     */
+    @RequestMapping("disableProduct")
+    public ModelAndView setProductDisabled(@RequestParam(value = "id") int id, RedirectAttributes attributes) {
+        ModelAndView mw = new ModelAndView();
+        mw.setViewName("redirect:/admin/getAllProducts");
+        if (productDao.disableProductByID(id)) {
+            attributes.addFlashAttribute("msg", "Product has been disabled");
+        } else {
+            attributes.addFlashAttribute("msg", "Product has not been disabled");
+        }
+        return mw;
     }
 }
 
