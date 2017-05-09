@@ -47,7 +47,7 @@ public class AddProductController {
 //        mav.addObject("productTypes", productTypes);
         mav.addObject("productCategories", productCategories);
         mav.addObject("product", new Product());
-        mav.setViewName("admin/addService");
+        mav.setViewName("newPages/admin/AddService");
         return mav;
     }
 
@@ -57,7 +57,7 @@ public class AddProductController {
         boolean checkEmptyTariff = productService.checkEmptyFieldIfProduct(product);
         if (!checkEmptyTariff) {
             model.addAttribute("errorEmptyProduct", " Please fill all fields");
-            return "admin/addTariff";
+            return "newPages/admin/AddTariff";
         }
         productService.saveProduct(product);
         return "redirect:/admin/fillTariff";

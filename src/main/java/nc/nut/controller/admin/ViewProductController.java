@@ -38,7 +38,7 @@ public class ViewProductController {
         ObjectMapper mapper = new ObjectMapper();
         List<Product> products = productDao.getAllProducts();
         model.addAttribute("productList", mapper.writeValueAsString(products));
-        return "admin/viewAllProducts";
+        return "newPages/admin/Products";
     }
 
     @RequestMapping(value = "getDetailsProduct", method = RequestMethod.GET)

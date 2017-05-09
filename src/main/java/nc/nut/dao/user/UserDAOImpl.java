@@ -41,7 +41,7 @@ public class UserDAOImpl implements UserDAO {
     private final static String FIND_BY_PHONE = "SELECT * FROM USERS WHERE PHONE=:phone";
 
     private final static String UPDATE_USER = "UPDATE USERS " +
-            "SET NAME=:name, SURNAME=:surname, PHONE=:phone, ADDRESS=:address, PLACE_ID=:placeId " +
+            "SET NAME=:name, SURNAME=:surname, PHONE=:phone " +
             "WHERE ID=:id";
     private final static String FIND_USER_BY_ID = "SELECT * FROM USERS WHERE ID=:id";
     private final static String SELECT_LIMITED_USERS ="select *\n" +
@@ -100,8 +100,8 @@ public class UserDAOImpl implements UserDAO {
         params.addValue("name", user.getName());
         params.addValue("surname", user.getSurname());
         params.addValue("phone", user.getPhone());
-        params.addValue("address", user.getAddress());
-        params.addValue("placeId", user.getPlaceId());
+//        params.addValue("address", user.getAddress());
+//        params.addValue("placeId", user.getPlaceId());
         params.addValue("id", user.getId());
         int rows = jdbcTemplate.update(UPDATE_USER, params);
         return rows > 0;

@@ -42,14 +42,14 @@ public class EditProfileController {
         ModelAndView model = new ModelAndView();
         model.addObject("user", user);
         String urlBegin;
-        if (roleMap==null) {
+        if (roleMap == null) {
             roleMap = new HashMap<>();
             roleMap.put(Role.Admin, "admin");
             roleMap.put(Role.CSR, "csr");
             roleMap.put(Role.PMG, "pmg");
         }
         urlBegin = roleMap.getOrDefault(user.getRole(), "user");
-        String view = "newPages/"+urlBegin+"/Profile";//Revniuk for new page
+        String view = "newPages/" + urlBegin + "/Profile";//Revniuk for new page
         model.addObject("pattern", urlBegin);
         model.setViewName(view);//Revniuk
         return model;
