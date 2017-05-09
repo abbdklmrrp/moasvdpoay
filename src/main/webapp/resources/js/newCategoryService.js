@@ -26,3 +26,19 @@ $(function () {
         }
     });
 });
+function SelectedCategory(a) {
+    document.getElementById("newCategory").style.display = 'none';
+    document.getElementById("newCategoryDesc").style.display = 'none';
+    var label = a.value;
+    if (label == "") {
+        var d = document.getElementById("newCategory");
+        var c = document.getElementById("newCategoryDesc");
+        d.style.display = 'block';
+        c.style.display = 'block';
+    } else {
+        document.getElementById("newCategory").style.display = 'none';
+        document.getElementById("newCategoryDesc").style.display = 'none';
+        document.getElementById("newCategoryID").value="";
+        document.getElementById("newCategoryDescID").value="";
+    }
+}

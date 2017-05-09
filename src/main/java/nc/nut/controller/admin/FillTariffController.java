@@ -4,10 +4,11 @@ import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductCategories;
 import nc.nut.dao.product.ProductDao;
 import nc.nut.services.ProductService;
+import nc.nut.util.ProductUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +20,8 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Rysakova Anna on 26.04.2017.
@@ -37,36 +38,53 @@ public class FillTariffController {
     private Logger logger = LoggerFactory.getLogger(FillTariffController.class);
 
     @RequestMapping(value = {"fillTariff"}, method = RequestMethod.GET)
-    public String fillTariffWithService(Model model, HttpSession session) {
-
+    public ModelAndView fillTariffWithService(ModelAndView mav) {
         List<Product> tariffs = productDao.getAllFreeTariffs();
         List<ProductCategories> productCategories = productDao.findProductCategories();
-
-        model.addAttribute("allServices", productCategories);
-        model.addAttribute("tariffs", tariffs);
-
-        return "admin/fillTariff";
+        mav.addObject("allServices", productCategories);
+        mav.addObject("tariffs", tariffs);
+        mav.setViewName("admin/fillTariff");
+        return mav;
     }
 
+    // FIXME: 08.05.2017 all checks of parameter to one validate method
     @RequestMapping(value = {"fillTariff"}, method = RequestMethod.POST)
-    public String identifyTariff(@RequestParam(value = "tariffId") Integer tariffId,
-                                 @RequestParam(value = "selectedService") String services,
-                                 Model model) {
-
-        String[] servicesArray = services.split(",");
-        boolean checkUniqueCategoryServices = productService.checkUniqueCategoryServices(servicesArray);
-        if (!checkUniqueCategoryServices) {
-
-            model.addAttribute("errorUniqueCategory", "Duplicate category");
-            return "admin/fillTariff";
+    public ModelAndView identifyTariff(@RequestParam(value = "tariffId") Integer tariffId,
+                                       @RequestParam(value = "selectedService", required = false) String services,
+                                       ModelAndView mav) {
+        if (Objects.equals(services, null)) {
+            mav.setViewName("admin/fillTariff");
+            return mav;
         }
-        productService.fillTariff(servicesArray, tariffId);
+        Product tariff = productDao.getById(tariffId);
+        if (tariff == null) {
+            mav.setViewName("admin/fillTariff");
+            return mav;
+        }
+        Integer[] servicesIdArray = ProductUtil.convertStringToIntegerArray(services);
 
-        return "admin/index";
+        boolean checkUniqueCategoryServices = productService.isCategoriesUnique(servicesIdArray);
+        if (!checkUniqueCategoryServices) {
+            mav.addObject("errorUniqueCategory", "Category already exists");
+            mav.setViewName("admin/fillTariff");
+            return mav;
+        }
+
+        try {
+            productService.fillInTariffWithServices(tariffId, servicesIdArray);
+        } catch (DataIntegrityViolationException ex) {
+            logger.error("Error in query to db ", ex);
+            mav.addObject("errorSQL ", "Error in query to db");
+            mav.setViewName("admin/fillTariff");
+            return mav;
+        }
+        mav.setViewName("admin/index");
+        return mav;
     }
 
+    // FIXME: 08.05.2017 add a stub for error page
     @ExceptionHandler({Exception.class})
-    public ModelAndView resolveException(Exception exception, HttpServletRequest request) {
+    public ModelAndView resolveException(Exception exception, HttpServletRequest request, ModelAndView mav) {
         FlashMap outputFlashMap = RequestContextUtils.getOutputFlashMap(request);
         if (outputFlashMap != null) {
             if (exception instanceof MissingServletRequestParameterException) {
@@ -78,7 +96,8 @@ public class FillTariffController {
                 outputFlashMap.put("errors", "Unexpected error: " + exception.getMessage());
             }
         }
-        return new ModelAndView("admin/fillTariff");
+        mav.setViewName("admin/index");
+        return mav;
     }
 }
 

@@ -11,16 +11,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @JsonTypeName("category")
-public class CategoryDto {
+public class ServicesByCategoryDto {
     @JsonProperty("id")
     private int id;
     @JsonProperty("name")
     private String name;
 
-    public CategoryDto() {
+    public ServicesByCategoryDto() {
     }
 
-    CategoryDto(int id, String name) {
+    ServicesByCategoryDto(int id, String name) {
         this.id = id;
         this.name = name;
     }

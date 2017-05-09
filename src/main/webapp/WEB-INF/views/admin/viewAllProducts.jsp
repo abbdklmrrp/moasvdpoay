@@ -18,12 +18,8 @@
     <spring:url value="/resources/js/jquery-1.12.1.min.js"
                 var="jqueryJs"/>
     <script src="${jqueryJs}"></script>
-    <%--<spring:url value="/resources/js/jquery.dataTables.js"--%>
-                <%--var="datatable"/>--%>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
     <script src="${datatable}"></script>
-    <%--<spring:url value="/resources/css/common.css" var="common"/>--%>
-    <%--<link href="${common}" rel="stylesheet"/>--%>
 </head>
 
 <body>

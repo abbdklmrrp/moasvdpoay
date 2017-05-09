@@ -2,7 +2,7 @@ package nc.nut.controller.admin;
 
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductDao;
-import nc.nut.dto.CategoryDto;
+import nc.nut.dto.ServicesByCategoryDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,21 +26,21 @@ public class ServicesEndpoint { // GET: services/tariffs/3G
     ProductDao productDao;
 
     @RequestMapping(value = {"tariffs/{tariff}"}, method = RequestMethod.GET)
-    public List<CategoryDto> servicesByTariff(@PathVariable("tariff") String tariffId) {
+    public List<ServicesByCategoryDto> servicesByTariff(@PathVariable("tariff") String tariffId) {
         Map<String, List<Product>> allServicesWithCategory = productDao.getAllServicesWithCategory();
 
-        List<CategoryDto> categoryDtoList = new ArrayList<>();
+        List<ServicesByCategoryDto> servicesByCategoryDtoList = new ArrayList<>();
         for (Map.Entry<String, List<Product>> key : allServicesWithCategory.entrySet()) {
             if (tariffId.equals(key.getKey())) {
                 for (Product product : key.getValue()) {
-                    CategoryDto categoryDto = new CategoryDto();
-                    categoryDto.setId(product.getId());
-                    categoryDto.setName(product.getName());
-                    categoryDtoList.add(categoryDto);
+                    ServicesByCategoryDto servicesByCategoryDto = new ServicesByCategoryDto();
+                    servicesByCategoryDto.setId(product.getId());
+                    servicesByCategoryDto.setName(product.getName());
+                    servicesByCategoryDtoList.add(servicesByCategoryDto);
                 }
             }
         }
-        return categoryDtoList;
+        return servicesByCategoryDtoList;
     }
 
 
