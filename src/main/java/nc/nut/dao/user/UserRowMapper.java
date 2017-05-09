@@ -23,6 +23,7 @@ public class UserRowMapper implements RowMapper<User> {
         user.setPlaceId(resultSet.getInt("place_id"));
         user.setCustomerId(resultSet.getInt("customer_id"));
         user.setRole(Role.getRoleFromId(resultSet.getInt("role_id")));
+        user.setEnable(resultSet.getInt("enable"));
 
         return user;
     }

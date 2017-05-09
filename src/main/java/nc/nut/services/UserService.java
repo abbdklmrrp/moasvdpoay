@@ -34,6 +34,9 @@ public class UserService {
         if (!user.getPhone().isEmpty() && !user.getPhone().equals(defaultUser.getPhone())) {
             defaultUser.setPhone(user.getPhone());
         }
+        if(!(user.getEnable()==null)){
+            defaultUser.setEnable(user.getEnable());
+        }
 //        if (!user.getAddress().isEmpty() && !user.getAddress().equals(defaultUser.getAddress())) {
 //            defaultUser.setAddress(user.getAddress());
 //            if (!Objects.equals(user.getPlaceId(), defaultUser.getPlaceId())) {
