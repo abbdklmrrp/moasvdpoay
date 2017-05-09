@@ -95,17 +95,27 @@ public class ProductService {
      * @param servicesId
      * @param product
      */
-    public void updateFillTariff(String[] servicesId, Product product) {
-        List<Product> oldServiceList = productDao.getServicesByTariff(product);
-        ArrayList<Integer> oldServiceIdList = new ArrayList<>();
-        for (Product p : oldServiceList) {
-            oldServiceIdList.add(p.getId());
-        }
-        List newServicesId = Arrays.asList(servicesId);
-        oldServiceIdList.removeAll(newServicesId);
-//        productDao.deleteServiceFromTariff(product.getId(),oldServiceIdList.toArray());
+    public void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product) {
+        List<Integer> oldServiceIdList = getIdServicesOfTariff(product);
+        List<Integer> newServicesId = ProductUtil.convertArrayToCollection(servicesId);
+
+        Collection uniqueServicesInFirstCollection = ProductUtil.getUniqueElementsInFirstCollection(oldServiceIdList, newServicesId);
+        Integer[] servicesToRemove = ProductUtil.convertCollectionToArray(uniqueServicesInFirstCollection);
+        ArrayList<TariffServiceDto> tariffServiceDtos = fillInDTOForBatchUpdate(product.getId(), servicesToRemove);
+        productDao.deleteServiceFromTariff(tariffServiceDtos);
+
+        uniqueServicesInFirstCollection = ProductUtil.getUniqueElementsInFirstCollection(newServicesId, oldServiceIdList);
+        Integer[] servicesToFillInTariff = ProductUtil.convertCollectionToArray(uniqueServicesInFirstCollection);
+        tariffServiceDtos = fillInDTOForBatchUpdate(product.getId(), servicesToFillInTariff);
+        productDao.fillInTariffWithServices(tariffServiceDtos);
     }
 
+    /**
+     * Anna Rysakova
+     *
+     * @param product
+     * @return
+     */
     private ArrayList<Integer> getIdServicesOfTariff(Product product) {
         List<Product> serviceList = productDao.getServicesByTariff(product);
         ArrayList<Integer> serviceIdList = new ArrayList<>();
@@ -115,7 +125,25 @@ public class ProductService {
         return serviceIdList;
     }
 
+    /**
+     * Anna Rysakova
+     *
+     * @param idTariff
+     * @param arrayOfIdServices
+     */
     public void fillInTariffWithServices(Integer idTariff, Integer[] arrayOfIdServices) {
+        ArrayList<TariffServiceDto> products = fillInDTOForBatchUpdate(idTariff, arrayOfIdServices);
+        productDao.fillInTariffWithServices(products);
+    }
+
+    /**
+     * Anna Rysakova
+     *
+     * @param idTariff
+     * @param arrayOfIdServices
+     * @return
+     */
+    private ArrayList<TariffServiceDto> fillInDTOForBatchUpdate(Integer idTariff, Integer[] arrayOfIdServices) {
         ArrayList<TariffServiceDto> products = new ArrayList<>();
         for (Integer idService : arrayOfIdServices) {
             TariffServiceDto tariffServiceDto = new TariffServiceDto();
@@ -123,7 +151,7 @@ public class ProductService {
             tariffServiceDto.setIdService(idService);
             products.add(tariffServiceDto);
         }
-        productDao.fillInTariffWithServices(products);
+        return products;
     }
 
     /**
@@ -146,7 +174,7 @@ public class ProductService {
      *
      * @param updateProduct
      */
-    public void updateProduct(Product updateProduct) {
+    public boolean updateProduct(Product updateProduct) {
         int productId = updateProduct.getId();
         Product product = productDao.getById(productId);
         if (!updateProduct.getName().isEmpty() & !updateProduct.getName().equals(product.getName())) {
@@ -165,7 +193,7 @@ public class ProductService {
         if (updateProduct.getStatus() != product.getStatus()) {
             product.setStatus(updateProduct.getStatus());
         }
-        productDao.update(product);
+        return productDao.update(product);
     }
 
     /**
