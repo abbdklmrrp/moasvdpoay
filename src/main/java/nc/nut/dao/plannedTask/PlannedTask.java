@@ -3,24 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nc.nut.dao.entity;
+package nc.nut.dao.plannedTask;
+
+import nc.nut.dao.entity.OperationStatus;
 
 import java.util.Calendar;
 
 /**
  * @author Alistratenko Nikita
  */
-public class Planned_task {
+public class PlannedTask {
 
     private Integer id;
-    private String status;
+    private OperationStatus status;
     private Integer orderId;
     private Calendar actionDate;
 
-    public Planned_task() {
+    public PlannedTask() {
     }
 
-    public Planned_task(int id, String status, int orderId, Calendar actionDate) {
+    public PlannedTask(int id, OperationStatus status, int orderId, Calendar actionDate) {
         this.id = id;
         this.status = status;
         this.orderId = orderId;
@@ -35,11 +37,11 @@ public class Planned_task {
         this.id = id;
     }
 
-    public String getStatus() {
+    public OperationStatus getStatus() {
         return status;
     }
 
-    public void setStatus_id(String status) {
+    public void setStatus(OperationStatus status) {
         this.status = status;
     }
 
@@ -61,7 +63,7 @@ public class Planned_task {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("Planned_task{").append("id=").append(id).append(", status=").append(status).append(", orderId=").append(orderId).append(", actionDate=").append(actionDate).append('}').toString();
+        return new StringBuilder().append("PlannedTask{").append("id=").append(id).append(", status=").append(status).append(", orderId=").append(orderId).append(", actionDate=").append(actionDate).append('}').toString();
     }
 
 }

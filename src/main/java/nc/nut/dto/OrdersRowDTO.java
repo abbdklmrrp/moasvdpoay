@@ -9,15 +9,15 @@ import java.util.Calendar;
  * Created by Yuliya Pedash on 07.05.2017.
  */
 public class OrdersRowDTO {
-    private final Integer productId;
+    private final Integer orderId;
     private final String name;
     private final ProductType productType;
     private final String description;
     private final Calendar endDate;
     private final OperationStatus operationStatus;
 
-    public OrdersRowDTO(Integer productId, String name, ProductType productType, String description, Calendar endDate, OperationStatus operationStatus) {
-        this.productId = productId;
+    public OrdersRowDTO(Integer orderId, String name, ProductType productType, String description, Calendar endDate, OperationStatus operationStatus) {
+        this.orderId = orderId;
         this.name = name;
         this.productType = productType;
         this.description = description;
@@ -25,8 +25,8 @@ public class OrdersRowDTO {
         this.operationStatus = operationStatus;
     }
 
-    public Integer getProductId() {
-        return productId;
+    public Integer getOrderId() {
+        return orderId;
     }
 
     public String getName() {
