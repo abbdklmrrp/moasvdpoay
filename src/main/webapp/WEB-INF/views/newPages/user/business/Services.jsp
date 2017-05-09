@@ -6,10 +6,8 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../../includes/headers/businessHeader.jsp"/>
-<div class="container">
-
-</div>
-<jsp:include page="../../includes/footer.jsp"/>
+    <jsp:include page="../../includes/headers/residentialHeader.jsp"/>
+    <jsp:include page="../../includes/services.jsp"/>
+    <jsp:include page="../../includes/footer.jsp"/>
 </body>
 </html>

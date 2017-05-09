@@ -7,7 +7,7 @@
     </jsp:include>
 </head>
 <body>
-<div class="container"><h1>Sorry, something went wrong :(</h1></div>
+<jsp:include page="includes/zaglushka.jsp"/>
 <jsp:include page="includes/footer.jsp"/>
 </body>
 </html>

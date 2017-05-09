@@ -9,7 +9,7 @@
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp"/>
 <div class="container">
-    <jsp:include page="../includes/Profile.jsp"/>
+    <jsp:include page="../includes/profile.jsp"/>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
 <script type="text/javascript"

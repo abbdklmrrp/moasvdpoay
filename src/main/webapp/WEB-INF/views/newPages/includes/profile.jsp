@@ -2,6 +2,7 @@
     <form id="details-form" modelAttribute="user" action="${contextPath}/${pattern}/editProfile" method="post">
         <div class="login-form">
             <h1 style="text-align: center">Personal information</h1>
+            <br>
             <div class="form-group form-group-lg">
                 <label class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-10">
@@ -51,6 +52,7 @@
                            pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"><br>
                 </div>
             </div>
+            <br>
             <div class="row hide" id="save-profile">
                 <div class="col-sm-2 col-xs-2"></div>
                 <button type="submit" class="btn btn-primary col-sm-10 col-xs-10" id="btn-save-profile">Save</button>
