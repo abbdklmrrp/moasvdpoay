@@ -9,6 +9,7 @@ $(document).ready(function () {
         $("#surname").prop('readonly', false);
         $("#address").prop('readonly', false);
         $("#phone").prop('readonly', false);
+        $("#email").prop('readonly', false);
     });
     $('#btn-change-password').click(function () {
         $('#edit-and-change').addClass("hide");
