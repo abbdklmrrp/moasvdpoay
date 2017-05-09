@@ -10,7 +10,7 @@
 <div class="container" style="width:60%; max-width: 400px;">
     <form action="${contextPath}/admin/signUpCoworker" modelAttribute="user" method="post">
         <div class="login-form">
-            <h1 style="text-align: center">Sign up</h1>
+            <h1 style="text-align: center">Registration new user</h1>
             <div class="form-group">
                 <select id="userType" name="userType" class="form-control" aria-required="true" required>
                     <option value="ADMIN">Admin</option>
