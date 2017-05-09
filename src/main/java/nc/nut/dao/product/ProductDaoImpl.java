@@ -40,8 +40,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_ENABLED_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 AND STATUS=1 ORDER BY ID";
     private final static String FIND_PRODUCT_BY_ID = "SELECT * FROM PRODUCTS WHERE ID=:id";
 
-    private final static String FIND_ALL_PRODUCTS = "SELECT ID,TYPE_ID,CATEGORY_ID,NAME,DURATION," +
-            "NEED_PROCESSING,DESCRIPTION,STATUS FROM PRODUCTS ORDER BY ID";
+    private final static String FIND_ALL_PRODUCTS = "SELECT ID, TYPE_ID, NAME, DURATION, DESCRIPTION, BASE_PRICE, STATUS FROM PRODUCTS ORDER BY ID";
 
     private final static String FIND_SERVICES_BY_TARIFF = "SELECT " +
             "p.ID," +
@@ -599,15 +598,11 @@ public class ProductDaoImpl implements ProductDao {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
             product.setProductType(ProductType.getProductTypeFromId(rs.getInt("TYPE_ID")));
-            Integer typeId = rs.getInt("TYPE_ID");
-            product.setCategoryId(rs.getInt("CATEGORY_ID"));
             product.setDurationInDays(rs.getInt("DURATION"));
             product.setName(rs.getString("NAME"));
             product.setDescription(rs.getString("DESCRIPTION"));
-            Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
-            product.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
-            Integer statusId = rs.getInt("STATUS");
-            product.setStatus(ProductStatus.getProductStatusFromId(statusId));
+            product.setBasePrice(rs.getBigDecimal("BASE_PRICE"));
+            product.setStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")));
             return product;
         });
         return productList;

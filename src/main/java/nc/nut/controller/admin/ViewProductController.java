@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductDao;
 import nc.nut.dao.product.ProductType;
-import nc.nut.services.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -28,10 +27,7 @@ public class ViewProductController {
 
     @Resource
     private ProductDao productDao;
-
-    @Resource
-    private ProductService productService;
-    private Logger logger = LoggerFactory.getLogger(ViewProductController.class);
+    private static Logger logger = LoggerFactory.getLogger(ViewProductController.class);
 
     @RequestMapping(value = "getAllProducts", method = RequestMethod.GET)
     public String getAllProducts(Model model) throws IOException {
@@ -43,14 +39,16 @@ public class ViewProductController {
 
     @RequestMapping(value = "getDetailsProduct", method = RequestMethod.GET)
     public ModelAndView getDetailsProduct(@RequestParam(value = "id") int id,
-                                   ModelAndView mav,
-                                   HttpSession session) {
+                                          ModelAndView mav,
+                                          HttpSession session) {
 
         List<Product> productList = productDao.getAllProducts();
         for (Product product : productList) {
+
             if (product.getId() == id) {
-                session.setAttribute("productId", product.getId());
-                mav.addObject("type_id", product.getProductType());
+                session.setAttribute("productId", id);
+                mav.addObject("type_id", product.getProductType().getId());
+
                 if (product.getProductType().equals(ProductType.Service)) {
                     mav.addObject("category_id", product.getCategoryId());
                     mav.setViewName("admin/updateService");
@@ -58,9 +56,6 @@ public class ViewProductController {
                 if (product.getProductType().equals(ProductType.Tariff)) {
                     List<Product> servicesByTariff = productDao.getServicesByTariff(product);
                     List<Product> servicesNotInTariff = productDao.getServicesNotInTariff(product);
-                    session.setAttribute("servicesByTariff", servicesByTariff);
-                    session.setAttribute("servicesNotInTariff", servicesNotInTariff);
-                    session.setAttribute("id", id);
                     mav.addObject("servicesByTariff", servicesByTariff);
                     mav.addObject("servicesNotInTariff", servicesNotInTariff);
                     mav.setViewName("admin/updateTariff");

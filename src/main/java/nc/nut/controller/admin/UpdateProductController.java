@@ -7,17 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.FlashMap;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -65,7 +59,7 @@ public class UpdateProductController {
         product.setId(id);
 
         productService.updateFillTariff(servicesId, product);
-        productService.updateTariffWithNewServices(servicesId, product);
+//        productService.updateTariffWithNewServices(servicesId, product);
         productService.updateProduct(product);
 
         session.removeAttribute("productId");
@@ -75,25 +69,25 @@ public class UpdateProductController {
         return "redirect:/admin/index";
     }
 
-    @ExceptionHandler({Exception.class})
-    public ModelAndView resolveException(Exception exception,
-                                         HttpServletRequest request,
-                                         HttpSession session) {
-
-        ModelAndView mav = new ModelAndView("redirect:/admin/getDetailsProduct");
-        FlashMap outputFlashMap = RequestContextUtils.getOutputFlashMap(request);
-        if (outputFlashMap != null) {
-            if (exception instanceof MissingServletRequestParameterException) {
-                logger.error("Services must be selected", exception.getMessage());
-                mav.addObject("servicesByTariff", session.getAttribute("servicesByTariff"));
-                mav.addObject("servicesNotInTariff", session.getAttribute("servicesNotInTariff"));
-                mav.addObject("id", session.getAttribute("id"));
-                outputFlashMap.put("errors", "Select all new services: ");
-            } else {
-                logger.error("Unexpected error", exception.getMessage());
-                outputFlashMap.put("errors", "Unexpected error: " + exception.getMessage());
-            }
-        }
-        return mav;
-    }
+//    @ExceptionHandler({Exception.class})
+//    public ModelAndView resolveException(Exception exception,
+//                                         HttpServletRequest request,
+//                                         HttpSession session) {
+//
+//        ModelAndView mav = new ModelAndView("redirect:/admin/getDetailsProduct");
+//        FlashMap outputFlashMap = RequestContextUtils.getOutputFlashMap(request);
+//        if (outputFlashMap != null) {
+//            if (exception instanceof MissingServletRequestParameterException) {
+//                logger.error("Services must be selected", exception.getMessage());
+//                mav.addObject("servicesByTariff", session.getAttribute("servicesByTariff"));
+//                mav.addObject("servicesNotInTariff", session.getAttribute("servicesNotInTariff"));
+//                mav.addObject("id", session.getAttribute("id"));
+//                outputFlashMap.put("errors", "Select all new services: ");
+//            } else {
+//                logger.error("Unexpected error", exception.getMessage());
+//                outputFlashMap.put("errors", "Unexpected error: " + exception.getMessage());
+//            }
+//        }
+//        return mav;
+//    }
 }
