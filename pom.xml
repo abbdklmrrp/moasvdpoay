@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>nc.nut</groupId>
-    <artifactId>SpringSecurity</artifactId>
-    <name>NutCrooker</name>
+    <artifactId>JTelecom</artifactId>
+    <name>JTelecom</name>
     <packaging>war</packaging>
-    <version>1.0.0-BUILD-SNAPSHOT</version>
+    <version>1.0</version>
     <properties>
         <java-version>1.8</java-version>
         <org.springframework-version>4.0.6.RELEASE</org.springframework-version>
