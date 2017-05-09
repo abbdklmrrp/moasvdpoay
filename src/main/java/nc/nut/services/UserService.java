@@ -3,6 +3,7 @@ package nc.nut.services;
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
 import nc.nut.googleMaps.ServiceGoogleMaps;
+import nc.nut.security.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,22 +20,26 @@ public class UserService {
     private UserDAO userDAO;
     @Resource
     private ServiceGoogleMaps serviceGoogleMaps;
-
+    @Resource
+    Md5PasswordEncoder encoder;
 
     public boolean updateUser(User user) {
         User defaultUser = userDAO.getUserById(user.getId());
-        String formatAddress=serviceGoogleMaps.getFormattedAddress(user.getAddress());
+        String formatAddress = serviceGoogleMaps.getFormattedAddress(user.getAddress());
         user.setAddress(formatAddress);
-        if (!user.getName().isEmpty() && !user.getName().equals(defaultUser.getName())) {
+        if (!user.getName().isEmpty()) {
             defaultUser.setName(user.getName());
         }
-        if (!user.getSurname().isEmpty() && !user.getSurname().equals(defaultUser.getSurname())) {
+        if (!user.getSurname().isEmpty()) {
             defaultUser.setSurname(user.getSurname());
         }
-        if (!user.getPhone().isEmpty() && !user.getPhone().equals(defaultUser.getPhone())) {
+        if (!user.getPhone().isEmpty()) {
             defaultUser.setPhone(user.getPhone());
         }
-        if(!(user.getEnable()==null)){
+        if (!user.getPassword().isEmpty()) {
+            defaultUser.setPassword(encoder.encode(user.getPassword()));
+        }
+        if (!(user.getEnable() == null)) {
             defaultUser.setEnable(user.getEnable());
         }
 //        if (!user.getAddress().isEmpty() && !user.getAddress().equals(defaultUser.getAddress())) {
