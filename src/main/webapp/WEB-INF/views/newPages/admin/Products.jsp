@@ -172,7 +172,7 @@
         ],
         renderers: {
             "action": function (pv, wv, grid) {
-                return $('<span>Click me</span>').click( function(){
+                return $('<input type="button" class="btn btn-success"  value="Edit" >').click( function(){
                         location.href='${contextPath}/admin/getDetailsProduct?id=' + wv.id
                     }
                 );

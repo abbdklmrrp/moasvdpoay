@@ -22,25 +22,33 @@
 
 <form method="POST" name="Form" action="${contextPath}/admin/updateTariff">
     <div class="login-form">
-        <%--<h1>SELECT TARIFF</h1>--%>
-        <%--<div class="form-group ">--%>
-        <%--<select name="id" class="form-control" id="id">--%>
-        <%--<c:forEach var="tariff" items="${allTariffs}">--%>
-        <%--<option value="${tariff.id}">${tariff.name}</option>--%>
-        <%--</c:forEach>--%>
-        <%--</select>--%>
-        <%--</div>--%>
+
         <h1>Fill or leave empty</h1>
         <div class="form-group ">
-            <h6>Enter new name</h6>
-            <input type="text" class="form-control" placeholder="New name " id="Name" name="name">
+            <h6>Enter name</h6>
+            <input type="text" class="form-control" placeholder="Name " id="Name" name="name" value="${product.name}">
             <i class="fa fa-user"></i>
         </div>
 
         <div class="form-group ">
             <h6>Enter description</h6>
-            <input type="text" class="form-control" placeholder="New description " id="Description" name="description">
+            <input type="text" class="form-control" placeholder="Description " id="Description" name="description"
+                   value="${product.description}">
             <i class="fa fa-user"></i>
+        </div>
+
+        <div class="form-group ">
+            <h6>Enter base price</h6>
+            <input type="text" class="form-control" placeholder="0" id="basePrice" name="basePrice" value="${product.basePrice}">
+            <i class="fa fa-user"></i>
+        </div>
+
+        <div class="form-group ">
+            <h6>Customer type</h6>
+            <select name="customerType" class="form-control" id="customerType">
+                <option value="Business">Business</option>
+                <option value="Residential">Residential</option>
+            </select>
         </div>
 
         <div class="form-group ">
@@ -52,17 +60,17 @@
 
         <div class="form-group ">
             <h6>Need processing by admin</h6>
-            <select name="needProcessing" class="form-control" id="needProcessing">
-                <option value="1">Need processing</option>
-                <option value="0">Do not need processing</option>
+            <select name="processingStrategy" class="form-control" id="processingStrategy">
+                <option value="NeedProcessing">Need processing</option>
+                <option value="DoNotNeedProcessing">Do not need processing</option>
             </select>
         </div>
 
         <div class="form-group ">
             <h6>Select status service</h6>
             <select name="status" class="form-control" id="Status">
-                <option value="1">Activate</option>
-                <option value="0">Not active</option>
+                <option value="Available">Activate</option>
+                <option value="NotAvailable">Not active</option>
             </select>
         </div>
 
@@ -82,7 +90,7 @@
             <h6>Selected services</h6>
             <select name="selectto" id="select-to" multiple="multiple">
                 <c:forEach var="tariff" items="${servicesByTariff}">
-                    <option value="${tariff.id}">${tariff.name}</option>
+                    <option value="${tariff.id}" selected>${tariff.name}</option>
                 </c:forEach>
             </select>
 

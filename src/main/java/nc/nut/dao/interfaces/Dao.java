@@ -1,7 +1,7 @@
 package nc.nut.dao.interfaces;
 
 /**
- * Created by Yuliya Pedash, Anna on 27.04.2017.
+ * Created by Yuliya Pedash, Anna Rysakova on 27.04.2017.
  */
 public interface Dao<T> {
     T getById(int id);

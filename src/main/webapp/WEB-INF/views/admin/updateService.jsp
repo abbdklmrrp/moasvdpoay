@@ -21,25 +21,25 @@
     <%--<script src="<c:url value="/resources/js/serviceTariff.js"/>"></script>--%>
 </head>
 <body>
-<form method="POST" modelAttribute="product" action="${contextPath}/admin/updateService">
+<form method="POST" modelAttribute="product" action="${pageContext.request.contextPath}/admin/updateService">
     <div class="login-form">
 
         <h1>Fill or leave empty</h1>
         <div class="form-group ">
             <h6>Enter name</h6>
-            <input type="text" class="form-control" placeholder="Name " id="Name" name="name">
+            <input type="text" class="form-control" placeholder="Name " id="Name" name="name" value="${product.name}">
             <i class="fa fa-user"></i>
         </div>
 
         <div class="form-group ">
             <h6>Enter description</h6>
-            <input type="text" class="form-control" placeholder="Description " id="Description" name="description">
+            <input type="text" class="form-control" placeholder="Description " id="Description" name="description" value="${product.description}">
             <i class="fa fa-user"></i>
         </div>
 
         <div class="form-group ">
             <h6>Enter base price</h6>
-            <input type="text" class="form-control" placeholder="0" id="basePrice" name="basePrice" value="0">
+            <input type="text" class="form-control" placeholder="0" id="basePrice" name="basePrice" value="${product.basePrice}">
             <i class="fa fa-user"></i>
         </div>
 
