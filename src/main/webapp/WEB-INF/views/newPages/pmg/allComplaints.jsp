@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -8,116 +9,32 @@
 <body>
 <jsp:include page="../includes/headers/pmgHeader.jsp"/>
 <div class="container">
+    <h3 style="text-align: center">All complaints</h3>
     <div class="row">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-bordered" id="tbl-all-complaints">
                 <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Table heading</th>
-                    <th>Table heading</th>
-                    <th>Table heading</th>
-                    <th>Table heading</th>
-                    <th>Table heading</th>
-                    <th>Table heading</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Description</th>
+                    <th>Order id</th>
                 </tr>
                 </thead>
                 <tbody id="myTable">
-                <tr>
-                    <td>1</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr class="success">
-                    <td>5</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
+                <c:forEach var="complaint" items="${complaints}">
+                    <tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>${complaint.description}</td>
+                        <td>${complaint.orderId}</td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
         </div>
         <div class="col-md-12 text-center">
-            <ul class="pagination pagination-lg pager" id="myPager"></ul>
+            <ul class="pagination" id="myPager"></ul>
         </div>
     </div>
 </div>

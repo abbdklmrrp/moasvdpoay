@@ -19,7 +19,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Complaints<i class="icon-angle-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="">My complaints</a></li>
-                        <li><a href="${pageContext.request.contextPath}/pmg/getAllComplaints">All complaints</a></li>
+                        <li><a href="${pageContext.request.contextPath}/pmg/allComplaints">All complaints</a></li>
                     </ul>
                 </li>
                 <li><a href="${pageContext.request.contextPath}/pmg/statistics">Statistics</a></li>
