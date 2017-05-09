@@ -15,6 +15,7 @@
 <div class="login-form">
     <h1>User PAGE</h1>
     <div class="form-group "><br>
+        <h2><a href="${contextPath}/user/getProfile">Profile</a></h2><br>
         <a href="<%=request.getContextPath()%>/user/orderService">OrderService</a><br>
         <a href="${contextPath}/user/getComplaint">Write Complaint</a><br>
         <a href="<%=request.getContextPath()%>/doLogout">Logout</a>

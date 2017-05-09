@@ -28,19 +28,16 @@ public class PersistenceConfig {
 
     @Bean(name = "dataSource")
     public DataSource dataSource() {
-/*        for glassfish connection pool
-        DataSource dataSource= null;
-        try {
-            dataSource = new OracleConnectionPoolDataSource();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            InitialContext initContext = new InitialContext();
-            dataSource = (DataSource) initContext.lookup("jdbc/ConnectionPool");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }*/
+//        for glassfish connection pool
+//        DataSource dataSource= null;
+//        try {
+//
+//            InitialContext initContext = new InitialContext();
+//            dataSource = (DataSource) initContext.lookup("jdbc/ConnectionPool");
+//        } catch (NamingException e) {
+//            e.printStackTrace();
+//        }
+//
 
         BasicDataSource dataSource = new BasicDataSource();
 //        DriverManagerDataSource dataSource = new DriverManagerDataSource();
