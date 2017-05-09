@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * @author Moiseienko Petro
@@ -37,7 +39,6 @@ public class EditProfileController {
 
     @RequestMapping(value = "/getProfile", method = RequestMethod.GET)
     public ModelAndView getProfile() {
-        System.out.println("hey");
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         ModelAndView model = new ModelAndView();
         model.addObject("user", user);
@@ -55,20 +56,25 @@ public class EditProfileController {
         return model;
     }
 
+    /**
+     *
+     * @Author Nikita Alistratenko
+     * @Author Moiseienko Petro
+     */
     @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
-    public String editProfile(User user) {
+    public String editProfile(User user, RedirectAttributes attributes) {
         User sessionUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        String urlBegin;
+        String urlBegin = roleMap.getOrDefault(sessionUser.getRole(), "user");
         String place = serviceGoogleMaps.getRegion(user.getAddress());
         Integer placeId = userDAO.findPlaceId(place);
         user.setPlaceId(placeId);
         user.setId(sessionUser.getId());
-        boolean success = userService.updateUser(user);
-        if (success) {
-            urlBegin = roleMap.getOrDefault(sessionUser.getRole(), "user");
-            return urlBegin + "/index";
+        if (userService.updateUser(user)) {
+            attributes.addFlashAttribute("msg", "User has been updated");
+        } else {
+            attributes.addFlashAttribute("msg", "User has not been updated");
         }
-        return "profile";
+        return "redirect:/" + urlBegin + "/getProfile";
     }
 
     @RequestMapping(value = "editUser", method = RequestMethod.POST)
