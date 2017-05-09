@@ -70,9 +70,9 @@ public class EditProfileController {
         user.setPlaceId(placeId);
         user.setId(sessionUser.getId());
         if (userService.updateUser(user)) {
-            attributes.addFlashAttribute("msg", "user has been updated");
+            attributes.addFlashAttribute("msg", "User has been updated");
         } else {
-            attributes.addFlashAttribute("msg", "user has not been updated");
+            attributes.addFlashAttribute("msg", "User has not been updated");
         }
         return "redirect:/" + urlBegin + "/getProfile";
     }
