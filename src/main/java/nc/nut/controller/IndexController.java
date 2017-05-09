@@ -30,10 +30,10 @@ public class IndexController {
             return "redirect:/admin/getProfile";
         }
         if (isPMG) {
-            return "redirect:/pmg/index";
+            return "redirect:/pmg/getProfile";
         }
         if (isCSR) {
-            return "redirect:/csr/index";
+            return "redirect:/csr/getProfile";
         } else {
             return "newPages/user/residential/Profile";
         }
