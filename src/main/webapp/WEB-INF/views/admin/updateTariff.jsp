@@ -39,7 +39,8 @@
 
         <div class="form-group ">
             <h6>Enter base price</h6>
-            <input type="text" class="form-control" placeholder="0" id="basePrice" name="basePrice" value="${product.basePrice}">
+            <input type="text" class="form-control" placeholder="0" id="basePrice" name="basePrice"
+                   value="${product.basePrice}">
             <i class="fa fa-user"></i>
         </div>
 
@@ -78,22 +79,25 @@
             <span style="float:right ; color: #10CE88;">${errors}</span>
         </c:if>
         <fieldset>
-            <h6>All services</h6>
-            <select name="allServices" id="select-from" multiple>
-                <c:forEach var="tariff" items="${servicesNotInTariff}">
-                    <option value="${tariff.id}">${tariff.name}</option>
+
+            <h6>All categories</h6>
+            <select name="categoriesID" id="categoriesID" multiple>
+                <c:forEach var="category" items="${allServices}">
+                    <option value="${category.categoryName}">${category.categoryName}</option>
                 </c:forEach>
             </select>
 
-            <a href="JavaScript:void(0);" id="btn-add">Add &raquo;</a>
-
             <h6>Selected services</h6>
-            <select name="selectto" id="select-to" multiple="multiple">
+            <select name="selectto" id="selectto" multiple="multiple">
+            </select>
+
+            <a href="JavaScript:void(0);" id="btn-add">Add&raquo;</a>
+            <h6>Selected services</h6>
+            <select name="selectedService" id="selectedService" multiple="multiple">
                 <c:forEach var="tariff" items="${servicesByTariff}">
                     <option value="${tariff.id}" selected>${tariff.name}</option>
                 </c:forEach>
             </select>
-
             <a href="JavaScript:void(0);" id="btn-remove">&laquo; Remove</a>
 
         </fieldset>
