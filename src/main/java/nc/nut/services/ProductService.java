@@ -7,13 +7,17 @@ import nc.nut.dao.price.PriceDao;
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductCategories;
 import nc.nut.dao.product.ProductDao;
-import nc.nut.dao.product.ProductType;
 import nc.nut.dao.user.Role;
 import nc.nut.dao.user.User;
 import nc.nut.dto.ProductCatalogRowDTO;
+import nc.nut.dto.TariffServiceDto;
+import nc.nut.util.ProductUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -28,6 +32,7 @@ public class ProductService {
     private ProductDao productDao;
     @Resource
     private PriceDao priceDao;
+    private static Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     /**
      * Rysakova Anna
@@ -37,7 +42,7 @@ public class ProductService {
      * @return
      */
     public Product getCategory(ProductCategories category, Product product) {
-        if (!category.getName().equals("")) {
+        if (!category.getCategoryName().isEmpty()) {
             productDao.addCategory(category);
             int newCategoryId = productDao.findIdCategory(category);
             product.setCategoryId(newCategoryId);
@@ -51,8 +56,8 @@ public class ProductService {
      * @param categories
      * @return
      */
-    public boolean checkEmptyNewCategory(ProductCategories categories) {
-        return !(!categories.getName().equals("") && categories.getDescription().equals(""));
+    public boolean isEmptyFieldsOfNewCategory(ProductCategories categories) {
+        return (categories.getCategoryName().isEmpty() ^ categories.getCategoryDescription().isEmpty());
     }
 
     /**
@@ -61,55 +66,27 @@ public class ProductService {
      * @param product
      * @return
      */
-    public boolean checkEmptyFieldIfProduct(Product product) {
-        return !(product.getName().equals("") || product.getDescription().equals(""));
+    public boolean isEmptyFieldOfProduct(Product product) {
+        return (product.getName().isEmpty() || product.getDescription().isEmpty() || (product.getBasePrice().compareTo(BigDecimal.ZERO) <= 0));
     }
 
     /**
      * Rysakova Anna
      *
-     * @param product
-     */
-    public void saveProduct(Product product) {
-        if (product.getProductType() == ProductType.Tariff) {
-            product.setCategoryId(null);
-            productDao.save(product);
-        }
-        if (product.getProductType() == ProductType.Service) {
-            productDao.save(product);
-        }
-    }
-
-    /**
-     * Rysakova Anna
-     *
-     * @param servicesId
-     * @param idTariff
-     */
-    public void fillTariff(String[] servicesId, int idTariff) {
-        for (String o : servicesId) {
-            productDao.fillTariff(idTariff, Integer.parseInt(o));
-        }
-    }
-
-    /**
-     * Rysakova Anna
-     *
-     * @param servicesId
+     * @param servicesIdArray
      * @return
      */
-    public boolean checkUniqueCategoryServices(String[] servicesId) {
+    public boolean isCategoriesUnique(Integer[] servicesIdArray) {
         List<Product> allServices = productDao.getAllServices();
         Set<Integer> serviceCategoryId = new HashSet<>();
-        for (String o : servicesId) {
-            for (Product p : allServices) {
-                System.out.println("p = " + p.getId() + " o " + o);
-                if (Integer.parseInt(o) == p.getId()) {
-                    serviceCategoryId.add(p.getCategoryId());
+        for (Integer serviceId : servicesIdArray) {
+            for (Product product : allServices) {
+                if (Objects.equals(serviceId, product.getId())) {
+                    serviceCategoryId.add(product.getCategoryId());
                 }
             }
         }
-        return servicesId.length == serviceCategoryId.size();
+        return servicesIdArray.length == serviceCategoryId.size();
     }
 
     /**
@@ -126,37 +103,42 @@ public class ProductService {
         }
         List newServicesId = Arrays.asList(servicesId);
         oldServiceIdList.removeAll(newServicesId);
-        removeServiceFromTariff(oldServiceIdList, product);
+//        productDao.deleteServiceFromTariff(product.getId(),oldServiceIdList.toArray());
+    }
+
+    private ArrayList<Integer> getIdServicesOfTariff(Product product) {
+        List<Product> serviceList = productDao.getServicesByTariff(product);
+        ArrayList<Integer> serviceIdList = new ArrayList<>();
+        for (Product product1 : serviceList) {
+            serviceIdList.add(product1.getId());
+        }
+        return serviceIdList;
+    }
+
+    public void fillInTariffWithServices(Integer idTariff, Integer[] arrayOfIdServices) {
+        ArrayList<TariffServiceDto> products = new ArrayList<>();
+        for (Integer idService : arrayOfIdServices) {
+            TariffServiceDto tariffServiceDto = new TariffServiceDto();
+            tariffServiceDto.setIdTariff(idTariff);
+            tariffServiceDto.setIdService(idService);
+            products.add(tariffServiceDto);
+        }
+        productDao.fillInTariffWithServices(products);
     }
 
     /**
      * Rysakova Anna
      *
-     * @param servicesId
+     * @param arrayOfIdServices
      * @param product
      */
-    public void updateTariffWithNewServices(String[] servicesId, Product product) {
-        List<Product> oldServiceList = productDao.getServicesByTariff(product);
-        ArrayList<Integer> oldServiceIdList = new ArrayList<>();
-        for (Product p : oldServiceList) {
-            oldServiceIdList.add(p.getId());
-        }
-        List newServicesId = Arrays.asList(servicesId);
-        newServicesId.removeAll(oldServiceIdList);
-        fillTariff(servicesId, product.getId());
+    // TODO: 07.05.2017
+    public void updateTariffWithNewServices(Integer[] arrayOfIdServices, Product product) {
+        ArrayList<Integer> oldServiceIdList = getIdServicesOfTariff(product);
+        ArrayList<Integer> newServiceIdList = ProductUtil.convertArrayToCollection(arrayOfIdServices);
 
-    }
+//        productDao.fillInTariffWithServices(product.getId(), arrayOfIdServices);
 
-    /**
-     * Rysakova Anna
-     *
-     * @param serviceIdList
-     * @param product
-     */
-    private void removeServiceFromTariff(List serviceIdList, Product product) {
-        for (Object o : serviceIdList) {
-            productDao.deleteServiceFromTariff(product.getId(), (Integer) o);
-        }
     }
 
     /**
@@ -214,7 +196,7 @@ public class ProductService {
         Map<String, List<ProductCatalogRowDTO>> categoriesWithProducts = new HashMap<>();
         List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTariff(user.getId());
         for (Product product : productWithoutStatuses) {
-            String categoryName = productDao.getProductCategoryById(product.getCategoryId()).getName();
+            String categoryName = productDao.getProductCategoryById(product.getCategoryId()).getCategoryName();
             if (!categoriesWithProducts.containsKey(categoryName)) {
                 categoriesWithProducts.put(categoryName, new ArrayList<>());
             }
