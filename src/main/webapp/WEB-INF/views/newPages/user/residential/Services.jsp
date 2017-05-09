@@ -15,7 +15,7 @@
             <h1 style="text-align: center">Services Catalog</h1>
             <c:choose>
             <c:when test="${not empty msg}">
-                <h3>${msg}</h3>
+                <h3 style="text-align: center">${msg}</h3>
             </c:when>
             <c:otherwise>
             <h3></h3>

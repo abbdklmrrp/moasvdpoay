@@ -12,10 +12,7 @@
     <div class="col-md-2"></div>
     <div class="col-md-8">
         <h1 style="text-align: center">Tariffs Catalog</h1>
-        <c:if test="${not empty currentTariff}">
-            <h4>Current tariff: ${currentTariff.name}</h4>
-        </c:if>
-
+        <br>
         <table border="1" class="table table-striped table-hover" id="tableServiceCatalog">
             <tr>
                 <th>Name</th>

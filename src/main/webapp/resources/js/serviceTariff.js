@@ -72,7 +72,7 @@
                 if (status == "success") {
                     swal("Success", "Tariff was deactivated!", "success");
                     var respContent = "";
-                    respContent += "<input type=\"button\" onclick=\"dactivateTariff(" + tariffId + ")\" value=\"Deactivate\" class=\"btn btn-success\">";
+                    respContent += "<input type=\"button\" onclick=\"dactivateTariff(" + tariffId + ")\" value=\"Activate\" class=\"btn btn-success\">";
                     $("#" + tariffId).html(respContent);
                 } else {
                     swal("Can`t deactivate", "Please try again later.");

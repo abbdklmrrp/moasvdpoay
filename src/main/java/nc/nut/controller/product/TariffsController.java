@@ -83,6 +83,7 @@ public class TariffsController {
     }
 
     @RequestMapping(value = {"residential/showServicesOfTariff", "business/showServicesOfTariff"}, method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    @ResponseBody
     public List<Product> showServicesOfTariff(@RequestParam Integer tariffId) {
         logger.debug("Method showServicesOfTariff param tariffId: {}", tariffId);
         List<Product> servicesOfTariff = productDao.getServicesOfTariff(tariffId);
