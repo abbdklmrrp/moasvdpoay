@@ -25,4 +25,9 @@ public interface UserDAO extends Dao<User> {
     User getUserById(Integer id);
 
     boolean update(User user);
+
+    Integer getCountUsersWithSearch(String search);
+
+    List<User> getLimitedQuantityUsers(int start, int length,String sort, String search);
+
 }

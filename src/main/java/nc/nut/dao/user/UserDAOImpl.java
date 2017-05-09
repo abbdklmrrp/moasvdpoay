@@ -1,6 +1,5 @@
 package nc.nut.dao.user;
 
-import nc.nut.mail.Mailer;
 import nc.nut.security.Md5PasswordEncoder;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -45,6 +44,28 @@ public class UserDAOImpl implements UserDAO {
             "SET NAME=:name, SURNAME=:surname, PHONE=:phone, ADDRESS=:address, PLACE_ID=:placeId " +
             "WHERE ID=:id";
     private final static String FIND_USER_BY_ID = "SELECT * FROM USERS WHERE ID=:id";
+    private final static String SELECT_LIMITED_USERS ="select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from USERS " +
+            " Where ENABLE=1 AND CUSTOMER_ID IS NOT NULL AND " +
+            " (name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern )" +
+            " "+
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
+
+    private static final String SELECT_COUNT="Select count(ID)\n" +
+            "  from Users " +
+            "WHERE ENABLE=1 AND CUSTOMER_ID IS NOT NULL AND " +
+            " ( name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern )";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -229,5 +250,24 @@ public class UserDAOImpl implements UserDAO {
         return jdbcTemplate.queryForObject(FIND_USER_BY_ID, params, new UserRowMapper());
     }
 
+    @Override
+    public Integer getCountUsersWithSearch(String search) {
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("pattern","%"+search+"%");
+        return jdbcTemplate.queryForObject(SELECT_COUNT,params,Integer.class);
+    }
 
+    @Override
+    public List<User> getLimitedQuantityUsers(int start, int length, String sort, String search) {
+        int rownum=start+length;
+        if(sort.isEmpty()){
+            sort="ID";
+        }
+        String sql=String.format(SELECT_LIMITED_USERS, sort);
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("start",start);
+        params.addValue("length",rownum);
+        params.addValue("pattern","%"+search+"%");
+        return jdbcTemplate.query(sql,params, new UserRowMapper());
+    }
 }
