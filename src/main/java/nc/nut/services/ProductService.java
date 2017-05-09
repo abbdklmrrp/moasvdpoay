@@ -149,10 +149,10 @@ public class ProductService {
     public void updateProduct(Product updateProduct) {
         int productId = updateProduct.getId();
         Product product = productDao.getById(productId);
-        if (!updateProduct.getName().equals("") & !updateProduct.getName().equals(product.getName())) {
+        if (!updateProduct.getName().isEmpty() & !updateProduct.getName().equals(product.getName())) {
             product.setName(updateProduct.getName());
         }
-        if (!updateProduct.getDescription().equals("") & !updateProduct.getDescription().equals(product.getDescription())) {
+        if (!updateProduct.getDescription().isEmpty() & !updateProduct.getDescription().equals(product.getDescription())) {
             product.setDescription(updateProduct.getDescription());
         }
         if (!Objects.equals(updateProduct.getDurationInDays(), product.getDurationInDays())) {
@@ -162,7 +162,7 @@ public class ProductService {
         if (updateProduct.getProcessingStrategy() != product.getProcessingStrategy()) {
             product.setProcessingStrategy(updateProduct.getProcessingStrategy());
         }
-        if (!Objects.equals(updateProduct.getStatus(), product.getStatus())) {
+        if (updateProduct.getStatus() != product.getStatus()) {
             product.setStatus(updateProduct.getStatus());
         }
         productDao.update(product);

@@ -457,7 +457,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("duration", product.getDurationInDays());
         params.addValue("needProcessing", product.getProcessingStrategy().getId());
         params.addValue("description", product.getDescription());
-        params.addValue("status", product.getStatus());
+        params.addValue("status", product.getStatus().getId());
         params.addValue("id", product.getId());
         int isUpdate = jdbcTemplate.update(UPDATE_SERVICE, params);
         return isUpdate > 0;

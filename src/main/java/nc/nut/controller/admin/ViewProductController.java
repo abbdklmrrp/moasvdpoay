@@ -32,24 +32,29 @@ public class ViewProductController {
                                           ModelAndView mav,
                                           HttpSession session) {
 
-        List<Product> productList = productDao.getAllProducts();
-        for (Product product : productList) {
+        Product foundProduct = productDao.getById(id);
+        logger.debug("Receive request param product id named 'id', value={} ", id);
 
-            if (product.getId() == id) {
-                session.setAttribute("productId", id);
-                mav.addObject("type_id", product.getProductType().getId());
+        if (foundProduct.getId() == id) {
+            logger.debug("Product found in database, id={} ", id);
+            session.setAttribute("productId", id);
+            mav.addObject("product", foundProduct);
+//                mav.addObject("type_id", product.getProductType().getId());
 
-                if (product.getProductType().equals(ProductType.Service)) {
-                    mav.addObject("category_id", product.getCategoryId());
-                    mav.setViewName("admin/updateService");
-                }
-                if (product.getProductType().equals(ProductType.Tariff)) {
-                    List<Product> servicesByTariff = productDao.getServicesByTariff(product);
-                    List<Product> servicesNotInTariff = productDao.getServicesNotInTariff(product);
-                    mav.addObject("servicesByTariff", servicesByTariff);
-                    mav.addObject("servicesNotInTariff", servicesNotInTariff);
-                    mav.setViewName("admin/updateTariff");
-                }
+            if (foundProduct.getProductType().equals(ProductType.Service)) {
+                logger.debug("Product type is {} ", foundProduct.getCategoryId());
+//                mav.addObject("category_id", foundProduct.getCategoryId());
+                mav.setViewName("admin/updateService");
+            }
+            if (foundProduct.getProductType().equals(ProductType.Tariff)) {
+                logger.debug("Product type is {} ", foundProduct.getCategoryId());
+                List<Product> servicesByTariff = productDao.getServicesByTariff(foundProduct);
+                logger.debug("Received services that are included in the tariff");
+                List<Product> servicesNotInTariff = productDao.getServicesNotInTariff(foundProduct);
+                logger.debug("Received services that are NOT included in the tariff");
+                mav.addObject("servicesByTariff", servicesByTariff);
+                mav.addObject("servicesNotInTariff", servicesNotInTariff);
+                mav.setViewName("admin/updateTariff");
             }
         }
         return mav;

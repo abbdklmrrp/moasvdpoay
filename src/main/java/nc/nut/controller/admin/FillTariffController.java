@@ -47,20 +47,16 @@ public class FillTariffController {
         return mav;
     }
 
-    // FIXME: 08.05.2017 all checks of parameter to one validate method
     @RequestMapping(value = {"fillTariff"}, method = RequestMethod.POST)
     public ModelAndView identifyTariff(@RequestParam(value = "tariffId") Integer tariffId,
                                        @RequestParam(value = "selectedService", required = false) String services,
                                        ModelAndView mav) {
-        if (Objects.equals(services, null)) {
-            mav.setViewName("admin/fillTariff");
-            return mav;
-        }
         Product tariff = productDao.getById(tariffId);
-        if (tariff == null) {
+        if (Objects.equals(services, null) || Objects.equals(tariff,null)) {
             mav.setViewName("admin/fillTariff");
             return mav;
         }
+
         Integer[] servicesIdArray = ProductUtil.convertStringToIntegerArray(services);
 
         boolean checkUniqueCategoryServices = productService.isCategoriesUnique(servicesIdArray);

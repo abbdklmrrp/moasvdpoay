@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  * Created by Anna on 30.04.2017.
@@ -28,20 +27,8 @@ public class UpdateProductController {
     private ProductService productService;
     private Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
 
-    @RequestMapping(value = {"updateTariff"}, method = RequestMethod.GET)
-    String getTariffForUpdate(Model model) {
-
-        List<Product> allServices = productDao.getAllServices();
-        List<Product> allTariffs = productDao.getAllTariffs();
-
-        model.addAttribute("allServices", allServices);
-        model.addAttribute("allTariffs", allTariffs);
-
-        return "admin/updateTariff";
-    }
-
     @RequestMapping(value = {"updateService"}, method = RequestMethod.POST)
-    String updateService(Product product, HttpSession session) {
+    public String updateService(Product product, HttpSession session) {
         Integer id = (Integer) session.getAttribute("productId");
         product.setId(id);
         productService.updateProduct(product);
@@ -50,7 +37,7 @@ public class UpdateProductController {
     }
 
     @RequestMapping(value = {"updateTariff"}, method = RequestMethod.POST)
-    String updateTariff(Product product,
+    public String updateTariff(Product product,
                         @RequestParam(value = "selectto") String services,
                         Model model, HttpSession session) {
 
