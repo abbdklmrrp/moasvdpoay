@@ -8,7 +8,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp"/>
-<div class="container" style="width:60%; max-width: 400px;">
+<div class="container">
     <jsp:include page="../includes/Profile.jsp"/>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
