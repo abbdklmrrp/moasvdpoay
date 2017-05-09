@@ -1,7 +1,9 @@
 package nc.nut.dao.product;
 
 import nc.nut.dao.interfaces.Dao;
+import nc.nut.dto.TariffServiceDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getAllFreeTariffs();
 
-    boolean fillTariff(int idTariff, int idService);
+    void fillInTariffWithServices(ArrayList<TariffServiceDto> tariffServiceDtos);
 
     boolean addCategory(ProductCategories categories);
 
@@ -40,6 +42,7 @@ public interface ProductDao extends Dao<Product> {
     /**
      * Method returns all services that are available in place.
      * created by Yuliya Pedash
+     *
      * @param placeId id of place
      * @return all available services
      */
@@ -47,6 +50,7 @@ public interface ProductDao extends Dao<Product> {
 
     /**
      * Gets category of admin by id
+     *
      * @param categoryId id of category
      * @return ProductCategory
      */
@@ -87,7 +91,7 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getServicesNotInTariff(Product product);
 
-    boolean deleteServiceFromTariff(int idTariff, int idService);
+    boolean deleteServiceFromTariff(int idTariff, Integer[] idServicesArray);
 
     boolean disableTariffByID(int id);
 
@@ -98,7 +102,7 @@ public interface ProductDao extends Dao<Product> {
     /**
      * Method update status of current tariff of user on Deactivate.
      *
-     * @param userId user id.
+     * @param userId   user id.
      * @param tariffId tariff id.
      * @return status of deactivation.
      */
@@ -124,7 +128,7 @@ public interface ProductDao extends Dao<Product> {
      * Method creates order for activation new tariff for user with id from params.
      * If user has already had tariff, old tariff will be deactivated.
      *
-     * @param userId id of user.
+     * @param userId   id of user.
      * @param tariffId id of tariff.
      * @return status of operation.
      */
@@ -138,5 +142,4 @@ public interface ProductDao extends Dao<Product> {
      * @return list of services.
      */
     public List<Product> getServicesOfTariff(Integer tariffId);
-
 }
