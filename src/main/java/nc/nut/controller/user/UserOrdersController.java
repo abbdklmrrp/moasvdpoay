@@ -5,6 +5,8 @@ import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
 import nc.nut.dto.OrdersRowDTO;
 import nc.nut.security.SecurityAuthenticationHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +20,7 @@ import java.util.List;
  * Created by Yuliya Pedash on 07.05.2017.
  */
 @Controller
-@RequestMapping({"user"})
+@RequestMapping({"","csr","user"})
 public class UserOrdersController {
     @Autowired
     OrderDao orderDao;
@@ -28,12 +30,24 @@ public class UserOrdersController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
 
-    @RequestMapping(value = {"orders"}, method = RequestMethod.GET)
-    public Model showOrdersForUser(Model model) {
+    private static Logger logger = LoggerFactory.getLogger(UserOrdersController.class);
+
+    @RequestMapping(value = {"residential/orders"}, method = RequestMethod.GET)
+    public String showOrdersForResidentialUser(Model model) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        logger.debug("Current user: {}", user.toString());
         List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsByUserId(user.getId());
         model.addAttribute("ordersRows", ordersRows);
-        return model;
+        return "newPages/user/residential/Orders";
+    }
+
+    @RequestMapping(value = {"business/orders"}, method = RequestMethod.GET)
+    public String showOrdersForBusinessUser(Model model) {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        logger.debug("Current user: {}", user.toString());
+        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsByUserId(user.getId());
+        model.addAttribute("ordersRows", ordersRows);
+        return "newPages/user/business/Orders";
     }
 
 }

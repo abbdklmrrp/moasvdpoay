@@ -12,8 +12,8 @@
         </div>
         <div class="collapse navbar-collapse ">
             <ul class="nav navbar-nav ">
-                <li><a href="">Profile</a></li>
-                <li><a href="">Orders</a></li>
+                <li><a href="<%=request.getContextPath()%>/user/residential/profile">Profile</a></li>
+                <li><a href="<%=request.getContextPath()%>/user/residential/orders">Orders</a></li>
                 <li><a href="<%=request.getContextPath()%>/user/residential/tariffs">Tariffs</a></li>
                 <li><a href="<%=request.getContextPath()%>/user/orderService">Services</a></li>
                 <li><a href="${contextPath}/user/getComplaint">Write to support</a></li>

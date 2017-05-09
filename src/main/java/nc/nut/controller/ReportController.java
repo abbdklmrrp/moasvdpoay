@@ -2,11 +2,14 @@ package nc.nut.controller;
 
 import nc.nut.dao.place.Place;
 import nc.nut.dao.place.PlaceDAO;
+import nc.nut.dao.user.User;
+import nc.nut.dao.user.UserDAO;
 import nc.nut.reports.ReportCreatingException;
 import nc.nut.reports.ReportData;
 import nc.nut.reports.ReportsService;
 import nc.nut.reports.excel.DocumentCreatingFailException;
 import nc.nut.reports.excel.ExcelReportCreator;
+import nc.nut.security.SecurityAuthenticationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,8 +34,12 @@ import java.util.List;
  * @author Revniuk Aleksandr
  */
 @Controller
-@RequestMapping(value = "report")
+@RequestMapping({"csr", "pmg"})
 public class ReportController {
+    @Resource
+    private SecurityAuthenticationHelper securityAuthenticationHelper;
+    @Resource
+    private UserDAO userDAO;
     @Autowired
     private PlaceDAO placeDAO;
     @Autowired
@@ -43,11 +51,12 @@ public class ReportController {
 
     private static Logger logger = LoggerFactory.getLogger(ReportController.class);
 
-    @RequestMapping
+    @RequestMapping(value = "/statistics")
     public String graph(Model model) {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         List<Place> regions = placeDAO.getAll();
         model.addAttribute("regions", regions);
-        return "report";
+        return "newPages/"+user.getRole().getName().toLowerCase()+"/Statistics";
     }
 
     @RequestMapping(value = "/data")

@@ -32,7 +32,7 @@ public class LoginController {
         if (currentUser != null) {
             return "redirect:index.htm";
         }
-        return "login";
+        return "newPages/Login";
     }
 
     @RequestMapping("/failure")
@@ -51,7 +51,7 @@ public class LoginController {
             } else {
                 model.addAttribute("error", "Error");
             }
-            return "login";
+            return "newPages/Login";
         } else {
             return "redirect:/login.htm";
         }

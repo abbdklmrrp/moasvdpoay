@@ -27,13 +27,13 @@ public class IndexController {
         boolean isPMG = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(Authority.PMG.getAuth()));
         boolean isCSR = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(Authority.CSR.getAuth()));
         if (isAdmin) {
-            return "redirect:/admin/index";
+            return "redirect:/admin/getProfile";
         }
         if (isPMG) {
-            return "redirect:/pmg/index";
+            return "redirect:/pmg/getProfile";
         }
         if (isCSR) {
-            return "redirect:/csr/index";
+            return "redirect:/csr/getProfile";
         } else {
             return "newPages/user/residential/Profile";
         }

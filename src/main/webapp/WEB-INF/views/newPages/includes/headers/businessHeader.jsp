@@ -13,12 +13,12 @@
         </div>
         <div class="collapse navbar-collapse ">
             <ul class="nav navbar-nav ">
-                <li><a href="">Profile</a></li>
-                <li><a href="">Orders</a></li>
+                <li><a href="<%=request.getContextPath()%>/user/business/profile">Profile</a></li>
+                <li><a href="<%=request.getContextPath()%>/user/business/orders">Orders</a></li>
                 <li><a href="<%=request.getContextPath()%>/user/business/tariffs">Tariffs</a></li>
                 <li><a href="<%=request.getContextPath()%>/user/orderService">Services</a></li>
                 <li><a href="${contextPath}/user/getComplaint">Write to support</a></li>
-                <li><a href="">Registration</a></li>
+                <li><a href="<%=request.getContextPath()%>/user/business/RegEmployee">Registration</a></li>
                 <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>
             </ul>
         </div>
