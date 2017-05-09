@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -216,23 +214,23 @@ public class ProductDaoImpl implements ProductDao {
             " base_price FROM Products " +
             " WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariffId)";
 
-    private final static String SELECT_LIMITED_PRODUCTS="select *\n" +
+    private final static String SELECT_LIMITED_PRODUCTS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from PRODUCTS " +
             " Where name like :pattern " +
             " OR description like :pattern " +
             " OR duration like :pattern " +
-            " OR base_price like :pattern "+
+            " OR base_price like :pattern " +
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
 
-    private static final String SELECT_COUNT="Select count(ID)\n" +
-            "  from PRODUCTS" +
-            " WHERE name like :pattern " +
-            " OR description like :pattern " +
-            " OR duration like :pattern " +
-            " OR base_price like :pattern ";
+    private static final String SELECT_COUNT = "SELECT count(ID)\n" +
+            "  FROM PRODUCTS" +
+            " WHERE name LIKE :pattern " +
+            " OR description LIKE :pattern " +
+            " OR duration LIKE :pattern " +
+            " OR base_price LIKE :pattern ";
 
     @Autowired
     @Qualifier("dataSource")
@@ -646,38 +644,43 @@ public class ProductDaoImpl implements ProductDao {
         return productList;
     }
 
-    /**
-     * Rysakova Anna
-     *
-     * @param product
-     * @return
-     */
-    @Override
-    public List<Product> getServicesNotInTariff(Product product) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("tariffId", product.getId());
-        List<Product> productList = jdbcTemplate.query(FIND_SERVICES_NOT_IN_TARIFF, params, (rs, rowNum) -> {
-            Product productTmp = new Product();
-            productTmp.setId(rs.getInt("ID"));
-            productTmp.setName(rs.getString("NAME"));
-            productTmp.setStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")));
-            productTmp.setCategoryId(rs.getInt("CATEGORY_ID"));
-            return productTmp;
-        });
-        return productList;
-    }
+//    /**
+//     * Rysakova Anna
+//     *
+//     * @param product
+//     * @return
+//     */
+//    @Override
+//    public List<Product> getServicesNotInTariff(Product product) {
+//        MapSqlParameterSource params = new MapSqlParameterSource();
+//        params.addValue("tariffId", product.getId());
+//        List<Product> productList = jdbcTemplate.query(FIND_SERVICES_NOT_IN_TARIFF, params, (rs, rowNum) -> {
+//            Product productTmp = new Product();
+//            productTmp.setId(rs.getInt("ID"));
+//            productTmp.setName(rs.getString("NAME"));
+//            productTmp.setStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")));
+//            productTmp.setCategoryId(rs.getInt("CATEGORY_ID"));
+//            return productTmp;
+//        });
+//        return productList;
+//    }
 
     /**
      * Rysakova Anna
      *
-     * @param idTariff
+     * @param
      * @return
      */
     @Override
-    public boolean deleteServiceFromTariff(int idTariff, Integer[] idServicesArray) {
-        SqlParameterSource[] params = SqlParameterSourceUtils.createBatch(idServicesArray);
-        int[] batchUpdate = jdbcTemplate.batchUpdate(ADD_TARIFF_SERVICE, params);
-        return batchUpdate.length != 0;
+    public void deleteServiceFromTariff(ArrayList<TariffServiceDto> tariffServiceDtos) {
+        List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDtos.size());
+        for (TariffServiceDto person : tariffServiceDtos) {
+            batchValues.add(
+                    new MapSqlParameterSource("idTariff", person.getIdTariff())
+                            .addValue("idService", person.getIdService())
+                            .getValues());
+        }
+        jdbcTemplate.batchUpdate(DELETE_SERVICE_FROM_TARIFF, batchValues.toArray(new Map[tariffServiceDtos.size()]));
     }
 
     /**
@@ -736,24 +739,24 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getLimitedQuantityProduct(int start, int length,String sort,String search) {
-        int rownum=start+length;
-        if(sort.isEmpty()){
-            sort="ID";
+    public List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search) {
+        int rownum = start + length;
+        if (sort.isEmpty()) {
+            sort = "ID";
         }
-        String sql=String.format(SELECT_LIMITED_PRODUCTS, sort);
-        MapSqlParameterSource params=new MapSqlParameterSource();
-        params.addValue("start",start);
-        params.addValue("length",rownum);
-        params.addValue("pattern","%"+search+"%");
-        List<Product> products=jdbcTemplate.query(sql,params, new ProductRowMapper());
+        String sql = String.format(SELECT_LIMITED_PRODUCTS, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("length", rownum);
+        params.addValue("pattern", "%" + search + "%");
+        List<Product> products = jdbcTemplate.query(sql, params, new ProductRowMapper());
         return products;
     }
 
     @Override
     public Integer getCountProductsWithSearch(String search) {
-        MapSqlParameterSource params=new MapSqlParameterSource();
-        params.addValue("pattern","%"+search+"%");
-        return jdbcTemplate.queryForObject(SELECT_COUNT,params,Integer.class);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
     }
 }

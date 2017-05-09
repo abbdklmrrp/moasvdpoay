@@ -89,9 +89,9 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getServicesByTariff(Product product);
 
-    List<Product> getServicesNotInTariff(Product product);
+//    List<Product> getServicesNotInTariff(Product product);
 
-    boolean deleteServiceFromTariff(int idTariff, Integer[] idServicesArray);
+    void deleteServiceFromTariff(ArrayList<TariffServiceDto> tariffServiceDtos);
 
     boolean disableProductByID(int id);
 
