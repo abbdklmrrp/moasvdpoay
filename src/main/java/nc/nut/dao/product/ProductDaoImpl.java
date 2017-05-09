@@ -43,16 +43,11 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_ALL_PRODUCTS = "SELECT ID, TYPE_ID, NAME, DURATION, DESCRIPTION, BASE_PRICE, STATUS FROM PRODUCTS ORDER BY ID";
 
     private final static String FIND_SERVICES_BY_TARIFF = "SELECT " +
-            "p.ID," +
-            "p.CATEGORY_ID," +
-            "p.NAME," +
-            "p.DURATION," +
-            "p.NEED_PROCESSING," +
-            "p.BASE_PRICE," +
-            "p.DESCRIPTION," +
-            "p.STATUS " +
-            "FROM PRODUCTS p " +
-            "JOIN TARIFF_SERVICES ts ON (p.ID=ts.SERVICE_ID) " +
+            "p.ID,\n" +
+            "p.CATEGORY_ID,\n" +
+            "p.NAME\n" +
+            "FROM PRODUCTS p\n" +
+            "JOIN TARIFF_SERVICES ts ON (p.ID=ts.SERVICE_ID)\n " +
             "WHERE ts.TARIFF_ID=:tariffId";
 
     private final static String FIND_ALL_SERVICES = "SELECT prod.ID, prod.NAME, prod.DESCRIPTION,prod.DURATION,prod.NEED_PROCESSING,\n" +
@@ -65,10 +60,6 @@ public class ProductDaoImpl implements ProductDao {
             "  p.ID,\n" +
             "  p.CATEGORY_ID,\n" +
             "  p.NAME,\n" +
-            "  p.BASE_PRICE,\n" +
-            "  p.DURATION,\n" +
-            "  p.NEED_PROCESSING,\n" +
-            "  p.DESCRIPTION,\n" +
             "  p.STATUS\n" +
             "FROM PRODUCTS p\n" +
             "WHERE p.ID NOT IN (SELECT ts.SERVICE_ID\n" +
@@ -648,14 +639,8 @@ public class ProductDaoImpl implements ProductDao {
         List<Product> productList = jdbcTemplate.query(FIND_SERVICES_BY_TARIFF, params, (rs, rowNum) -> {
             Product productTmp = new Product();
             productTmp.setId(rs.getInt("ID"));
-            productTmp.setDurationInDays(rs.getInt("DURATION"));
             productTmp.setName(rs.getString("NAME"));
-            productTmp.setDescription(rs.getString("DESCRIPTION"));
-            productTmp.setBasePrice(rs.getBigDecimal("BASE_PRICE"));
-            productTmp.setStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")));
             productTmp.setCategoryId(rs.getInt("CATEGORY_ID"));
-            Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
-            productTmp.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
             return productTmp;
         });
         return productList;
@@ -674,14 +659,9 @@ public class ProductDaoImpl implements ProductDao {
         List<Product> productList = jdbcTemplate.query(FIND_SERVICES_NOT_IN_TARIFF, params, (rs, rowNum) -> {
             Product productTmp = new Product();
             productTmp.setId(rs.getInt("ID"));
-            productTmp.setDurationInDays(rs.getInt("DURATION"));
             productTmp.setName(rs.getString("NAME"));
-            productTmp.setDescription(rs.getString("DESCRIPTION"));
-            productTmp.setBasePrice(rs.getBigDecimal("BASE_PRICE"));
             productTmp.setStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")));
             productTmp.setCategoryId(rs.getInt("CATEGORY_ID"));
-            Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
-            productTmp.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
             return productTmp;
         });
         return productList;
