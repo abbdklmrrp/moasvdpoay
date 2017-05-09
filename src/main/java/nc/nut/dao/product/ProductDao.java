@@ -142,4 +142,8 @@ public interface ProductDao extends Dao<Product> {
      * @return list of services.
      */
     public List<Product> getServicesOfTariff(Integer tariffId);
+
+    Integer getCountProductsWithSearch(String search);
+
+    List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search);
 }

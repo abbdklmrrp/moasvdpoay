@@ -48,6 +48,7 @@ public class ProductDaoImpl implements ProductDao {
             "p.NAME," +
             "p.DURATION," +
             "p.NEED_PROCESSING," +
+            "p.BASE_PRICE," +
             "p.DESCRIPTION," +
             "p.STATUS " +
             "FROM PRODUCTS p " +
@@ -60,11 +61,19 @@ public class ProductDaoImpl implements ProductDao {
             "JOIN PRODUCT_CATEGORIES pCategories ON (prod.CATEGORY_ID=pCategories.ID)\n" +
             "WHERE prod.STATUS=1 AND pTypes.name='Service' AND pCategories.name=:categoryName";
 
-    private final static String FIND_SERVICES_NOT_IN_TARIFF = "SELECT p.ID,p.CATEGORY_ID,p.NAME,p.BASE_PRICE,p.DURATION,p.NEED_PROCESSING,p.DESCRIPTION,p.STATUS " +
-            "FROM PRODUCTS p" +
-            " WHERE p.ID NOT IN " +
-            "                  (SELECT ts.SERVICE_ID FROM TARIFF_SERVICES ts  " +
-            "                  WHERE ts.TARIFF_ID=:tariffId) AND p.TYPE_ID=2";
+    private final static String FIND_SERVICES_NOT_IN_TARIFF = "SELECT\n" +
+            "  p.ID,\n" +
+            "  p.CATEGORY_ID,\n" +
+            "  p.NAME,\n" +
+            "  p.BASE_PRICE,\n" +
+            "  p.DURATION,\n" +
+            "  p.NEED_PROCESSING,\n" +
+            "  p.DESCRIPTION,\n" +
+            "  p.STATUS\n" +
+            "FROM PRODUCTS p\n" +
+            "WHERE p.ID NOT IN (SELECT ts.SERVICE_ID\n" +
+            "                   FROM TARIFF_SERVICES ts\n" +
+            "                   WHERE ts.TARIFF_ID = :tariffId) AND p.TYPE_ID = 2";
 
     private final static String FIND_ALL_SERVICES_WITH_CATEGORY = "SELECT " +
             "prod.ID, " +
@@ -215,6 +224,24 @@ public class ProductDaoImpl implements ProductDao {
             " status," +
             " base_price FROM Products " +
             " WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariffId)";
+
+    private final static String SELECT_LIMITED_PRODUCTS="select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from PRODUCTS " +
+            " Where name like :pattern " +
+            " OR description like :pattern " +
+            " OR duration like :pattern " +
+            " OR base_price like :pattern "+
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
+
+    private static final String SELECT_COUNT="Select count(ID)\n" +
+            "  from PRODUCTS" +
+            " WHERE name like :pattern " +
+            " OR description like :pattern " +
+            " OR duration like :pattern " +
+            " OR base_price like :pattern ";
 
     @Autowired
     @Qualifier("dataSource")
@@ -619,18 +646,17 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("tariffId", product.getId());
         List<Product> productList = jdbcTemplate.query(FIND_SERVICES_BY_TARIFF, params, (rs, rowNum) -> {
-            Product p = new Product();
-            p.setId(rs.getInt("ID"));
-            p.setProductType(ProductType.Service);
-            p.setCategoryId(rs.getInt("CATEGORY_ID"));
-            p.setDurationInDays(rs.getInt("DURATION"));
-            p.setName(rs.getString("NAME"));
-            p.setDescription(rs.getString("DESCRIPTION"));
+            Product productTmp = new Product();
+            productTmp.setId(rs.getInt("ID"));
+            productTmp.setDurationInDays(rs.getInt("DURATION"));
+            productTmp.setName(rs.getString("NAME"));
+            productTmp.setDescription(rs.getString("DESCRIPTION"));
+            productTmp.setBasePrice(rs.getBigDecimal("BASE_PRICE"));
+            productTmp.setStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")));
+            productTmp.setCategoryId(rs.getInt("CATEGORY_ID"));
             Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
-            p.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
-            Integer statusId = rs.getInt("STATUS");
-            p.setStatus(ProductStatus.getProductStatusFromId(statusId));
-            return p;
+            productTmp.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
+            return productTmp;
         });
         return productList;
     }
@@ -645,7 +671,20 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> getServicesNotInTariff(Product product) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("tariffId", product.getId());
-        return jdbcTemplate.query(FIND_SERVICES_NOT_IN_TARIFF, params, productRowMapper);
+        List<Product> productList = jdbcTemplate.query(FIND_SERVICES_NOT_IN_TARIFF, params, (rs, rowNum) -> {
+            Product productTmp = new Product();
+            productTmp.setId(rs.getInt("ID"));
+            productTmp.setDurationInDays(rs.getInt("DURATION"));
+            productTmp.setName(rs.getString("NAME"));
+            productTmp.setDescription(rs.getString("DESCRIPTION"));
+            productTmp.setBasePrice(rs.getBigDecimal("BASE_PRICE"));
+            productTmp.setStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")));
+            productTmp.setCategoryId(rs.getInt("CATEGORY_ID"));
+            Integer processingStrategyId = rs.getInt("NEED_PROCESSING");
+            productTmp.setProcessingStrategy(ProcessingStrategy.getProcessingStrategyFromId(processingStrategyId));
+            return productTmp;
+        });
+        return productList;
     }
 
     /**
@@ -710,5 +749,27 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", userId);
         return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL, params, new ProductRowMapper());
+    }
+
+    @Override
+    public List<Product> getLimitedQuantityProduct(int start, int length,String sort,String search) {
+        int rownum=start+length;
+        if(sort.isEmpty()){
+            sort="ID";
+        }
+        String sql=String.format(SELECT_LIMITED_PRODUCTS, sort);
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("start",start);
+        params.addValue("length",rownum);
+        params.addValue("pattern","%"+search+"%");
+        List<Product> products=jdbcTemplate.query(sql,params, new ProductRowMapper());
+        return products;
+    }
+
+    @Override
+    public Integer getCountProductsWithSearch(String search) {
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("pattern","%"+search+"%");
+        return jdbcTemplate.queryForObject(SELECT_COUNT,params,Integer.class);
     }
 }

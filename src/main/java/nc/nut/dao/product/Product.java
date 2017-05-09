@@ -1,5 +1,6 @@
 package nc.nut.dao.product;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nc.nut.dao.entity.CustomerType;
 
 import java.math.BigDecimal;
@@ -11,12 +12,15 @@ import java.util.Objects;
 public class Product {
     private Integer id;
     private Integer categoryId;
+    @JsonProperty("duration")
     private Integer durationInDays;
+    @JsonProperty("type_id")
     private ProductType productType;
     private ProcessingStrategy processingStrategy;
     private String name;
     private String description;
     private ProductStatus status;
+    @JsonProperty("base_price")
     private BigDecimal basePrice;
     private CustomerType customerType;
 
