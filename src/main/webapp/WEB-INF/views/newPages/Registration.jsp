@@ -7,8 +7,11 @@
 </head>
 <%-- action="${pageContext.request.contextPath}/userRegistration" modelAttribute="user" method="post"--%>
 <body>
-    <jsp:include page="includes/headers/emptyHeader.jsp"/>
-    <jsp:include page="includes/registrationForm.jsp"/>
-    <jsp:include page="includes/footer.jsp"/>
+<jsp:include page="includes/headers/emptyHeader.jsp">
+    <jsp:param name="text" value="About"/>
+    <jsp:param name="link" value="about"/>
+</jsp:include>
+<jsp:include page="includes/registrationForm.jsp"/>
+<jsp:include page="includes/footer.jsp"/>
 </body>
 </html>
