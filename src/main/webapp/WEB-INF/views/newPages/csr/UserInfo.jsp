@@ -86,21 +86,21 @@
     </div>
 </div>
 
-        <form action="${contextPath}/csr/userTariffs" method="post">
-            <button type="submit" class="log-btn">Tariffs</button>
-        </form>
-        <form action="${contextPath}/csr/userServices" method="post">
-            <button type="submit" class="log-btn">Services</button>
-        </form>
+        <%--<form action="${contextPath}/csr/userTariffs" method="post">--%>
+            <%--<button type="submit" class="log-btn">Tariffs</button>--%>
+        <%--</form>--%>
+        <%--<form action="${contextPath}/csr/userServices" method="post">--%>
+            <%--<button type="submit" class="log-btn">Services</button>--%>
+        <%--</form>--%>
         <form action="${contextPath}/csr/userOrders" method="post">
             <button type="submit" class="log-btn">Orders</button>
         </form>
         <form action="${contextPath}/csr/writeComplaint" method="get">
             <button type="submit" class="log-btn">Write complain</button>
         </form>
-        <form action="${conextPath}/csr/sendPassword" method="post">
-            <button type="submit" class="log-btn">Send password</button>
-        </form>
+        <%--<form action="${conextPath}/csr/sendPassword" method="post">--%>
+            <%--<button type="submit" class="log-btn">Send password</button>--%>
+        <%--</form>--%>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
