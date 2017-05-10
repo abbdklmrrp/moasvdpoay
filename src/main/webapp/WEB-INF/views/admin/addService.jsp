@@ -25,11 +25,8 @@
     <div class="login-form">
         <h1>ENTER NEW SERVICE</h1><br>
 
-        <c:if test="${not empty errorExistCategory}">
-            <span style="float:right ; color: #10CE88;">${errorExistCategory}</span>
-        </c:if>
-        <c:if test="${not empty errorEmptyFields}">
-            <span style="float:right ; color: #10CE88;">${errorEmptyFields}</span>
+        <c:if test="${not empty errorService}">
+            <span style="float:right ; color: #10CE88;">${errorService}</span>
         </c:if>
 
         <div id='categoryId'>

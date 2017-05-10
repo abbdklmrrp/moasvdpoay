@@ -36,12 +36,13 @@ public class UpdateProductController {
 
     private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
     private static final String ERROR_UNEXPECTED = "Unexpected error";
-    private static final String ERROR_IN_CONNECTION = "Error with connection to db";
+    private static final String ERROR_IN_CONNECTION = "Error with filling database";
 
     private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
 
     @RequestMapping(value = {"updateService"}, method = RequestMethod.POST)
-    public String updateService(Product product, HttpSession session) {
+    public ModelAndView updateService(ModelAndView mav,
+                                      Product product, HttpSession session) {
 
         Integer id = (Integer) session.getAttribute("productId");
         logger.debug("Receive service's id {} ", id);
@@ -51,8 +52,8 @@ public class UpdateProductController {
         logger.debug("Service was update {} ", isUpdate);
         session.removeAttribute("productId");
         logger.debug("Attribute 'productId' was removed from session");
-
-        return "redirect:/admin/index";
+        mav.setViewName("redirect:/admin/getProfile");
+        return mav;
     }
 
     @RequestMapping(value = {"updateTariff"}, method = RequestMethod.POST)
@@ -91,7 +92,7 @@ public class UpdateProductController {
 
         session.removeAttribute("productId");
         logger.debug("Attribute 'productId' was removed from session");
-        mav.setViewName("redirect:/admin/index");
+        mav.setViewName("redirect:/admin/getProfile");
         return mav;
     }
 
