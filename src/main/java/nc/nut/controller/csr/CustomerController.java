@@ -4,6 +4,10 @@ package nc.nut.controller.csr;
 import nc.nut.dao.customer.Customer;
 import nc.nut.dao.customer.CustomerDAO;
 import nc.nut.dao.entity.CustomerType;
+import nc.nut.dao.user.Role;
+import nc.nut.dao.user.User;
+import nc.nut.dao.user.UserDAO;
+import nc.nut.security.SecurityAuthenticationHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,23 +26,40 @@ public class CustomerController {
 
     @Resource
     private CustomerDAO customerDAO;
+    @Resource
+    private SecurityAuthenticationHelper securityAuthenticationHelper;
+    @Resource
+    private UserDAO userDAO;
 
     @RequestMapping(value = {"getCreateCustomer"}, method = RequestMethod.GET)
     public ModelAndView getCreateCustomer() {
-        ModelAndView modelAndView=new ModelAndView("csr/createCustomer");//add admin page if admin
+        ModelAndView modelAndView=new ModelAndView();
+        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        if(user.getRole().equals(Role.Admin)){
+          modelAndView.setViewName("newPages/admin/RegNewCustomer");
+        }else{
+            modelAndView.setViewName("newPages/csr/RegNewCustomer");
+        }
         modelAndView.addObject("customer",new Customer());
 
         return modelAndView;
     }
 
     @RequestMapping(value = {"createCustomer"}, method = RequestMethod.POST)
-    public String createCustomer(Customer customer) {
+    public ModelAndView createCustomer(Customer customer) {
+        ModelAndView modelAndView=new ModelAndView();
+        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        if(user.getRole().equals(Role.Admin)){
+            modelAndView.setViewName("newPages/csr/createCustomer");
+        }else{
+            modelAndView.setViewName("newPages/admin/createCustomer");
+        }
         customer.setCustomerType(CustomerType.Business);
         boolean success = customerDAO.save(customer);
-        if (success) {
-            return "csr/index";
+        if(!success){
+            modelAndView.setViewName("newPages/includes/error");
         }
-        return "csr/createCustomer";
+       return modelAndView;
     }
 
 

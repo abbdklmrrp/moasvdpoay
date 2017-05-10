@@ -3,7 +3,7 @@
     <div class="col-md-4">
         <div class="col-md-1"></div>
         <div class="col-md-10">
-            <form action="${pageContext.request.contextPath}/userRegistration" modelAttribute="user" method="post">
+            <form action="${pageContext.request.contextPath}/signUp" modelAttribute="user" method="post">
                 <div class="login-form">
                     <h1 style="text-align: center">Registration</h1>
                     <br>

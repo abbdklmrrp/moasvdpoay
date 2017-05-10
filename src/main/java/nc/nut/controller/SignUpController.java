@@ -3,6 +3,7 @@ package nc.nut.controller;
 
 import nc.nut.dao.customer.Customer;
 import nc.nut.dao.customer.CustomerDAO;
+import nc.nut.dao.entity.CustomerType;
 import nc.nut.dao.user.Role;
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
@@ -42,7 +43,7 @@ public class SignUpController {
 
     @RequestMapping(value = "registrationFromCsr", method = RequestMethod.GET)
     public ModelAndView registrationFromCsr() {
-        ModelAndView model = new ModelAndView("csr/signUp");
+        ModelAndView model = new ModelAndView("newPages/csr/RegNewUser");
         List<String> customersName = customerDAO.getAllBusinessCustomersName();
         model.addObject("customersName", customersName);
         model.addObject("user", new User());
@@ -77,9 +78,9 @@ public class SignUpController {
         user.setRole(Role.getRoleByName(userType));
         boolean success = userService.saveWithGeneratePassword(user);
         if (!success) {
-            return "admin/createCoworker";
+            return "newPages/admin/RegNewUser";
         } else {
-            return "admin/index";
+            return "newPages/includes/error";
         }
     }
 
@@ -89,8 +90,11 @@ public class SignUpController {
                              @RequestParam(value = "companyName") String companyName,
                              @RequestParam(value = "secretKey") String secretKey) {
         user = setCustomerId(user, companyName, secretKey, userType);
+        if(user==null){
+            return "newPages/includes/error";
+        }
         boolean success = userService.saveWithGeneratePassword(user);
-        return success ? "csr/index" : "csr/signUp";
+        return success ? "newPages/csr/RegNewUser" : "newPages/includes/error";
 
     }
 
@@ -99,7 +103,10 @@ public class SignUpController {
         Integer customerId;
         if (Role.Individual.equals(user.getRole())) {
             Customer customer = new Customer(user.getEmail(), user.getPassword());
-            customerDAO.save(customer);
+            boolean success=customerDAO.save(customer);
+            if(!success){
+                return null;
+            }
             customerId = customerDAO.getCustomerId(user.getEmail(), user.getPassword());
         } else {
             customerId = customerDAO.getCustomerId(companyName, secretKey);
@@ -110,16 +117,23 @@ public class SignUpController {
 
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public String signUp(User user,
-                         @RequestParam(value = "userType") String userType,
-                         @RequestParam(value = "companyName") String companyName,
-                         @RequestParam(value = "secretKey") String secretKey) {
-        user = setCustomerId(user, companyName, secretKey, userType);
-        boolean success = userService.save(user);
-        if (!success) {
-            return "signUp";
+    public String signUp(User user) {
+        Integer customerId;
+        Customer customer = new Customer(user.getEmail(), user.getPassword());
+        customer.setCustomerType(CustomerType.Residential);
+        boolean successCustomer = customerDAO.save(customer);
+        if (!successCustomer) {
+            return "newPages/includes/error";
         } else {
-            return "login";
+            customerId = customerDAO.getCustomerId(user.getEmail(), user.getPassword());
+            user.setCustomerId(customerId);
+            user.setRole(Role.Individual);
+            boolean success = userService.save(user);
+            if (!success) {
+                return "newPages/includes/error";
+            } else {
+                return "newPages/Login";
+            }
         }
     }
 }
