@@ -56,7 +56,7 @@ public class FillTariffController {
 
     @RequestMapping(value = {"fillTariff"}, method = RequestMethod.POST)
     public ModelAndView identifyTariff(@RequestParam(value = "tariffId") Integer tariffId,
-                                       @RequestParam(value = "selectedService", required = false) String services,
+                                       @RequestParam(value = "selectedService") String services,
                                        ModelAndView mav) {
 
         Product tariff = productDao.getById(tariffId);
@@ -91,7 +91,7 @@ public class FillTariffController {
             mav.setViewName("admin/fillTariff");
             return mav;
         }
-        mav.setViewName("admin/index");
+        mav.setViewName("redirect:/admin/getProfile");
         return mav;
     }
 
