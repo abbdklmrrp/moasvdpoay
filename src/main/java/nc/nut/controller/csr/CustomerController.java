@@ -24,12 +24,14 @@ import javax.annotation.Resource;
 @RequestMapping({"csr","admin"})
 public class CustomerController {
 
+    
     @Resource
     private CustomerDAO customerDAO;
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
     private UserDAO userDAO;
+
 
     @RequestMapping(value = {"getCreateCustomer"}, method = RequestMethod.GET)
     public ModelAndView getCreateCustomer() {
