@@ -15,7 +15,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Products<i class="icon-angle-down"></i></a>
                     <ul class="dropdown-menu">
-                        <li><a href="${pageContext.request.contextPath}/admin/getAllProducts">All products</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/getProducts">All products</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/addTariff">New tariff</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/addService">New service</a></li>
                     </ul>

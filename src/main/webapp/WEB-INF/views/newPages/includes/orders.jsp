@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <h1 style="text-align: center">Orders</h1>
             <br>
-            <table border="1" class="table table-striped table-hover" id="tableServiceCatalog">
+            <table border="1" class="table table-striped table-hover">
                 <tr>
                     <td>Name</td>
                     <td>Type</td>
@@ -24,12 +24,14 @@
                         <td>${orderRow.operationStatus.name}</td>
                         <c:choose>
                             <c:when test="${orderRow.operationStatus.name == 'Active'}">
-                                <td><input type="button" class="btn btn-warning"
-                                           onclick="suspendOrder(${orderRow.productId})" value="Suspend"></td>
+                                <td id="action(${orderRow.orderId})">
+                                    <input type="button" class="btn btn-warning toggle-form-btn"
+                                           onclick="toggleFormFunc(${orderRow.orderId})" value="Suspend"></td>
                             </c:when>
                             <c:when test="${orderRow.operationStatus.name == 'Suspended'}">
                                 <td><input type="button" class="btn btn-success"
-                                           onclick="activateOrderAfterSuspend(${orderRow.productId})" value="Suspend"></td>
+                                           onclick="activateOrderAfterSuspend(${orderRow.orderId})" value="Activate">
+                                </td>
                             </c:when>
                             <c:otherwise>
                                 <td>-</td>
@@ -38,7 +40,28 @@
                     </tr>
                 </c:forEach>
             </table>
+
         </div>
         <div class="col-md-2"></div>
     </div>
+    <div class="row">
+        <form id="formWithDates" class="form-horizontal">
+            <br/>
+            <label class="control-label">Date Begin:
+                <input id="beginDate" name="beginDate" type="date"/>
+            </label>
+            <br/>
+            <label class="control-label">Date End:
+                <input id="endDate" name="endDate" type="date"/>
+            </label>
+            <input type="hidden" id="orderId" name="orderId">
+            <input type="submit" class="btn btn-warning suspendButton"
+                   value="Suspend">
+            <%--<input type="button" class="btn btn-warning suspendButton"--%>
+            <%--onclick="suspendOrder()" value="Suspend">--%>
+            <br/>
+        </form>
+    </div>
 </div>
+<link href="<c:url value="/resources/css/sweet-alert.css"/>" rel="stylesheet">
+<script type="text/javascript" src="<c:url value="${contextPath}/resources/js/sweet-alert.min.js"/>"></script>

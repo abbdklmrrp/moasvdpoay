@@ -3,6 +3,7 @@ package nc.nut.dao.complaint;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -16,6 +17,8 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     private final static String GET_ALL_BY_PMG_ID_SQL = "SELECT * FROM COMPLAINTS WHERE PMG_ID = :pmgId";
     private final static String GET_ALL_BY_ORDER_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ORDER_ID = :orderId";
     private final static String GET_ALL_BY_STATUS_ID_SQL = "SELECT * FROM COMPLAINTS WHERE STATUS_ID = :statusId";
+    private final static String SET_PMG_ID_SQL = "UPDATE COMPLAINTS SET PMG_ID = :pmgId, STATUS_ID = 2/* in processing */ WHERE ID = :id";
+    private final static String GET_ALL_WITH_PMG_ID_IS_NULL_SQL = "SELECT * FROM COMPLAINTS WHERE PMG_ID is NULL";
     private final static String GET_BY_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ID = :id";
     private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints(ORDER_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
             "VALUES(:orderId,:creatingDate,:statusId,:description)";
@@ -95,6 +98,11 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     }
 
     @Override
+    public List<Complaint> getAllWithoutPMGId() {
+        return jdbcTemplate.query(GET_ALL_WITH_PMG_ID_IS_NULL_SQL, complaintRowMapper);
+    }
+
+    @Override
     public List<Complaint> getByPlaceId(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("placeId", id);
@@ -106,6 +114,15 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("statusId", id);
         return jdbcTemplate.query(GET_ALL_BY_STATUS_ID_SQL, params, complaintRowMapper);
+    }
+
+    @Override
+    @Transactional
+    public boolean setPMGId(int complaintId, int pmgId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pmgId", pmgId);
+        params.addValue("id", complaintId);
+        return jdbcTemplate.update(SET_PMG_ID_SQL, params) > 0;
     }
 
     @Override

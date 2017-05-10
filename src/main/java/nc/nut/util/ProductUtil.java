@@ -1,5 +1,6 @@
 package nc.nut.util;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class ProductUtil {
      * @param <T>
      * @return
      */
-    public static <T> Collection<T> getUniqueElementsInCollection(Collection<T> initialCollection, Collection<T> compareCollection) {
+    public static <T> Collection<T> getUniqueElementsInFirstCollection(Collection<T> initialCollection, Collection<T> compareCollection) {
         Collection<T> resultCollection = new ArrayList<>(initialCollection);
         Collection<T> collectionForCompare = new ArrayList<>(compareCollection);
         resultCollection.removeAll(collectionForCompare);
@@ -62,12 +63,22 @@ public class ProductUtil {
         return new ArrayList<>(Arrays.asList(array));
     }
 
+    /**
+     * Anna Rysakova
+     *
+     * @param collection
+     * @return
+     */
+    public static Integer[] convertCollectionToArray(Collection<T> collection) {
+        return collection.toArray(new Integer[collection.size()]);
+    }
+
     public static void main(String[] args) {
         Integer[] a = new Integer[]{1, 2};
         Integer[] b = new Integer[]{2, 3};
         Collection a1 = convertArrayToCollection(a);
         Collection b1 = convertArrayToCollection(b);
-        Collection<Integer> c = getUniqueElementsInCollection(a1, b1);
+        Collection<Integer> c = getUniqueElementsInFirstCollection(a1, b1);
         System.out.println("Collection a: " + Arrays.toString(a1.toArray()));
         System.out.println("Collection b: " + Arrays.toString(b1.toArray()));
         System.out.println("Collection c: " + Arrays.toString(c.toArray()));

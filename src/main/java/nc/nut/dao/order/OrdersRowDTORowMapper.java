@@ -22,13 +22,13 @@ public class OrdersRowDTORowMapper implements RowMapper<OrdersRowDTO> {
         Calendar finalDateCal = new GregorianCalendar();
         int duration = resultSet.getInt("duration");
         String name = resultSet.getString("name");
-        Integer productId = resultSet.getInt("id");
+        Integer orderId = resultSet.getInt("id");
         ProductType productType = ProductType.getProductTypeFromId(resultSet.getInt("type_id"));
         String description = resultSet.getString("description");
         OperationStatus operationStatus = OperationStatus.getOperationStatusFromId(resultSet.getInt("current_status_id"));
         finalDateCal.setTime(creationDate);
         finalDateCal.add(Calendar.DATE, duration);
 
-        return new OrdersRowDTO(productId, name, productType, description, finalDateCal, operationStatus);
+        return new OrdersRowDTO(orderId, name, productType, description, finalDateCal, operationStatus);
     }
 }

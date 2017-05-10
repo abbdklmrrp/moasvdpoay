@@ -9,5 +9,6 @@
     <jsp:include page="../../includes/headers/businessHeader.jsp"/>
     <jsp:include page="../../includes/orders.jsp"/>
     <jsp:include page="../../includes/footer.jsp"/>
+    <script type="text/javascript" src="<c:url value="${contextPath}/resources/js/suspendOrder.js"/>"></script>
 </body>
 </html>

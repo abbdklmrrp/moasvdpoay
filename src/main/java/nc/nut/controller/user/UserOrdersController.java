@@ -4,16 +4,22 @@ import nc.nut.dao.order.OrderDao;
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
 import nc.nut.dto.OrdersRowDTO;
+import nc.nut.dto.SuspendFormDTO;
 import nc.nut.security.SecurityAuthenticationHelper;
+import nc.nut.services.OrderService;
+import nc.nut.utils.DatesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -22,21 +28,28 @@ import java.util.List;
 @Controller
 @RequestMapping({"","csr","user"})
 public class UserOrdersController {
-    @Autowired
-    OrderDao orderDao;
+    private final static String SUCCESS_MSG = "Thank you! Your order will be suspended from %s to %s.";
+    private final static String DATE_ERROR_MSG = "Unable to suspend your order. Please, check the dates you've entered.";
+    private final static String FAIL_SUSPEND_ERROR_MSG ="Sorry! An error occurred while suspending your order. Please, try again.";
+    private final static String CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG ="Unable to suspend your order within these dates, because you have other planned tasks that can interrupt superdense process.";
+
+    @Resource
+    private OrderDao orderDao;
     @Resource
     private UserDAO userDAO;
+    @Resource
+    private OrderService orderService;
+    private static Logger logger = LoggerFactory.getLogger(UserOrdersController.class);
+
 
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
 
-    private static Logger logger = LoggerFactory.getLogger(UserOrdersController.class);
-
     @RequestMapping(value = {"residential/orders"}, method = RequestMethod.GET)
-    public String showOrdersForResidentialUser(Model model) {
+    public String showOrdersForUser(Model model) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user: {}", user.toString());
-        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsByUserId(user.getId());
+        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
         model.addAttribute("ordersRows", ordersRows);
         return "newPages/user/residential/Orders";
     }
@@ -45,9 +58,33 @@ public class UserOrdersController {
     public String showOrdersForBusinessUser(Model model) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user: {}", user.toString());
-        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsByUserId(user.getId());
+        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
         model.addAttribute("ordersRows", ordersRows);
         return "newPages/user/business/Orders";
     }
 
+    @RequestMapping(value = {"/residential/suspend", "/business/suspend"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String suspendOrder(@RequestBody SuspendFormDTO suspendFormDTO) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar beginDate = suspendFormDTO.getBeginDate();
+        Calendar endDate = suspendFormDTO.getEndDate();
+        Integer orderId = suspendFormDTO.getOrderId();
+        if (!DatesHelper.areDatesCorrectForOrderSuspendence(beginDate, endDate)) {
+            logger.error("Incorrect dates received from superdense form");
+            return DATE_ERROR_MSG;
+        }
+        if(!orderService.canOrderBeSuspendedWithinDates(beginDate, endDate,orderId)){
+            logger.error("Unable to suspend product because of other planned tasks");
+            return CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG;
+        }
+        boolean isServiceSuspended = orderService.suspendOrder(beginDate, endDate, orderId);
+        if (isServiceSuspended) {
+            logger.info("Successful order superdense, order id: " + orderId);
+            return String.format(SUCCESS_MSG,dateFormat.format(beginDate.getTime()), dateFormat.format(endDate.getTime()));
+        }
+        logger.error("Unable to suspend order, order id: " + orderId);
+        return FAIL_SUSPEND_ERROR_MSG;
+
+    }
 }

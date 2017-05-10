@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nc.nut.dao.complaint.Complaint;
 import nc.nut.dao.complaint.ComplaintDAO;
 import nc.nut.dao.complaint.ComplaintStatus;
+import nc.nut.dao.entity.OperationHistoryDao;
+import nc.nut.dao.entity.OperationHistoryRecord;
 import nc.nut.dao.order.OrderDao;
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductDao;
@@ -47,6 +49,8 @@ public class UsersDetailController {
     private UserService userService;
     @Resource
     private ServiceGoogleMaps serviceGoogleMaps;
+    @Resource
+    private OperationHistoryDao operationHistoryDao;
 
     private List<User> clients;
 
@@ -104,9 +108,20 @@ public class UsersDetailController {
         return message;
     }
 
-    @RequestMapping(value = "viewOrders", method = RequestMethod.POST)
-    public String viewOrders(Model model) throws IOException {
-        return "csr/index";
+    @RequestMapping(value = "userOrders", method = RequestMethod.POST)
+    public ModelAndView viewOrders(Model model) throws IOException {
+        return new ModelAndView("newPages/csr/UserOrders");
+    }
+
+    @RequestMapping(value="getOperationHistory",method = RequestMethod.GET)
+    public ListHolder getOperationHistory(@ModelAttribute GridRequestDto request,HttpSession session){
+        Integer userId=(Integer)session.getAttribute("userId");
+        String sort = request.getSort();
+        int start = request.getStartBorder();
+        int length = request.getEndBorder();
+        List<OperationHistoryRecord> data = operationHistoryDao.getOperationHistoryByUserId(userId,start,length,sort);
+        int size = operationHistoryDao.getCountOperationForUser(userId);
+        return ListHolder.create(data, size);
     }
 
     @RequestMapping(value = "sendPassword", method = RequestMethod.POST)

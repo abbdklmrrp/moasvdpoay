@@ -89,11 +89,11 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getServicesByTariff(Product product);
 
-    List<Product> getServicesNotInTariff(Product product);
+//    List<Product> getServicesNotInTariff(Product product);
 
-    boolean deleteServiceFromTariff(int idTariff, Integer[] idServicesArray);
+    void deleteServiceFromTariff(ArrayList<TariffServiceDto> tariffServiceDtos);
 
-    boolean disableTariffByID(int id);
+    boolean disableProductByID(int id);
 
     List<Product> getProductsByUserId(int id);
 
@@ -143,7 +143,7 @@ public interface ProductDao extends Dao<Product> {
      */
     public List<Product> getServicesOfTariff(Integer tariffId);
 
-    public List<Product> getLimitedQuantityProduct(int start, int length,String sort,String search);
+    Integer getCountProductsWithSearch(String search);
 
-    public Integer getCountProductsWithSearch(String search);
+    List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search);
 }
