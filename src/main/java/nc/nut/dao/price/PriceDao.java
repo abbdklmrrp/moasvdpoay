@@ -2,6 +2,8 @@ package nc.nut.dao.price;
 
 import nc.nut.dao.interfaces.Dao;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by Yuliya Pedash on 27.04.2017.
@@ -17,4 +19,7 @@ public interface PriceDao extends Dao<Price> {
      * @see Price
      */
     Price getPriceByProductIdAndPlaceId(Integer productId, Integer placeId);
+
+    boolean fillPriceOfProductByRegion(ArrayList<Price> priceByRegionDtos);
+
 }

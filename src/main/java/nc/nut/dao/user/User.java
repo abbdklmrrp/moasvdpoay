@@ -1,5 +1,7 @@
 package nc.nut.dao.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author Rysakova Anna
  */
@@ -14,6 +16,7 @@ public class User {
     private Integer customerId;
     private String password;
     private String authority;
+    @JsonProperty("role_id")
     private Role role;
     private Integer enable;
 
@@ -125,6 +128,19 @@ public class User {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("User{").append("name='").append(name).append('\'').append(", password='").append(password).append('\'').append(", authorities='").append(authority).append('\'').append('}').toString();
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", placeId=" + placeId +
+                ", customerId=" + customerId +
+                ", password='" + password + '\'' +
+                ", authority='" + authority + '\'' +
+                ", role=" + role +
+                ", enable=" + enable +
+                '}';
     }
 }

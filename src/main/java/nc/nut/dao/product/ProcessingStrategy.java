@@ -9,8 +9,8 @@ import java.util.Objects;
  * Created by Yuliya Pedash on 05.05.2017.
  */
 public enum ProcessingStrategy {
-    NeedsProcessing(1, "Needs Processing"),
-    DoesntNeedProcessing(0, "Doesn't Need Processing");
+    NeedProcessing(1, "Need Processing"),
+    DoNotNeedProcessing(0, "Doesn't need Processing");
     private static Logger logger = LoggerFactory.getLogger(ProcessingStrategy.class);
     private static String WRONG_ID_ERROR_MSG = "Wrong id: ";
     private Integer id;

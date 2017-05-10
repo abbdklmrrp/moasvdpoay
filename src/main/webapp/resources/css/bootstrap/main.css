@@ -1096,3 +1096,7 @@ footer .container {
 #tableServiceCatalog tr td {
   text-align: center;
 }
+
+#tbl-all-complaints tr:nth-child(n+2):hover{
+  background-color: #bdc3c7;
+}

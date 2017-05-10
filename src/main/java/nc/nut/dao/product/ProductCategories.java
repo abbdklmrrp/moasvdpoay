@@ -8,8 +8,8 @@ import java.util.Objects;
 public class ProductCategories {
 
     private Integer id;
-    private String name;
-    private String description;
+    private String categoryName;
+    private String categoryDescription;
 
     public ProductCategories() {
     }
@@ -22,20 +22,20 @@ public class ProductCategories {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryName(String newCategory) {
+        this.categoryName = newCategory;
     }
 
-    public String getDescription() {
-        return description;
+    public String getCategoryDescription() {
+        return categoryDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCategoryDescription(String newCategoryDesc) {
+        this.categoryDescription = newCategoryDesc;
     }
 
     @Override
@@ -44,13 +44,13 @@ public class ProductCategories {
         if (!(o instanceof ProductCategories)) return false;
         ProductCategories that = (ProductCategories) o;
         return getId() == that.getId() &&
-                Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getDescription(), that.getDescription());
+                Objects.equals(getCategoryName(), that.getCategoryName()) &&
+                Objects.equals(getCategoryDescription(), that.getCategoryDescription());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription());
+        return Objects.hash(getId(), getCategoryName(), getCategoryDescription());
     }
 
 }

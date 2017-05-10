@@ -1,6 +1,5 @@
 package nc.nut.dao.user;
 
-import nc.nut.mail.Mailer;
 import nc.nut.security.Md5PasswordEncoder;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -35,16 +34,59 @@ public class UserDAOImpl implements UserDAO {
             "  USERS.ADDRESS," +
             "  USERS.ROLE_ID," +
             "  USERS.PLACE_ID," +
-            "  USERS.CUSTOMER_ID" +
+            "  USERS.CUSTOMER_ID," +
+            "  USERS.ENABLE" +
             "    FROM USERS" +
             "  WHERE EMAIL=:email";
 
     private final static String FIND_BY_PHONE = "SELECT * FROM USERS WHERE PHONE=:phone";
 
     private final static String UPDATE_USER = "UPDATE USERS " +
-            "SET NAME=:name, SURNAME=:surname, PHONE=:phone " +
+            "SET NAME=:name, SURNAME=:surname, PHONE=:phone, ENABLE= :enable, PASSWORD= :password " +
             "WHERE ID=:id";
     private final static String FIND_USER_BY_ID = "SELECT * FROM USERS WHERE ID=:id";
+    private final static String SELECT_LIMITED_USERS = "select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from USERS " +
+            " Where ENABLE=1 AND CUSTOMER_ID IS NOT NULL AND " +
+            " (name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern )" +
+            " " +
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
+
+    private static final String SELECT_COUNT = "Select count(ID)\n" +
+            "  from Users " +
+            "WHERE ENABLE=1 AND CUSTOMER_ID IS NOT NULL AND " +
+            " ( name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern )";
+
+    private static final String SELECT_ALL_COUNT = "Select count(ID)\n" +
+            "  from Users " +
+            "WHERE name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern ";
+
+    private static final String SELECT_LIMITED_ALL_USERS = "select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from USERS " +
+            " Where name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern " +
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -79,9 +121,11 @@ public class UserDAOImpl implements UserDAO {
         params.addValue("name", user.getName());
         params.addValue("surname", user.getSurname());
         params.addValue("phone", user.getPhone());
+        params.addValue("password", user.getPassword());
 //        params.addValue("address", user.getAddress());
 //        params.addValue("placeId", user.getPlaceId());
         params.addValue("id", user.getId());
+        params.addValue("enable", user.getEnable());
         int rows = jdbcTemplate.update(UPDATE_USER, params);
         return rows > 0;
 
@@ -94,7 +138,8 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public boolean save(User user) {
-        if (!this.validateFields(user)||!this.isUnique(user)){ return false;
+        if (!this.validateFields(user) || !this.isUnique(user)) {
+            return false;
         } else {
             MapSqlParameterSource params = new MapSqlParameterSource();
             String encodePassword = encoder.encode(user.getPassword());
@@ -229,5 +274,44 @@ public class UserDAOImpl implements UserDAO {
         return jdbcTemplate.queryForObject(FIND_USER_BY_ID, params, new UserRowMapper());
     }
 
+    @Override
+    public Integer getCountUsersWithSearch(String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
+    }
 
+    @Override
+    public List<User> getLimitedQuantityUsers(int start, int length, String sort, String search) {
+        int rownum = start + length;
+        if (sort.isEmpty()) {
+            sort = "ID";
+        }
+        String sql = String.format(SELECT_LIMITED_USERS, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("length", rownum);
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.query(sql, params, new UserRowMapper());
+    }
+
+    @Override
+    public Integer getCountAllUsersWithSearch(String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_ALL_COUNT, params, Integer.class);
+    }
+
+    @Override
+    public List<User> getLimitedQuantityAllUsers(int start, int length, String sort, String search) {
+        if (sort.isEmpty()) {
+            sort = "ID";
+        }
+        String sql = String.format(SELECT_LIMITED_ALL_USERS, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("length", length);
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.query(sql, params, new UserRowMapper());
+    }
 }

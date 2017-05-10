@@ -72,7 +72,7 @@ public class ServiceOrderController {
         String msg;
         order.setProductId(serviceId);
         order.setUserId(currentUser.getId());
-        if (chosenProduct.getProcessingStrategy() == ProcessingStrategy.NeedsProcessing) {
+        if (chosenProduct.getProcessingStrategy() == ProcessingStrategy.NeedProcessing) {
             order.setCurrentStatus(OperationStatus.InProcessing);
             msg = String.format(ORDER_IN_PROCESS_MSG, chosenProduct.getName());
         } else {

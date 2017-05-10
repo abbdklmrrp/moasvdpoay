@@ -9,7 +9,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.WebUtils;
 
 import javax.annotation.Resource;
@@ -55,5 +59,24 @@ public class LoginController {
         } else {
             return "redirect:/login.htm";
         }
+    }
+
+    @RequestMapping(value = "/userRegistration", method = RequestMethod.GET)
+    public String getRegistrationPage() {
+        return "newPages/Registration";
+    }
+
+    @RequestMapping(value = "/userRegistration", method = RequestMethod.POST)
+    public ModelAndView registerUser(@ModelAttribute("user") nc.nut.dao.user.User user, RedirectAttributes attributes) {
+        ModelAndView mw = new ModelAndView();
+        boolean result = false;
+        logger.warn(user.toString());
+        if (result) {
+            attributes.addFlashAttribute("msg", "You have been registered");
+        } else {
+            attributes.addFlashAttribute("msg", "You have not been registered");
+        }
+        mw.setViewName("redirect:/");
+        return mw;
     }
 }
