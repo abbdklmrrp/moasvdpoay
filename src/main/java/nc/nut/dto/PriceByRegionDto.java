@@ -8,8 +8,10 @@ import java.math.BigDecimal;
 public class PriceByRegionDto {
 
     private Integer productId;
-    private Integer [] placeId;
-    private BigDecimal[] priceByRegion;
+    private String productName;
+    private String productDescription;
+    private String placeName;
+    private BigDecimal priceProduct;
 
     public PriceByRegionDto() {
     }
@@ -22,19 +24,40 @@ public class PriceByRegionDto {
         this.productId = productId;
     }
 
-    public Integer[] getPlaceId() {
-        return placeId;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setPlaceId(Integer[] placeId) {
-        this.placeId = placeId;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public BigDecimal[] getPriceByRegion() {
-        return priceByRegion;
+    public String getProductDescription() {
+        return productDescription;
     }
 
-    public void setPriceByRegion(BigDecimal[] priceByRegion) {
-        this.priceByRegion = priceByRegion;
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
+    }
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+
+    public BigDecimal getPriceProduct() {
+        return priceProduct;
+    }
+
+    public void setPriceProduct(BigDecimal priceProduct) {
+        this.priceProduct = priceProduct;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append("PriceByRegionDto{").append("productId=").append(productId).append(", productName='").append(productName).append('\'').append(", productDescription='").append(productDescription).append('\'').append(", placeName='").append(placeName).append('\'').append(", priceProduct=").append(priceProduct).append('}').toString();
     }
 }
