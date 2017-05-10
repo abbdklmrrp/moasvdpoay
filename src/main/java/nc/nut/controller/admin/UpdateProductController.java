@@ -36,7 +36,7 @@ public class UpdateProductController {
 
     private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
     private static final String ERROR_UNEXPECTED = "Unexpected error";
-    private static final String ERROR_IN_CONNECTION = "Error with connection to db";
+    private static final String ERROR_IN_CONNECTION = "Error with filling database";
 
     private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
 

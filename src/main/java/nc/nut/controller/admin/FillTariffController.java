@@ -36,7 +36,7 @@ public class FillTariffController {
     private ProductService productService;
 
     private static final String ERROR_UNIQUE_CATEGORY = "Category already exists";
-    private static final String ERROR_IN_CONNECTION = "Error with connection to db";
+    private static final String ERROR_IN_CONNECTION = "Error with filling database";
     private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select srvices to tariff";
 
     private static Logger logger = LoggerFactory.getLogger(FillTariffController.class);
@@ -64,7 +64,7 @@ public class FillTariffController {
 
         if (Objects.equals(services, null) || Objects.equals(tariff, null)) {
             logger.error("Incoming data error with services {} ", Objects.equals(services, null));
-            mav.addObject("errorFillTariff", ERROR_FILL_IN_TARIFF_SERVICES);
+            mav.addObject("errorFilling", ERROR_FILL_IN_TARIFF_SERVICES);
             logger.error("Incoming data error with tariff {} ", Objects.equals(tariff, null));
             mav.setViewName("admin/fillTariff");
             return mav;
@@ -77,7 +77,7 @@ public class FillTariffController {
         logger.debug("Check that the new category does not exist in the database {} ", checkUniqueCategoryServices);
         if (!checkUniqueCategoryServices) {
             logger.error("Category already exist in database");
-            mav.addObject("errorFillTariff", ERROR_UNIQUE_CATEGORY);
+            mav.addObject("errorFilling", ERROR_UNIQUE_CATEGORY);
             mav.setViewName("admin/fillTariff");
             return mav;
         }
@@ -87,7 +87,7 @@ public class FillTariffController {
             logger.debug("Fill in tariff with services to database");
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {} ", ex);
-            mav.addObject("errorFillTariff ", ERROR_IN_CONNECTION);
+            mav.addObject("errorFilling ", ERROR_IN_CONNECTION);
             mav.setViewName("admin/fillTariff");
             return mav;
         }
