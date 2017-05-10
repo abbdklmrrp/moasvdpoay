@@ -158,7 +158,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String DELETE_SERVICE_FROM_TARIFF = "DELETE FROM TARIFF_SERVICES " +
             "WHERE TARIFF_ID=:idTariff AND SERVICE_ID=:idService ";
 
-    private final static String DISABLE_PRODUCT = "UPDATE Products SET status=0 WHERE id=:id";
+    private final static String DISABLE_ENABLE_PRODUCT = "UPDATE Products SET status=:status WHERE id=:id";
 
     private final static String FIND_PRODUCT_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME," +
             "prod.description AS DESCRIPTION, prod.DURATION AS duration " +
@@ -233,7 +233,7 @@ public class ProductDaoImpl implements ProductDao {
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern ";
 
-    private final static String FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE ="SELECT\n" +
+    private final static String FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE = "SELECT\n" +
             "  product.ID,\n" +
             "  product.NAME\n" +
             "FROM PRODUCTS product\n" +
@@ -709,10 +709,16 @@ public class ProductDaoImpl implements ProductDao {
      * @author Nikita Alistratenko
      */
     @Override
-    public boolean disableProductByID(int productID) {
+    public boolean disableEnableProductByID(int productID) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", productID);
-        return jdbcTemplate.update(DISABLE_PRODUCT, params) > 0;
+        Product p = getById(productID);
+        if (p.getStatus().getId() == 1) {
+            params.addValue("status", 0);
+        } else {
+            params.addValue("status", 1);
+        }
+        return jdbcTemplate.update(DISABLE_ENABLE_PRODUCT, params) > 0;
     }
 
     /**

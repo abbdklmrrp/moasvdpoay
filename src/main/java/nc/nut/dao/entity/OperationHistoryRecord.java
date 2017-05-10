@@ -5,6 +5,8 @@
  */
 package nc.nut.dao.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Calendar;
 
 /**
@@ -13,14 +15,17 @@ import java.util.Calendar;
 public class OperationHistoryRecord {
 
     private Integer id;
+    @JsonProperty("order_id")
     private Integer orderId;
+    @JsonProperty("operation_date")
     private Calendar operationDate;
-    private String status;
+    @JsonProperty("status_id")
+    private OperationStatus status;
 
     public OperationHistoryRecord() {
     }
 
-    public OperationHistoryRecord(int id, int orderId, Calendar operationDate, String status) {
+    public OperationHistoryRecord(int id, int orderId, Calendar operationDate, OperationStatus status) {
         this.id = id;
         this.orderId = orderId;
         this.operationDate = operationDate;
@@ -51,11 +56,11 @@ public class OperationHistoryRecord {
         this.operationDate = operationDate;
     }
 
-    public String getStatus() {
+    public OperationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OperationStatus status) {
         this.status = status;
     }
 
