@@ -14,7 +14,7 @@
             <ul class="nav navbar-nav ">
                 <li><a href="${pageContext.request.contextPath}/pmg/getProfile">Profile</a></li>
                 <li><a href="">Users</a></li>
-                <li><a href="">Products</a></li>
+                <li><a href="${pageContext.request.contextPath}/pmg/getPmgProductsPage">Products</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Complaints<i class="icon-angle-down"></i></a>
                     <ul class="dropdown-menu">

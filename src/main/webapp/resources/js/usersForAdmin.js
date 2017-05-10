@@ -7,11 +7,10 @@ function activateUser(userId) {
         data: {userId: userId},
         type: "POST",
         dataType: 'text',
-        //  async: false,
         success: function (resultMsg) {
             if (resultMsg === '"success"') {
                 swal({
-                    title: "This  was activated.",
+                    title: "User  was activated.",
                     type: "success"
                 });
                 var $statusElement = $('#' + userId);
@@ -20,7 +19,7 @@ function activateUser(userId) {
                 $newStatus.appendTo($statusElement);
             }
             else {
-                swal("Sorry, an error occurred while deactivating this product for you!", "Please, try again", "error");
+                swal("Sorry, an error occurred while activating this user!", "Please, try again", "error");
             }
         },
         error: function () {
@@ -28,7 +27,6 @@ function activateUser(userId) {
             console.log("error");
         }
     })
-    // event.preventDefault();
 }
 function deactivateUser(userId) {
     swal({
@@ -48,23 +46,16 @@ function deactivateUser(userId) {
                 success: function (resultMsg) {
                     if (resultMsg === '"success"') {
                         swal({
-                            title: "This  was deactivated.",
+                            title: "User was banned.",
                             type: "success"
                         });
                         var $statusElement = $('#' + userId);
                         $statusElement.empty();
                         var $newStatus = $('<input type="button" class="btn btn-success"  value="Activate" onclick="activateUser('+userId+')">');
-                        // $newStatus.addEventListener('click', function(){
-                        //     alert(serviceId);
-                        //     activateService(serviceId);
-                        // });
-                        // $newStatus.onclick = function () {
-                        //     activateService(serviceId);
-                        // }
                         $newStatus.appendTo($statusElement);
                     }
                     else {
-                        swal("Sorry, an error occurred while deactivating this product for you!", "Please, try again", "error");
+                        swal("Sorry, an error occurred while banning this user!", "Please, try again", "error");
                     }
                 },
 

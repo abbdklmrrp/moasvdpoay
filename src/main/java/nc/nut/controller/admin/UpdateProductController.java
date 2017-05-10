@@ -65,7 +65,7 @@ public class UpdateProductController {
         product.setId(id);
 
         productService.updateFillTariff(servicesId, product);
-        productService.updateTariffWithNewServices(servicesId, product);
+//        productService.updateTariffWithNewServices(servicesId, product);
         productService.updateProduct(product);
 
         session.removeAttribute("productId");

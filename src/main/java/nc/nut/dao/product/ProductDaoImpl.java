@@ -217,6 +217,24 @@ public class ProductDaoImpl implements ProductDao {
             " base_price FROM Products " +
             " WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariffId)";
 
+    private final static String SELECT_LIMITED_PRODUCTS="select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from PRODUCTS " +
+            " Where name like :pattern " +
+            " OR description like :pattern " +
+            " OR duration like :pattern " +
+            " OR base_price like :pattern "+
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
+
+    private static final String SELECT_COUNT="Select count(ID)\n" +
+            "  from PRODUCTS" +
+            " WHERE name like :pattern " +
+            " OR description like :pattern " +
+            " OR duration like :pattern " +
+            " OR base_price like :pattern ";
+
     @Autowired
     @Qualifier("dataSource")
     private DataSource dataSource;
@@ -716,4 +734,29 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("id", userId);
         return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL, params, new ProductRowMapper());
     }
+
+    @Override
+    public List<Product> getLimitedQuantityProduct(int start, int length,String sort,String search) {
+        int rownum=start+length;
+        if(sort.isEmpty()){
+            sort="ID";
+        }
+        System.out.println(sort);
+        String sql=String.format(SELECT_LIMITED_PRODUCTS, sort);
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("start",start);
+        params.addValue("length",rownum);
+        params.addValue("pattern","%"+search+"%");
+        List<Product> products=jdbcTemplate.query(sql,params, new ProductRowMapper());
+        return products;
+    }
+
+    @Override
+    public Integer getCountProductsWithSearch(String search) {
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("pattern","%"+search+"%");
+        return jdbcTemplate.queryForObject(SELECT_COUNT,params,Integer.class);
+    }
+
+
 }
