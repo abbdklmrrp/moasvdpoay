@@ -11,15 +11,11 @@ $(document).ready(function () {
     //     $("#orderId").value =
     //
     // });
-    $("#formWithDates").submit(function(e) {
-        // reference to form object
+    $("#formWithDates").submit(function (e) {
         var form = this;
-        // for stopping the default action of element
         e.preventDefault();
-        // mapthat will hold form data
         var formData = {}
-        //iterate over form elements
-        $.each(this, function(i, v){
+        $.each(this, function (i, v) {
             var input = $(v);
             formData[input.attr("name")] = input.val();
             delete formData["undefined"];
@@ -28,23 +24,23 @@ $(document).ready(function () {
 
         if (areDatesCorrect()) {
             jQuery.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            url: 'suspend',
-            type: "POST",
-            dataType: "json",
-           // data: jQuery("#formWithDates").serialize(),
-            data: JSON.stringify(formData),
-            success: function (resultMsg) {
-                swal(resultMsg);
-            },
-            error: function () {
-                swal("Sorry, an error on server has occurred", "please, try again.", "error");
-                console.log("error");
-            }
-        });
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: 'suspend',
+                type: "POST",
+                dataType: "json",
+                // data: jQuery("#formWithDates").serialize(),
+                data: JSON.stringify(formData),
+                success: function (resultMsg) {
+                    swal(resultMsg);
+                },
+                error: function () {
+                    swal("Sorry, an error on server has occurred", "please, try again.", "error");
+                    console.log("error");
+                }
+            });
         }
     });
 
@@ -58,7 +54,7 @@ function areDatesCorrect() {
     var end = new Date($('#endDate').val());
     var currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
-    start.setHours(0,0,0,0);
+    start.setHours(0, 0, 0, 0);
     if ($('#beginDate').val() == '' || $('#endDate').val() == '') {
         swal("Please, enter both, begin and end date.");
         return false;
@@ -70,7 +66,7 @@ function areDatesCorrect() {
         });
         return false;
     }
-    if (start.getTime() <  currentDate.getTime()){
+    if (start.getTime() < currentDate.getTime()) {
         swal({
             title: "Begin date of order's suspense should not not be earlier than today .",
             type: "error"
@@ -116,38 +112,46 @@ function getDataFromWithDates() {
 //
 // }
 function activateOrderAfterSuspend(orderId) {
-    if (areDatesCorrect()) {
-        jQuery.ajax({
-            url: 'activateAfterSuspend',
-            data: {orderId: orderId},
-            type: "POST",
-            dataType: 'text',
-            success: function (resultMsg) {
-                if (resultMsg === '"success"') {
-                    swal({
-                        title: "Activation of order was successful",
-                        type: "success"
-                    })
-                    var actionElement = $("action"+orderId);
-                    actionElement.empty();
-                    var $newActionElement = $('<input/>', {
-                        type: 'button',
-                        value: 'Suspend',
-                        class: "btn btn-warning toggle-form-btn"
-                    });
-                    $newActionElement.onclick= new function () {
-                        toggleFormFunc(orderId);
-                    }
+    jQuery.ajax({
+        url: 'activateAfterSuspend',
+        data: {orderId: orderId},
+        type: "POST",
+        dataType: 'text',
+        success: function (isSuccess) {
+            if (isSuccess) {
+                swal({
+                    title: "Activation of order was successful",
+                    type: "success"
+                })
+                var $actionContainerElement = $("#action" + orderId);
+                $actionContainerElement.empty();
+                var $newActionInput = $('<input/>', {
+                    type: 'button',
+                    value: 'Suspend',
+                    class: "btn btn-warning toggle-form-btn"
+                });
+                $newActionInput.onclick = new function () {
+                    toggleFormFunc(orderId);
                 }
-                else {
-                    swal("Activation of order failed", "Please, try again.",
-                        "error")
-                }
-            },
-            error: function () {
-                swal("Sorry, an error on server has occurred", "please, try again.", "error");
-                console.log("error");PRICES
+                $newActionInput.appendTo($actionContainerElement)
+
+                // $newStatus.addEventListener('click', function () {
+                //     deactivateService(serviceId);
+                // }, false);
+                // newActionInput.onclick= new function () {
+                //     toggleFormFunc(orderId);
+                // }
+                // newActionInput.appendTo($actionContainerElement)
             }
-        });
-    }
+            else {
+                swal("Activation of order failed", "Please, try again.",
+                    "error")
+            }
+        },
+        error: function () {
+            swal("Sorry, an error on server has occurred", "please, try again.", "error");
+            console.log("error");
+        }
+    });
+
 }
