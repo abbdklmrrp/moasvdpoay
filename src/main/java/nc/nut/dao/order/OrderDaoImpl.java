@@ -35,10 +35,13 @@ public class OrderDaoImpl implements OrderDao {
             "WHERE USERS.CUSTOMER_ID = :cust_id\n" +
             "      AND ORDERS.CURRENT_STATUS_ID <> 3 /*deactivated status id*/\n" +
             "      AND PRODUCTS.TYPE_ID = 2 /*service id*/\n";
-    private final static String DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT = "UPDATE ORDERS " +
+    private final static String DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT_SQL = "UPDATE ORDERS " +
             "SET CURRENT_STATUS_ID = 3 /*deactivated operation status id*/ " +
             "WHERE PRODUCT_ID = :product_id " +
             "      AND USER_ID = :user_id";
+    private final static String SUSPEND_ORDER_SQL = "UPDATE ORDERS " +
+            "SET CURRENT_STATUS_ID = 2 /*suspended operation status id*/ " +
+            "WHERE ID = :id ";
     private final static String INSERT_ORDER = "INSERT INTO ORDERS (PRODUCT_ID, USER_ID, CURRENT_STATUS_ID) " +
             "VALUES (:product_id, :user_id, :cur_status_id)";
     private final static String SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL = "SELECT id FROM Orders " +
@@ -57,26 +60,26 @@ public class OrderDaoImpl implements OrderDao {
     private final static String SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL = "SELECT * FROM ORDERS WHERE\n" +
             "  PRODUCT_ID = :product_id\n" +
             "  AND USER_ID = :user_id\n " +
-            "AND CURRENT_STATUS_ID <> 3 /*Deactivated*/";
-    private final static String SELECT_ORDERS_DTO_BY_USER_ID_SQL = "SELECT\n" +
-            "    p.id,\n " +
-            "  p.NAME,\n" +
-            "  p.TYPE_ID,\n" +
-            "  p.DURATION,\n" +
-            "  p.DESCRIPTION,\n" +
-            "  op_his.OPERATION_DATE,\n" +
-            "  o.CURRENT_STATUS_ID\n " +
+            "AND CURRENT_STATUS_ID <> 3 /*Deactivated status*/";
+    private final static String SELECT_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT\n" +
+            "   o.id,\n" +
+            "   p.NAME,\n" +
+            "   p.TYPE_ID,\n" +
+            "   p.DURATION,\n" +
+            "   p.DESCRIPTION,\n" +
+            "   op_his.OPERATION_DATE,\n" +
+            "   o.CURRENT_STATUS_ID\n" +
             "FROM ORDERS o\n" +
-            "  JOIN\n" +
-            "  (\n" +
-            "    SELECT\n" +
-            "      OPERATION_DATE,\n" +
-            "      ORDER_ID\n" +
-            "    FROM OPERATIONS_HISTORY\n" +
-            "    WHERE ID IN ( SELECT MIN(ID) FROM OPERATIONS_HISTORY GROUP BY ORDER_ID)\n" +
-            "  ) op_his ON op_his.ORDER_ID = o.ID\n" +
-            "  JOIN PRODUCTS p ON p.ID = o.PRODUCT_ID\n " +
-            "WHERE o.CURRENT_STATUS_ID <> 3 AND o.USER_ID = :id";
+            "   JOIN (SELECT\n" +
+            "            OPERATION_DATE,\n" +
+            "            ORDER_ID\n" +
+            "         FROM OPERATIONS_HISTORY\n" +
+            "         WHERE ID IN (SELECT MIN(ID)\n" +
+            "                      FROM OPERATIONS_HISTORY\n" +
+            "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = o.ID\n" +
+            "   JOIN PRODUCTS p ON p.ID = o.PRODUCT_ID\n" +
+            "   JOIN USERS u ON u.ID = o.USER_ID\n" +
+            "WHERE o.CURRENT_STATUS_ID <> 3 AND u.CUSTOMER_ID =:cust_id";
 
     @Override
     public Order getById(int id) {
@@ -151,7 +154,7 @@ public class OrderDaoImpl implements OrderDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("product_id", productId);
         params.addValue("user_id", userId);
-        return jdbcTemplate.update(DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT, params) > 0;
+        return jdbcTemplate.update(DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT_SQL, params) > 0;
     }
 
     /**
@@ -165,11 +168,29 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.queryForObject(SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL, params, orderRowMapper);
     }
 
+//    @Override
+//    public Calendar getEndDateOfOrderActive(Integer orderId) {
+//        return null;
+//    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<OrdersRowDTO> getOrderRowsByUserId(int userId) {
+    public List<OrdersRowDTO> getOrderRowsBDTOByCustomerId(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", userId);
-        return jdbcTemplate.query(SELECT_ORDERS_DTO_BY_USER_ID_SQL, params, new OrdersRowDTORowMapper());
+        params.addValue("cust_id", customerId);
+        return jdbcTemplate.query(SELECT_ORDERS_DTO_BY_CUSTOMER_ID_SQL, params, new OrdersRowDTORowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean suspendOrder(Integer orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", orderId);
+        return jdbcTemplate.update(SUSPEND_ORDER_SQL, params) > 0;
+
+    }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 public class ExcelReportDataWriter {
     /**
      * This method defines beginning of the report
-     * and calls two methods {@link #writeReportData(XSSFSheet, List)} and
+     * and calls two methods {@link #drawChart(Sheet, int)} and
      * {@link #writeTableBody(short, Sheet, List)}
      *
      * @param excelSheet sheet on which report will be written
@@ -70,8 +70,8 @@ public class ExcelReportDataWriter {
         ChartDataSource<String> xAxisData = DataSources.fromStringCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 0, 0));
         ChartDataSource<Number> yAxisData1 = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 1, 1));
         ChartDataSource<Number> yAxisData2 = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 2, 2));
-        data.addSeries(xAxisData, yAxisData1).setTitle("Complaints");
         data.addSeries(xAxisData, yAxisData2).setTitle("Reports");
+        data.addSeries(xAxisData, yAxisData1).setTitle("Complaints");
         chart.plot(data, bottomAxis, leftAxis);
     }
 

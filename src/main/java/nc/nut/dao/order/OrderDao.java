@@ -46,6 +46,14 @@ public interface OrderDao extends Dao<Order> {
     boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId);
 
     /**
+     * This method sets 'Suspended' status for particular order.
+     *
+     * @param orderId id of order
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     */
+    boolean suspendOrder(Integer orderId);
+
+    /**
      * This method returns order by user for particular product.
      *
      * @param userId    id of user
@@ -55,11 +63,16 @@ public interface OrderDao extends Dao<Order> {
     Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId);
 
     /**
-     * This method returns DTO object for order row.
+     * This method returns Order Row DTO object by customer id.
+     * For forming this object it gets data on all orders of users of
+     * customer with given id.
      *
-     * @param userId id of user
+     * @param customerId id of customer
      * @return OrdersRowDTO object
      * @see OrdersRowDTO for details
      */
-    List<OrdersRowDTO> getOrderRowsByUserId(int userId);
+    List<OrdersRowDTO> getOrderRowsBDTOByCustomerId(Integer customerId);
+
+
+//    Calendar getEndDateOfOrderActive(Integer orderId);
 }

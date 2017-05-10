@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -6,8 +8,10 @@
     </jsp:include>
 </head>
 <body>
-    <jsp:include page="../../includes/headers/residentialHeader.jsp"/>
-    <jsp:include page="../../includes/orders.jsp"/>
-    <jsp:include page="../../includes/footer.jsp"/>
+<jsp:include page="../../includes/headers/residentialHeader.jsp"/>
+<jsp:include page="../../includes/orders.jsp"/>
+<jsp:include page="../../includes/footer.jsp"/>
+
+<script type="text/javascript" src="<c:url value="${contextPath}/resources/js/suspendOrder.js"/>"></script>
 </body>
 </html>

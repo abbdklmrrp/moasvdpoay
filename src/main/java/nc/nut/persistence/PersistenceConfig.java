@@ -57,4 +57,8 @@ public class PersistenceConfig {
     public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
+//    @Bean
+//    public DataSourceTransactionManager transactionManager(DataSource dataSource){
+//        return new DataSourceTransactionManager(dataSource);
+//    }
 }
