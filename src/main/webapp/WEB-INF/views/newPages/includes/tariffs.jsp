@@ -25,7 +25,7 @@
                             <td id="${tariff.id}"><input type="button" onclick="deactivateTariff(${tariff.id})" value="Deactivate" class="btn btn-danger"></td>
                         </c:when>
                         <c:otherwise>
-                            <td id="${tariff.id}"><input type="button" onclick="activateTariff(${tariff.id})" value="Activate" class="btn btn-success"></td>
+                            <td id="${tariff.id}"><input type="button" onclick="activateTariff(${tariff.id}, ${currentTariff.id})" value="Activate" class="btn btn-success"></td>
                         </c:otherwise>
                     </c:choose>
                 </tr>
