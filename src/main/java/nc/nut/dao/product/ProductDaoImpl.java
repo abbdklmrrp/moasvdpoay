@@ -83,7 +83,7 @@ public class ProductDaoImpl implements ProductDao {
 
     private final static String UPDATE_SERVICE = "UPDATE PRODUCTS SET NAME=:name," +
             "DURATION=:duration,NEED_PROCESSING=:needProcessing," +
-            "DESCRIPTION=:description,STATUS=:status WHERE ID=:id";
+            "DESCRIPTION=:description,STATUS=:status,BASE_PRICE=:basePrice WHERE ID=:id";
 
     private final static String ADD_TARIFF_SERVICE = "INSERT INTO TARIFF_SERVICES(TARIFF_ID,SERVICE_ID) VALUES(:tariffId,:serviceId)";
     private final static String ADD_CATEGORY = "INSERT INTO PRODUCT_CATEGORIES(NAME,DESCRIPTION) VALUES(:name,:description)";
@@ -464,6 +464,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("needProcessing", product.getProcessingStrategy().getId());
         params.addValue("description", product.getDescription());
         params.addValue("status", product.getStatus().getId());
+        params.addValue("basePrice", product.getBasePrice());
         params.addValue("id", product.getId());
         int isUpdate = jdbcTemplate.update(UPDATE_SERVICE, params);
         return isUpdate > 0;
