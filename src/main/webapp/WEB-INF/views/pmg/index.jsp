@@ -8,11 +8,16 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>PMG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
 </head>
 <body bgcolor="#f5f5dc">
-<div align="center">
-    PMG page!
-    <a href="<%=request.getContextPath()%>/doLogout">Logout</a>
+<div class="login-form">
+    <h1>PMG PAGE</h1>
+    <div class="form-group "><br>
+        <h2><a href="${contextPath}/pmg/getProfile">Profile</a></h2><br>
+        <h2><a href="<%=request.getContextPath()%>/doLogout">Logout</a></h2><br>
+    </div>
 </div>
 </body>
 </html>

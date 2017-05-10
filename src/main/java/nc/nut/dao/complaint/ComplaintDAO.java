@@ -20,7 +20,7 @@ public interface ComplaintDAO extends Dao<Complaint> {
      * @param id id of CSR
      * @return list of complaints
      */
-    List<Complaint> getByCSRId(int id);
+    List<Complaint> getByPMGId(int id);
 
     /**
      * This method returns all complaints by concrete order.
@@ -29,6 +29,13 @@ public interface ComplaintDAO extends Dao<Complaint> {
      * @return list of complaints
      */
     List<Complaint> getByOrderId(int id);
+
+    /**
+     * This method returns all complaints with PMGId is NULL.
+     *
+     * @return list of complaints
+     */
+    List<Complaint> getAllWithoutPMGId();
 
     /**
      * This method returns all complaints by place.
@@ -45,6 +52,15 @@ public interface ComplaintDAO extends Dao<Complaint> {
      * @return list of complaints
      */
     List<Complaint> getByStatusID(int id);
+
+    /**
+     * This method set PMG id for complaint and change status.
+     *
+     * @param complaintId id of complaint
+     * @param pmgId id of PMG
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     */
+    boolean setPMGId(int complaintId, int pmgId);
 
     /**
      * This method changes status of complaint.

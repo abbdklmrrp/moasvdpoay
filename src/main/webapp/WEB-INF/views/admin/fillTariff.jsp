@@ -4,7 +4,6 @@
   User: Anna
   Date: 24.04.2017
   Time: 9:12
-  To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -30,18 +29,15 @@
             </select>
         </div>
 
-        <c:if test="${not empty errors}">
-            <span style="float:right ; color: #10CE88;">${errors}</span>
-        </c:if>
-        <c:if test="${not empty errorUniqueCategory}">
-            <span style="float:right ; color: #10CE88;">${errorUniqueCategory}</span>
+        <c:if test="${not empty errorFillTariff}">
+            <span style="float:right ; color: #10CE88;">${errorFillTariff}</span>
         </c:if>
 
         <fieldset>
-            <h6>All services</h6>
+            <h6>All categories</h6>
             <select name="categoriesID" id="categoriesID" multiple>
                 <c:forEach var="category" items="${allServices}">
-                    <option value="${category.name}">${category.name}</option>
+                    <option value="${category.categoryName}">${category.categoryName}</option>
                 </c:forEach>
             </select>
 

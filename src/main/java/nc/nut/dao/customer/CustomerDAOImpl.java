@@ -18,8 +18,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     private final static String FIND_COMPANY_SQL = "SELECT ID " +
             "FROM CUSTOMERS " +
             "WHERE NAME=:name AND SECRET_KEY=:secretKey";
-    private final static String SAVE_CUSTOMER_SQL = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY) " +
-             "VALUES(:name, :secretKey)";
+    private final static String SAVE_CUSTOMER_SQL = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY,TYPE_ID) " +
+             "VALUES(:name, :secretKey,:typeId)";
 
     private final static String SELECT_BUSINESS_CUSTOMERS="SELECT NAME FROM CUSTOMERS\n" +
             "WHERE ID NOT IN (SELECT CUSTOMER_ID FROM USERS WHERE ROLE_ID=4)";
@@ -71,9 +71,11 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public boolean save(Customer customer) {
         String password = encoder.encode(customer.getSecretKey());
+        Integer type=customer.getCustomerType().getId();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", customer.getName());
         params.addValue("secretKey", password);
+        params.addValue("typeId", type);
         return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params)>0;
     }
 

@@ -1,13 +1,11 @@
 $(document).ready(function () {
     $('#btnShowReport').click(function () {
         if (checkDate()) {
-            cleanErrors();
             drawChartAndTable();
         }
     });
     $('#btnDownloadReport').click(function () {
         if (checkDate()) {
-            cleanErrors();
             $('#formWithRegionsAndDates').submit();
         }
     });
@@ -40,13 +38,7 @@ function checkDate() {
 }
 
 function showError(message) {
-    $('#err').html(message);
-    $('#line_top_x').empty();
-    $('#table_div').empty();
-}
-
-function cleanErrors() {
-    $('#err').empty();
+    sweetAlert("Oops...", message, "error");
 }
 
 google.charts.load('current', {'packages': ['corechart']});
@@ -56,7 +48,7 @@ function drawChartAndTable() {
     var len = 0;
     var isError = Boolean(false);
     jQuery.ajax({
-        url: 'report/data',
+        url: 'data',
         type: "GET",
         dataType: "json",
         data: jQuery("#formWithRegionsAndDates").serialize(),

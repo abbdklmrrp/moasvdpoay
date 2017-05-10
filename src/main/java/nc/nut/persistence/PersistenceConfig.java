@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
@@ -13,8 +14,8 @@ import javax.sql.DataSource;
  * Created by Rysakova Anna on 20.04.2017.
  */
 @Configuration
-//@PropertySource("classpath:db/oracle.properties")
-@PropertySource("classpath:ANN_DB.properties")
+@PropertySource("classpath:db/oracle.properties")
+//@PropertySource("classpath:ANN_DB.properties")
 public class PersistenceConfig {
     @Value("${datasource.driver-class-name}")
     private String driver;
@@ -28,19 +29,16 @@ public class PersistenceConfig {
 
     @Bean(name = "dataSource")
     public DataSource dataSource() {
-/*        for glassfish connection pool
-        DataSource dataSource= null;
-        try {
-            dataSource = new OracleConnectionPoolDataSource();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            InitialContext initContext = new InitialContext();
-            dataSource = (DataSource) initContext.lookup("jdbc/ConnectionPool");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }*/
+//        for glassfish connection pool
+//        DataSource dataSource= null;
+//        try {
+//
+//            InitialContext initContext = new InitialContext();
+//            dataSource = (DataSource) initContext.lookup("jdbc/ConnectionPool");
+//        } catch (NamingException e) {
+//            e.printStackTrace();
+//        }
+//
 
         BasicDataSource dataSource = new BasicDataSource();
 //        DriverManagerDataSource dataSource = new DriverManagerDataSource();

@@ -1,6 +1,8 @@
 package nc.nut.dao.order;
 
 import nc.nut.dto.OrdersRowDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,9 @@ import java.util.List;
  */
 @Service
 public class OrderDaoImpl implements OrderDao {
+
+    private static Logger logger = LoggerFactory.getLogger(OrderDaoImpl.class);
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Resource
@@ -42,11 +47,15 @@ public class OrderDaoImpl implements OrderDao {
     private final static String SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL = "SELECT id FROM Orders " +
             "WHERE product_id = :productId " +
             "AND user_id = :userId " +
-            "AND current_status_id = 1/* Active */";
+            "AND (current_status_id = 1/* Active */ " +
+            "     OR current_status_id = 2/* Suspended */ " +
+            "     OR current_status_id = 4/* In processing */)";
     private final static String SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL = "SELECT id FROM Orders " +
             "WHERE product_id IN (SELECT id FROM Products WHERE name = :productName) " +
             "AND user_id = :userId " +
-            "AND current_status_id = 1/* Active */";
+            "AND (current_status_id = 1/* Active */ " +
+            "     OR current_status_id = 2/* Suspended */ " +
+            "     OR current_status_id = 4/* In processing */)";
     private final static String DELETE_ORDER_BY_ID_SQL = "DELETE FROM ORDERS WHERE ID = :id;";
     private final static String SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL = "SELECT * FROM ORDERS WHERE\n" +
             "  PRODUCT_ID = :product_id\n" +
@@ -113,7 +122,12 @@ public class OrderDaoImpl implements OrderDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
         params.addValue("productId", productId);
-        return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
+        try {
+            return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
+        } catch (Exception e) {
+            logger.debug("There are no user`s orders with such params.");
+            return null;
+        }
     }
 
     /**
@@ -124,7 +138,12 @@ public class OrderDaoImpl implements OrderDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
         params.addValue("productName", productName);
-        return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL, params, Integer.class);
+        try {
+            return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL, params, Integer.class);
+        } catch (Exception e) {
+            logger.debug("There are no user`s orders with such params.");
+            return null;
+        }
     }
 
     /**

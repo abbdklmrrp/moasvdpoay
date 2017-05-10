@@ -16,18 +16,18 @@ public class Complaint {
     private Calendar creationDate;
     private String description;
     private ComplaintStatus status;
-    private Integer csrId;
+    private Integer pmgId;
     private Integer orderId;
 
     public Complaint() {
     }
 
-    public Complaint(int id, Calendar creationDate, String description, ComplaintStatus status, int csrId, int orderId) {
+    public Complaint(int id, Calendar creationDate, String description, ComplaintStatus status, int pmgId, int orderId) {
         this.id = id;
         this.creationDate = creationDate;
         this.description = description;
         this.status = status;
-        this.csrId = csrId;
+        this.pmgId = pmgId;
         this.orderId = orderId;
     }
 
@@ -63,12 +63,12 @@ public class Complaint {
         this.status = status;
     }
 
-    public Integer getCsrId() {
-        return csrId;
+    public Integer getPmgId() {
+        return pmgId;
     }
 
-    public void setCsrId(Integer csrId) {
-        this.csrId = csrId;
+    public void setPmgId(Integer pmgId) {
+        this.pmgId = pmgId;
     }
 
     public Integer getOrderId() {
@@ -81,7 +81,7 @@ public class Complaint {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("Complaint{").append("id=").append(id).append(", creationDate=").append(creationDate).append(", description=").append(description).append(", status=").append(status).append(", csrId=").append(csrId).append(", orderId=").append(orderId).append('}').toString();
+        return new StringBuilder().append("Complaint{").append("id=").append(id).append(", creationDate=").append(creationDate).append(", description=").append(description).append(", status=").append(status).append(", pmgId=").append(pmgId).append(", orderId=").append(orderId).append('}').toString();
     }
 
 }

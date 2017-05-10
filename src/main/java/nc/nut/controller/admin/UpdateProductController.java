@@ -3,10 +3,11 @@ package nc.nut.controller.admin;
 import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductDao;
 import nc.nut.services.ProductService;
+import nc.nut.util.ProductUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Anna on 30.04.2017.
@@ -32,68 +33,81 @@ public class UpdateProductController {
     private ProductDao productDao;
     @Resource
     private ProductService productService;
-    private Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
 
-    @RequestMapping(value = {"updateTariff"}, method = RequestMethod.GET)
-    String getTariffForUpdate(Model model) {
+    private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
+    private static final String ERROR_UNEXPECTED = "Unexpected error";
+    private static final String ERROR_IN_CONNECTION = "Error with connection to db";
 
-        List<Product> allServices = productDao.getAllServices();
-        List<Product> allTariffs = productDao.getAllTariffs();
-
-        model.addAttribute("allServices", allServices);
-        model.addAttribute("allTariffs", allTariffs);
-
-        return "admin/updateTariff";
-    }
+    private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
 
     @RequestMapping(value = {"updateService"}, method = RequestMethod.POST)
-    String updateService(Product product, HttpSession session) {
+    public String updateService(Product product, HttpSession session) {
+
         Integer id = (Integer) session.getAttribute("productId");
+        logger.debug("Receive service's id {} ", id);
         product.setId(id);
-        productService.updateProduct(product);
+        logger.debug("Write ID to product {} ", product.getId());
+        boolean isUpdate = productService.updateProduct(product);
+        logger.debug("Service was update {} ", isUpdate);
         session.removeAttribute("productId");
+        logger.debug("Attribute 'productId' was removed from session");
+
         return "redirect:/admin/index";
     }
 
     @RequestMapping(value = {"updateTariff"}, method = RequestMethod.POST)
-    String updateTariff(Product product,
-                        @RequestParam(value = "selectto") String services,
-                        Model model, HttpSession session) {
+    public ModelAndView updateTariff(Product product,
+                                     @RequestParam(value = "selectedService", required = false) String services,
+                                     ModelAndView mav, HttpSession session) {
 
-        String[] servicesId = services.split(",");
         Integer id = (Integer) session.getAttribute("productId");
-        product.setId(id);
+        logger.debug("Receive tariff's id {} ", id);
+        Product tariff = productDao.getById(id);
+        logger.debug("Checked that the tariff exists {} ", tariff.toString());
 
-        productService.updateFillTariff(servicesId, product);
-        productService.updateTariffWithNewServices(servicesId, product);
-        productService.updateProduct(product);
+        if (Objects.equals(services, null) || Objects.equals(tariff, null)) {
+            logger.error("Incoming data error with services {} ", Objects.equals(services, null));
+            logger.error("Incoming data error with tariff {} ", Objects.equals(tariff, null));
+            mav.addObject("errorFillTariff", ERROR_FILL_IN_TARIFF_SERVICES);
+            mav.setViewName("admin/updateTariff");
+            return mav;
+        }
+        product.setId(id);
+        logger.debug("Write ID to product {} ", product.getId());
+        Integer[] servicesIdArray = ProductUtil.convertStringToIntegerArray(services);
+        logger.debug("Convert a string array of service's ID to an integer array");
+
+        try {
+            productService.updateFillingOfTariffsWithServices(servicesIdArray, product);
+            logger.debug("Update tariff: removed unnecessary services, added new services");
+            productService.updateProduct(product);
+            logger.debug("Update fields of service");
+        } catch (DataIntegrityViolationException ex) {
+            logger.error("Error with filling database {}", ex);
+            mav.addObject("errorFillTariff ", ERROR_IN_CONNECTION);
+            mav.setViewName("admin/fillTariff");
+            return mav;
+        }
 
         session.removeAttribute("productId");
-        session.removeAttribute("servicesByTariff");
-        session.removeAttribute("servicesNotInTariff");
-
-        return "redirect:/admin/index";
+        logger.debug("Attribute 'productId' was removed from session");
+        mav.setViewName("redirect:/admin/index");
+        return mav;
     }
 
     @ExceptionHandler({Exception.class})
-    public ModelAndView resolveException(Exception exception,
-                                         HttpServletRequest request,
-                                         HttpSession session) {
-
-        ModelAndView mav = new ModelAndView("redirect:/admin/getDetailsProduct");
+    public ModelAndView resolveException(Exception exception, HttpServletRequest request, ModelAndView mav) {
         FlashMap outputFlashMap = RequestContextUtils.getOutputFlashMap(request);
         if (outputFlashMap != null) {
             if (exception instanceof MissingServletRequestParameterException) {
                 logger.error("Services must be selected", exception.getMessage());
-                mav.addObject("servicesByTariff", session.getAttribute("servicesByTariff"));
-                mav.addObject("servicesNotInTariff", session.getAttribute("servicesNotInTariff"));
-                mav.addObject("id", session.getAttribute("id"));
-                outputFlashMap.put("errors", "Select all new services: ");
+                outputFlashMap.put("errors", ERROR_FILL_IN_TARIFF_SERVICES);
             } else {
                 logger.error("Unexpected error", exception.getMessage());
-                outputFlashMap.put("errors", "Unexpected error: " + exception.getMessage());
+                outputFlashMap.put("errors", ERROR_UNEXPECTED + exception.getMessage());
             }
         }
+        mav.setViewName("admin/index");
         return mav;
     }
 }

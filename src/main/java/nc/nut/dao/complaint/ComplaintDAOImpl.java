@@ -1,10 +1,9 @@
 package nc.nut.dao.complaint;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -15,18 +14,20 @@ import java.util.List;
 @Repository
 public class ComplaintDAOImpl implements ComplaintDAO {
 
-    private final static String GET_ALL_BY_CSR_ID_SQL = "SELECT * FROM COMPLAINTS WHERE CSR_ID = :csrId";
+    private final static String GET_ALL_BY_PMG_ID_SQL = "SELECT * FROM COMPLAINTS WHERE PMG_ID = :pmgId";
     private final static String GET_ALL_BY_ORDER_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ORDER_ID = :orderId";
     private final static String GET_ALL_BY_STATUS_ID_SQL = "SELECT * FROM COMPLAINTS WHERE STATUS_ID = :statusId";
+    private final static String SET_PMG_ID_SQL = "UPDATE COMPLAINTS SET PMG_ID = :pmgId, STATUS_ID = 2/* in processing */ WHERE ID = :id";
+    private final static String GET_ALL_WITH_PMG_ID_IS_NULL_SQL = "SELECT * FROM COMPLAINTS WHERE PMG_ID is NULL";
     private final static String GET_BY_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ID = :id";
-    private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints(ORDER_ID,CSR_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
+    private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints(ORDER_ID,PMG_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
             "VALUES(:orderId,:csrId,:creatingDate,:statusId,:description)";
     private final static String UPDATE_STATUS_ID_SQL = "UPDATE COMPLAINTS SET STATUS_ID = :statusId WHERE ID = :id";
     private final static String UPDATE_DESCRIPTION_SQL = "UPDATE COMPLAINTS SET DESCRIPTION = :description WHERE ID = :id";
     private final static String GET_ALL_BY_PLACE_ID_SQL = "SELECT " +
             "   COMPLAINTS.ID, \n" +
             "   COMPLAINTS.ORDER_ID, \n" +
-            "   COMPLAINTS.CSR_ID, \n" +
+            "   COMPLAINTS.PMG_ID, \n" +
             "   COMPLAINTS.CREATING_DATE, \n" +
             "   COMPLAINTS.STATUS_ID, \n" +
             "   COMPLAINTS.DESCRIPTION\n" +
@@ -70,7 +71,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     public boolean save(Complaint object) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("orderId", object.getOrderId());
-        params.addValue("csrId", object.getCsrId());
+        params.addValue("csrId", object.getPmgId());
         params.addValue("creatingDate", object.getCreationDate());
         params.addValue("statusId", object.getStatus().getId());
         params.addValue("description", object.getDescription());
@@ -84,10 +85,10 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     }
 
     @Override
-    public List<Complaint> getByCSRId(int id) {
+    public List<Complaint> getByPMGId(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("csrId", id);
-        return jdbcTemplate.query(GET_ALL_BY_CSR_ID_SQL, params, complaintRowMapper);
+        params.addValue("pmgId", id);
+        return jdbcTemplate.query(GET_ALL_BY_PMG_ID_SQL, params, complaintRowMapper);
     }
 
     @Override
@@ -95,6 +96,11 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("orderId", id);
         return jdbcTemplate.query(GET_ALL_BY_ORDER_ID_SQL, params, complaintRowMapper);
+    }
+
+    @Override
+    public List<Complaint> getAllWithoutPMGId() {
+        return jdbcTemplate.query(GET_ALL_WITH_PMG_ID_IS_NULL_SQL, complaintRowMapper);
     }
 
     @Override
@@ -109,6 +115,15 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("statusId", id);
         return jdbcTemplate.query(GET_ALL_BY_STATUS_ID_SQL, params, complaintRowMapper);
+    }
+
+    @Override
+    @Transactional
+    public boolean setPMGId(int complaintId, int pmgId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pmgId", pmgId);
+        params.addValue("id", complaintId);
+        return jdbcTemplate.update(SET_PMG_ID_SQL, params) > 0;
     }
 
     @Override

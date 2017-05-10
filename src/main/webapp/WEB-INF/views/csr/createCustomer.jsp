@@ -19,7 +19,7 @@
     <div class="login-form">
         <h2>Create new customer</h2>
             <div class="form-group ">
-                <input type="text" class="form-control" placeholder="Company name " id="CompanyName" name="companyName">
+                <input type="text" class="form-control" placeholder="Company name " id="name" name="name">
                 <i class="fa fa-user"></i>
             </div>
             <div class="form-group ">

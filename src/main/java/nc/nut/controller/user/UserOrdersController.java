@@ -10,6 +10,9 @@ import nc.nut.services.OrderService;
 import nc.nut.utils.DatesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +29,7 @@ import java.util.List;
  * Created by Yuliya Pedash on 07.05.2017.
  */
 @Controller
-@RequestMapping({"user"})
+@RequestMapping({"","csr","user"})
 public class UserOrdersController {
     private final static String SUCCESS_MSG = "Thank you! Your order will be suspended from %s to %s.";
     private final static String DATE_ERROR_MSG = "Unable to suspend your order. Please, check the dates you've entered.";
@@ -48,9 +51,21 @@ public class UserOrdersController {
     @RequestMapping(value = {"orders"}, method = RequestMethod.GET)
     public String showOrdersForUser(Model model) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        logger.debug("Current user: {}", user.toString());
+        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsByUserId(user.getId());
         List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
         model.addAttribute("ordersRows", ordersRows);
         return "newPages/user/residential/Orders";
+        return "newPages/user/residential/Orders";
+    }
+
+    @RequestMapping(value = {"business/orders"}, method = RequestMethod.GET)
+    public String showOrdersForBusinessUser(Model model) {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        logger.debug("Current user: {}", user.toString());
+        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsByUserId(user.getId());
+        model.addAttribute("ordersRows", ordersRows);
+        return "newPages/user/business/Orders";
     }
 
     @RequestMapping(value = {"/suspend"}, method = RequestMethod.POST)
