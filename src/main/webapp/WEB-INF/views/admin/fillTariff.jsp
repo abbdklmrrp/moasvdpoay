@@ -22,7 +22,7 @@
     <div class="login-form">
         <h1>SELECT SERVICES</h1>
         <div class="form-group ">
-            <select name="productId" class="form-control" id="tariffs">
+            <select name="tariffId" class="form-control" id="tariffs">
                 <c:forEach var="tariff" items="${tariffs}">
                     <option value="${tariff.id}">${tariff.name}</option>
                 </c:forEach>
@@ -47,7 +47,7 @@
 
             <a href="JavaScript:void(0);" id="btn-add">Add&raquo;</a>
             <h6>Selected services</h6>
-            <select name="selectedService" id="selectedService" multiple="multiple">
+            <select name="selectedService" id="selectedService" multiple="multiple" required>
             </select>
             <a href="JavaScript:void(0);" id="btn-remove">&laquo; Remove</a>
 

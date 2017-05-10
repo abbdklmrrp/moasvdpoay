@@ -14,15 +14,6 @@
         <div class="login-form">
             <h1 style="text-align: center">Create service</h1>
 
-            <%--<h6>Select product type</h6>--%>
-            <%--<div class="form-group ">--%>
-            <%--<select id="productType" name="productType" class="form-control" aria-required="true" onChange="Selected(this)">--%>
-            <%--<c:forEach var="productType" items="${productTypes}">--%>
-            <%--<option value="${productType}">${productType}</option>--%>
-            <%--</c:forEach>--%>
-            <%--</select>--%>
-            <%--</div>--%>
-
             <c:if test="${not empty error}">
                 <span style="float:right ; color: #10CE88;">${error}</span>
             </c:if>
@@ -33,9 +24,9 @@
             <div class="form-group row" id='categoryId'>
                 <label class="col-sm-4 control-label">Select category</label>
                 <div class="col-sm-8">
-                    <select name="categoryId" class="form-control" required>
+                    <select name="categoryId" class="form-control" onclick="SelectedCategory(this)" required>
                         <c:forEach var="category" items="${productCategories}">
-                            <option value="${category.id}">${category.name}</option>
+                            <option value="${category.id}">${category.categoryName}</option>
                         </c:forEach>
                         <option value="">New category</option>
                     </select>
@@ -45,7 +36,7 @@
                 <label class="col-sm-4 control-label">Enter new category</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="New category"
-                           name="newCategory" id="newCategory-inpt">
+                           name="categoryName" id="newCategory-inpt">
                     <i class="fa fa-user"></i>
                 </div>
             </div>
@@ -53,8 +44,8 @@
                 <label class="col-sm-4 control-label">Enter new category description</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control"
-                                             placeholder="New category description "
-                                             name="newCategoryDesc" id="newCategoryDesc-inpt">
+                           placeholder="New category description "
+                           name="categoryDescription" id="newCategoryDesc-inpt">
                     <i class="fa fa-user"></i>
                 </div>
             </div>
@@ -62,7 +53,7 @@
                 <label class="col-sm-4 control-label">Enter name</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="Name " id="Name"
-                                             name="name" required>
+                           name="name" required>
                     <i class="fa fa-user"></i>
                 </div>
             </div>
@@ -70,17 +61,25 @@
                 <label class="col-sm-4 control-label">Enter description</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="Description "
-                                             id="Description" name="description" required>
+                           id="Description" name="description" required>
+                    <i class="fa fa-user"></i>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 control-label">Enter base price</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" placeholder="0 "
+                           id="basePrice" name="basePrice" required>
                     <i class="fa fa-user"></i>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-4 control-label">Customer type</label>
                 <div class="col-sm-8">
-                    <select name="customerTypeId" class="form-control" id="customerTypeId" required>
-                    <option value="1">Legal</option>
-                    <option value="2">Individual</option>
-                </select></div>
+                    <select name="customerType" class="form-control" id="customerTypeId" required>
+                        <option value="Business">Business</option>
+                        <option value="Residential">Residential</option>
+                    </select></div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-4 control-label">Select duration in days</label>
@@ -94,15 +93,12 @@
                 <label class="col-sm-4 control-label">Need processing by admin</label>
                 <div class="col-sm-8">
                     <div class="row">
-                        <input type="radio" name="needProcessing" class="col-sm-1" value="1">
-                        <label class="col-sm-5 control-label">Yes</label>
-                        <input type="radio" name="needProcessing" class="col-sm-1" value="0" checked>
-                        <label class="col-sm-5 control-label">No</label>
+                        <input type="radio" name="processingStrategy" class="col-sm-1" value="NeedProcessing">
+                        <label class="col-sm-5 control-label">Need Processing</label>
+                        <input type="radio" name="processingStrategy" class="col-sm-1" value="DoNotNeedProcessing"
+                               checked>
+                        <label class="col-sm-5 control-label">Do Not Need Processing</label>
                     </div>
-                    <%--<select name="needProcessing" class="form-control" id="needProcessing">--%>
-                    <%--<option value="1">Need processing</option>--%>
-                    <%--<option value="0">Do not need processing</option>--%>
-                    <%--</select>--%>
                 </div>
             </div>
 
@@ -110,15 +106,11 @@
                 <label class="col-sm-4 control-label">Select status service</label>
                 <div class="col-sm-8">
                     <div class="row">
-                        <input type="radio" name="status" class="col-sm-1" value="1">
-                        <label class="col-sm-5 control-label">Activate</label>
-                        <input type="radio" name="status" class="col-sm-1" value="0" checked>
-                        <label class="col-sm-5 control-label">Not active</label>
+                        <input type="radio" name="status" class="col-sm-1" value="Available">
+                        <label class="col-sm-5 control-label">Available</label>
+                        <input type="radio" name="status" class="col-sm-1" value="NotAvailable" checked>
+                        <label class="col-sm-5 control-label">Not Available</label>
                     </div>
-                    <%--<select name="status" class="form-control" id="Status">--%>
-                        <%--<option value="1">Activate</option>--%>
-                        <%--<option value="0">Not active</option>--%>
-                    <%--</select>--%>
                 </div>
             </div>
             <div class="row">
@@ -132,10 +124,10 @@
 </div>
 
 <jsp:include page="../includes/footer.jsp"/>
-<%--<script type="text/javascript" src="http://www.google.com/jsapi"></script>--%>
-<%--<script type="text/javascript">--%>
-<%--google.load("jquery", "1.4.4");--%>
-<%--</script>--%>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("jquery", "1.4.4");
+</script>
 <script src="<c:url value="/resources/js/newCategoryService.js"/>"></script>
 </body>
 </html>
