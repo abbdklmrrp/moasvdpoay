@@ -22,15 +22,15 @@
     <div class="login-form">
         <h1>SELECT SERVICES</h1>
         <div class="form-group ">
-            <select name="tariffId" class="form-control" id="tariffs">
+            <select name="productId" class="form-control" id="tariffs">
                 <c:forEach var="tariff" items="${tariffs}">
                     <option value="${tariff.id}">${tariff.name}</option>
                 </c:forEach>
             </select>
         </div>
 
-        <c:if test="${not empty errorFillTariff}">
-            <span style="float:right ; color: #10CE88;">${errorFillTariff}</span>
+        <c:if test="${not empty errorFilling}">
+            <span style="float:right ; color: #10CE88;">${errorFilling}</span>
         </c:if>
 
         <fieldset>
