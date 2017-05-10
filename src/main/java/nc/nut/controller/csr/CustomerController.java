@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 @RequestMapping({"csr","admin"})
 public class CustomerController {
 
-    
+
     @Resource
     private CustomerDAO customerDAO;
     @Resource
