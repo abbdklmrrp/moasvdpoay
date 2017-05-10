@@ -10,9 +10,6 @@ import nc.nut.services.OrderService;
 import nc.nut.utils.DatesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,14 +45,12 @@ public class UserOrdersController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
 
-    @RequestMapping(value = {"orders"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"residential/orders"}, method = RequestMethod.GET)
     public String showOrdersForUser(Model model) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user: {}", user.toString());
-        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsByUserId(user.getId());
         List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
         model.addAttribute("ordersRows", ordersRows);
-        return "newPages/user/residential/Orders";
         return "newPages/user/residential/Orders";
     }
 
@@ -63,12 +58,12 @@ public class UserOrdersController {
     public String showOrdersForBusinessUser(Model model) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user: {}", user.toString());
-        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsByUserId(user.getId());
+        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
         model.addAttribute("ordersRows", ordersRows);
         return "newPages/user/business/Orders";
     }
 
-    @RequestMapping(value = {"/suspend"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/residential/suspend", "/business/suspend"}, method = RequestMethod.POST)
     @ResponseBody
     public String suspendOrder(@RequestBody SuspendFormDTO suspendFormDTO) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");

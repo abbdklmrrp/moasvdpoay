@@ -5,7 +5,6 @@ import nc.nut.dao.order.OrderDao;
 import nc.nut.dao.plannedTask.PlannedTask;
 import nc.nut.dao.plannedTask.PlannedTaskDao;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
@@ -35,7 +34,8 @@ public class OrderService {
      * @param orderId   order id
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
-    @Transactional
+    //todo transactins
+    //  @Transactional
     public boolean suspendOrder(Calendar beginDate, Calendar endDate, Integer orderId) {
         PlannedTask suspendPlanTask = new PlannedTask();
         PlannedTask activatedPlanTask = new PlannedTask();
