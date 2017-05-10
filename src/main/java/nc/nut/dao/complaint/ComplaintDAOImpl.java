@@ -20,8 +20,8 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     private final static String SET_PMG_ID_SQL = "UPDATE COMPLAINTS SET PMG_ID = :pmgId, STATUS_ID = 2/* in processing */ WHERE ID = :id";
     private final static String GET_ALL_WITH_PMG_ID_IS_NULL_SQL = "SELECT * FROM COMPLAINTS WHERE PMG_ID is NULL";
     private final static String GET_BY_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ID = :id";
-    private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints(ORDER_ID,PMG_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
-            "VALUES(:orderId,:csrId,:creatingDate,:statusId,:description)";
+    private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints(ORDER_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
+            "VALUES(:orderId,:creatingDate,:statusId,:description)";
     private final static String UPDATE_STATUS_ID_SQL = "UPDATE COMPLAINTS SET STATUS_ID = :statusId WHERE ID = :id";
     private final static String UPDATE_DESCRIPTION_SQL = "UPDATE COMPLAINTS SET DESCRIPTION = :description WHERE ID = :id";
     private final static String GET_ALL_BY_PLACE_ID_SQL = "SELECT " +
@@ -71,7 +71,6 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     public boolean save(Complaint object) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("orderId", object.getOrderId());
-        params.addValue("csrId", object.getPmgId());
         params.addValue("creatingDate", object.getCreationDate());
         params.addValue("statusId", object.getStatus().getId());
         params.addValue("description", object.getDescription());

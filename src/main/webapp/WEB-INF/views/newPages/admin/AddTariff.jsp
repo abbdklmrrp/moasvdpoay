@@ -10,10 +10,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>ADD NEW TARIFF</title>
-    <link href="<c:url value="/resources/css/basic.css"/>" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <jsp:include page="../includes/head.jsp">
+        <jsp:param name="title" value="New Tariff"/>
+    </jsp:include>
     <%--<script type="text/javascript">--%>
     <%--google.load("jquery", "1.4.4");--%>
     <%--</script>--%>
@@ -21,102 +20,82 @@
     <%--<script src="<c:url value="/resources/js/serviceTariff.js"/>"></script>--%>
 </head>
 <body>
-<form method="POST" modelAttribute="product" action="<%=request.getContextPath()%>/admin/addTariff">
-    <div class="login-form">
-        <h1>ENTER NEW TARIFF</h1><br>
+<jsp:include page="../includes/headers/adminHeader.jsp"/>
+<div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
+    <form method="POST" modelAttribute="product" action="<%=request.getContextPath()%>/admin/addTariff">
+        <div class="login-form">
+            <h1 style="text-align: center;">Create new tariff</h1>
 
-        <%--<h6>Select product type</h6>--%>
-        <%--<div class="form-group ">--%>
-        <%--<select id="productType" name="productType" class="form-control" aria-required="true" onChange="Selected(this)">--%>
-        <%--<c:forEach var="productType" items="${productTypes}">--%>
-        <%--<option value="${productType}">${productType}</option>--%>
-        <%--</c:forEach>--%>
-        <%--</select>--%>
-        <%--</div>--%>
+            <c:if test="${not empty error}">
+                <span style="float:right ; color: #10CE88;">${error}</span>
+            </c:if>
+            <c:if test="${not empty errorEmptyProduct}">
+                <span style="float:right ; color: #10CE88;">${errorEmptyProduct}</span>
+            </c:if>
 
-        <c:if test="${not empty error}">
-            <span style="float:right ; color: #10CE88;">${error}</span>
-        </c:if>
-        <c:if test="${not empty errorEmptyProduct}">
-            <span style="float:right ; color: #10CE88;">${errorEmptyProduct}</span>
-        </c:if>
-
-        <%--<div id='Block1' style='display: none;'>--%>
-        <%--<div class="form-group ">--%>
-        <%--<h6>Select category</h6>--%>
-        <%--<select name="categoryId" class="form-control" >--%>
-        <%--<c:forEach var="category" items="${productCategories}">--%>
-        <%--<option value="${category.id}">${category.name}</option>--%>
-        <%--</c:forEach>--%>
-        <%--<option value="">New category</option>--%>
-        <%--</select>--%>
-        <%--</div>--%>
-        <%--</div>--%>
-
-        <%--<div id="newCategory">--%>
-        <%--<div class="form-group ">--%>
-        <%--<h6>Enter new category</h6>--%>
-        <%--<input type="text" class="form-control" placeholder="New category " name="newCategory">--%>
-        <%--<i class="fa fa-user"></i>--%>
-        <%--</div>--%>
-        <%--</div>--%>
-
-        <%--<div id="newCategoryDesc">--%>
-        <%--<div class="form-group ">--%>
-        <%--<h6>Enter new category description</h6>--%>
-        <%--<input type="text" class="form-control" placeholder="New category description "--%>
-        <%--name="newCategoryDesc">--%>
-        <%--<i class="fa fa-user"></i>--%>
-        <%--</div>--%>
-        <%--</div>--%>
-
-        <div class="form-group ">
-            <h6>Enter name</h6>
-            <input type="text" class="form-control" placeholder="Name " id="Name" name="name">
-            <i class="fa fa-user"></i>
+            <div class="form-group row">
+                <label class="col-sm-4 control-label">Enter name</label>
+                <div class="col-sm-8"> <input type="text" class="form-control" placeholder="Name " id="Name" name="name">
+                    <i class="fa fa-user"></i>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 control-label">Enter description</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" placeholder="Description " id="Description" name="description">
+                    <i class="fa fa-user"></i>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 control-label">Customer type</label>
+                <div class="col-sm-8">
+                    <select name="customerTypeId" class="form-control" id="customerTypeId">
+                        <option value="1">Business</option>
+                        <option value="2">Residential</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 control-label">Select duration in days</label>
+                <div class="col-sm-8">
+                    <select name="durationInDays" class="form-control" id="durationInDays">
+                        <option value="365">365</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 control-label">Need processing by admin</label>
+                <div class="col-sm-8">
+                    <div class="row">
+                        <input type="radio" name="needProcessing" class="col-sm-1" value="1">
+                        <label class="col-sm-5 control-label">Need Processing</label>
+                        <input type="radio" name="needProcessing" class="col-sm-1" value="0"
+                               checked>
+                        <label class="col-sm-5 control-label">Do Not Need Processing</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4 control-label">Select status service</label>
+                <div class="col-sm-8">
+                    <div class="row">
+                        <input type="radio" name="status" class="col-sm-1" value="1">
+                        <label class="col-sm-5 control-label">Activate</label>
+                        <input type="radio" name="status" class="col-sm-1" value="0" checked>
+                        <label class="col-sm-5 control-label">Not active</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 col-xs-0"></div>
+                <button type="submit" class="btn btn-primary col-sm-4 col-xs-12">Save</button>
+                <div class="col-sm-4 col-xs-0"></div>
+            </div>
         </div>
-
-        <div class="form-group ">
-            <h6>Enter description</h6>
-            <input type="text" class="form-control" placeholder="Description " id="Description" name="description">
-            <i class="fa fa-user"></i>
-        </div>
-
-        <div class="form-group ">
-            <h6>Customer type</h6>
-            <select name="customerTypeId" class="form-control" id="customerTypeId">
-                <option value="1">Legal</option>
-                <option value="2">Individual</option>
-            </select>
-        </div>
-
-        <div class="form-group ">
-            <h6>Select duration in days</h6>
-            <select name="durationInDays" class="form-control" id="durationInDays">
-                <option value="365">365</option>
-            </select>
-        </div>
-
-        <div class="form-group ">
-            <h6>Need processing by admin</h6>
-            <select name="needProcessing" class="form-control" id="needProcessing">
-                <option value="1">Need processing</option>
-                <option value="0">Do not need processing</option>
-            </select>
-        </div>
-
-        <div class="form-group ">
-            <h6>Select status service</h6>
-            <select name="status" class="form-control" id="Status">
-                <option value="1">Activate</option>
-                <option value="0">Not active</option>
-            </select>
-        </div>
-        <button type="submit" class="log-btn">Save</button>
-        <br>
-        <h2><a href="${contextPath}/doLogout">Logout</a></h2>
-
-    </div>
+    </form>
+</div>
+<jsp:include page="../includes/footer.jsp"/>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 </form>
 </body>
 </html>

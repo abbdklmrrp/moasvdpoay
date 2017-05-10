@@ -1,4 +1,4 @@
-<div class="container" style="width:60%; max-width: 400px;">
+<div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
 
     <form id="details-form" modelAttribute="user" action="${pageContext.request.contextPath}/${pattern}/editProfile"
           method="post">
