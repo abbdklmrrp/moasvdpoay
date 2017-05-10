@@ -1,6 +1,7 @@
 package nc.nut.dao.product;
 
 import nc.nut.dao.user.UserDAO;
+import nc.nut.dto.PriceByRegionDto;
 import nc.nut.dto.TariffServiceDto;
 import nc.nut.mail.Mailer;
 import org.slf4j.Logger;
@@ -239,6 +240,16 @@ public class ProductDaoImpl implements ProductDao {
             "WHERE product.ID NOT IN (SELECT price.PRODUCT_ID\n" +
             "                         FROM PRICES price)\n" +
             "      AND product.CUSTOMER_TYPE_ID = 2";
+
+    private final static String FIND_PRODUCT_PRICE_BY_REGION = "SELECT\n" +
+            "  product.ID,\n" +
+            "  product.NAME,\n" +
+            "  product.DESCRIPTION,\n" +
+            "  place.NAME PLACE,\n" +
+            "  price.PRICE\n" +
+            "FROM PRODUCTS product\n" +
+            "  JOIN PRICES price ON (product.ID = price.PRODUCT_ID)\n" +
+            "  JOIN PLACES place ON (price.PLACE_ID = place.ID)";
 
     @Autowired
     @Qualifier("dataSource")
@@ -782,6 +793,20 @@ public class ProductDaoImpl implements ProductDao {
             product.setId(rs.getInt("ID"));
             product.setName(rs.getString("NAME"));
             return product;
+        });
+        return products;
+    }
+
+    @Override
+    public List<PriceByRegionDto> getProductPriceByRegion() {
+        List<PriceByRegionDto> products = jdbcTemplate.query(FIND_PRODUCT_PRICE_BY_REGION, (rs, rowNum) -> {
+            PriceByRegionDto priceByRegionDto = new PriceByRegionDto();
+            priceByRegionDto.setProductId(rs.getInt("ID"));
+            priceByRegionDto.setProductName(rs.getString("NAME"));
+            priceByRegionDto.setProductDescription(rs.getString("DESCRIPTION"));
+            priceByRegionDto.setPlaceName(rs.getString("PLACE"));
+            priceByRegionDto.setPriceProduct(rs.getBigDecimal("PRICE"));
+            return priceByRegionDto;
         });
         return products;
     }

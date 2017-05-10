@@ -9,7 +9,7 @@
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="All complaints"/>
+        <jsp:param name="tittle" value="Fill products with prices"/>
     </jsp:include>
 </head>
 <body>
