@@ -30,7 +30,6 @@
                         <li><a href="${pageContext.request.contextPath}/admin/getCreateCustomer">New customer</a></li>
                     </ul>
                 </li>
-                <li><a href="#">Promotions</a></li>
                 <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>
             </ul>
         </div>

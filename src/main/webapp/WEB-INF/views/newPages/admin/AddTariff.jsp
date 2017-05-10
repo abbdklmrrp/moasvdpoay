@@ -22,7 +22,7 @@
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp"/>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
-    <form method="POST" modelAttribute="product" action="<%=request.getContextPath()%>/admin/addTariff">
+    <form method="POST" modelAttribute="product" action="${contextPath}/admin/addTariff">
         <div class="login-form">
             <h1 style="text-align: center;">Create new tariff</h1>
 
@@ -47,6 +47,14 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-sm-4 control-label">Enter base price</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" placeholder="0 "
+                           id="basePrice" name="basePrice" required>
+                    <i class="fa fa-user"></i>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-sm-4 control-label">Customer type</label>
                 <div class="col-sm-8">
                     <select name="customerTypeId" class="form-control" id="customerTypeId">
@@ -67,22 +75,23 @@
                 <label class="col-sm-4 control-label">Need processing by admin</label>
                 <div class="col-sm-8">
                     <div class="row">
-                        <input type="radio" name="needProcessing" class="col-sm-1" value="1">
+                        <input type="radio" name="processingStrategy" class="col-sm-1" value="NeedProcessing">
                         <label class="col-sm-5 control-label">Need Processing</label>
-                        <input type="radio" name="needProcessing" class="col-sm-1" value="0"
+                        <input type="radio" name="processingStrategy" class="col-sm-1" value="DoNotNeedProcessing"
                                checked>
                         <label class="col-sm-5 control-label">Do Not Need Processing</label>
                     </div>
                 </div>
             </div>
+
             <div class="form-group row">
                 <label class="col-sm-4 control-label">Select status service</label>
                 <div class="col-sm-8">
                     <div class="row">
-                        <input type="radio" name="status" class="col-sm-1" value="1">
-                        <label class="col-sm-5 control-label">Activate</label>
-                        <input type="radio" name="status" class="col-sm-1" value="0" checked>
-                        <label class="col-sm-5 control-label">Not active</label>
+                        <input type="radio" name="status" class="col-sm-1" value="Available">
+                        <label class="col-sm-5 control-label">Available</label>
+                        <input type="radio" name="status" class="col-sm-1" value="NotAvailable" checked>
+                        <label class="col-sm-5 control-label">Not Available</label>
                     </div>
                 </div>
             </div>
