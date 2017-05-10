@@ -36,7 +36,7 @@
      *
      * @param tariffId id of tariff.
      */
-    function activateTariff(tariffId) {
+    function activateTariff(tariffId, currentTariffId) {
         $.ajax({
             url: 'activateTariff',
             data: {tariffId: tariffId},
@@ -47,6 +47,11 @@
                     var respContent = "";
                     respContent += "<input type=\"button\" onclick=\"deactivateTariff(" + tariffId + ")\" value=\"Deactivate\" class=\"btn btn-danger\">";
                     $("#" + tariffId).html(respContent);
+                    if (currentTariffId != "") {
+                        var buttonOldTariff = "";
+                        buttonOldTariff += "<input type=\"button\" onclick=\"activateTariff(" + currentTariffId + ")\" value=\"Activate\" class=\"btn btn-success\">";
+                        $("#" + currentTariffId).html(buttonOldTariff);
+                    }
                 } else {
                     swal("Can`t activate", "Please try again later.");
                 }
@@ -72,7 +77,7 @@
                 if (status == "success") {
                     swal("Success", "Tariff was deactivated!", "success");
                     var respContent = "";
-                    respContent += "<input type=\"button\" onclick=\"dactivateTariff(" + tariffId + ")\" value=\"Activate\" class=\"btn btn-success\">";
+                    respContent += "<input type=\"button\" onclick=\"activateTariff(" + tariffId + ")\" value=\"Activate\" class=\"btn btn-success\">";
                     $("#" + tariffId).html(respContent);
                 } else {
                     swal("Can`t deactivate", "Please try again later.");

@@ -77,17 +77,4 @@ public class EditProfileController {
         return "redirect:/" + urlBegin + "/getProfile";
     }
 
-    @RequestMapping(value = "editUser", method = RequestMethod.POST)
-    public String editUserProfile(User user, HttpSession session) {
-        String place = serviceGoogleMaps.getRegion(user.getAddress());
-        Integer placeId = userDAO.findPlaceId(place);
-        Integer id = (Integer) session.getAttribute("userId");
-        user.setPlaceId(placeId);
-        user.setId(id);
-        boolean success = userService.updateUser(user);
-        if (success) {
-            return "csr/index";
-        }
-        return "csr/userPage";
-    }
 }
