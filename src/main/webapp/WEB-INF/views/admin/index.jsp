@@ -26,7 +26,8 @@
         <h2><a href="${pageContext.request.contextPath}/admin/fillTariff">Fill tariff with services</a></h2><br>
         <h2><a href="${pageContext.request.contextPath}/admin/deleteTariff">Delete tariff</a></h2><br>
         <h2><a href="${pageContext.request.contextPath}/admin/registrationFromAdmin">Create co-worker</a></h2><br>
-        <h2><a href="<%=request.getContextPath()%>/doLogout">Logout</a></h2><br>
+        <h2><a href="${pageContext.request.contextPath}/admin/fillTariffsPrices">Fill price by region</a></h2><br>
+        <h2><a href="${pageContext.request.contextPath}/doLogout">Logout</a></h2><br>
     </div>
 </div>
 </body>

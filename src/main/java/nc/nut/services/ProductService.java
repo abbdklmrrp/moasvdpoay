@@ -186,12 +186,14 @@ public class ProductService {
         if (!Objects.equals(updateProduct.getDurationInDays(), product.getDurationInDays())) {
             product.setDurationInDays(updateProduct.getDurationInDays());
         }
-
         if (updateProduct.getProcessingStrategy() != product.getProcessingStrategy()) {
             product.setProcessingStrategy(updateProduct.getProcessingStrategy());
         }
         if (updateProduct.getStatus() != product.getStatus()) {
             product.setStatus(updateProduct.getStatus());
+        }
+        if (!Objects.equals(updateProduct.getBasePrice(), product.getBasePrice())) {
+            product.setBasePrice(updateProduct.getBasePrice());
         }
         return productDao.update(product);
     }

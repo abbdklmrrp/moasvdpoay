@@ -28,13 +28,14 @@
 
         <div class="form-group ">
             <h6>Enter name</h6>
-            <input type="text" class="form-control" placeholder="Name " id="Name" name="name" value="">
+            <input type="text" class="form-control" placeholder="Name " id="Name" name="name" value="" required>
             <i class="fa fa-user"></i>
         </div>
 
         <div class="form-group ">
             <h6>Enter description</h6>
-            <input type="text" class="form-control" placeholder="Description " id="Description" name="description" value="">
+            <input type="text" class="form-control" placeholder="Description " id="Description" name="description"
+                   value="" required>
             <i class="fa fa-user"></i>
         </div>
 
