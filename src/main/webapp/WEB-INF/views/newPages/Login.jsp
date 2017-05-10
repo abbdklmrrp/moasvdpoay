@@ -14,9 +14,12 @@
     </script>
 </head>
 <body>
-    <jsp:include page="includes/headers/emptyHeader.jsp"/>
-    <jsp:include page="includes/loginForm.jsp"/>
-    <jsp:include page="includes/footer.jsp"/>
-    <h2 style="text-align: center" id="message" hidden disabled="true">${msg}</h2>
+<jsp:include page="includes/headers/emptyHeader.jsp">
+    <jsp:param name="text" value="About"/>
+    <jsp:param name="link" value="about"/>
+</jsp:include>
+<jsp:include page="includes/loginForm.jsp"/>
+<jsp:include page="includes/footer.jsp"/>
+<h2 style="text-align: center" id="message" hidden disabled="true">${msg}</h2>
 </body>
 </html>

@@ -52,6 +52,14 @@ public interface OrderDao extends Dao<Order> {
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
     boolean suspendOrder(Integer orderId);
+    /**
+     * This method sets 'Activated' status for particular order.
+     *
+     * @param orderId id of order
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     */
+    boolean activateOrder(Integer orderId);
+
 
     /**
      * This method returns order by user for particular product.
@@ -74,5 +82,4 @@ public interface OrderDao extends Dao<Order> {
     List<OrdersRowDTO> getOrderRowsBDTOByCustomerId(Integer customerId);
 
 
-//    Calendar getEndDateOfOrderActive(Integer orderId);
 }

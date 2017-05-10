@@ -50,7 +50,7 @@ public class ViewProductController {
         if (foundProduct.getId() == id) {
             logger.debug("Product found in database, id={} ", id);
             session.setAttribute("productId", id);
-            logger.debug("Save to session ID of product {} ",id);
+            logger.debug("Save to session ID of product {} ", id);
             mav.addObject("product", foundProduct);
 
             if (foundProduct.getProductType().equals(ProductType.Service)) {
@@ -74,14 +74,14 @@ public class ViewProductController {
     /**
      * @author Nikita Alistratenko
      */
-    @RequestMapping("disableProduct")
-    public ModelAndView setProductDisabled(@RequestParam(value = "id") int id, RedirectAttributes attributes) {
+    @RequestMapping("disableEnableProduct")
+    public ModelAndView setProductDisabledEnabled(@RequestParam(value = "id") int id, RedirectAttributes attributes) {
         ModelAndView mw = new ModelAndView();
         mw.setViewName("redirect:/admin/getAllProducts");
-        if (productDao.disableProductByID(id)) {
-            attributes.addFlashAttribute("msg", "Product has been disabled");
+        if (productDao.disableEnableProductByID(id)) {
+            attributes.addFlashAttribute("msg", "Product status has been changed");
         } else {
-            attributes.addFlashAttribute("msg", "Product has not been disabled");
+            attributes.addFlashAttribute("msg", "Product status has not been changed");
         }
         return mw;
     }

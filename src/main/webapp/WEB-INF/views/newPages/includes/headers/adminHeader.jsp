@@ -19,6 +19,8 @@
                         <li><a href="${pageContext.request.contextPath}/admin/addTariff">New tariff</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/addService">New service</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/fillTariffsPrices">Fill in products with prices</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/viewAllProducts">View product prices by
+                            region</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

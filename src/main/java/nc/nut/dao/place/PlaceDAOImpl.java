@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public class PlaceDAOImpl implements PlaceDAO {
     private final static String GET_ALL_SQL = "SELECT * FROM Places";
-    private final static String GET_PLACES_FOR_FILL_IN_TARIFF="Select ID,NAME FROM PLACES";
+    private final static String GET_PLACES_FOR_FILL_IN_TARIFF = "Select ID,NAME FROM PLACES WHERE ID<>1";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 

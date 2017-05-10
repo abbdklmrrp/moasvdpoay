@@ -36,7 +36,7 @@ public class AddProductController {
     @RequestMapping(value = {"addTariff"}, method = RequestMethod.GET)
     public ModelAndView addProduct(ModelAndView mav) {
         mav.addObject("product", new Product());
-        mav.setViewName("admin/addTariff");
+        mav.setViewName("newPages/admin/AddTariff");
         return mav;
     }
 

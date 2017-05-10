@@ -1,6 +1,7 @@
 package nc.nut.dao.product;
 
 import nc.nut.dao.interfaces.Dao;
+import nc.nut.dto.PriceByRegionDto;
 import nc.nut.dto.TariffServiceDto;
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public interface ProductDao extends Dao<Product> {
 
     void deleteServiceFromTariff(ArrayList<TariffServiceDto> tariffServiceDtos);
 
-    boolean disableProductByID(int id);
+    boolean disableEnableProductByID(int id);
 
     List<Product> getProductsByUserId(int id);
 
@@ -148,4 +149,8 @@ public interface ProductDao extends Dao<Product> {
     List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search);
 
     List<Product> getProductForResidentialCustomerWithoutPrice();
+
+    List<PriceByRegionDto> getProductPriceByRegion();
+
+
 }

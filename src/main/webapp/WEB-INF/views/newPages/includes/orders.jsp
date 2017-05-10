@@ -22,21 +22,22 @@
                         <td>${orderRow.description}</td>
                         <td><fmt:formatDate value="${orderRow.endDate.time}" type='date' pattern="dd-MM-yyyy"/></td>
                         <td>${orderRow.operationStatus.name}</td>
-                        <c:choose>
-                            <c:when test="${orderRow.operationStatus.name == 'Active'}">
-                                <td id="action(${orderRow.orderId})">
+
+                                <td id="action${orderRow.orderId}">
+                                    <c:choose>
+                                    <c:when test="${orderRow.operationStatus.name == 'Active'}">
                                     <input type="button" class="btn btn-warning toggle-form-btn"
                                            onclick="toggleFormFunc(${orderRow.orderId})" value="Suspend"></td>
                             </c:when>
                             <c:when test="${orderRow.operationStatus.name == 'Suspended'}">
-                                <td><input type="button" class="btn btn-success"
+                             <input type="button" class="btn btn-success"
                                            onclick="activateOrderAfterSuspend(${orderRow.orderId})" value="Activate">
-                                </td>
                             </c:when>
                             <c:otherwise>
-                                <td>-</td>
+                              -
                             </c:otherwise>
                         </c:choose>
+                    </td>
                     </tr>
                 </c:forEach>
             </table>

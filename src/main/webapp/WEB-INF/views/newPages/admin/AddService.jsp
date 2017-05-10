@@ -9,7 +9,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp"/>
-<div class="container" style="width:60%; max-width: 600px;">
+<div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
     <form method="POST" modelAttribute="product" action="<%=request.getContextPath()%>/admin/addService">
         <div class="login-form">
             <h1 style="text-align: center">Create service</h1>
@@ -114,9 +114,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-4 col-xs-4"></div>
-                <button type="submit" class="btn btn-primary col-sm-4 col-xs-4">Save</button>
-                <div class="col-sm-4 col-xs-4"></div>
+                <div class="col-sm-4 col-xs-0"></div>
+                <button type="submit" class="btn btn-primary col-sm-4 col-xs-12">Save</button>
+                <div class="col-sm-4 col-xs-0"></div>
             </div>
 
         </div>

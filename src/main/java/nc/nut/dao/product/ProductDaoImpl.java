@@ -1,6 +1,7 @@
 package nc.nut.dao.product;
 
 import nc.nut.dao.user.UserDAO;
+import nc.nut.dto.PriceByRegionDto;
 import nc.nut.dto.TariffServiceDto;
 import nc.nut.mail.Mailer;
 import org.slf4j.Logger;
@@ -157,7 +158,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String DELETE_SERVICE_FROM_TARIFF = "DELETE FROM TARIFF_SERVICES " +
             "WHERE TARIFF_ID=:idTariff AND SERVICE_ID=:idService ";
 
-    private final static String DISABLE_PRODUCT = "UPDATE Products SET status=0 WHERE id=:id";
+    private final static String DISABLE_ENABLE_PRODUCT = "UPDATE Products SET status=:status WHERE id=:id";
 
     private final static String FIND_PRODUCT_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME," +
             "prod.description AS DESCRIPTION, prod.DURATION AS duration " +
@@ -232,13 +233,23 @@ public class ProductDaoImpl implements ProductDao {
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern ";
 
-    private final static String FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE ="SELECT\n" +
+    private final static String FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE = "SELECT\n" +
             "  product.ID,\n" +
             "  product.NAME\n" +
             "FROM PRODUCTS product\n" +
             "WHERE product.ID NOT IN (SELECT price.PRODUCT_ID\n" +
             "                         FROM PRICES price)\n" +
             "      AND product.CUSTOMER_TYPE_ID = 2";
+
+    private final static String FIND_PRODUCT_PRICE_BY_REGION = "SELECT\n" +
+            "  product.ID,\n" +
+            "  product.NAME,\n" +
+            "  product.DESCRIPTION,\n" +
+            "  place.NAME PLACE,\n" +
+            "  price.PRICE\n" +
+            "FROM PRODUCTS product\n" +
+            "  JOIN PRICES price ON (product.ID = price.PRODUCT_ID)\n" +
+            "  JOIN PLACES place ON (price.PLACE_ID = place.ID)";
 
     @Autowired
     @Qualifier("dataSource")
@@ -698,10 +709,16 @@ public class ProductDaoImpl implements ProductDao {
      * @author Nikita Alistratenko
      */
     @Override
-    public boolean disableProductByID(int productID) {
+    public boolean disableEnableProductByID(int productID) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", productID);
-        return jdbcTemplate.update(DISABLE_PRODUCT, params) > 0;
+        Product p = getById(productID);
+        if (p.getStatus().getId() == 1) {
+            params.addValue("status", 0);
+        } else {
+            params.addValue("status", 1);
+        }
+        return jdbcTemplate.update(DISABLE_ENABLE_PRODUCT, params) > 0;
     }
 
     /**
@@ -776,6 +793,20 @@ public class ProductDaoImpl implements ProductDao {
             product.setId(rs.getInt("ID"));
             product.setName(rs.getString("NAME"));
             return product;
+        });
+        return products;
+    }
+
+    @Override
+    public List<PriceByRegionDto> getProductPriceByRegion() {
+        List<PriceByRegionDto> products = jdbcTemplate.query(FIND_PRODUCT_PRICE_BY_REGION, (rs, rowNum) -> {
+            PriceByRegionDto priceByRegionDto = new PriceByRegionDto();
+            priceByRegionDto.setProductId(rs.getInt("ID"));
+            priceByRegionDto.setProductName(rs.getString("NAME"));
+            priceByRegionDto.setProductDescription(rs.getString("DESCRIPTION"));
+            priceByRegionDto.setPlaceName(rs.getString("PLACE"));
+            priceByRegionDto.setPriceProduct(rs.getBigDecimal("PRICE"));
+            return priceByRegionDto;
         });
         return products;
     }

@@ -42,6 +42,9 @@ public class OrderDaoImpl implements OrderDao {
     private final static String SUSPEND_ORDER_SQL = "UPDATE ORDERS " +
             "SET CURRENT_STATUS_ID = 2 /*suspended operation status id*/ " +
             "WHERE ID = :id ";
+    private final static String ACTIVATE_ORDER_SQL = "UPDATE ORDERS " +
+            "SET CURRENT_STATUS_ID = 1 /*activated operation status id*/ " +
+            "WHERE ID = :id ";
     private final static String INSERT_ORDER = "INSERT INTO ORDERS (PRODUCT_ID, USER_ID, CURRENT_STATUS_ID) " +
             "VALUES (:product_id, :user_id, :cur_status_id)";
     private final static String SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL = "SELECT id FROM Orders " +
@@ -192,5 +195,14 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("id", orderId);
         return jdbcTemplate.update(SUSPEND_ORDER_SQL, params) > 0;
 
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean activateOrder(Integer orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", orderId);
+        return jdbcTemplate.update(ACTIVATE_ORDER_SQL, params) > 0;
     }
 }
