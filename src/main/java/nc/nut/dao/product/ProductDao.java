@@ -146,4 +146,6 @@ public interface ProductDao extends Dao<Product> {
     Integer getCountProductsWithSearch(String search);
 
     List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search);
+
+    List<Product> getProductForResidentialCustomerWithoutPrice();
 }

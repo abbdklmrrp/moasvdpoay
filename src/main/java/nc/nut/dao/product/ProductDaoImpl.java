@@ -232,6 +232,14 @@ public class ProductDaoImpl implements ProductDao {
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern ";
 
+    private final static String FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE ="SELECT\n" +
+            "  product.ID,\n" +
+            "  product.NAME\n" +
+            "FROM PRODUCTS product\n" +
+            "WHERE product.ID NOT IN (SELECT price.PRODUCT_ID\n" +
+            "                         FROM PRICES price)\n" +
+            "      AND product.CUSTOMER_TYPE_ID = 2";
+
     @Autowired
     @Qualifier("dataSource")
     private DataSource dataSource;
@@ -758,5 +766,16 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
+    }
+
+    @Override
+    public List<Product> getProductForResidentialCustomerWithoutPrice() {
+        List<Product> products = jdbcTemplate.query(FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE, (rs, rowNum) -> {
+            Product product = new Product();
+            product.setId(rs.getInt("ID"));
+            product.setName(rs.getString("NAME"));
+            return product;
+        });
+        return products;
     }
 }
