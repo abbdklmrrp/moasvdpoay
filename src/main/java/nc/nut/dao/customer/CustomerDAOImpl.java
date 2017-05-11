@@ -22,7 +22,8 @@ public class CustomerDAOImpl implements CustomerDAO {
              "VALUES(:name, :secretKey,:typeId)";
 
     private final static String SELECT_BUSINESS_CUSTOMERS="SELECT NAME FROM CUSTOMERS\n" +
-            "WHERE ID NOT IN (SELECT CUSTOMER_ID FROM USERS WHERE ROLE_ID=4)";
+            "WHERE ID=1";
+    private final static String SELECT_CUSTOMERS_BY_NAME="SELECT ID FROM CUSTOMERS WHERE NAME=:name";
 
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -70,13 +71,17 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public boolean save(Customer customer) {
+        String name=customer.getName();
+        if(!isUnique(name)){
+            return false;
+        }else{
         String password = encoder.encode(customer.getSecretKey());
         Integer type=customer.getCustomerType().getId();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", customer.getName());
         params.addValue("secretKey", password);
         params.addValue("typeId", type);
-        return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params)>0;
+        return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params)>0;}
     }
 
     @Override
@@ -88,5 +93,15 @@ public class CustomerDAOImpl implements CustomerDAO {
     public List<String> getAllBusinessCustomersName() {
         List<String> customers=jdbcTemplate.query(SELECT_BUSINESS_CUSTOMERS,(rs,rowNum)-> rs.getString("name"));
         return customers;
+    }
+
+    private boolean isUnique(String name){
+        MapSqlParameterSource params=new MapSqlParameterSource("name",name);
+        List<Customer> customers=jdbcTemplate.query(SELECT_CUSTOMERS_BY_NAME,params,(rs,rownum)->{
+            Customer customer=new Customer();
+            customer.setId(rs.getInt("id"));
+            return customer;
+        });
+         return customers.isEmpty();
     }
 }

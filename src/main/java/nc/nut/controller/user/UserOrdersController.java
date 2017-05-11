@@ -12,10 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -26,12 +23,12 @@ import java.util.List;
  * Created by Yuliya Pedash on 07.05.2017.
  */
 @Controller
-@RequestMapping({"","csr","user"})
+@RequestMapping({"", "csr", "user"})
 public class UserOrdersController {
     private final static String SUCCESS_MSG = "Thank you! Your order will be suspended from %s to %s.";
     private final static String DATE_ERROR_MSG = "Unable to suspend your order. Please, check the dates you've entered.";
-    private final static String FAIL_SUSPEND_ERROR_MSG ="Sorry! An error occurred while suspending your order. Please, try again.";
-    private final static String CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG ="Unable to suspend your order within these dates, because you have other planned tasks that can interrupt superdense process.";
+    private final static String FAIL_SUSPEND_ERROR_MSG = "Sorry! An error occurred while suspending your order. Please, try again.";
+    private final static String CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG = "Unable to suspend your order within these dates, because you have other planned tasks that can interrupt superdense process.";
 
     @Resource
     private OrderDao orderDao;
@@ -74,17 +71,23 @@ public class UserOrdersController {
             logger.error("Incorrect dates received from superdense form");
             return DATE_ERROR_MSG;
         }
-        if(!orderService.canOrderBeSuspendedWithinDates(beginDate, endDate,orderId)){
+        if (!orderService.canOrderBeSuspendedWithinDates(beginDate, endDate, orderId)) {
             logger.error("Unable to suspend product because of other planned tasks");
             return CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG;
         }
         boolean isServiceSuspended = orderService.suspendOrder(beginDate, endDate, orderId);
         if (isServiceSuspended) {
             logger.info("Successful order superdense, order id: " + orderId);
-            return String.format(SUCCESS_MSG,dateFormat.format(beginDate.getTime()), dateFormat.format(endDate.getTime()));
+            return String.format(SUCCESS_MSG, dateFormat.format(beginDate.getTime()), dateFormat.format(endDate.getTime()));
         }
         logger.error("Unable to suspend order, order id: " + orderId);
         return FAIL_SUSPEND_ERROR_MSG;
 
+    }
+
+    @RequestMapping(value = {"/residential/activateAfterSuspend", "/business/activateAfterSuspend"}, method = RequestMethod.POST)
+    @ResponseBody
+    public Boolean activateAfterSuspend(@RequestParam Integer orderId) {
+        return orderDao.activateOrder(orderId);
     }
 }

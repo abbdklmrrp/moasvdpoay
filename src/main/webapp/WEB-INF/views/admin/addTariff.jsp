@@ -19,37 +19,40 @@
     <div class="login-form">
         <h1>ENTER NEW TARIFF</h1><br>
 
-        <c:if test="${not empty error}">
-            <span style="float:right ; color: #10CE88;">${error}</span>
-        </c:if>
-        <c:if test="${not empty errorEmptyFields}">
-            <span style="float:right ; color: #10CE88;">${errorEmptyFields}</span>
+        <c:if test="${not empty errorEmptyFilling}">
+            <span style="float:right ; color: #10CE88;">${errorEmptyFilling}</span>
         </c:if>
 
         <div class="form-group ">
             <h6>Enter name</h6>
-            <input type="text" class="form-control" placeholder="Name " id="Name" name="name" value="">
+            <input type="text" class="form-control" placeholder="Name " id="Name" name="name" value="" required>
             <i class="fa fa-user"></i>
         </div>
 
         <div class="form-group ">
             <h6>Enter description</h6>
-            <input type="text" class="form-control" placeholder="Description " id="Description" name="description" value="">
+            <input type="text" class="form-control" placeholder="Description " id="Description" name="description"
+                   value="" required>
             <i class="fa fa-user"></i>
         </div>
 
-        <div class="form-group ">
-            <h6>Enter base price</h6>
-            <input type="text" class="form-control" placeholder="0" id="basePrice" name="basePrice" value="0">
-            <i class="fa fa-user"></i>
+
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Enter base price</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="0 "
+                       id="basePrice" name="basePrice" required>
+                <i class="fa fa-user"></i>
+            </div>
         </div>
 
-        <div class="form-group ">
-            <h6>Customer type</h6>
-            <select name="customerType" class="form-control" id="customerType">
-                <option value="Business">Business</option>
-                <option value="Residential">Residential</option>
-            </select>
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Customer type</label>
+            <div class="col-sm-8">
+                <select name="customerType" class="form-control" id="customerTypeId" required>
+                    <option value="Business">Business</option>
+                    <option value="Residential">Residential</option>
+                </select></div>
         </div>
 
         <div class="form-group ">

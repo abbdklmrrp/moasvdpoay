@@ -36,7 +36,7 @@ public class DeleteTariffController {
     @RequestMapping(value = "deleteTariff", method = RequestMethod.POST)
     public ModelAndView deleteTariff(@RequestParam(value = "tariff", required = false) Integer tariffID) {
         if (tariffID != null) {
-            productDao.disableProductByID(tariffID);
+            productDao.disableEnableProductByID(tariffID);
         }
         return new ModelAndView("redirect:/admin/deleteTariff");
     }

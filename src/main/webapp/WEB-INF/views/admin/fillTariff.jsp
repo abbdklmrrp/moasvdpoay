@@ -29,8 +29,8 @@
             </select>
         </div>
 
-        <c:if test="${not empty errorFillTariff}">
-            <span style="float:right ; color: #10CE88;">${errorFillTariff}</span>
+        <c:if test="${not empty errorFilling}">
+            <span style="float:right ; color: #10CE88;">${errorFilling}</span>
         </c:if>
 
         <fieldset>
@@ -47,7 +47,7 @@
 
             <a href="JavaScript:void(0);" id="btn-add">Add&raquo;</a>
             <h6>Selected services</h6>
-            <select name="selectedService" id="selectedService" multiple="multiple">
+            <select name="selectedService" id="selectedService" multiple="multiple" required>
             </select>
             <a href="JavaScript:void(0);" id="btn-remove">&laquo; Remove</a>
 

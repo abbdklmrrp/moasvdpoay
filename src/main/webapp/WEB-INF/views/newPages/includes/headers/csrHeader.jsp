@@ -23,13 +23,13 @@
                     </ul>
                 </li>
                 <li><a href="${pageContext.request.contextPath}/csr/getUsersPage">Users</a></li>
-                <li><a href="">Products</a></li>
+                <li><a href="${pageContext.request.contextPath}/csr/getCsrProductsPage">Products</a></li>
                 <li><a href="${pageContext.request.contextPath}/csr/statistics">Statistics</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Registration<i class="icon-angle-down"></i></a>
                     <ul class="dropdown-menu">
-                        <li><a href="">New user</a></li>
-                        <li><a href="">New customer</a></li>
+                        <li><a href="${pageContext.request.contextPath}/csr/registrationFromCsr">New user</a></li>
+                        <li><a href="${pageContext.request.contextPath}/csr/getCreateCustomer">New customer</a></li>
                     </ul>
                 </li>
                 <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>

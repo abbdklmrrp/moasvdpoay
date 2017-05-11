@@ -12,4 +12,6 @@ public interface PlaceDAO {
      * @return list of places
      */
     List<Place> getAll();
+
+    List<Place> getPlacesForFillInTariff();
 }

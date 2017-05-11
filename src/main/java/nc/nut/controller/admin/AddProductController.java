@@ -36,7 +36,7 @@ public class AddProductController {
     @RequestMapping(value = {"addTariff"}, method = RequestMethod.GET)
     public ModelAndView addProduct(ModelAndView mav) {
         mav.addObject("product", new Product());
-        mav.setViewName("admin/addTariff");
+        mav.setViewName("newPages/admin/AddTariff");
         return mav;
     }
 
@@ -47,7 +47,7 @@ public class AddProductController {
         mav.addObject("productCategories", productCategories);
         mav.addObject("product", new Product());
         mav.addObject("newProductCategories", new ProductCategories());
-        mav.setViewName("admin/addService");
+        mav.setViewName("newPages/admin/AddService");
         return mav;
     }
 
@@ -79,7 +79,7 @@ public class AddProductController {
         logger.debug("Check that the incoming new category fields are not empty {} ", isEmptyFieldsOfNewCategory);
 
         if (isEmptyFieldsOfService || isEmptyFieldsOfNewCategory) {
-            mav.addObject("errorEmptyFields", ERROR_WRONG_FIELDS);
+            mav.addObject("errorService", ERROR_WRONG_FIELDS);
             logger.error("Incoming request has empty fields");
             List<ProductCategories> productCategories = productDao.findProductCategories();
             logger.debug("Get all service's categories");
@@ -92,13 +92,13 @@ public class AddProductController {
             logger.debug("Set category for tariff {} ",product.getCategoryId());
         } catch (DuplicateKeyException e) {
             logger.error(ERROR_EXIST_OF_CATEGORY, e);
-            mav.addObject("errorExistCategory", ERROR_EXIST_OF_CATEGORY);
+            mav.addObject("errorService", ERROR_EXIST_OF_CATEGORY);
             mav.setViewName("admin/addService");
             return mav;
         }
         boolean isSave = productDao.save(product);
         logger.debug("Save product was success {} ", isSave);
-        mav.setViewName("redirect:/admin/index");
+        mav.setViewName("redirect:/admin/getProfile");
         return mav;
     }
 }

@@ -18,16 +18,18 @@
                         <li><a href="${pageContext.request.contextPath}/admin/getProducts">All products</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/addTariff">New tariff</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/addService">New service</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/fillTariffsPrices">Fill in products with prices</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/viewAllProducts">View product prices by
+                            region</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Registration<i class="icon-angle-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="${pageContext.request.contextPath}/admin/registrationFromAdmin">New user</a></li>
-                        <li><a href="#">New customer</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/getCreateCustomer">New customer</a></li>
                     </ul>
                 </li>
-                <li><a href="#">Promotions</a></li>
                 <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>
             </ul>
         </div>

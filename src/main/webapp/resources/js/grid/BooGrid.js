@@ -59,10 +59,13 @@
       for (var gridHeader in gridHeaders) {
         if (gridHeaders.hasOwnProperty(gridHeader)) {
           var sorting = gridHeaders[gridHeader];
-          if (sorting != null) {
-            sort = gridHeader + '=' + sorting;
+         if (sorting != null) {
+            if(sorting==true){
+                sort = gridHeader + ' ASC';
+            }else{
+            sort = gridHeader + ' DESC';}
             atLeastOneAdded = true;
-          }
+         }
         }
       }
       if (!atLeastOneAdded) {

@@ -1,18 +1,25 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Petro
+  Date: 09.05.2017
+  Time: 23:21
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page session="false" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="../includes/head.jsp" %>
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="Products"/>
+        <jsp:param name="tittle" value="User Orders"/>
     </jsp:include>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">
         google.load("jquery", "1.4.4");
     </script>
 </head>
 <body>
-<jsp:include page="../includes/headers/pmgHeader.jsp"/>
+<jsp:include page="../includes/headers/csrHeader.jsp"/>
 <div class="container">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
@@ -26,7 +33,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-10" data-grid="title">
-                    Title
+                    Operations
                 </div>
                 <div class="col-md-2" style="text-align:right;">
                     <a href="javascript:" data-grid="pager-refresh">
@@ -39,10 +46,8 @@
             <div class="row" style="margin: 20px 0;">
                 <div class="col-md-2">
                     <select class="form-control" data-grid="pager-length">
+                        <option value="5">5</option>
                         <option value="10">10</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -74,62 +79,41 @@
             <table class="table table-striped table-bordered table-hover" data-grid="grid">
                 <thead>
                 <tr>
-                    <th class="col-xs-2" data-grid-header="name" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="order_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
                         </div>
-                        Name
+                        Order
                     </th>
-                    <th class="col-xs-2" data-grid-header="description" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="operation_date" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
                         </div>
-                        Description
+                        Date
                     </th>
-                    <th class="col-xs-2" data-grid-header="duration" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="status_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
                         </div>
-                        Duration
-                    </th>
-                    <th class="col-xs-2" data-grid-header="base_price" data-grid-header-sortable="true">
-                        <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
-                        </div>
-                        Price
-                    </th>
-                    <th class="col-xs-2" data-grid-header="type_id" data-grid-header-sortable="true">
-                        <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
-                        </div>
-                        Type
-                    </th>
-                    <%--</th>--%>
+                        Status
                 </tr>
                 </thead>
                 <tbody>
                 <tr data-grid="row">
-                    <td data-cell="name"></td>
-                    <td data-cell="description"></td>
-                    <td data-cell="duration"></td>
-                    <td data-cell="base_price"></td>
-                    <td data-cell="type_id"></td>
-
+                    <td data-cell="order_id"></td>
+                    <td  data-cell="operation_date" data-type="date" data-format-string="Do MMMM YYYY"></td>
+                    <td data-cell="status_id"></td>
                 </tr>
                 </tbody>
             </table>
             <div class="row" style="margin: 20px 0;">
                 <div class="col-md-2">
                     <select class="form-control" data-grid="pager-length">
+                        <option value="5">5</option>
                         <option value="10">10</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
                     </select>
                 </div>
                 <div class="col-md-10">
@@ -152,20 +136,27 @@
             </div>
         </div>
     </div>
-
 </div>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<script src="${contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
+<script src="${contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>
+
 <script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
 <script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
 <script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${contextPath}/pmg/getProducts.json'}),
+        ds: new RemoteDataSource({url: '${contextPath}/csr/getOperationHistory.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ]
     })
+
 </script>

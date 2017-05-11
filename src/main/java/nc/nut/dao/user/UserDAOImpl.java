@@ -42,7 +42,7 @@ public class UserDAOImpl implements UserDAO {
     private final static String FIND_BY_PHONE = "SELECT * FROM USERS WHERE PHONE=:phone";
 
     private final static String UPDATE_USER = "UPDATE USERS " +
-            "SET NAME=:name, SURNAME=:surname, PHONE=:phone, ENABLE= :enable, PASSWORD= :password " +
+            "SET NAME=:name, SURNAME=:surname, PHONE=:phone, ENABLE= :enable, PASSWORD= :password, ADDRESS= :address " +
             "WHERE ID=:id";
     private final static String FIND_USER_BY_ID = "SELECT * FROM USERS WHERE ID=:id";
     private final static String SELECT_LIMITED_USERS = "select *\n" +
@@ -120,12 +120,12 @@ public class UserDAOImpl implements UserDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", user.getName());
         params.addValue("surname", user.getSurname());
+        params.addValue("enable", user.getEnable());
         params.addValue("phone", user.getPhone());
         params.addValue("password", user.getPassword());
-//        params.addValue("address", user.getAddress());
+        params.addValue("address", user.getAddress());
 //        params.addValue("placeId", user.getPlaceId());
         params.addValue("id", user.getId());
-        params.addValue("enable", user.getEnable());
         int rows = jdbcTemplate.update(UPDATE_USER, params);
         return rows > 0;
 

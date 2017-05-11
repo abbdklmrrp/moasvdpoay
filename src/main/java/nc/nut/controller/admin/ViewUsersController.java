@@ -30,15 +30,8 @@ public class ViewUsersController {
         return new ModelAndView("newPages/admin/Users");
     }
     @RequestMapping(value = {"getUsers"}, method = RequestMethod.GET)
-    public ListHolder servicesByTariff(@ModelAttribute GridRequestDto request) {
+    public ListHolder getUsers(@ModelAttribute GridRequestDto request) {
         String sort=request.getSort();
-        if(!sort.isEmpty()){
-            String[] array=sort.split("=");
-            if("true".equals(array[1])){
-                sort=array[0]+" "+"ASC";
-            }else{
-                sort=array[0]+" "+"DESC";
-            }}
         int start=request.getStartBorder();
         int length=request.getEndBorder();
         String search=request.getSearch();

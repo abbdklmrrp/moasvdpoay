@@ -1,3 +1,4 @@
+var oldPass = document.getElementById('oldPassword');
 var newPass = document.getElementById('password');
 var confirmPass = document.getElementById('confirmPassword');
 var saveBtn = document.getElementById('btn-save-profile');
@@ -16,7 +17,21 @@ $(document).ready(function () {
         $('#save-profile').removeClass("hide");
         newPass.setAttribute("required", "required");
         confirmPass.setAttribute("required", "required");
-    });//$("#name").prop('readonly', false);
+        oldPass.setAttribute("required", "required")
+    });
+    $('#btn-cancel').click(function () {
+        $('#edit-and-change').removeClass("hide");
+        $('.change-pass').addClass("hide");
+        $('#save-profile').addClass("hide");
+        newPass.removeAttribute("required");
+        confirmPass.removeAttribute("required");
+        oldPass.removeAttribute("required");
+        $("#name").prop('readonly', true);
+        $("#surname").prop('readonly', true);
+        $("#address").prop('readonly', true);
+        $("#phone").prop('readonly', true);
+        saveBtn.removeAttribute("disabled");
+    });
 });
 confirmPass.onkeyup = function () {
     if (this.value != newPass.value) {
@@ -29,8 +44,8 @@ confirmPass.onkeyup = function () {
     }
 };
 window.onload = function () {
-    if (document.getElementById('message').innerHTML.trim() != '') {
-        swal(document.getElementById('message').innerHTML);
+    if (document.getElementById('errorMessage').innerHTML.trim() != '') {
+        sweetAlert(document.getElementById('errorMessage').innerHTML);
     }
 };
 setTimeout(function () {
