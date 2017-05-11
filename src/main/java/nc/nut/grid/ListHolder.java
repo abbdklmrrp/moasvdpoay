@@ -8,9 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Anna Rysakova on 07.05.2017.
- */
+
 @XmlAccessorType(XmlAccessType.NONE)
 @JsonTypeName("listData")
 public class ListHolder<T> {

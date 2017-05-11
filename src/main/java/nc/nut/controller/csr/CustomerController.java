@@ -52,9 +52,9 @@ public class CustomerController {
         ModelAndView modelAndView=new ModelAndView();
         User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         if(user.getRole().equals(Role.Admin)){
-            modelAndView.setViewName("newPages/csr/createCustomer");
+            modelAndView.setViewName("newPages/admin/RegNewCustomer");
         }else{
-            modelAndView.setViewName("newPages/admin/createCustomer");
+            modelAndView.setViewName("newPages/csr/RegNewCustomer");
         }
         customer.setCustomerType(CustomerType.Business);
         boolean success = customerDAO.save(customer);

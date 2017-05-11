@@ -6,9 +6,7 @@ import com.google.common.annotations.VisibleForTesting;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
-/**
- * Created by Anna Rysakova on 07.05.2017.
- */
+
 @XmlAccessorType(XmlAccessType.NONE)
 @JsonTypeName("grid")
 public class GridRequestDto {
