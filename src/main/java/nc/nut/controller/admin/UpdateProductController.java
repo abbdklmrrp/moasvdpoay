@@ -88,7 +88,7 @@ public class UpdateProductController {
             mav.addObject("error ", ERROR_TYPE);
             logger.error("Wrong parameter's type ", e.getMessage());
         } catch (DataIntegrityViolationException ex) {
-            logger.error("Error with filling database {}", ex);
+            logger.error("Error with filling database {}", ex.getMessage());
             mav.addObject("error ", ERROR_IN_CONNECTION);
             mav.setViewName("admin/fillTariff");
             return mav;

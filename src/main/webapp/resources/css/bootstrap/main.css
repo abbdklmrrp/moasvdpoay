@@ -1097,6 +1097,6 @@ footer .container {
   text-align: center;
 }
 
-#tbl-all-complaints tr:nth-child(n+2):hover{
+#tbl-all-complaints tbody tr:hover{
   background-color: #bdc3c7;
 }
