@@ -17,7 +17,7 @@ public class ProductUtil {
     private static Logger logger = LoggerFactory.getLogger(ProductUtil.class);
 
     /**
-     * Anna Rysakova
+     * @
      *
      * @param string
      * @return
@@ -29,8 +29,8 @@ public class ProductUtil {
         for (int i = 0; i < stringArray.length; i++) {
             try {
                 integerArray[i] = Integer.parseInt(stringArray[i]);
-            } catch (NumberFormatException nfe) {
-                logger.error("Wrong parameter's type ", nfe.getMessage());
+            } catch (NumberFormatException e) {
+                logger.error("Wrong parameter's type ", e.getMessage());
             }
         }
         return integerArray;
@@ -69,7 +69,7 @@ public class ProductUtil {
      * @param collection
      * @return
      */
-    public static T[] convertCollectionToArray(Collection<T> collection) {
-        return collection.toArray(new T[collection.size()]);
+    public static Integer[] convertCollectionToArray(Collection<T> collection) {
+        return collection.toArray(new Integer[collection.size()]);
     }
 }
