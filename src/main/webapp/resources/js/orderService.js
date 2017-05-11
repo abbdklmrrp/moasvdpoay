@@ -57,6 +57,7 @@ function setNewProductStatus(serviceId) {
 
 
     })
+
 }
 
 function deactivateService(serviceId) {

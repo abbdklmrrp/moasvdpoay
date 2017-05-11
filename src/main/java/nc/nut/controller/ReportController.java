@@ -107,8 +107,6 @@ public class ReportController {
 
         }
         reportMaker.getExcelWorkbook().write(outputStream);
-        //todo make without deleting document
-        reportMaker.getXlsDocWorker().getExcelReportFile().delete();
         outputStream.close();
     }
 }

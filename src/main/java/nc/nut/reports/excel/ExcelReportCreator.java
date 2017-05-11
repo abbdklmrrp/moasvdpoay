@@ -18,10 +18,10 @@ import java.util.List;
 public class ExcelReportCreator {
 
     private XSSFWorkbook excelWorkbook;
-    private ExcelDocWorker xlsDocWorker;
+    private ExcelWorkbookWorker xlsDocWorker;
 
     public ExcelReportCreator(String fileName) {
-        this.xlsDocWorker = new ExcelDocWorker(fileName);
+        this.xlsDocWorker = new ExcelWorkbookWorker(fileName);
 
     }
 
@@ -29,7 +29,7 @@ public class ExcelReportCreator {
         return excelWorkbook;
     }
 
-    public ExcelDocWorker getXlsDocWorker() {
+    public ExcelWorkbookWorker getXlsDocWorker() {
         return xlsDocWorker;
     }
 
@@ -40,7 +40,7 @@ public class ExcelReportCreator {
      * @param data report data
      */
     public void makeReport(List<ReportData> data) throws DocumentCreatingFailException {
-        xlsDocWorker.createDocumentFromTemplate();
+        xlsDocWorker.createWorkbookFromTemplate();
         excelWorkbook = xlsDocWorker.getExcelWorkbook();
         String sheetName = "report";
         XSSFSheet excelSheet;
