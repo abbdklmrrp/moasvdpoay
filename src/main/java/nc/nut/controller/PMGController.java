@@ -14,11 +14,11 @@ import javax.annotation.Resource;
 @RequestMapping({"pmg"})
 public class PMGController {
     @Resource
-    ComplaintDAO complaintDAO;
+    private ComplaintDAO complaintDAO;
 
     @RequestMapping({"index"})
-    String index() {
-        return "pmg/index";
+    public String index() {
+        return "newPages/pmg/Profile";
     }
 
     @RequestMapping(value = "allComplaints")

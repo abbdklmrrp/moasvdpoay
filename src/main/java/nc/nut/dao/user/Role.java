@@ -13,9 +13,9 @@ public enum Role {
     Admin(1, "ADMIN"),
     PMG(2, "PMG"),
     CSR(3, "CSR"),
-    Individual(4, "INDIVIDUAL"),
-    Legal(5, "LEGAL"),
-    Employee(6, "EMPLOYEE");
+    RESIDENTIAL(4, "INDIVIDUAL"),
+    BUSINESS(5, "BUSINESS"),
+    EMPLOYEE(6, "EMPLOYEE");
 
     private Integer id;
     private String name;

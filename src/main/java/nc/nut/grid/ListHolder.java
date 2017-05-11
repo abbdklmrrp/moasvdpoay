@@ -43,9 +43,10 @@ public class ListHolder<T> {
 
     @Override
     public String toString() {
-        return "ListHolder{" +
-                "data size=" + data.size() +
-                ", totalCount=" + totalCount +
-                '}';
+        return new StringBuilder()
+                .append("ListHolder{")
+                .append("data size=").append(data.size())
+                .append(", totalCount=").append(totalCount)
+                .append('}').toString();
     }
 }

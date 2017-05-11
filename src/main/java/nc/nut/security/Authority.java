@@ -7,8 +7,8 @@ public enum Authority {
     ADMIN("ADMIN"),
     PMG("PMG"),
     CSR("CSR"),
-    INDIVIDUAL("INDIVIDUAL"),
-    LEGAL("LEGAL"),
+    RESIDENTIAL("RESIDENTIAL"),
+    BUSINESS("BUSINESS"),
     EMPLOYEE("EMPLOYEE");
 
     private final String auth;

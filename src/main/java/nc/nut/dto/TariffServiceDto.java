@@ -25,4 +25,13 @@ public class TariffServiceDto {
     public void setIdService(Integer idService) {
         this.idService = idService;
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("TariffServiceDto{")
+                .append("idTariff=").append(idTariff)
+                .append(", idService=").append(idService)
+                .append('}').toString();
+    }
 }
