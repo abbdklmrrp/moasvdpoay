@@ -37,6 +37,7 @@ public class UpdateProductController {
     private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
     private static final String ERROR_UNEXPECTED = "Unexpected error";
     private static final String ERROR_IN_CONNECTION = "Error with filling database";
+    private static final String ERROR_TYPE = "Wrong type of input data";
 
     private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
 
@@ -69,23 +70,26 @@ public class UpdateProductController {
         if (Objects.equals(services, null) || Objects.equals(tariff, null)) {
             logger.error("Incoming data error with services {} ", Objects.equals(services, null));
             logger.error("Incoming data error with tariff {} ", Objects.equals(tariff, null));
-            mav.addObject("errorFillTariff", ERROR_FILL_IN_TARIFF_SERVICES);
+            mav.addObject("error", ERROR_FILL_IN_TARIFF_SERVICES);
             mav.setViewName("admin/updateTariff");
             return mav;
         }
         product.setId(id);
         logger.debug("Write ID to product {} ", product.getId());
-        Integer[] servicesIdArray = ProductUtil.convertStringToIntegerArray(services);
-        logger.debug("Convert a string array of service's ID to an integer array");
 
         try {
+            Integer[] servicesIdArray = ProductUtil.convertStringToIntegerArray(services);
+            logger.debug("Convert a string array of service's ID to an integer array");
             productService.updateFillingOfTariffsWithServices(servicesIdArray, product);
             logger.debug("Update tariff: removed unnecessary services, added new services");
             productService.updateProduct(product);
             logger.debug("Update fields of service");
+        } catch (NumberFormatException e) {
+            mav.addObject("error ", ERROR_TYPE);
+            logger.error("Wrong parameter's type ", e.getMessage());
         } catch (DataIntegrityViolationException ex) {
-            logger.error("Error with filling database {}", ex);
-            mav.addObject("errorFillTariff ", ERROR_IN_CONNECTION);
+            logger.error("Error with filling database {}", ex.getMessage());
+            mav.addObject("error ", ERROR_IN_CONNECTION);
             mav.setViewName("admin/fillTariff");
             return mav;
         }
@@ -102,10 +106,10 @@ public class UpdateProductController {
         if (outputFlashMap != null) {
             if (exception instanceof MissingServletRequestParameterException) {
                 logger.error("Services must be selected", exception.getMessage());
-                outputFlashMap.put("errors", ERROR_FILL_IN_TARIFF_SERVICES);
+                outputFlashMap.put("error", ERROR_FILL_IN_TARIFF_SERVICES);
             } else {
                 logger.error("Unexpected error", exception.getMessage());
-                outputFlashMap.put("errors", ERROR_UNEXPECTED + exception.getMessage());
+                outputFlashMap.put("error", ERROR_UNEXPECTED + exception.getMessage());
             }
         }
         mav.setViewName("admin/index");

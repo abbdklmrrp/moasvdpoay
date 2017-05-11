@@ -10,10 +10,11 @@ import nc.nut.dao.user.UserDAO;
 import nc.nut.grid.GridRequestDto;
 import nc.nut.grid.ListHolder;
 import nc.nut.security.SecurityAuthenticationHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -41,33 +42,36 @@ public class CustomerController {
 
     @RequestMapping(value = {"getCreateCustomer"}, method = RequestMethod.GET)
     public ModelAndView getCreateCustomer() {
-        ModelAndView modelAndView = new ModelAndView();
-        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        if (user.getRole().equals(Role.Admin)) {
-            modelAndView.setViewName("newPages/admin/RegNewCustomer");
-        } else {
+        ModelAndView modelAndView=new ModelAndView();
+        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        if(user.getRole().equals(Role.Admin)){
+          modelAndView.setViewName("newPages/admin/RegNewCustomer");
+        }else{
             modelAndView.setViewName("newPages/csr/RegNewCustomer");
         }
-        modelAndView.addObject("customer", new Customer());
+        modelAndView.addObject("customer",new Customer());
 
         return modelAndView;
     }
 
     @RequestMapping(value = {"createCustomer"}, method = RequestMethod.POST)
     public ModelAndView createCustomer(Customer customer) {
-        ModelAndView modelAndView = new ModelAndView();
-        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        if (user.getRole().equals(Role.Admin)) {
+        ModelAndView modelAndView=new ModelAndView();
+        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        if(user.getRole().equals(Role.Admin)){
             modelAndView.setViewName("newPages/admin/RegNewCustomer");
-        } else {
+        }else{
             modelAndView.setViewName("newPages/csr/RegNewCustomer");
         }
         customer.setCustomerType(CustomerType.Business);
         boolean success = customerDAO.save(customer);
-        if (!success) {
+        if(!success){
+            logger.error("Can't create customer");
             modelAndView.setViewName("newPages/includes/error");
+        }else{
+            logger.debug("created customer "+customer.getName());
         }
-        return modelAndView;
+       return modelAndView;
     }
 
     @RequestMapping(value = {"getCustomers"}, method = RequestMethod.GET)

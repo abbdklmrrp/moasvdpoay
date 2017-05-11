@@ -157,21 +157,6 @@ public class ProductService {
     /**
      * Rysakova Anna
      *
-     * @param arrayOfIdServices
-     * @param product
-     */
-    // TODO: 07.05.2017
-    public void updateTariffWithNewServices(Integer[] arrayOfIdServices, Product product) {
-        ArrayList<Integer> oldServiceIdList = getIdServicesOfTariff(product);
-        ArrayList<Integer> newServiceIdList = ProductUtil.convertArrayToCollection(arrayOfIdServices);
-
-//        productDao.fillInTariffWithServices(product.getId(), arrayOfIdServices);
-
-    }
-
-    /**
-     * Rysakova Anna
-     *
      * @param updateProduct
      */
     public boolean updateProduct(Product updateProduct) {
