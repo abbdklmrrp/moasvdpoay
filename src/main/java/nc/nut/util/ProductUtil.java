@@ -17,35 +17,44 @@ public class ProductUtil {
     private static Logger logger = LoggerFactory.getLogger(ProductUtil.class);
 
     /**
-     * Anna Rysakova
+     * This method converts the received <code>String</code> into
+     * an <code>Integer</code> array. The data in the line is stored in a comma.
+     * Helper method for {@link nc.nut.controller.admin.UpdateProductController}
+     * Helper method for {@link nc.nut.controller.admin.FillTariffController}
      *
-     * @param string
-     * @return
+     * @param string data in <code>String</code> format
+     * @return Array of <code>Integer</code> from a convertible <code>String</code>
      */
     public static Integer[] convertStringToIntegerArray(String string) {
         String[] stringArray = string.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+        logger.debug("Convert received string to String array {} ", Arrays.toString(stringArray));
         Integer[] integerArray = new Integer[stringArray.length];
-
+        logger.debug("Convert String array to Integer array {} ", Arrays.toString(integerArray));
         for (int i = 0; i < stringArray.length; i++) {
             try {
                 integerArray[i] = Integer.parseInt(stringArray[i]);
-            } catch (NumberFormatException nfe) {
-                logger.error("Wrong parameter's type ", nfe.getMessage());
+            } catch (NumberFormatException e) {
+                logger.error("Wrong parameter's type ", e.getMessage());
             }
         }
         return integerArray;
     }
 
     /**
-     * Anna Rysakova
+     * This method compare generic <code>Collection</code> and remove from first collection
+     * elements which included in second <code>Collection</code>.
+     * Helper method for {@link nc.nut.services.ProductService#fillInTariffWithServices(Integer, Integer[])}
      *
-     * @param initialCollection
-     * @param compareCollection
-     * @param <T>
-     * @return
+     * @see Collection
+     * @see T
+     * @param originalCollection original <code>Collection</code>
+     * @param compareCollection collection from which the elements will be compared
+     * @param <T> collection type
+     * @return collection Collection of elements from the first collection,
+     *         which are included in the second collection
      */
-    public static <T> Collection<T> getUniqueElementsInFirstCollection(Collection<T> initialCollection, Collection<T> compareCollection) {
-        Collection<T> resultCollection = new ArrayList<>(initialCollection);
+    public static <T> Collection<T> getUniqueElementsInFirstCollection(Collection<T> originalCollection, Collection<T> compareCollection) {
+        Collection<T> resultCollection = new ArrayList<>(originalCollection);
         Collection<T> collectionForCompare = new ArrayList<>(compareCollection);
         resultCollection.removeAll(collectionForCompare);
 
@@ -71,16 +80,5 @@ public class ProductUtil {
      */
     public static Integer[] convertCollectionToArray(Collection<T> collection) {
         return collection.toArray(new Integer[collection.size()]);
-    }
-
-    public static void main(String[] args) {
-        Integer[] a = new Integer[]{1, 2};
-        Integer[] b = new Integer[]{2, 3};
-        Collection a1 = convertArrayToCollection(a);
-        Collection b1 = convertArrayToCollection(b);
-        Collection<Integer> c = getUniqueElementsInFirstCollection(a1, b1);
-        System.out.println("Collection a: " + Arrays.toString(a1.toArray()));
-        System.out.println("Collection b: " + Arrays.toString(b1.toArray()));
-        System.out.println("Collection c: " + Arrays.toString(c.toArray()));
     }
 }
