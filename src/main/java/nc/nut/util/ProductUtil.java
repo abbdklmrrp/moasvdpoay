@@ -72,15 +72,4 @@ public class ProductUtil {
     public static Integer[] convertCollectionToArray(Collection<T> collection) {
         return collection.toArray(new Integer[collection.size()]);
     }
-
-    public static void main(String[] args) {
-        Integer[] a = new Integer[]{1, 2};
-        Integer[] b = new Integer[]{2, 3};
-        Collection a1 = convertArrayToCollection(a);
-        Collection b1 = convertArrayToCollection(b);
-        Collection<Integer> c = getUniqueElementsInFirstCollection(a1, b1);
-        System.out.println("Collection a: " + Arrays.toString(a1.toArray()));
-        System.out.println("Collection b: " + Arrays.toString(b1.toArray()));
-        System.out.println("Collection c: " + Arrays.toString(c.toArray()));
-    }
 }
