@@ -44,8 +44,8 @@ confirmPass.onkeyup = function () {
     }
 };
 window.onload = function () {
-    if (document.getElementById('message').innerHTML.trim() != '') {
-        swal(document.getElementById('message').innerHTML);
+    if (document.getElementById('errorMessage').innerHTML.trim() != '') {
+        sweetAlert(document.getElementById('errorMessage').innerHTML);
     }
 };
 setTimeout(function () {

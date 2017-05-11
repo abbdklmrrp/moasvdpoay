@@ -1,9 +1,12 @@
 package nc.nut.services;
 
+import nc.nut.controller.EditProfileController;
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
 import nc.nut.googleMaps.ServiceGoogleMaps;
 import nc.nut.security.Md5PasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -11,7 +14,7 @@ import java.util.Objects;
 import java.util.Random;
 
 /**
- * @author Moiseienko Petro
+ * @author Moiseienko Petro, Nikita Alistratenko
  * @since 03.05.2017.
  */
 @Service
@@ -23,24 +26,34 @@ public class UserService {
     @Resource
     Md5PasswordEncoder encoder;
 
-    public boolean updateUser(User user) {
-        User defaultUser = userDAO.getUserById(user.getId());
-        String formatAddress = serviceGoogleMaps.getFormattedAddress(user.getAddress());
-        user.setAddress(formatAddress);
-        if (!user.getName().isEmpty()) {
-            defaultUser.setName(user.getName());
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    public boolean updateUser(User editedUser) {
+        User oldUser = userDAO.getUserById(editedUser.getId());
+        logger.warn("before changes" + oldUser.toString());
+        //if address was changed
+        if (!oldUser.getAddress().equals(editedUser.getAddress())) {
+            String formatAddress = serviceGoogleMaps.getFormattedAddress(editedUser.getAddress());
+            oldUser.setAddress(formatAddress);
+            if ((!editedUser.getAddress().isEmpty()) || (!formatAddress.isEmpty())) {
+                oldUser.setAddress(formatAddress);
+                oldUser.setPlaceId(userDAO.findPlaceId(serviceGoogleMaps.getRegion(formatAddress)));
+            }
         }
-        if (!user.getSurname().isEmpty()) {
-            defaultUser.setSurname(user.getSurname());
+        if (!editedUser.getName().isEmpty()) {
+            oldUser.setName(editedUser.getName());
         }
-        if (!user.getPhone().isEmpty()) {
-            defaultUser.setPhone(user.getPhone());
+        if (!editedUser.getSurname().isEmpty()) {
+            oldUser.setSurname(editedUser.getSurname());
         }
-        if (!user.getPassword().isEmpty()) {
-            defaultUser.setPassword(encoder.encode(user.getPassword()));
+        if (!editedUser.getPhone().isEmpty()) {
+            oldUser.setPhone(editedUser.getPhone());
         }
-        if (!(user.getEnable() == null)) {
-            defaultUser.setEnable(user.getEnable());
+        if (!editedUser.getPassword().isEmpty()) {
+            oldUser.setPassword(encoder.encode(editedUser.getPassword()));
+        }
+        if (!(editedUser.getEnable() == null)) {
+            oldUser.setEnable(editedUser.getEnable());
         }
 //        if (!user.getAddress().isEmpty() && !user.getAddress().equals(defaultUser.getAddress())) {
 //            defaultUser.setAddress(user.getAddress());
@@ -48,7 +61,8 @@ public class UserService {
 //                defaultUser.setPlaceId(user.getPlaceId());
 //            }
 //        }
-        return userDAO.update(defaultUser);
+        logger.warn("after changes" + oldUser.toString());
+        return userDAO.update(oldUser);
     }
 
     public boolean save(User user) {

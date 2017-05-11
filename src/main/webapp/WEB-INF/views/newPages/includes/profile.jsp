@@ -76,5 +76,5 @@
         <div class="col-sm-2 col-xs-2"></div>
         <button class="btn btn-primary col-sm-5 col-xs-5" id="btn-change-password">Change password</button>
     </div>
-    <h2 style="text-align: center" id="message" hidden disabled="true">${msg}</h2>
+    <h2 style="text-align: center" id="errorMessage" hidden disabled="true">${msg}</h2>
 </div>

@@ -1,12 +1,16 @@
 package nc.nut.controller;
 
+import nc.nut.dao.product.ProductStatus;
 import nc.nut.dao.user.Role;
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
 import nc.nut.googleMaps.ServiceGoogleMaps;
+import nc.nut.security.Md5PasswordEncoder;
 import nc.nut.security.SecurityAuthenticationHelper;
 import nc.nut.services.UserService;
+import org.slf4j.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,10 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * @author Moiseienko Petro
@@ -26,6 +30,8 @@ import java.util.logging.Logger;
 @Controller
 @RequestMapping({"admin", "csr", "pmg", "user"})
 public class EditProfileController {
+
+    private static Logger logger = LoggerFactory.getLogger(EditProfileController.class);
 
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
@@ -56,25 +62,70 @@ public class EditProfileController {
         return model;
     }
 
+//    /**
+//     * @Author Moiseienko Petro
+//     * @Author Nikita Alistratenko
+//     */
+//    @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
+//    public String editProfile(User editedUser, RedirectAttributes attributes, HttpServletRequest request) {
+//        User sessionUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+//        String urlPatterForCertainUserRole = roleMap.getOrDefault(sessionUser.getRole(), "user");
+//        String place = serviceGoogleMaps.getRegion(editedUser.getAddress());
+//        Integer placeId = userDAO.findPlaceId(place);
+//        editedUser.setPlaceId(placeId);
+//        editedUser.setId(sessionUser.getId());
+//        if (userService.updateUser(editedUser)) {
+//            attributes.addFlashAttribute("msg", "User has been updated");
+//        } else {
+//            attributes.addFlashAttribute("msg", "User has not been updated");
+//        }
+//        return "redirect:/" + urlPatterForCertainUserRole + "/getProfile";
+//    }
+
     /**
-     *
+     * @param editedUser new user info
+     * @param attributes for passing messages to jsp
+     * @param request    to get additional parameters
+     * @return redirect to view
      * @Author Nikita Alistratenko
-     * @Author Moiseienko Petro
      */
     @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
-    public String editProfile(User user, RedirectAttributes attributes) {
+    public String editProfile1(@ModelAttribute("user") User editedUser, RedirectAttributes attributes, HttpServletRequest request) {
+        //Message of the updating
+        String errorMessage = null;
+        //needs to get id for user from db. JSP/SpringSecurity does not contain its id
         User sessionUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        String urlBegin = roleMap.getOrDefault(sessionUser.getRole(), "user");
-        String place = serviceGoogleMaps.getRegion(user.getAddress());
-        Integer placeId = userDAO.findPlaceId(place);
-        user.setPlaceId(placeId);
-        user.setId(sessionUser.getId());
-        if (userService.updateUser(user)) {
-            attributes.addFlashAttribute("msg", "User has been updated");
-        } else {
-            attributes.addFlashAttribute("msg", "User has not been updated");
+        //needs to set placeID to new copy of user
+        Integer placeId = sessionUser.getPlaceId();
+        label:
+        {
+            //if address was changed
+            if (!editedUser.getAddress().equals(sessionUser.getAddress())) {
+                String place = serviceGoogleMaps.getRegion(editedUser.getAddress());
+                placeId = userDAO.findPlaceId(place);
+                //checks if entered address isn't in database
+                if (placeId == null || placeId == 0) {
+                    errorMessage = "Our company does not provide service for this region";
+                    break label;
+                }
+            }
+            editedUser.setPlaceId(placeId);
+            //if new password was entered
+            if (!editedUser.getPassword().isEmpty()) {
+                //checks if old pass is wrong
+                if (!sessionUser.getPassword().equals(new Md5PasswordEncoder().encode(request.getParameter("oldPassword")))) {
+                    errorMessage = "You have entered wrong old password. Please, try again.";
+                    break label;
+                }
+            }
+            editedUser.setId(sessionUser.getId());
+            logger.warn(editedUser.toString() + ". oldpass: " + request.getParameter("oldPassword"));
+            if (!userService.updateUser(editedUser)) {
+                errorMessage = "User has not been updated";
+            }
         }
-        return "redirect:/" + urlBegin + "/getProfile";
+        attributes.addFlashAttribute("msg", errorMessage);
+        return "redirect:/" + sessionUser.getRole().getNameInLowwerCase() + "/getProfile";
     }
 
 }

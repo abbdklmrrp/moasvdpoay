@@ -31,6 +31,10 @@ public enum Role {
         return name;
     }
 
+    public String getNameInLowwerCase() {
+        return name.toLowerCase();
+    }
+
     public Integer getId() {
         return id;
     }
@@ -52,13 +56,14 @@ public enum Role {
         throw new IllegalArgumentException(WRONG_ID_ERROR_MSG + id);
     }
 
-    public static Role getRoleByName(String name){
-        Role[]roles=values();
-        for(Role role:roles){
-            if(Objects.equals(role.getName(),name)){
+    public static Role getRoleByName(String name) {
+        Role[] roles = values();
+        for (Role role : roles) {
+            if (Objects.equals(role.getName(), name.toUpperCase())) {
                 return role;
             }
         }
         return null;
     }
+
 }
