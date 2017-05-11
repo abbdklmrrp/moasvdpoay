@@ -22,10 +22,10 @@
                     <td><input type="button" onclick="showServicesOfTariff(${tariff.id})" value="Show" class="btn btn-primary"></td>
                     <c:choose>
                         <c:when test="${ tariff.id == currentTariff.id}">
-                            <td id="${tariff.id}"><input type="button" onclick="deactivateTariff(${tariff.id})" value="Deactivate" class="btn btn-danger"></td>
+                            <td id="${tariff.id}"><input type="button" name="${tariff.id}" onclick="deactivateTariff(${tariff.id})" value="Deactivate" class="btn btn-danger"></td>
                         </c:when>
                         <c:otherwise>
-                            <td id="${tariff.id}"><input type="button" onclick="activateTariff(${tariff.id}, ${currentTariff.id})" value="Activate" class="btn btn-success"></td>
+                            <td id="${tariff.id}"><input type="button" name="${tariff.id}" onclick="activateTariff(${tariff.id}, ${currentTariff.id})" value="Activate" class="btn btn-success"></td>
                         </c:otherwise>
                     </c:choose>
                 </tr>

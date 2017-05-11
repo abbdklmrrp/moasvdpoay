@@ -19,24 +19,28 @@ import java.util.Map;
  * Created by Rysakova Anna on 26.04.2017.
  */
 @RestController
-@RequestMapping({"services"})
-public class ServicesEndpoint { // GET: services/tariffs/3G
-    private Logger logger = LoggerFactory.getLogger(ServicesEndpoint.class);
+@RequestMapping({"admin"})
+public class ServicesEndpoint { // GET: admin/category/1
+    private static Logger logger = LoggerFactory.getLogger(ServicesEndpoint.class);
     @Resource
-    ProductDao productDao;
+    private ProductDao productDao;
 
-    @RequestMapping(value = {"tariffs/{tariff}"}, method = RequestMethod.GET)
-    public List<ServicesByCategoryDto> servicesByTariff(@PathVariable("tariff") String tariffId) {
+    @RequestMapping(value = {"category/{categoryId}"}, method = RequestMethod.GET)
+    public List<ServicesByCategoryDto> servicesByTariff(@PathVariable("categoryId") String categoryId) {
         Map<String, List<Product>> allServicesWithCategory = productDao.getAllServicesWithCategory();
+        logger.debug("Get a map where the key - the name of the category, the value - list of services");
 
         List<ServicesByCategoryDto> servicesByCategoryDtoList = new ArrayList<>();
+        logger.debug("Create list of services by category");
         for (Map.Entry<String, List<Product>> key : allServicesWithCategory.entrySet()) {
-            if (tariffId.equals(key.getKey())) {
+            if (categoryId.equals(key.getKey())) {
+                logger.debug("Receive category found, id {} ", categoryId);
                 for (Product product : key.getValue()) {
                     ServicesByCategoryDto servicesByCategoryDto = new ServicesByCategoryDto();
                     servicesByCategoryDto.setId(product.getId());
                     servicesByCategoryDto.setName(product.getName());
                     servicesByCategoryDtoList.add(servicesByCategoryDto);
+                    logger.debug("To list of services by catalog add {} ", servicesByCategoryDto);
                 }
             }
         }

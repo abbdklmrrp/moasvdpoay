@@ -26,6 +26,8 @@ public class IndexController {
         boolean isAdmin = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.getAuth()));
         boolean isPMG = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(Authority.PMG.getAuth()));
         boolean isCSR = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(Authority.CSR.getAuth()));
+        boolean isBusiness = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(Authority.BUSINESS.getAuth()));
+        boolean isResidential = currentUser.getAuthorities().contains(new SimpleGrantedAuthority(Authority.RESIDENTIAL.getAuth()));
         if (isAdmin) {
             return "redirect:/admin/getProfile";
         }
@@ -34,8 +36,14 @@ public class IndexController {
         }
         if (isCSR) {
             return "redirect:/csr/getProfile";
+        }
+        if (isBusiness) {
+            return "redirect:/user/business/getProfile";
+        }
+        if (isResidential) {
+            return "redirect:/user/residential/getProfile";
         } else {
-            return "newPages/user/residential/Profile";
+            return "redirect:/employee/getProfile";
         }
     }
 }

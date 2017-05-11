@@ -40,4 +40,13 @@ public class ServicesByCategoryDto {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("ServicesByCategoryDto{")
+                .append("id=").append(id)
+                .append(", name='").append(name)
+                .append('\'').append('}').toString();
+    }
 }

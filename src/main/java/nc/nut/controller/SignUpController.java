@@ -10,14 +10,12 @@ import nc.nut.dao.user.UserDAO;
 import nc.nut.googleMaps.ServiceGoogleMaps;
 import nc.nut.services.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -101,7 +99,7 @@ public class SignUpController {
     private User setCustomerId(User user, String companyName, String secretKey, String userType) {
         user.setRole(Role.getRoleByName(userType));
         Integer customerId;
-        if (Role.Individual.equals(user.getRole())) {
+        if (Role.RESIDENTIAL.equals(user.getRole())) {
             Customer customer = new Customer(user.getEmail(), user.getPassword());
             customer.setCustomerType(CustomerType.Residential);
             boolean success=customerDAO.save(customer);
@@ -128,7 +126,7 @@ public class SignUpController {
         } else {
             customerId = customerDAO.getCustomerId(user.getEmail(), user.getPassword());
             user.setCustomerId(customerId);
-            user.setRole(Role.Individual);
+            user.setRole(Role.RESIDENTIAL);
             boolean success = userService.save(user);
             if (!success) {
                 return "newPages/includes/error";

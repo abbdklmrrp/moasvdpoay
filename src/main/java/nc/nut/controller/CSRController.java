@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping({"csr"})
 public class CSRController {
-    @RequestMapping({"index"})
-    String index() {
-        return "csr/index";
+
+    @RequestMapping({"getProfile"})
+    public String index() {
+        return "newPages/csr/Profile";
     }
 }

@@ -23,7 +23,7 @@ public class SpringMvcInitializer extends AbstractAnnotationConfigDispatcherServ
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/index.htm", "*.htm", "*.json", "/"};
+        return new String[]{"*.htm", "*.json", "/"};
     }
 
     @Override
@@ -36,7 +36,6 @@ public class SpringMvcInitializer extends AbstractAnnotationConfigDispatcherServ
     protected Filter[] getServletFilters() {
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
-        characterEncodingFilter.setForceEncoding(true);
         return new Filter[]{characterEncodingFilter};
     }
 }

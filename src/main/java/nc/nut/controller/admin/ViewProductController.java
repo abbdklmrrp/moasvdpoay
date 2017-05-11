@@ -31,6 +31,7 @@ public class ViewProductController {
     private ProductDao productDao;
     private static Logger logger = LoggerFactory.getLogger(ViewProductController.class);
 
+    // TODO: 11.05.2017 to delete
     @RequestMapping(value = "getAllProducts", method = RequestMethod.GET)
     public String getAllProducts(Model model) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
