@@ -69,7 +69,7 @@ public class UpdateProductController {
         if (Objects.equals(services, null) || Objects.equals(tariff, null)) {
             logger.error("Incoming data error with services {} ", Objects.equals(services, null));
             logger.error("Incoming data error with tariff {} ", Objects.equals(tariff, null));
-            mav.addObject("errorFillTariff", ERROR_FILL_IN_TARIFF_SERVICES);
+            mav.addObject("error", ERROR_FILL_IN_TARIFF_SERVICES);
             mav.setViewName("admin/updateTariff");
             return mav;
         }
@@ -85,7 +85,7 @@ public class UpdateProductController {
             logger.debug("Update fields of service");
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {}", ex);
-            mav.addObject("errorFillTariff ", ERROR_IN_CONNECTION);
+            mav.addObject("error ", ERROR_IN_CONNECTION);
             mav.setViewName("admin/fillTariff");
             return mav;
         }
@@ -102,10 +102,10 @@ public class UpdateProductController {
         if (outputFlashMap != null) {
             if (exception instanceof MissingServletRequestParameterException) {
                 logger.error("Services must be selected", exception.getMessage());
-                outputFlashMap.put("errors", ERROR_FILL_IN_TARIFF_SERVICES);
+                outputFlashMap.put("error", ERROR_FILL_IN_TARIFF_SERVICES);
             } else {
                 logger.error("Unexpected error", exception.getMessage());
-                outputFlashMap.put("errors", ERROR_UNEXPECTED + exception.getMessage());
+                outputFlashMap.put("error", ERROR_UNEXPECTED + exception.getMessage());
             }
         }
         mav.setViewName("admin/index");

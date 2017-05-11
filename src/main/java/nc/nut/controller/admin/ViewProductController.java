@@ -47,6 +47,7 @@ public class ViewProductController {
 
         Product foundProduct = productDao.getById(id);
         logger.debug("Receive request param product id named 'id', value={} ", id);
+        logger.info("QQQQQQ {} ", id);
 
         if (foundProduct.getId() == id) {
             logger.debug("Product found in database, id={} ", id);
