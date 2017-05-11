@@ -69,7 +69,7 @@ public class ProductUtil {
      * @param collection
      * @return
      */
-    public static Integer[] convertCollectionToArray(Collection<T> collection) {
-        return collection.toArray(new Integer[collection.size()]);
+    public static T[] convertCollectionToArray(Collection<T> collection) {
+        return collection.toArray(new T[collection.size()]);
     }
 }
