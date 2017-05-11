@@ -95,7 +95,7 @@
         <form action="${contextPath}/csr/userOrders" method="post">
             <button type="submit" class="log-btn">Orders</button>
         </form>
-        <form action="${contextPath}/csr/writeComplaint" method="get">
+        <form action="${contextPath}/csr/getCsrComplaint" method="get">
             <button type="submit" class="log-btn">Write complain</button>
         </form>
         <%--<form action="${conextPath}/csr/sendPassword" method="post">--%>
