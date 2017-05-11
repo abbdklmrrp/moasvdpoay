@@ -76,6 +76,15 @@ public class UserDAOImpl implements UserDAO {
             " OR phone like :pattern " +
             " OR address like :pattern ";
 
+    private static final String SELECT_ALL_COUNT_OF_CUSTOMER = "Select count(ID)\n" +
+            "  from Users " +
+            "WHERE CUSTOMER_ID= :custID AND (name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern) ";
+
+
     private static final String SELECT_LIMITED_ALL_USERS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from USERS " +
@@ -84,6 +93,17 @@ public class UserDAOImpl implements UserDAO {
             " OR email like :pattern " +
             " OR phone like :pattern " +
             " OR address like :pattern " +
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
+    private static final String SELECT_LIMITED_ALL_USERS_OF_CUSTOMER = "select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from USERS " +
+            " Where customer_id= :custID and (name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern) " +
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
@@ -311,6 +331,29 @@ public class UserDAOImpl implements UserDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("start", start);
         params.addValue("length", length);
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.query(sql, params, new UserRowMapper());
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public Integer getCountUsersWithSearchOfCustomer(String search, int custID) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("custID", custID);
+        return jdbcTemplate.queryForObject(SELECT_ALL_COUNT_OF_CUSTOMER, params, Integer.class);
+    }
+
+    @Override
+    public List<User> getLimitedQuantityUsersOfCustomer(int start, int length, String sort, String search, int custID) {
+        if (sort.isEmpty()) {
+            sort = "ID";
+        }
+        String sql = String.format(SELECT_LIMITED_ALL_USERS_OF_CUSTOMER, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("length", length);
+        params.addValue("custID", custID);
         params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.query(sql, params, new UserRowMapper());
     }
