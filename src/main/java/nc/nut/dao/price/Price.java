@@ -52,7 +52,12 @@ public class Price {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("Price{").append("placeId=").append(placeId).append(", product_id=").append(productId).append(", price=").append(price).append('}').toString();
+        return new StringBuilder()
+                .append("Price{")
+                .append("placeId=").append(placeId)
+                .append(", product_id=").append(productId)
+                .append(", price=").append(price)
+                .append('}').toString();
     }
 
     @Override
