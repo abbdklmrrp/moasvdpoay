@@ -4,6 +4,8 @@ import nc.nut.dao.product.Product;
 import nc.nut.dao.product.ProductDao;
 import nc.nut.grid.GridRequestDto;
 import nc.nut.grid.ListHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +25,7 @@ public class ViewProductsController {
 
     @Resource
     private ProductDao productDao;
+    private static Logger logger = LoggerFactory.getLogger(ViewProductsController.class);
 
     @RequestMapping(value={"getPmgProductsPage"},method =RequestMethod.GET)
     public ModelAndView getPmgProductsPage(){
@@ -39,6 +42,7 @@ public class ViewProductsController {
         int start=request.getStartBorder();
         int length=request.getLength();
         String search=request.getSearch();
+        logger.debug("Get products in interval:" + start + " : " + length);
         List<Product> data=productDao.getLimitedQuantityProduct(start,length,sort,search);
         int size=productDao.getCountProductsWithSearch(search);
         return ListHolder.create(data, size);

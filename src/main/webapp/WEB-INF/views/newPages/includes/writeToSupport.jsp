@@ -17,12 +17,12 @@
                 </div>
             </div>
             <br>
-            <textarea  name="description" cols="65" rows="15" style="text-align: center"></textarea>
+            <textarea id="description" name="description" cols="65" rows="15" style="text-align: center"></textarea>
             <br>
             <br>
             <div class="row">
                 <div class="col-md-6"></div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary">  Send  </button></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary" onclick="saveComplaint()">  Send  </button></div>
                 <div class="col-md-4"></div>
             </div>
         </div>

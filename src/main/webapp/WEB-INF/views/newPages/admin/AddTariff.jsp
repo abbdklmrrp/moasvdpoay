@@ -13,11 +13,6 @@
     <jsp:include page="../includes/head.jsp">
         <jsp:param name="title" value="New Tariff"/>
     </jsp:include>
-    <%--<script type="text/javascript">--%>
-    <%--google.load("jquery", "1.4.4");--%>
-    <%--</script>--%>
-    <%--<script src="<c:url value="/resources/js/newCategoryService.js"/>"></script>--%>
-    <%--<script src="<c:url value="/resources/js/serviceTariff.js"/>"></script>--%>
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp"/>
@@ -29,25 +24,22 @@
             <c:if test="${not empty error}">
                 <span style="float:right ; color: #10CE88;">${error}</span>
             </c:if>
-            <c:if test="${not empty errorEmptyProduct}">
-                <span style="float:right ; color: #10CE88;">${errorEmptyProduct}</span>
-            </c:if>
 
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Enter name</label>
+                <label class="col-sm-4 control-label">Name</label>
                 <div class="col-sm-8"> <input type="text" class="form-control" placeholder="Name " id="Name" name="name">
                     <i class="fa fa-user"></i>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Enter description</label>
+                <label class="col-sm-4 control-label">Description</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="Description " id="Description" name="description">
                     <i class="fa fa-user"></i>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Enter base price</label>
+                <label class="col-sm-4 control-label">Base price</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="0 "
                            id="basePrice" name="basePrice" required>
@@ -58,13 +50,13 @@
                 <label class="col-sm-4 control-label">Customer type</label>
                 <div class="col-sm-8">
                     <select name="customerTypeId" class="form-control" id="customerTypeId">
-                        <option value="1">Business</option>
-                        <option value="2">Residential</option>
+                        <option value="Business">Business</option>
+                        <option value="Residential">Residential</option>
                     </select>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Select duration in days</label>
+                <label class="col-sm-4 control-label">Duration in days</label>
                 <div class="col-sm-8">
                     <select name="durationInDays" class="form-control" id="durationInDays">
                         <option value="365">365</option>
@@ -72,14 +64,14 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Need processing by admin</label>
+                <label class="col-sm-4 control-label">Need processing</label>
                 <div class="col-sm-8">
                     <div class="row">
                         <input type="radio" name="processingStrategy" class="col-sm-1" value="NeedProcessing">
-                        <label class="col-sm-5 control-label">Need Processing</label>
+                        <label class="col-sm-5 control-label">Yes</label>
                         <input type="radio" name="processingStrategy" class="col-sm-1" value="DoNotNeedProcessing"
                                checked>
-                        <label class="col-sm-5 control-label">Do Not Need Processing</label>
+                        <label class="col-sm-5 control-label">No</label>
                     </div>
                 </div>
             </div>

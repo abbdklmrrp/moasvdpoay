@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 
@@ -31,6 +33,8 @@ public class CustomerController {
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
     private UserDAO userDAO;
+
+    private static Logger logger=LoggerFactory.getLogger(CustomerController.class);
 
 
     @RequestMapping(value = {"getCreateCustomer"}, method = RequestMethod.GET)
@@ -52,14 +56,17 @@ public class CustomerController {
         ModelAndView modelAndView=new ModelAndView();
         User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         if(user.getRole().equals(Role.Admin)){
-            modelAndView.setViewName("newPages/csr/createCustomer");
+            modelAndView.setViewName("newPages/admin/RegNewCustomer");
         }else{
-            modelAndView.setViewName("newPages/admin/createCustomer");
+            modelAndView.setViewName("newPages/csr/RegNewCustomer");
         }
         customer.setCustomerType(CustomerType.Business);
         boolean success = customerDAO.save(customer);
         if(!success){
+            logger.error("Can't create customer");
             modelAndView.setViewName("newPages/includes/error");
+        }else{
+            logger.debug("created customer "+customer.getName());
         }
        return modelAndView;
     }

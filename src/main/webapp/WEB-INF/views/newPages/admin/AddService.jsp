@@ -17,9 +17,6 @@
             <c:if test="${not empty error}">
                 <span style="float:right ; color: #10CE88;">${error}</span>
             </c:if>
-            <c:if test="${not empty errorEmptyProduct}">
-                <span style="float:right ; color: #10CE88;">${errorEmptyProduct}</span>
-            </c:if>
 
             <div class="form-group row" id='categoryId'>
                 <label class="col-sm-4 control-label">Select category</label>
@@ -33,7 +30,7 @@
                 </div>
             </div>
             <div class="form-group row" id="newCategory">
-                <label class="col-sm-4 control-label">Enter new category</label>
+                <label class="col-sm-4 control-label">New category name</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="New category"
                            name="categoryName" id="newCategory-inpt">
@@ -41,7 +38,7 @@
                 </div>
             </div>
             <div class="form-group row" id="newCategoryDesc">
-                <label class="col-sm-4 control-label">Enter new category description</label>
+                <label class="col-sm-4 control-label">New category description</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control"
                            placeholder="New category description "
@@ -50,7 +47,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Enter name</label>
+                <label class="col-sm-4 control-label">Name</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="Name " id="Name"
                            name="name" required>
@@ -58,7 +55,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Enter description</label>
+                <label class="col-sm-4 control-label">Description</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="Description "
                            id="Description" name="description" required>
@@ -66,7 +63,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Enter base price</label>
+                <label class="col-sm-4 control-label">Base price</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="0 "
                            id="basePrice" name="basePrice" required>
@@ -82,7 +79,7 @@
                     </select></div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Select duration in days</label>
+                <label class="col-sm-4 control-label">Duration in days</label>
                 <div class="col-sm-8">
                     <select name="durationInDays" class="form-control" id="durationInDays" required>
                         <option value="365">365</option>
@@ -90,14 +87,14 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Need processing by admin</label>
+                <label class="col-sm-4 control-label">Need processing</label>
                 <div class="col-sm-8">
                     <div class="row">
                         <input type="radio" name="processingStrategy" class="col-sm-1" value="NeedProcessing">
-                        <label class="col-sm-5 control-label">Need Processing</label>
+                        <label class="col-sm-5 control-label">Yes</label>
                         <input type="radio" name="processingStrategy" class="col-sm-1" value="DoNotNeedProcessing"
                                checked>
-                        <label class="col-sm-5 control-label">Do Not Need Processing</label>
+                        <label class="col-sm-5 control-label">No</label>
                     </div>
                 </div>
             </div>
