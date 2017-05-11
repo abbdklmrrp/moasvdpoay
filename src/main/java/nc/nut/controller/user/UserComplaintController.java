@@ -12,9 +12,8 @@ import nc.nut.dao.user.UserDAO;
 import nc.nut.security.SecurityAuthenticationHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
@@ -24,7 +23,7 @@ import java.util.List;
  * @author Moiseienko Petro
  * @since 02.05.2017.
  */
-@Controller
+@RestController
 @RequestMapping({"user"})
 public class UserComplaintController {
     @Resource
@@ -39,28 +38,33 @@ public class UserComplaintController {
     private OrderDao orderDAO;
 
     @RequestMapping(value = "/getComplaint", method = RequestMethod.GET)
-    public String getComplaint(Model model) {
+    public ModelAndView getComplaint() {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         List<Product> products = productDao.getActiveProductsByUserId(user.getId());
-        model.addAttribute("productList", products);
-        return "newPages/user/residential/WriteToSupport";
+        ModelAndView modelAndView=new ModelAndView("newPages/user/residential/WriteToSupport");
+        modelAndView.addObject("productList",products);
+        return modelAndView;
     }
 
     @RequestMapping(value = "/writeComplaint", method = RequestMethod.POST)
-    public String writeComplaint(@RequestParam(value = "products") int productId,
+    @ResponseBody
+    public String writeComplaint(@RequestParam(value = "productId") int productId,
                                  @RequestParam(value = "description") String description) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Integer orderId = orderDAO.getOrderIdByUserIdAndProductId(user.getId(), productId);
+        String message="";
         Calendar calendar = Calendar.getInstance();
         Complaint complaint = new Complaint();
         complaint.setOrderId(orderId);
-        complaint.setStatus(ComplaintStatus.InProcessing);
         complaint.setCreationDate(calendar);
         complaint.setDescription(description);
+        complaint.setStatus(ComplaintStatus.InProcessing);
         boolean success = complaintDAO.save(complaint);
         if (success) {
-            return "user/index";
+            message="success";
+        } else {
+            message="fail";
         }
-        return "newPages/user/residential/WriteToSupport";
+        return message;
     }
 }

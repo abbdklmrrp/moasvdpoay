@@ -34,7 +34,7 @@ public class SignUpController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/registration")
     public ModelAndView registration() {
-        ModelAndView model = new ModelAndView("signUp");
+        ModelAndView model = new ModelAndView("newPages/Registration");
         model.addObject("user", new User());
         return model;
     }
@@ -75,7 +75,7 @@ public class SignUpController {
                                  @RequestParam(value = "userType") String userType) {
         user.setRole(Role.getRoleByName(userType));
         boolean success = userService.saveWithGeneratePassword(user);
-        if (!success) {
+        if (success) {
             return "newPages/admin/RegNewUser";
         } else {
             return "newPages/includes/error";
@@ -101,6 +101,7 @@ public class SignUpController {
         Integer customerId;
         if (Role.RESIDENTIAL.equals(user.getRole())) {
             Customer customer = new Customer(user.getEmail(), user.getPassword());
+            customer.setCustomerType(CustomerType.Residential);
             boolean success=customerDAO.save(customer);
             if(!success){
                 return null;

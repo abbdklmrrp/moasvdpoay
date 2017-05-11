@@ -97,7 +97,6 @@ public class UsersDetailController {
         complaint.setOrderId(orderId);
         complaint.setCreationDate(calendar);
         complaint.setDescription(description);
-        complaint.setPmgId(userId);
         complaint.setStatus(ComplaintStatus.InProcessing);
         boolean success = complaintDAO.save(complaint);
         if (success) {
