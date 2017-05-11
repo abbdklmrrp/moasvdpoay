@@ -26,7 +26,7 @@
                                 <td id="action${orderRow.orderId}">
                                     <c:choose>
                                     <c:when test="${orderRow.operationStatus.name == 'Active'}">
-                                    <input type="button" class="btn btn-warning toggle-form-btn"
+                                    <input type="button" class="btn btn-warning"
                                            onclick="toggleFormFunc(${orderRow.orderId})" value="Suspend"></td>
                             </c:when>
                             <c:when test="${orderRow.operationStatus.name == 'Suspended'}">

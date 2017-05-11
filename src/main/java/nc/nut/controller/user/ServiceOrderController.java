@@ -84,17 +84,16 @@ public class ServiceOrderController {
         if (!isActivated) {
             msg = ERROR_PLACING_ORDER_MSG;
             logger.warn("Error while placing order: " + order.toString());
-            //     return "user/result";
         }
-        //      model.addAttribute("resultMsg", msg);
         return msg;
     }
 
-    @RequestMapping(value = {"/getNewOrder"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/getNewOrderStatus"}, method = RequestMethod.GET)
     @ResponseBody
-    public Order getNewOrder(@RequestParam Integer serviceId) {
+    public String getNewOrderStatus(@RequestParam Integer serviceId) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        return orderDao.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
+        Order newOrder = orderDao.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
+        return newOrder.getCurrentStatus().getName();
     }
 
     @RequestMapping(value = {"/deactivateService"}, method = RequestMethod.POST, produces = "application/json")
@@ -102,13 +101,11 @@ public class ServiceOrderController {
     public String deactivateOrder(@RequestParam Integer serviceId) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         boolean wasDeactivated = orderDao.deactivateOrderOfUserForProduct(Integer.valueOf(serviceId), currentUser.getId());
-        //  String message;
         if (!wasDeactivated) {
             logger.error(String.format("Error while deactivating order(product_id : %s, user_id: %d)", serviceId,
                     currentUser.getId()));
             return "fail";
         }
-        //  model.addAttribute("resultMsg", message);
         return "success";
 
     }
