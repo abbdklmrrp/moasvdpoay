@@ -39,7 +39,7 @@ public class ExcelReportCreator {
      *
      * @param data report data
      */
-    public void makeReport(List<ReportData> data) throws DocumentCreatingFailException {
+    public void makeReport(List<ReportData> data) throws WorkbookCreatingFailException {
         xlsDocWorker.createWorkbookFromTemplate();
         excelWorkbook = xlsDocWorker.getExcelWorkbook();
         String sheetName = "report";

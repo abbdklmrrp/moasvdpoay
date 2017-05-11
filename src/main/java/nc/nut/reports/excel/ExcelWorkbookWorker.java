@@ -30,14 +30,14 @@ public class ExcelWorkbookWorker {
     /**
      * method which create workbook for report from existing template
      */
-    public void createWorkbookFromTemplate() throws DocumentCreatingFailException {
+    public void createWorkbookFromTemplate() throws WorkbookCreatingFailException {
         final String TEMP_FILE_ADDRESS = File.separator + "excel" + File.separator + "template.xlsx";
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(TEMP_FILE_ADDRESS);
         try {
             excelWorkbook = new XSSFWorkbook(inputStream);
         } catch (IOException e) {
             logger.error("Error while creating Workbook from template ", e);
-            throw new DocumentCreatingFailException("Excel while creating workbook from template  " + workbookName);
+            throw new WorkbookCreatingFailException("Excel while creating workbook from template  " + workbookName);
         }
     }
 

@@ -7,8 +7,8 @@ import nc.nut.dao.user.UserDAO;
 import nc.nut.reports.ReportCreatingException;
 import nc.nut.reports.ReportData;
 import nc.nut.reports.ReportsService;
-import nc.nut.reports.excel.DocumentCreatingFailException;
 import nc.nut.reports.excel.ExcelReportCreator;
+import nc.nut.reports.excel.WorkbookCreatingFailException;
 import nc.nut.security.SecurityAuthenticationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,13 +98,8 @@ public class ReportController {
                 (HEADER_VAR1, HEADER_VAR2 + fileName);
         try {
             reportMaker.makeReport(reportsService.getDataForReport(beginDate, endDate, region));
-        } //todo add error handling
-        catch (DocumentCreatingFailException e) {
-            return;
-            //todo add error handling
-        } catch (ReportCreatingException e) {
-            return;
-
+        } catch (WorkbookCreatingFailException | ReportCreatingException e) {
+            logger.error("Error while downloading document", e);
         }
         reportMaker.getExcelWorkbook().write(outputStream);
         outputStream.close();
