@@ -45,13 +45,16 @@ public class FillPriceByRegion {
 
     @RequestMapping(value = {"fillTariffsPrices"}, method = RequestMethod.GET)
     public ModelAndView getRegionForFill(ModelAndView mav) {
+
         List<Product> products = productDao.getProductForResidentialCustomerWithoutPrice();
         logger.debug("Get all the tariffs that are not filled with services");
         List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
         logger.debug("Get products that do not have a price by region");
+
         mav.addObject("products", products);
         mav.addObject("placesForFillInTariff", placesForFillInTariff);
         mav.addObject("priceByRegionDto", new PriceByRegionDto());
+
         mav.setViewName("newPages/admin/fillTariffsPrices");
         return mav;
     }
