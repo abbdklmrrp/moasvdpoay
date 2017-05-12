@@ -1,6 +1,7 @@
-package nc.nut.dto;
+package jtelecom.dto;
 
-import nc.nut.dao.complaint.Complaint;
+
+import jtelecom.dao.complaint.Complaint;
 
 import java.util.List;
 

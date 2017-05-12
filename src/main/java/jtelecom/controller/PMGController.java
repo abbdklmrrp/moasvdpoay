@@ -2,6 +2,7 @@ package jtelecom.controller;
 
 import jtelecom.dao.complaint.Complaint;
 import jtelecom.dao.complaint.ComplaintDAO;
+import jtelecom.dto.ComplaintDataPartitionDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
