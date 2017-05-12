@@ -710,6 +710,7 @@ public class ProductDaoImpl implements ProductDao {
      */
     @Override
     public boolean disableEnableProductByID(int productID) {
+        logger.debug("Product sent to get status changed, id = {} ", productID);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", productID);
         Product p = getById(productID);

@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by Rysakova Anna on 01.05.2017.
+ * Created by Rysakova Anna on 01.05.2017., Nikita Alistratenko
  */
 @Controller
 @RequestMapping({"admin"})
@@ -78,13 +78,16 @@ public class ViewProductController {
      */
     @RequestMapping("disableEnableProduct")
     public ModelAndView setProductDisabledEnabled(@RequestParam(value = "id") int id, RedirectAttributes attributes) {
+        logger.debug("Product sent to get status changed, id = ", id);
         ModelAndView mw = new ModelAndView();
-        mw.setViewName("redirect:/admin/getAllProducts");
         if (productDao.disableEnableProductByID(id)) {
             attributes.addFlashAttribute("msg", "Product status has been changed");
+            logger.debug("Product status has been changed, id = ", id);
         } else {
             attributes.addFlashAttribute("msg", "Product status has not been changed");
+            logger.error("Product status has not been changed, id = ", id);
         }
+        mw.setViewName("redirect:/admin/getAllProducts");
         return mw;
     }
 }

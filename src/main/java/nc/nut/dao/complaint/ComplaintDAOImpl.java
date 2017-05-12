@@ -18,7 +18,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     private final static String GET_ALL_BY_ORDER_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ORDER_ID = :orderId";
     private final static String GET_ALL_BY_STATUS_ID_SQL = "SELECT * FROM COMPLAINTS WHERE STATUS_ID = :statusId";
     private final static String SET_PMG_ID_SQL = "UPDATE COMPLAINTS SET PMG_ID = :pmgId, STATUS_ID = 2/* in processing */ WHERE ID = :id";
-    private final static String GET_ALL_WITH_PMG_ID_IS_NULL_SQL = "SELECT * FROM COMPLAINTS WHERE PMG_ID is NULL";
+    private final static String GET_INTERVAL_WHERE_PMG_ID_IS_NULL_SORTED_BY_DATE_SQL = "SELECT * FROM\n" +
+            "  (SELECT ID, ORDER_ID, CREATING_DATE, STATUS_ID, DESCRIPTION, PMG_ID, ROW_NUMBER() OVER (ORDER BY CREATING_DATE) R FROM COMPLAINTS)\n" +
+            "WHERE R > :startIndex AND R <= :endIndex";
     private final static String GET_BY_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ID = :id";
     private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints(ORDER_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
             "VALUES(:orderId,:creatingDate,:statusId,:description)";
@@ -36,6 +38,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
             "   INNER JOIN USERS ON USERS.ID = ORDERS.USER_ID\n" +
             "   INNER JOIN PLACES ON USERS.PLACE_ID = PLACES.ID\n" +
             "   WHERE PLACES.ID = :placeId";
+    private final static String COUNT_COMPLAINTS_WHERE_PMG_ID_IS_NULL_SQL = "SELECT COUNT(ID)\n" +
+            "  FROM COMPLAINTS\n" +
+            "WHERE PMG_ID is NULL";
 
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -98,8 +103,11 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     }
 
     @Override
-    public List<Complaint> getAllWithoutPMGId() {
-        return jdbcTemplate.query(GET_ALL_WITH_PMG_ID_IS_NULL_SQL, complaintRowMapper);
+    public List<Complaint> getIntervalOfComplaintsWithoutPMGId(int startIndex, int endIndex) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("startIndex", startIndex);
+        params.addValue("endIndex", endIndex);
+        return jdbcTemplate.query(GET_INTERVAL_WHERE_PMG_ID_IS_NULL_SORTED_BY_DATE_SQL, params, complaintRowMapper);
     }
 
     @Override
@@ -142,4 +150,8 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return jdbcTemplate.update(UPDATE_DESCRIPTION_SQL, params) > 0;
     }
 
+    @Override
+    public int countComplaintsWithoutPMGId() {
+        return jdbcTemplate.queryForObject(COUNT_COMPLAINTS_WHERE_PMG_ID_IS_NULL_SQL,new MapSqlParameterSource(), Integer.class);
+    }
 }
