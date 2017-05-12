@@ -153,10 +153,21 @@ public class ProductDaoImpl implements ProductDao {
             "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
             " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
             "WHERE ord.USER_ID = :id AND status.NAME != 'Deactivated'";
-    private final static String FIND_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME " +
-            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
-            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
-            "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
+//    private final static String FIND_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME " +
+//            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
+//            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
+//            "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
+
+    private final static String SELECT_ACTIVE_PRODUCTS_FOR_CUSTOMER = "SELECT " +
+            "Products.id id, " +
+            "Products.name name " +
+            "FROM Products " +
+            "JOIN Orders ON Orders.product_id = Products.id " +
+            "WHERE (Orders.current_status_id = 1/* Active */ " +
+            "       OR Orders.current_status_id = 2/* Suspended */ " +
+            "       OR Orders.current_status_id = 4/* In processing */) " +
+            "AND Orders.user_id IN (SELECT id FROM Users WHERE customer_id = " +
+            "                                           (SELECT customer_id FROM USERS WHERE id = :id))";
     private final static String DEACTIVATE_TARIFF_OF_USER_SQL = "UPDATE Orders SET current_status_id = 3/* Deactivated */" +
             "WHERE user_id IN (SELECT id FROM Users WHERE customer_id = (SELECT customer_id FROM Users WHERE id = :userId )) " +
             "AND product_id = :tariffId " +
@@ -490,6 +501,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
+     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -505,6 +517,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
+     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -516,6 +529,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
+     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -530,6 +544,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
+     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -538,6 +553,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
+     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -557,6 +573,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
+     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -572,6 +589,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
+     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -732,12 +750,12 @@ public class ProductDaoImpl implements ProductDao {
     /**
      * @param id
      * @return
-     * @author Moiseienko Petro
+     * @author Moiseienko Petro, Anton Bulgakov
      */
     @Override
     public List<Product> getActiveProductsByUserId(Integer id) {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        List<Product> products = jdbcTemplate.query(FIND_ACTIVE_PRODUCTS_FOR_USER, params, (rs, rowNum) -> {
+        List<Product> products = jdbcTemplate.query(SELECT_ACTIVE_PRODUCTS_FOR_CUSTOMER, params, (rs, rowNum) -> {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
             product.setName(rs.getString("NAME"));

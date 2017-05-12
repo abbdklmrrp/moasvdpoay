@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * @author Rysakova Anna
  */
 @Controller
-@RequestMapping({"user"})
+@RequestMapping({""})
 public class UserController {
 
     private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
@@ -29,12 +29,12 @@ public class UserController {
 
     @RequestMapping({"/business/getProfile"})
     public String indexBusiness() {
-        return "newPages/user/business/Profile";
+        return "newPages/business/Profile";
     }
 
     @RequestMapping({"/residential/getProfile"})
     public String indexResidential() {
-        return "newPages/user/residential/Profile";
+        return "newPages/residential/Profile";
     }
 
     @RequestMapping({"/employee/getProfile"})

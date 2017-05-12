@@ -28,15 +28,6 @@ public interface OrderDao extends Dao<Order> {
     Integer getOrderIdByUserIdAndProductId(Integer userId, Integer productId);
 
     /**
-     * Method returns order id according to user id and product name with active status.
-     *
-     * @param userId      id of user.
-     * @param productName name of product.
-     * @return id of order.
-     */
-    Integer getOrderIdByUserIdAndProductName(Integer userId, String productName);
-
-    /**
      * Set 'Deactivated' status for order of product for user.
      *
      * @param productId id of product to deactivate
