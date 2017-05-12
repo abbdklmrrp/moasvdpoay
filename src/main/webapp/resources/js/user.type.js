@@ -3,7 +3,8 @@
  */
 function Selected(a) {
     var label = a.value;
-    if (label == "LEGAL") {
+    alert(label);
+    if (label === "BUSINESS") {
         var d=document.getElementById("Block1");
         d.style.display = 'block';
     } else {

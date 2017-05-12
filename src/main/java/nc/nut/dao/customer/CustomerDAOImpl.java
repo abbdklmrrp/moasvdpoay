@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     private final static String SAVE_CUSTOMER_SQL = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY,TYPE_ID) " +
             "VALUES(:name, :secretKey,:typeId)";
 
-    private final static String SELECT_BUSINESS_CUSTOMERS = "SELECT NAME FROM CUSTOMERS\n" +
+    private final static String SELECT_BUSINESS_CUSTOMERS = "SELECT * FROM CUSTOMERS\n" +
             "WHERE TYPE_ID=1";
     private final static String SELECT_CUSTOMERS_BY_NAME = "SELECT ID FROM CUSTOMERS WHERE NAME=:name";
 
@@ -94,18 +95,13 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public boolean save(Customer customer) {
-        String name = customer.getName();
-        if (!isUnique(name)) {
-            return false;
-        } else {
-            String password = encoder.encode(customer.getSecretKey());
-            Integer type = customer.getCustomerType().getId();
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("name", customer.getName());
-            params.addValue("secretKey", password);
-            params.addValue("typeId", type);
-            return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params) > 0;
-        }
+        String password = encoder.encode(customer.getSecretKey());
+        Integer type = customer.getCustomerType().getId();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", customer.getName());
+        params.addValue("secretKey", password);
+        params.addValue("typeId", type);
+        return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params) > 0;
     }
 
     @Override
@@ -114,19 +110,14 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public List<String> getAllBusinessCustomersName() {
-        List<String> customers = jdbcTemplate.query(SELECT_BUSINESS_CUSTOMERS, (rs, rowNum) -> rs.getString("name"));
-        return customers;
+    public List<Customer> getAllBusinessCustomers() {
+        return jdbcTemplate.query(SELECT_BUSINESS_CUSTOMERS, new CustomerRowMapper());
     }
 
 
-    private boolean isUnique(String name) {
-        MapSqlParameterSource params = new MapSqlParameterSource("name", name);
-        List<Customer> customers = jdbcTemplate.query(SELECT_CUSTOMERS_BY_NAME, params, (rs, rownum) -> {
-            Customer customer = new Customer();
-            customer.setId(rs.getInt("id"));
-            return customer;
-        });
+    public boolean isUnique(Customer customer) {
+        MapSqlParameterSource params = new MapSqlParameterSource("name", customer.getName());
+        List<Integer> customers = jdbcTemplate.query(SELECT_CUSTOMERS_BY_NAME, params, (rs, rownum) -> rs.getInt("id"));
         return customers.isEmpty();
     }
 

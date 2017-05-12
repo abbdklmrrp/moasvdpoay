@@ -20,9 +20,11 @@ public interface CustomerDAO extends Dao<Customer> {
 
     List<User> getAllUsers(int customerId);
 
-    List<String> getAllBusinessCustomersName();
+    List<Customer> getAllBusinessCustomers();
 
     List<Customer> getLimitedQuantityCustomer(int start, int length, String sort, String search);
 
     Integer getCountCustomersWithSearch(String search);
+
+    boolean isUnique(Customer customer);
 }

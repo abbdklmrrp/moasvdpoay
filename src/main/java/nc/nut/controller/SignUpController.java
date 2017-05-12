@@ -3,11 +3,8 @@ package nc.nut.controller;
 
 import nc.nut.dao.customer.Customer;
 import nc.nut.dao.customer.CustomerDAO;
-import nc.nut.dao.entity.CustomerType;
 import nc.nut.dao.user.Role;
 import nc.nut.dao.user.User;
-import nc.nut.dao.user.UserDAO;
-import nc.nut.googleMaps.ServiceGoogleMaps;
 import nc.nut.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -27,8 +25,6 @@ import java.util.List;
 @Controller
 @RequestMapping({"", "csr", "admin"})
 public class SignUpController {
-    @Resource
-    private UserDAO userDAO;
     @Resource
     private CustomerDAO customerDAO;
     @Resource
@@ -45,8 +41,8 @@ public class SignUpController {
     @RequestMapping(value = "registrationFromCsr", method = RequestMethod.GET)
     public ModelAndView registrationFromCsr() {
         ModelAndView model = new ModelAndView("newPages/csr/RegNewUser");
-        List<String> customersName = customerDAO.getAllBusinessCustomersName();
-        model.addObject("customersName", customersName);
+        List<Customer> customers = customerDAO.getAllBusinessCustomers();
+        model.addObject("customers", customers);
         model.addObject("user", new User());
         return model;
     }
@@ -59,90 +55,42 @@ public class SignUpController {
     }
 
 
-    private User getUser(User user,
-                         String city,
-                         String street,
-                         String building) {
-        String address = city + ", " + street + ", " + building;
-        ServiceGoogleMaps maps = new ServiceGoogleMaps();
-        String place = maps.getRegion(address);
-        int placeId = userDAO.findPlaceId(place);
-        user.setAddress(address);
-        user.setPlaceId(placeId);
-        return user;
-
-    }
-
     @RequestMapping(value = "/signUpCoworker", method = RequestMethod.POST)
     public String signUpCoworker(User user,
-                                 @RequestParam(value = "userType") String userType) {
+                                 @RequestParam(value = "userType") String userType, RedirectAttributes attributes) {
         user.setRole(Role.getRoleByName(userType));
-        boolean success = userService.saveWithGeneratePassword(user);
-        if (success) {
-            logger.debug("User created, email " + user.getEmail());
-            return "newPages/admin/RegNewUser";
-        } else {
-            logger.error("User creating failed");
-            return "newPages/includes/error";
-        }
+        String message = userService.saveWithGeneratingPassword(user);
+        attributes.addFlashAttribute("msg", message);
+        return "redirect:/admin/registrationFromAdmin";
     }
 
     @RequestMapping(value = "signUpUser", method = RequestMethod.POST)
     public String signUpUser(User user,
                              @RequestParam(value = "userType") String userType,
                              @RequestParam(value = "companyName") String companyName,
-                             @RequestParam(value = "secretKey") String secretKey) {
-        user = setCustomerId(user, companyName, secretKey, userType);
-        if (user == null) {
-            logger.error("Getting customer id failed");
-            return "newPages/includes/error";
-        }
-        boolean success = userService.saveWithGeneratePassword(user);
-        return success ? "newPages/csr/RegNewUser" : "newPages/includes/error";
-
-    }
-
-    private User setCustomerId(User user, String companyName, String secretKey, String userType) {
+                             @RequestParam(value = "secretKey") String secretKey, RedirectAttributes attributes) {
         user.setRole(Role.getRoleByName(userType));
-        Integer customerId;
-        if (Role.RESIDENTIAL.equals(user.getRole())) {
-            Customer customer = new Customer(user.getEmail(), user.getPassword());
-            customer.setCustomerType(CustomerType.Residential);
-            boolean success = customerDAO.save(customer);
-            if (!success) {
-                logger.error("Customer creating for residential user failed");
-                return null;
-            }
-            customerId = customerDAO.getCustomerId(user.getEmail(), user.getPassword());
-        } else {
-            customerId = customerDAO.getCustomerId(companyName, secretKey);
+        String message = "";
+        if (user.getRole() == Role.RESIDENTIAL) {
+            message = userService.saveResidentialWithPasswordGenerating(user);
+            logger.info(message);
+        } else if (Role.BUSINESS == user.getRole()) {
+            message = userService.saveBusinessUser(user, companyName, secretKey);
         }
-        user.setCustomerId(customerId);
-        return user;
+        attributes.addFlashAttribute("msg", message);
+        return "redirect:/csr/registrationFromCsr";
+
     }
 
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public String signUp(User user) {
-        Integer customerId;
-        Customer customer = new Customer(user.getEmail(), user.getPassword());
-        customer.setCustomerType(CustomerType.Residential);
-        boolean successCustomer = customerDAO.save(customer);
-        if (!successCustomer) {
-            logger.error("Saving customer for residential user failed");
-            return "newPages/includes/error";
+    public String signUp(User user, RedirectAttributes attributes) {
+        String message = userService.saveResidential(user);
+        if ("User successfully saved".equals(message)) {
+            return "newPages/Login";
         } else {
-            customerId = customerDAO.getCustomerId(user.getEmail(), user.getPassword());
-            user.setCustomerId(customerId);
-            user.setRole(Role.RESIDENTIAL);
-            boolean success = userService.save(user);
-            if (!success) {
-                logger.error("Saving user failed");
-                return "newPages/includes/error";
-            } else {
-                logger.info("user successfully saved");
-                return "newPages/Login";
-            }
+            attributes.addFlashAttribute("msg", message);
+            return "redirect:/registration";
         }
     }
 }

@@ -158,9 +158,6 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public boolean save(User user) {
-        if (!this.validateFields(user) || !this.isUnique(user)) {
-            return false;
-        } else {
             MapSqlParameterSource params = new MapSqlParameterSource();
             String encodePassword = encoder.encode(user.getPassword());
             params.addValue("name", user.getName());
@@ -175,7 +172,6 @@ public class UserDAOImpl implements UserDAO {
             params.addValue("enable", 1);
             int save = jdbcTemplate.update(SAVE_USER, params);
             return save > 0;
-        }
     }
 
     @Override
@@ -227,19 +223,8 @@ public class UserDAOImpl implements UserDAO {
         return clients;
     }
 
-    private boolean validateFields(User user) {
-        if (user.getSurname().isEmpty()) return false;
-        else if (user.getRole().getId() == 0) return false;
-        else if (user.getPhone().isEmpty()) return false;
-        else if (user.getName().isEmpty()) return false;
-        else if (user.getPassword().isEmpty()) return false;
-        else if (user.getEmail().isEmpty()) return false;
-        else if (user.getAddress().isEmpty()) return false;
-        else if (user.getPlaceId() == 0) return false;
-        return true;
-    }
 
-    private boolean isUnique(User user) {
+    public boolean isUnique(User user) {
         String email = user.getEmail();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("email", email);

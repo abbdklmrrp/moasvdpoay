@@ -38,4 +38,5 @@ public interface UserDAO extends Dao<User> {
 
     List<User> getLimitedQuantityUsersOfCustomer(int start, int length, String sort, String search, int custID);
 
+    boolean isUnique(User user);
 }

@@ -1,6 +1,5 @@
 package nc.nut.controller;
 
-import nc.nut.dao.product.ProductStatus;
 import nc.nut.dao.user.Role;
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -111,6 +109,28 @@ public class EditProfileController {
         }
         attributes.addFlashAttribute("msg", errorMessage);
         return "redirect:/" + sessionUser.getRole().getNameInLowwerCase() + "/getProfile";
+    }
+
+    @RequestMapping(value = "editUser", method = RequestMethod.POST)
+    public ModelAndView editUserProfile(User user, HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView("newPages/csr/UserInfo");
+        String message = "";
+        Integer id = (Integer) session.getAttribute("userId");
+        user.setId(id);
+        String place = serviceGoogleMaps.getRegion(user.getAddress());
+        Integer placeId = userDAO.findPlaceId(place);
+        user.setPlaceId(placeId);
+        boolean success = userService.updateUser(user);
+        if (success) {
+            message = "User successfully updated";
+            logger.debug("user updated: " + id);
+        } else {
+            message = "User updating failed";
+            logger.error("user updating failed, userId " + id);
+        }
+        modelAndView.addObject("msg", message);
+        modelAndView.addObject("user", user);
+        return modelAndView;
     }
 
 }

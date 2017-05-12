@@ -13,7 +13,7 @@ public enum Role {
     Admin(1, "ADMIN"),
     PMG(2, "PMG"),
     CSR(3, "CSR"),
-    RESIDENTIAL(4, "INDIVIDUAL"),
+    RESIDENTIAL(4, "RESIDENTIAL"),
     BUSINESS(5, "BUSINESS"),
     EMPLOYEE(6, "EMPLOYEE");
 

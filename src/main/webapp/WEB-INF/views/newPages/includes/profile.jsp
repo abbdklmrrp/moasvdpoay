@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">City</label><br>
+                <label class="col-sm-2 control-label">Address</label><br>
                 <div class="col-sm-10">
                     <input readonly type="text" class="form-control" name="address" id="address" value="${user.address}"
                            required><br>
