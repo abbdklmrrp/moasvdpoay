@@ -25,6 +25,7 @@ import java.util.List;
 @Controller
 @RequestMapping({"", "csr", "user"})
 public class UserOrdersController {
+    //todo to file
     private final static String SUCCESS_MSG = "Thank you! Your order will be suspended from %s to %s.";
     private final static String DATE_ERROR_MSG = "Unable to suspend your order. Please, check the dates you've entered.";
     private final static String FAIL_SUSPEND_ERROR_MSG = "Sorry! An error occurred while suspending your order. Please, try again.";
@@ -44,20 +45,21 @@ public class UserOrdersController {
 
     @RequestMapping(value = {"residential/orders"}, method = RequestMethod.GET)
     public String showOrdersForUser(Model model) {
-        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        logger.debug("Current user: {}", user.toString());
-        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
-        model.addAttribute("ordersRows", ordersRows);
+        showOrders(model);
         return "newPages/user/residential/Orders";
     }
 
     @RequestMapping(value = {"business/orders"}, method = RequestMethod.GET)
     public String showOrdersForBusinessUser(Model model) {
+        showOrders(model);
+        return "newPages/user/business/Orders";
+    }
+
+    private void showOrders(Model model) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user: {}", user.toString());
         List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
         model.addAttribute("ordersRows", ordersRows);
-        return "newPages/user/business/Orders";
     }
 
     @RequestMapping(value = {"/residential/suspend", "/business/suspend"}, method = RequestMethod.POST)
@@ -67,20 +69,20 @@ public class UserOrdersController {
         Calendar beginDate = suspendFormDTO.getBeginDate();
         Calendar endDate = suspendFormDTO.getEndDate();
         Integer orderId = suspendFormDTO.getOrderId();
-        if (!DatesHelper.areDatesCorrectForOrderSuspendence(beginDate, endDate)) {
-            logger.error("Incorrect dates received from superdense form");
+        if (!DatesHelper.areDatesCorrectForOrderSuspense(beginDate, endDate)) {
+            logger.error("Incorrect dates received from superdense form: {}, {}", beginDate, endDate);
             return DATE_ERROR_MSG;
         }
         if (!orderService.canOrderBeSuspendedWithinDates(beginDate, endDate, orderId)) {
-            logger.error("Unable to suspend product because of other planned tasks");
+            logger.error("Unable to suspend order because of other planned tasks, orderId {} ", orderId);
             return CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG;
         }
         boolean isServiceSuspended = orderService.suspendOrder(beginDate, endDate, orderId);
         if (isServiceSuspended) {
-            logger.info("Successful order superdense, order id: " + orderId);
+            logger.info("Successful order suspense, order id: {}", orderId);
             return String.format(SUCCESS_MSG, dateFormat.format(beginDate.getTime()), dateFormat.format(endDate.getTime()));
         }
-        logger.error("Unable to suspend order, order id: " + orderId);
+        logger.error("Unable to suspend order, order id: {}", orderId);
         return FAIL_SUSPEND_ERROR_MSG;
 
     }
@@ -88,6 +90,12 @@ public class UserOrdersController {
     @RequestMapping(value = {"/residential/activateAfterSuspend", "/business/activateAfterSuspend"}, method = RequestMethod.POST)
     @ResponseBody
     public Boolean activateAfterSuspend(@RequestParam Integer orderId) {
-        return orderDao.activateOrder(orderId);
+        Boolean wasOrderActivated = orderDao.activateOrder(orderId);
+        if (wasOrderActivated) {
+            logger.info("Successful order activation, order id: {} ", orderId);
+        } else {
+            logger.info("Unsuccessful order activation, order id: {} ", orderId);
+        }
+        return wasOrderActivated;
     }
 }

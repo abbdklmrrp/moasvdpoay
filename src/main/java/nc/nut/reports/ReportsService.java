@@ -41,7 +41,6 @@ public class ReportsService {
     private final static String DAY_PERIOD_PATTERN = "dd-MM-yyyy";
     private final static String MONTH_PERIOD_PATTERN = "MM-yyyy";
     private final static String YEAR_PERIOD_PATTERN = "yyyy";
-    //todo change regex
     private final static String REGEX = "<step>";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -104,7 +103,6 @@ public class ReportsService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar beginDate = new GregorianCalendar();
         Calendar endDate = new GregorianCalendar();
-        //todo determine which one is wrong for error msg
         try {
             beginDate.setTime(simpleDateFormat.parse(beginDateStr));
             endDate.setTime(simpleDateFormat.parse(endDateStr));

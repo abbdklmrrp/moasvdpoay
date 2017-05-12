@@ -117,6 +117,14 @@ public interface ProductDao extends Dao<Product> {
     public List<Product> getAvailableTariffsForCustomers();
 
     /**
+     * Method returns all services that are available for customers.
+     * If there are no services for customer, method returns empty list.
+     *
+     * @return
+     */
+    public List<Product> getServicesAvailableForCustomer();
+
+    /**
      * Method returns tariff of customer according to customer id from params.
      * If no such customer or customer doesn`t have active tariff, method returns null.
      *

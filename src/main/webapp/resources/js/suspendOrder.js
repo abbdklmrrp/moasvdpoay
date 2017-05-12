@@ -46,13 +46,21 @@ function areDatesCorrect() {
     var currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
     start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
     if ($('#beginDate').val() == '' || $('#endDate').val() == '') {
         swal("Please, enter both, begin and end date.");
         return false;
     }
-    if (end.getTime() < start.getTime()) {
+    if (end.getTime() == start.getTime()) {
         swal({
             title: "Begin date of order's suspense should be earlier than date of end of order's suspense.",
+            type: "error"
+        });
+        return false;
+    }
+    if (end.getTime() == start.getTime()) {
+        swal({
+            title: "Begin date of order's suspense should be different from date of end of order's suspense.",
             type: "error"
         });
         return false;

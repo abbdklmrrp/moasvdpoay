@@ -222,7 +222,7 @@ public class ProductService {
         List<Order> orders = orderDao.getOrdersByCustomerId(user.getCustomerId());
         List<Product> productWithoutStatuses = user.getRole() == Role.Individual ?
                 productDao.getAllAvailableServicesByPlace(user.getPlaceId()) :
-                productDao.getAllServices();
+                productDao.getServicesAvailableForCustomer();
         Map<String, List<ProductCatalogRowDTO>> categoriesWithProducts = new HashMap<>();
         List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTariff(user.getId());
         for (Product product : productWithoutStatuses) {
@@ -232,7 +232,7 @@ public class ProductService {
             }
             List<ProductCatalogRowDTO> allProductCatalogRowsForCategoryDTO = categoriesWithProducts.get(categoryName);
             String status = getStatusForProductAsString(product, orders, servicesOfCurrentUserTariff);
-            Price price = null;
+            Price price;
             if (user.getRole() == Role.Individual) {
                 price = priceDao.getPriceByProductIdAndPlaceId(product.getId(), user.getPlaceId());
             } else {

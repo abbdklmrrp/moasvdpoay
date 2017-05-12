@@ -187,6 +187,10 @@ public class ProductDaoImpl implements ProductDao {
             "base_price " +
             "FROM Products " +
             "WHERE customer_type_id = 1 /* Business */";
+    private final static String SELECT_SERVICES_FOR_CUSTOMERS_SQL = "SELECT * " +
+            "FROM Products " +
+            "WHERE customer_type_id = 1 /* Business */ " +
+            "AND TYPE_ID = 2 /*Service*/";
     private final static String SELECT_CURRENT_CUSTOMER_TARIFF_BY_CUSTOMER_ID_SQL = "SELECT " +
             "id, " +
             "category_id, " +
@@ -548,6 +552,14 @@ public class ProductDaoImpl implements ProductDao {
             logger.debug("There are no tariffs for customers.");
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Product> getServicesAvailableForCustomer() {
+        return jdbcTemplate.query(SELECT_SERVICES_FOR_CUSTOMERS_SQL, productRowMapper);
     }
 
     /**
