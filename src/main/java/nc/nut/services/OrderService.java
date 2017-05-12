@@ -5,7 +5,6 @@ import nc.nut.dao.order.OrderDao;
 import nc.nut.dao.plannedTask.PlannedTask;
 import nc.nut.dao.plannedTask.PlannedTaskDao;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
@@ -78,7 +77,7 @@ public class OrderService {
      * @param
      * @return
      */
-    @Transactional
+    //   @Transactional
     public boolean deactivateOrderOfUserCompletely(Integer orderId) {
         return false;
     }

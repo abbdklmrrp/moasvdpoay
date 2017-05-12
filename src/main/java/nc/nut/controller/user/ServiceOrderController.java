@@ -11,7 +11,7 @@ import nc.nut.dao.user.UserDAO;
 import nc.nut.dto.ProductCatalogRowDTO;
 import nc.nut.security.SecurityAuthenticationHelper;
 import nc.nut.services.ProductService;
-import nc.nut.utils.SharedVariables;
+import nc.nut.util.SharedVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -110,21 +110,21 @@ public class ServiceOrderController {
     /**
      * This method deactivates order of user for particular order.
      *
-     * @param serviceId
+     * @param serviceId id of service
      * @return String "success" if deactivation was successful, "fail" otherwise
      */
     @RequestMapping(value = {"/deactivateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String deactivateOrder(@RequestParam Integer serviceId) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        Boolean wasDeactivated = orderDao.deactivateOrderOfUserForProduct(Integer.valueOf(serviceId), currentUser.getId());
+        Boolean wasDeactivated = orderDao.deactivateOrderOfUserForProduct(serviceId, currentUser.getId());
         if (wasDeactivated) {
-            logger.info(String.format("Successful deactivation of order (product_id : {}, user_id: {})", serviceId,
-                    currentUser.getId()));
+            logger.info("Successful deactivation of order (product_id : {}, user_id: {})", serviceId,
+                    currentUser.getId());
             return SharedVariables.SUCCESS;
         } else {
-            logger.error(String.format("Error while deactivating order(product_id : {}, user_id: {})", serviceId,
-                    currentUser.getId()));
+            logger.error("Error while deactivating order(product_id : {}, user_id: {})", serviceId,
+                    currentUser.getId());
         }
         return SharedVariables.FAIL;
 

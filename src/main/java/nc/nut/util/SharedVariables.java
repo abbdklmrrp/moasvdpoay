@@ -1,4 +1,4 @@
-package nc.nut.utils;
+package nc.nut.util;
 
 /**
  * Created by Yuliya Pedash on 12.05.2017.

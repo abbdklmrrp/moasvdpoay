@@ -38,7 +38,11 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 ORDER BY ID";
     private final static String FIND_ENABLED_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 AND STATUS=1 ORDER BY ID";
     private final static String FIND_PRODUCT_BY_ID = "SELECT * FROM PRODUCTS WHERE ID=:id";
-
+    private final static String SELECT_PRODUCT_BY_ID_BASE_PRICE_SET_BY_PLACE_SQL = "SELECT id, type_id, category_id, name, duration, need_processing, DESCRIPTION,\n" +
+            "  status, price AS base_price\n" +
+            "  FROM PRODUCTS\n" +
+            "  INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID " +
+            "WHERE PRICES.PLACE_ID = :place_id AND PRODUCT_ID = :product_id";
     private final static String FIND_ALL_PRODUCTS = "SELECT ID, TYPE_ID, NAME, DURATION, DESCRIPTION, BASE_PRICE, STATUS FROM PRODUCTS ORDER BY ID";
 
     private final static String FIND_SERVICES_BY_TARIFF = "SELECT " +
@@ -822,5 +826,14 @@ public class ProductDaoImpl implements ProductDao {
             return priceByRegionDto;
         });
         return products;
+    }
+
+    @Override
+    public Product findProductWithPriceSetByPlace(Integer productId, Integer placeId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("product_id", productId);
+        params.addValue("place_id", placeId);
+        return jdbcTemplate.queryForObject(SELECT_PRODUCT_BY_ID_BASE_PRICE_SET_BY_PLACE_SQL, params, productRowMapper);
+
     }
 }

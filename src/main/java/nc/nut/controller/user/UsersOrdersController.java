@@ -23,8 +23,8 @@ import java.util.List;
  * Created by Yuliya Pedash on 07.05.2017.
  */
 @Controller
-@RequestMapping({"", "csr", "user"})
-public class UserOrdersController {
+@RequestMapping({"csr", "user"})
+public class UsersOrdersController {
     //todo to file
     private final static String SUCCESS_MSG = "Thank you! Your order will be suspended from %s to %s.";
     private final static String DATE_ERROR_MSG = "Unable to suspend your order. Please, check the dates you've entered.";
@@ -37,7 +37,7 @@ public class UserOrdersController {
     private UserDAO userDAO;
     @Resource
     private OrderService orderService;
-    private static Logger logger = LoggerFactory.getLogger(UserOrdersController.class);
+    private static Logger logger = LoggerFactory.getLogger(UsersOrdersController.class);
 
 
     @Resource
