@@ -1,7 +1,6 @@
 package nc.nut.dao.product;
 
 import nc.nut.dao.interfaces.Dao;
-import nc.nut.dto.PriceByRegionDto;
 import nc.nut.dto.TariffServiceDto;
 
 import java.util.ArrayList;
@@ -107,14 +106,14 @@ public interface ProductDao extends Dao<Product> {
      * @param tariffId tariff id.
      * @return status of deactivation.
      */
-    public Boolean deactivateTariff(Integer userId, Integer tariffId);
+    Boolean deactivateTariff(Integer userId, Integer tariffId);
 
     /**
      * Method returns all tariffs are available for customers. If there are no tariffs in this place, method returns empty list.
      *
      * @return list of tariffs.
      */
-    public List<Product> getAvailableTariffsForCustomers();
+    List<Product> getAvailableTariffsForCustomers();
 
     /**
      * Method returns tariff of customer according to customer id from params.
@@ -123,7 +122,7 @@ public interface ProductDao extends Dao<Product> {
      * @param customerId id of customer.
      * @return tariff of customer.
      */
-    public Product getCurrentCustomerTariff(Integer customerId);
+    Product getCurrentCustomerTariff(Integer customerId);
 
     /**
      * Method creates order for activation new tariff for user with id from params.
@@ -133,7 +132,7 @@ public interface ProductDao extends Dao<Product> {
      * @param tariffId id of tariff.
      * @return status of operation.
      */
-    public boolean activateTariff(Integer userId, Integer tariffId);
+    boolean activateTariff(Integer userId, Integer tariffId);
 
     /**
      * Method returns list of services are in tariff with id from params.
@@ -142,15 +141,13 @@ public interface ProductDao extends Dao<Product> {
      * @param tariffId id of tariff.
      * @return list of services.
      */
-    public List<Product> getServicesOfTariff(Integer tariffId);
+    List<Product> getServicesOfTariff(Integer tariffId);
 
     Integer getCountProductsWithSearch(String search);
 
     List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search);
 
     List<Product> getProductForResidentialCustomerWithoutPrice();
-
-    List<PriceByRegionDto> getProductPriceByRegion();
 
 
 }

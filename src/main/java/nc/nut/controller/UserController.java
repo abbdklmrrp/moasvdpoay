@@ -21,12 +21,11 @@ import javax.annotation.Resource;
 @RequestMapping({"user"})
 public class UserController {
 
+    private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
     private UserDAO dao;
-
-    private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
 
     @RequestMapping({"/business/getProfile"})
     public String indexBusiness() {

@@ -1,8 +1,10 @@
 package nc.nut.dao.price;
 
 import nc.nut.dao.interfaces.Dao;
+import nc.nut.dto.PriceByRegionDto;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -21,5 +23,10 @@ public interface PriceDao extends Dao<Price> {
     Price getPriceByProductIdAndPlaceId(Integer productId, Integer placeId);
 
     boolean fillPriceOfProductByRegion(ArrayList<Price> priceByRegionDtos);
+
+    List<PriceByRegionDto> getPriceInRegionsForAllProducts();
+
+    List<PriceByRegionDto> getPriceInRegionsByProduct(int productId);
+
 
 }

@@ -22,17 +22,14 @@ import java.util.List;
 @Controller
 @RequestMapping({"admin"})
 public class AddProductController {
+    private final static String ERROR_WRONG_FIELDS = "Please, check the correctness of the input data";
+    private final static String ERROR_EXIST_OF_CATEGORY = "Category already exists";
+    private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
     @Resource
     private ProductDao productDao;
     @Resource
     private ProductService productService;
 
-    private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
-
-    private final static String ERROR_WRONG_FIELDS = "Please, check the correctness of the input data";
-    private final static String ERROR_EXIST_OF_CATEGORY = "Category already exists";
-
-    // maybe ename also add to mav?
     @RequestMapping(value = {"addTariff"}, method = RequestMethod.GET)
     public ModelAndView addProduct(ModelAndView mav) {
         mav.addObject("product", new Product());
@@ -82,14 +79,14 @@ public class AddProductController {
             mav.addObject("error", ERROR_WRONG_FIELDS);
             logger.error("Incoming request has empty fields");
             List<ProductCategories> productCategories = productDao.findProductCategories();
-            logger.debug("Get all service's categories");
+            logger.debug("Get all service's categories {} ", productCategories.toString());
             mav.addObject("productCategories", productCategories);
             mav.setViewName("admin/addService");
             return mav;
         }
         try {
             product = productService.getCategory(productCategory, product);
-            logger.debug("Set category for tariff {} ",product.getCategoryId());
+            logger.debug("Set category for tariff {} ", product.getCategoryId());
         } catch (DuplicateKeyException e) {
             logger.error(ERROR_EXIST_OF_CATEGORY, e);
             mav.addObject("error", ERROR_EXIST_OF_CATEGORY);

@@ -46,7 +46,4 @@ public class ServicesEndpoint { // GET: admin/category/1
         }
         return servicesByCategoryDtoList;
     }
-
-
 }
-

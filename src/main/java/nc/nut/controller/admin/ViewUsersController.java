@@ -5,16 +5,14 @@ import nc.nut.dao.user.UserDAO;
 import nc.nut.grid.GridRequestDto;
 import nc.nut.grid.ListHolder;
 import nc.nut.services.UserService;
-import org.springframework.ui.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Moiseienko Petro
@@ -23,12 +21,11 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping({"admin"})
 public class ViewUsersController {
+    private static Logger logger = LoggerFactory.getLogger(ViewUsersController.class);
     @Resource
     private UserDAO userDAO;
     @Resource
     private UserService userService;
-
-    private static Logger logger = LoggerFactory.getLogger(ViewUsersController.class);
 
     @RequestMapping(value = "getUsersPage", method = RequestMethod.GET)
     public ModelAndView getUsers() throws IOException {

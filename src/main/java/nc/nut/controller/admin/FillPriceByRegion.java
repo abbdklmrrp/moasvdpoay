@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,6 +30,9 @@ import java.util.List;
 @RequestMapping({"admin"})
 public class FillPriceByRegion {
 
+    private static final String ERROR_IN_CONNECTION = "Error with filling database";
+    private static final String ERROR_FILL_IN_PRICE_BY_PRODUCT = "Please, check that the region was selected and price input";
+    private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
     @Resource
     private PlaceDAO placeDAO;
     @Resource
@@ -38,18 +42,13 @@ public class FillPriceByRegion {
     @Resource
     private PriceDao priceDao;
 
-    private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
-
-    private static final String ERROR_IN_CONNECTION = "Error with filling database";
-    private static final String ERROR_FILL_IN_PRICE_BY_PRODUCT = "Please, check that the region was selected and price input";
-
     @RequestMapping(value = {"fillTariffsPrices"}, method = RequestMethod.GET)
     public ModelAndView getRegionForFill(ModelAndView mav) {
 
         List<Product> products = productDao.getProductForResidentialCustomerWithoutPrice();
-        logger.debug("Get all the tariffs that are not filled with services");
+        logger.debug("Get all the tariffs that are not filled with services {} ", products.toString());
         List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
-        logger.debug("Get products that do not have a price by region");
+        logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
 
         mav.addObject("products", products);
         mav.addObject("placesForFillInTariff", placesForFillInTariff);
@@ -65,10 +64,10 @@ public class FillPriceByRegion {
                                           @RequestParam(value = "placeId") Integer[] placeId,
                                           @RequestParam(value = "priceByRegion") BigDecimal[] priceByRegion
     ) {
-
-        boolean isValidate = priceService.isValidate(productId, placeId, priceByRegion);
-        if (!isValidate) {
-            logger.error("Incoming data of place ID and is not correct {} ", placeId, priceByRegion);
+        boolean isValid = priceService.isValid(productId, placeId, priceByRegion);
+        if (!isValid) {
+            logger.error("Incoming data of place ID and is not correct {} {}",
+                    Arrays.toString(placeId), Arrays.toString(priceByRegion));
             mav.addObject("error", ERROR_FILL_IN_PRICE_BY_PRODUCT);
             mav.setViewName("admin/fillTariff");
             return mav;
