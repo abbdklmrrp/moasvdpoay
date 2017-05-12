@@ -227,6 +227,7 @@ CREATE OR REPLACE VIEW Authorities AS
     Users.id       id,
     Users.email    username,
     Users.password password,
+    Users.enable   enable,
     Roles.name     role
   FROM Users
     JOIN Roles ON Roles.id = Users.role_id;

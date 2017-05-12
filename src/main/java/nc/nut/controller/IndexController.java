@@ -18,7 +18,7 @@ public class IndexController {
     private SecurityAuthenticationHelper securityAuthenticationHelper;
 
     @RequestMapping({"index"})
-    String index() {
+    public String index() {
         User currentUser = securityAuthenticationHelper.getCurrentUser();
         if (currentUser == null) {
             return "redirect:/login";

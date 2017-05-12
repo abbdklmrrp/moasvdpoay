@@ -27,21 +27,6 @@ public class UserController {
     @Resource
     private UserDAO dao;
 
-    @RequestMapping({"/business/getProfile"})
-    public String indexBusiness() {
-        return "newPages/business/Profile";
-    }
-
-    @RequestMapping({"/residential/getProfile"})
-    public String indexResidential() {
-        return "newPages/residential/Profile";
-    }
-
-    @RequestMapping({"/employee/getProfile"})
-    public String indexEmployee() {
-        return "newPages/employee/Profile";
-    }
-
     @RequestMapping(value = "profile", method = RequestMethod.GET)
     public ModelAndView getProfile() {
         User user = dao.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());

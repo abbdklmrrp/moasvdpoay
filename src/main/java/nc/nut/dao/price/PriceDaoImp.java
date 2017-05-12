@@ -97,6 +97,12 @@ public class PriceDaoImp implements PriceDao {
         return products;
     }
 
+    /**
+     * Anna Rysakova
+     *
+     * @param productId
+     * @return
+     */
     @Override
     public List<PriceByRegionDto> getPriceInRegionsByProduct(int productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();

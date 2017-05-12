@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -19,11 +18,6 @@ import java.util.List;
 public class PMGController {
     @Resource
     private ComplaintDAO complaintDAO;
-
-    @RequestMapping({"index"})
-    public String index() {
-        return "newPages/pmg/Profile";
-    }
 
     @RequestMapping(value = "allComplaints")
     public String getAllComplaints() {
