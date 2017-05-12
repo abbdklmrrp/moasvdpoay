@@ -47,18 +47,14 @@ public class OrderDaoImpl implements OrderDao {
             "WHERE ID = :id ";
     private final static String INSERT_ORDER = "INSERT INTO ORDERS (PRODUCT_ID, USER_ID, CURRENT_STATUS_ID) " +
             "VALUES (:product_id, :user_id, :cur_status_id)";
-    private final static String SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL = "SELECT id FROM Orders " +
-            "WHERE product_id = :productId " +
-            "AND user_id = :userId " +
-            "AND (current_status_id = 1/* Active */ " +
-            "     OR current_status_id = 2/* Suspended */ " +
-            "     OR current_status_id = 4/* In processing */)";
-    private final static String SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL = "SELECT id FROM Orders " +
-            "WHERE product_id IN (SELECT id FROM Products WHERE name = :productName) " +
-            "AND user_id = :userId " +
-            "AND (current_status_id = 1/* Active */ " +
-            "     OR current_status_id = 2/* Suspended */ " +
-            "     OR current_status_id = 4/* In processing */)";
+    private final static String SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL = "SELECT Orders.id " +
+            "FROM Orders" +
+            "JOIN Users ON Orders.user_id = Users.id"+
+            "WHERE (Orders.current_status_id = 1/* Active */ " +
+            "       OR Orders.current_status_id = 2/* Suspended */ " +
+            "       OR Orders.current_status_id = 4/* In processing */)"+
+            "AND Orders.product_id = productId " +
+            "AND Users.customer_id = (SELECT customer_id FROM Users WHERE id = :userId)";
     private final static String DELETE_ORDER_BY_ID_SQL = "DELETE FROM ORDERS WHERE ID = :id;";
     private final static String SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL = "SELECT * FROM ORDERS WHERE\n" +
             "  PRODUCT_ID = :product_id\n" +
@@ -118,6 +114,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     /**
+     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -127,22 +124,6 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("productId", productId);
         try {
             return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
-        } catch (Exception e) {
-            logger.debug("There are no user`s orders with such params.");
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Integer getOrderIdByUserIdAndProductName(Integer userId, String productName) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", userId);
-        params.addValue("productName", productName);
-        try {
-            return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_NAME_SQL, params, Integer.class);
         } catch (Exception e) {
             logger.debug("There are no user`s orders with such params.");
             return null;

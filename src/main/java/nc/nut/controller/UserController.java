@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * @author Rysakova Anna
  */
 @Controller
-@RequestMapping({"user"})
+@RequestMapping({""})
 public class UserController {
 
     private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
