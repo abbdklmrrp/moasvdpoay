@@ -11,6 +11,7 @@ import nc.nut.dao.user.UserDAO;
 import nc.nut.dto.ProductCatalogRowDTO;
 import nc.nut.security.SecurityAuthenticationHelper;
 import nc.nut.services.ProductService;
+import nc.nut.util.SharedVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -50,19 +51,26 @@ public class ServiceOrderController {
     private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing your order. Please, try again!";
 
     @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
-    String showServices(Model model) {
+    public String showServices(Model model) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        logger.debug("Current user id : " + currentUser.getId());
+        logger.debug("Current user id : {} ", currentUser.getId());
         Map<String, List<ProductCatalogRowDTO>> categoriesWithProductsToShow = productService.getCategoriesWithProductsForUser(currentUser);
         if (categoriesWithProductsToShow.isEmpty()) {
             model.addAttribute("msg", NO_PRODUCTS_FOR_YOU_MSG);
-            logger.info("No products for user: " + currentUser.getId());
+            logger.info("No products for user: {}", currentUser.getId());
         } else {
             model.addAttribute("categoriesProducts", categoriesWithProductsToShow);
         }
         return "newPages/user/residential/Services";
     }
 
+    /**
+     * This method takes id of service and creates order for this service for
+     * currently logged user.
+     *
+     * @param serviceId id of service
+     * @return message with result of operation
+     */
     @RequestMapping(value = {"/activateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String activateService(@RequestParam Integer serviceId) {
@@ -83,33 +91,42 @@ public class ServiceOrderController {
         boolean isActivated = orderDao.save(order);
         if (!isActivated) {
             msg = ERROR_PLACING_ORDER_MSG;
-            logger.warn("Error while placing order: " + order.toString());
-            //     return "user/result";
+            logger.warn("Error while placing order: {} ", order.toString());
         }
-        //      model.addAttribute("resultMsg", msg);
+        logger.debug("Order for service: {} was placed", serviceId);
         return msg;
+
     }
 
-    @RequestMapping(value = {"/getNewOrder"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/getNewOrderStatus"}, method = RequestMethod.GET)
     @ResponseBody
-    public Order getNewOrder(@RequestParam Integer serviceId) {
+    public String getNewOrderStatus(@RequestParam Integer serviceId) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        return orderDao.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
+        Order newOrder = orderDao.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
+        logger.debug("Gotten  order of user: {} ", newOrder);
+        return newOrder.getCurrentStatus().getName();
     }
 
-    @RequestMapping(value = {"/deactivateService"}, method = RequestMethod.POST, produces = "application/json")
+    /**
+     * This method deactivates order of user for particular order.
+     *
+     * @param serviceId id of service
+     * @return String "success" if deactivation was successful, "fail" otherwise
+     */
+    @RequestMapping(value = {"/deactivateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String deactivateOrder(@RequestParam Integer serviceId) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        boolean wasDeactivated = orderDao.deactivateOrderOfUserForProduct(Integer.valueOf(serviceId), currentUser.getId());
-        //  String message;
-        if (!wasDeactivated) {
-            logger.error(String.format("Error while deactivating order(product_id : %s, user_id: %d)", serviceId,
-                    currentUser.getId()));
-            return "fail";
+        Boolean wasDeactivated = orderDao.deactivateOrderOfUserForProduct(serviceId, currentUser.getId());
+        if (wasDeactivated) {
+            logger.info("Successful deactivation of order (product_id : {}, user_id: {})", serviceId,
+                    currentUser.getId());
+            return SharedVariables.SUCCESS;
+        } else {
+            logger.error("Error while deactivating order(product_id : {}, user_id: {})", serviceId,
+                    currentUser.getId());
         }
-        //  model.addAttribute("resultMsg", message);
-        return "success";
+        return SharedVariables.FAIL;
 
     }
 

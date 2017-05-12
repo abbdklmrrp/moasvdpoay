@@ -56,7 +56,7 @@ public class ReportController {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         List<Place> regions = placeDAO.getAll();
         model.addAttribute("regions", regions);
-        return "newPages/"+user.getRole().getName().toLowerCase()+"/Statistics";
+        return "newPages/" + user.getRole().getName().toLowerCase() + "/Statistics";
     }
 
     @RequestMapping(value = "/data")
@@ -100,6 +100,7 @@ public class ReportController {
             reportMaker.makeReport(reportsService.getDataForReport(beginDate, endDate, region));
         } catch (WorkbookCreatingFailException | ReportCreatingException e) {
             logger.error("Error while downloading document", e);
+            return;
         }
         reportMaker.getExcelWorkbook().write(outputStream);
         outputStream.close();

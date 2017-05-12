@@ -1,6 +1,7 @@
 package nc.nut.dao.product;
 
 import nc.nut.dao.interfaces.Dao;
+import nc.nut.dto.PriceByRegionDto;
 import nc.nut.dto.TariffServiceDto;
 
 import java.util.ArrayList;
@@ -106,14 +107,22 @@ public interface ProductDao extends Dao<Product> {
      * @param tariffId tariff id.
      * @return status of deactivation.
      */
-    Boolean deactivateTariff(Integer userId, Integer tariffId);
+    public Boolean deactivateTariff(Integer userId, Integer tariffId);
 
     /**
      * Method returns all tariffs are available for customers. If there are no tariffs in this place, method returns empty list.
      *
      * @return list of tariffs.
      */
-    List<Product> getAvailableTariffsForCustomers();
+    public List<Product> getAvailableTariffsForCustomers();
+
+    /**
+     * Method returns all services that are available for customers.
+     * If there are no services for customer, method returns empty list.
+     *
+     * @return
+     */
+    public List<Product> getServicesAvailableForCustomer();
 
     /**
      * Method returns tariff of customer according to customer id from params.
@@ -122,7 +131,7 @@ public interface ProductDao extends Dao<Product> {
      * @param customerId id of customer.
      * @return tariff of customer.
      */
-    Product getCurrentCustomerTariff(Integer customerId);
+    public Product getCurrentCustomerTariff(Integer customerId);
 
     /**
      * Method creates order for activation new tariff for user with id from params.
@@ -132,7 +141,7 @@ public interface ProductDao extends Dao<Product> {
      * @param tariffId id of tariff.
      * @return status of operation.
      */
-    boolean activateTariff(Integer userId, Integer tariffId);
+    public boolean activateTariff(Integer userId, Integer tariffId);
 
     /**
      * Method returns list of services are in tariff with id from params.
@@ -148,6 +157,16 @@ public interface ProductDao extends Dao<Product> {
     List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search);
 
     List<Product> getProductForResidentialCustomerWithoutPrice();
+
+    /**
+     * This method returns Product object in which <code>basePrice</code>
+     * will be determined by price configured for place in prices table.
+     *
+     * @param productId id of product
+     * @param placeId   id of place
+     * @return found Product
+     */
+    Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
 
 
 }

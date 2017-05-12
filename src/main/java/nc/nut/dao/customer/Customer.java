@@ -25,7 +25,7 @@ public class Customer {
         this.secretKey = secretKey;
     }
 
-    public Customer(){
+    public Customer() {
 
     }
 
@@ -67,6 +67,26 @@ public class Customer {
 
     public void setInvoice(Integer invoice) {
         this.invoice = invoice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Customer customer = (Customer) o;
+
+        if (!id.equals(customer.id)) return false;
+        if (secretKey != null ? !secretKey.equals(customer.secretKey) : customer.secretKey != null) return false;
+        return invoice != null ? invoice.equals(customer.invoice) : customer.invoice == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (secretKey != null ? secretKey.hashCode() : 0);
+        result = 31 * result + (invoice != null ? invoice.hashCode() : 0);
+        return result;
     }
 
     @Override

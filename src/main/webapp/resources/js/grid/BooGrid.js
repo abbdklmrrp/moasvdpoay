@@ -111,18 +111,18 @@
       monitor.start();
 
       var request = data();
-      
+
       // ship with UI activities
       if (refreshClicked) {
         request.refreshed = true;
       }
       refreshClicked = false;
-      
+
       if(first) {
         request.first = true;
         first = false;
       }
-      
+
       var needToStop = false;
 
       for (var ind = 0; ind < listeners.length; ind++) {

@@ -62,26 +62,6 @@ public class EditProfileController {
         return model;
     }
 
-//    /**
-//     * @Author Moiseienko Petro
-//     * @Author Nikita Alistratenko
-//     */
-//    @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
-//    public String editProfile(User editedUser, RedirectAttributes attributes, HttpServletRequest request) {
-//        User sessionUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-//        String urlPatterForCertainUserRole = roleMap.getOrDefault(sessionUser.getRole(), "user");
-//        String place = serviceGoogleMaps.getRegion(editedUser.getAddress());
-//        Integer placeId = userDAO.findPlaceId(place);
-//        editedUser.setPlaceId(placeId);
-//        editedUser.setId(sessionUser.getId());
-//        if (userService.updateUser(editedUser)) {
-//            attributes.addFlashAttribute("msg", "User has been updated");
-//        } else {
-//            attributes.addFlashAttribute("msg", "User has not been updated");
-//        }
-//        return "redirect:/" + urlPatterForCertainUserRole + "/getProfile";
-//    }
-
     /**
      * @param editedUser new user info
      * @param attributes for passing messages to jsp
@@ -91,6 +71,7 @@ public class EditProfileController {
      */
     @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
     public String editProfile1(@ModelAttribute("user") User editedUser, RedirectAttributes attributes, HttpServletRequest request) {
+        logger.debug("User sent to be edited = {} ", editedUser);
         //Message of the updating
         String errorMessage = null;
         //needs to get id for user from db. JSP/SpringSecurity does not contain its id
@@ -106,6 +87,7 @@ public class EditProfileController {
                 //checks if entered address isn't in database
                 if (placeId == null || placeId == 0) {
                     errorMessage = "Our company does not provide service for this region";
+                    logger.debug("User address is not supported = ", editedUser);
                     break label;
                 }
             }
@@ -115,13 +97,16 @@ public class EditProfileController {
                 //checks if old pass is wrong
                 if (!sessionUser.getPassword().equals(new Md5PasswordEncoder().encode(request.getParameter("oldPassword")))) {
                     errorMessage = "You have entered wrong old password. Please, try again.";
+                    logger.debug("User old password is not valid = {} ", editedUser);
                     break label;
                 }
             }
             editedUser.setId(sessionUser.getId());
-            logger.warn(editedUser.toString() + ". oldpass: " + request.getParameter("oldPassword"));
             if (!userService.updateUser(editedUser)) {
                 errorMessage = "User has not been updated";
+                logger.error("User has not been updated = {} ", editedUser);
+            } else {
+                logger.debug("User has been updated = {} ", editedUser);
             }
         }
         attributes.addFlashAttribute("msg", errorMessage);

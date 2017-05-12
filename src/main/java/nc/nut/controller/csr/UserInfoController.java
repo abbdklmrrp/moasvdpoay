@@ -21,7 +21,7 @@ public class UserInfoController {
 
     @Resource
     private UserDAO userDAO;
-    private static Logger logger= LoggerFactory.getLogger(UserInfoController.class);
+    private static Logger logger = LoggerFactory.getLogger(UserInfoController.class);
 
     @RequestMapping(value = "getDetails", method = RequestMethod.GET)
     public ModelAndView getDetails(@RequestParam(value = "id") int id, HttpSession session) throws IOException {
@@ -30,7 +30,7 @@ public class UserInfoController {
         session.setAttribute("userId", id);
         model.setViewName("newPages/csr/UserInfo");
         model.addObject("user", user);
-        logger.debug("Get to user page, id "+id);
+        logger.debug("Get to user page, id " + id);
         return model;
     }
 

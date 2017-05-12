@@ -48,7 +48,7 @@ public class ViewUsersController {
     @ResponseBody
     public String activateUser(@RequestParam Integer userId) {
         User user = userDAO.getUserById(userId);
-        String message = "";
+        String message;
         user.setEnable(1);
         boolean success = userService.updateUser(user);
         if (!success) {
@@ -65,7 +65,7 @@ public class ViewUsersController {
     @ResponseBody
     public String deactivateUser(@RequestParam Integer userId) {
         User user = userDAO.getUserById(userId);
-        String message = "";
+        String message;
         user.setEnable(0);
         boolean success = userService.updateUser(user);
         if (!success) {

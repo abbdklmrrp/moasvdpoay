@@ -2,6 +2,8 @@ package nc.nut.dao.customer;
 
 import nc.nut.dao.user.User;
 import nc.nut.security.Md5PasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -10,20 +12,39 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @author Moiseienko Petro
+ * @author Moiseienko Petro, Nikita Alistratenko
  * @since 24.04.2017.
  */
 @Service
 public class CustomerDAOImpl implements CustomerDAO {
+
+
+    private static Logger logger = LoggerFactory.getLogger(CustomerDAOImpl.class);
+
     private final static String FIND_COMPANY_SQL = "SELECT ID " +
             "FROM CUSTOMERS " +
             "WHERE NAME=:name AND SECRET_KEY=:secretKey";
     private final static String SAVE_CUSTOMER_SQL = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY,TYPE_ID) " +
-             "VALUES(:name, :secretKey,:typeId)";
+            "VALUES(:name, :secretKey,:typeId)";
 
-    private final static String SELECT_BUSINESS_CUSTOMERS="SELECT NAME FROM CUSTOMERS\n" +
-            "WHERE ID=1";
-    private final static String SELECT_CUSTOMERS_BY_NAME="SELECT ID FROM CUSTOMERS WHERE NAME=:name";
+    private final static String SELECT_BUSINESS_CUSTOMERS = "SELECT NAME FROM CUSTOMERS\n" +
+            "WHERE TYPE_ID=1";
+    private final static String SELECT_CUSTOMERS_BY_NAME = "SELECT ID FROM CUSTOMERS WHERE NAME=:name";
+
+    private final static String SELECT_LIMITED_CUSTOMERS = "select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from CUSTOMERS " +
+            " Where name like :pattern " +
+            " OR invoice like :pattern) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
+
+    private static final String SELECT_COUNT = "SELECT count(ID)\n" +
+            "  FROM CUSTOMERS" +
+            " WHERE name LIKE :pattern " +
+            " OR invoice LIKE :pattern ";
+
+    private final static String SELECT_CUSTOMER_BY_ID = "SELECT * FROM CUSTOMERS where id= :id ";
 
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -36,7 +57,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", name);
         params.addValue("secretKey", password);
-        return jdbcTemplate.queryForObject(FIND_COMPANY_SQL,params,Integer.class);
+        return jdbcTemplate.queryForObject(FIND_COMPANY_SQL, params, Integer.class);
     }
 
     @Override
@@ -61,7 +82,9 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public Customer getById(int id) {
-        return null;
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        map.addValue("id", id);
+        return jdbcTemplate.queryForObject(SELECT_CUSTOMER_BY_ID, map, new CustomerRowMapper());
     }
 
     @Override
@@ -71,17 +94,18 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public boolean save(Customer customer) {
-        String name=customer.getName();
-        if(!isUnique(name)){
+        String name = customer.getName();
+        if (!isUnique(name)) {
             return false;
-        }else{
-        String password = encoder.encode(customer.getSecretKey());
-        Integer type=customer.getCustomerType().getId();
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("name", customer.getName());
-        params.addValue("secretKey", password);
-        params.addValue("typeId", type);
-        return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params)>0;}
+        } else {
+            String password = encoder.encode(customer.getSecretKey());
+            Integer type = customer.getCustomerType().getId();
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("name", customer.getName());
+            params.addValue("secretKey", password);
+            params.addValue("typeId", type);
+            return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params) > 0;
+        }
     }
 
     @Override
@@ -91,17 +115,41 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public List<String> getAllBusinessCustomersName() {
-        List<String> customers=jdbcTemplate.query(SELECT_BUSINESS_CUSTOMERS,(rs,rowNum)-> rs.getString("name"));
+        List<String> customers = jdbcTemplate.query(SELECT_BUSINESS_CUSTOMERS, (rs, rowNum) -> rs.getString("name"));
         return customers;
     }
 
-    private boolean isUnique(String name){
-        MapSqlParameterSource params=new MapSqlParameterSource("name",name);
-        List<Customer> customers=jdbcTemplate.query(SELECT_CUSTOMERS_BY_NAME,params,(rs,rownum)->{
-            Customer customer=new Customer();
+
+    private boolean isUnique(String name) {
+        MapSqlParameterSource params = new MapSqlParameterSource("name", name);
+        List<Customer> customers = jdbcTemplate.query(SELECT_CUSTOMERS_BY_NAME, params, (rs, rownum) -> {
+            Customer customer = new Customer();
             customer.setId(rs.getInt("id"));
             return customer;
         });
-         return customers.isEmpty();
+        return customers.isEmpty();
     }
+
+    @Override
+    public List<Customer> getLimitedQuantityCustomer(int start, int length, String sort, String search) {
+        int rownum = start + length;
+        if (sort.isEmpty()) {
+            sort = "ID";
+        }
+        String sql = String.format(SELECT_LIMITED_CUSTOMERS, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("length", rownum);
+        params.addValue("pattern", "%" + search + "%");
+        List<Customer> customers = jdbcTemplate.query(sql, params, new CustomerRowMapper());
+        return customers;
+    }
+
+    @Override
+    public Integer getCountCustomersWithSearch(String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
+    }
+
 }

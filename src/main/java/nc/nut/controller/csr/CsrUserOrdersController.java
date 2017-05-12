@@ -6,7 +6,6 @@ import nc.nut.grid.GridRequestDto;
 import nc.nut.grid.ListHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,10 +23,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping({"csr"})
-public class UserOrdersController {
+public class CsrUserOrdersController {
     @Resource
     private OperationHistoryDao operationHistoryDao;
-    private static Logger logger = LoggerFactory.getLogger(UserOrdersController.class);
+    private static Logger logger = LoggerFactory.getLogger(CsrUserOrdersController.class);
 
     @RequestMapping(value = "userOrders", method = RequestMethod.POST)
     public ModelAndView viewOrders() throws IOException {

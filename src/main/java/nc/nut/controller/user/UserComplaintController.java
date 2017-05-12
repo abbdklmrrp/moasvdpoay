@@ -29,7 +29,7 @@ import java.util.List;
  * @since 02.05.2017.
  */
 @RestController
-@RequestMapping({"user","csr"})
+@RequestMapping({"user", "csr"})
 public class UserComplaintController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
@@ -77,14 +77,14 @@ public class UserComplaintController {
     }
 
     private String saveComplaint(int userId, int productId, String description) {
-        String message = "";
+        String message;
         Calendar calendar = Calendar.getInstance();
         Integer orderId = orderDAO.getOrderIdByUserIdAndProductId(userId, productId);
         Complaint complaint = new Complaint();
         complaint.setOrderId(orderId);
         complaint.setCreationDate(calendar);
         complaint.setDescription(description);
-        complaint.setStatus(ComplaintStatus.InProcessing);
+        complaint.setStatus(ComplaintStatus.Send);
         boolean success = complaintDAO.save(complaint);
         if (success) {
             logger.debug("Complaint saved: orderId " + orderId + " user id: " + userId);
