@@ -196,6 +196,7 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.update(SUSPEND_ORDER_SQL, params) > 0;
 
     }
+
     /**
      * {@inheritDoc}
      */

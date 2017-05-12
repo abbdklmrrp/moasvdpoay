@@ -43,7 +43,7 @@ public class IndexController {
         if (isResidential) {
             return "redirect:/user/residential/getProfile";
         } else {
-            return "redirect:/employee/getProfile";
+            return "redirect:/user/employee/getProfile";
         }
     }
 }

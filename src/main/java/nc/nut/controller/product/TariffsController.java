@@ -22,7 +22,7 @@ import java.util.List;
  * @since 04.05.2017.
  */
 @Controller
-@RequestMapping({"", "csr", "user"})
+@RequestMapping({"csr", "user"})
 public class TariffsController {
 
     @Resource
@@ -86,8 +86,6 @@ public class TariffsController {
     @ResponseBody
     public List<Product> showServicesOfTariff(@RequestParam Integer tariffId) {
         logger.debug("Method showServicesOfTariff param tariffId: {}", tariffId);
-        List<Product> servicesOfTariff = productDao.
-                getServicesOfTariff(tariffId);
-        return servicesOfTariff;
+        return productDao.getServicesOfTariff(tariffId);
     }
 }
