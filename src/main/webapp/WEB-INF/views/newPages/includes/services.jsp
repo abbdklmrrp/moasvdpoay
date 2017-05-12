@@ -4,6 +4,7 @@
         <div class="col-md-2"></div>
         <div class="col-md-8">
             <h1 style="text-align: center">Services Catalog</h1>
+            <br>
             <c:choose>
                 <c:when test="${not empty msg}">
                     <h3 style="text-align: center">${msg}</h3>

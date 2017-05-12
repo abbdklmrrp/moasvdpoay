@@ -10,9 +10,9 @@
         </div>
         <div class="collapse navbar-collapse ">
             <ul class="nav navbar-nav ">
-                <li><a href="profile.jsp">Profile</a></li>
-                <li><a href="../../employee/Orders.jsp">Orders</a></li>
-                <li><a href="../../employee/WriteToSupport.jsp">Write to support</a></li>
+                <li><a href="<%=request.getContextPath()%>/employee/getProfile">Profile</a></li>
+                <li><a href="<%=request.getContextPath()%>/employee/orders">Orders</a></li>
+                <li><a href="<%=request.getContextPath()%>/employee/getComplaint">Write to support</a></li>
                 <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>
             </ul>
         </div>
