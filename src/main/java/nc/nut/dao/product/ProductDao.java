@@ -59,14 +59,6 @@ public interface ProductDao extends Dao<Product> {
     ProductCategories getProductCategoryById(Integer categoryId);
 
     /**
-     * Method returns current user`s tariff. If user hasn`t got tariff, method returns null.
-     *
-     * @param userId user Id.
-     * @return current user`s tariff.
-     */
-    Product getCurrentUserTariff(Integer userId);
-
-    /**
      * Method returns all tariffs are available in place with id from params. If there are no tariffs in this place, method returns empty list.
      *
      * @param placeId id of place.

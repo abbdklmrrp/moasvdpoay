@@ -23,7 +23,6 @@ import java.util.List;
  * Created by Yuliya Pedash on 07.05.2017.
  */
 @Controller
-@RequestMapping({"csr", "user"})
 public class UsersOrdersController {
     //todo to file
     private final static String SUCCESS_MSG = "Thank you! Your order will be suspended from %s to %s.";
@@ -46,13 +45,13 @@ public class UsersOrdersController {
     @RequestMapping(value = {"residential/orders"}, method = RequestMethod.GET)
     public String showOrdersForUser(Model model) {
         showOrders(model);
-        return "newPages/user/residential/Orders";
+        return "newPages/residential/Orders";
     }
 
     @RequestMapping(value = {"business/orders"}, method = RequestMethod.GET)
     public String showOrdersForBusinessUser(Model model) {
         showOrders(model);
-        return "newPages/user/business/Orders";
+        return "newPages/business/Orders";
     }
 
     private void showOrders(Model model) {

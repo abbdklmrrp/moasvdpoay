@@ -2,12 +2,12 @@
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="Write to support"/>
+        <jsp:param name="tittle" value="Registration employee"/>
     </jsp:include>
 </head>
 <body>
-    <jsp:include page="../includes/headers/employeeHeader.jsp"/>
-    <jsp:include page="../includes/writeToSupport.jsp"/>
+    <jsp:include page="../includes/headers/businessHeader.jsp"/>
+    <jsp:include page="../includes/zaglushka.jsp"/>
     <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>

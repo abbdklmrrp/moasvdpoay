@@ -38,12 +38,12 @@ public class IndexController {
             return "redirect:/csr/getProfile";
         }
         if (isBusiness) {
-            return "redirect:/user/business/getProfile";
+            return "redirect:/business/getProfile";
         }
         if (isResidential) {
-            return "redirect:/user/residential/getProfile";
+            return "redirect:/residential/getProfile";
         } else {
-            return "redirect:/user/employee/getProfile";
+            return "redirect:/employee/getProfile";
         }
     }
 }

@@ -29,7 +29,7 @@ import java.util.Map;
  * Created by Yuliya Pedash on 24.04.2017.
  */
 @Controller
-@RequestMapping({"user"})
+@RequestMapping({"residential", "business", "csr", "employee"})
 public class ServiceOrderController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
@@ -61,7 +61,7 @@ public class ServiceOrderController {
         } else {
             model.addAttribute("categoriesProducts", categoriesWithProductsToShow);
         }
-        return "newPages/user/residential/Services";
+        return "newPages/" + currentUser.getRole().getNameInLowwerCase() + "/Services";
     }
 
     /**
@@ -71,7 +71,7 @@ public class ServiceOrderController {
      * @param serviceId id of service
      * @return message with result of operation
      */
-    @RequestMapping(value = {"/activateService"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"activateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String activateService(@RequestParam Integer serviceId) {
         Product chosenProduct = productDao.getById(serviceId);
@@ -98,7 +98,7 @@ public class ServiceOrderController {
 
     }
 
-    @RequestMapping(value = {"/getNewOrderStatus"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"getNewOrderStatus"}, method = RequestMethod.GET)
     @ResponseBody
     public String getNewOrderStatus(@RequestParam Integer serviceId) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
@@ -113,7 +113,7 @@ public class ServiceOrderController {
      * @param serviceId id of service
      * @return String "success" if deactivation was successful, "fail" otherwise
      */
-    @RequestMapping(value = {"/deactivateService"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"deactivateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String deactivateOrder(@RequestParam Integer serviceId) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());

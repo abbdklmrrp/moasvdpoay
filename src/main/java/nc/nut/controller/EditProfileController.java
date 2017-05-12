@@ -1,6 +1,5 @@
 package nc.nut.controller;
 
-import nc.nut.dao.product.ProductStatus;
 import nc.nut.dao.user.Role;
 import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
@@ -13,22 +12,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Moiseienko Petro
+ * @author Moiseienko Petro , Anton Bulgakov
  * @since 05.05.2017.
  */
 @Controller
-@RequestMapping({"admin", "csr", "pmg", "user"})
+@RequestMapping({"admin", "csr", "pmg", "business", "employee", "residential"})
 public class EditProfileController {
 
     private static Logger logger = LoggerFactory.getLogger(EditProfileController.class);
@@ -54,6 +51,9 @@ public class EditProfileController {
             roleMap.put(Role.Admin, "admin");
             roleMap.put(Role.CSR, "csr");
             roleMap.put(Role.PMG, "pmg");
+            roleMap.put(Role.BUSINESS, "business");
+            roleMap.put(Role.EMPLOYEE, "employee");
+            roleMap.put(Role.RESIDENTIAL, "residential");
         }
         urlBegin = roleMap.getOrDefault(user.getRole(), "user");
         String view = "newPages/" + urlBegin + "/Profile";//Revniuk for new page

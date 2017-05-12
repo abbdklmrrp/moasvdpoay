@@ -29,7 +29,7 @@ import java.util.List;
  * @since 02.05.2017.
  */
 @RestController
-@RequestMapping({"user","csr"})
+@RequestMapping({"residential", "business", "csr", "employee"})
 public class UserComplaintController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
@@ -43,11 +43,11 @@ public class UserComplaintController {
     private OrderDao orderDAO;
     private static Logger logger = LoggerFactory.getLogger(UserComplaintController.class);
 
-    @RequestMapping(value = "/getComplaint", method = RequestMethod.GET)
+    @RequestMapping(value = "getComplaint", method = RequestMethod.GET)
     public ModelAndView getComplaint() {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         ModelAndView modelAndView = getProducts(user.getId());
-        modelAndView.setViewName("newPages/user/residential/WriteToSupport");
+        modelAndView.setViewName("newPages/" + user.getRole().getName().toLowerCase() + "/WriteToSupport");
         return modelAndView;
     }
 

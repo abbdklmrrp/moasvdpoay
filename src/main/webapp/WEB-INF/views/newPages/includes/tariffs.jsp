@@ -13,7 +13,7 @@
                 <th>Services</th>
                 <th>Status</th>
             </tr>
-            <c:forEach var="tariff" items="${tariffsByPlace}">
+            <c:forEach var="tariff" items="${tariffs}">
                 <tr>
                     <td>${tariff.name}</td>
                     <td>${tariff.description}</td>
