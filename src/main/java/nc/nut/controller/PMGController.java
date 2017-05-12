@@ -2,6 +2,7 @@ package nc.nut.controller;
 
 import nc.nut.dao.complaint.Complaint;
 import nc.nut.dao.complaint.ComplaintDAO;
+import nc.nut.dto.ComplaintDataPartitionDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,15 +25,12 @@ public class PMGController {
         return "newPages/pmg/allComplaints";
     }
 
-    @RequestMapping(value = "getLength")
-    @ResponseBody
-    public int getData() {
-        return complaintDAO.countComplaintsWithoutPMGId();
-    }
-
     @RequestMapping(value = "getData")
     @ResponseBody
-    public List<Complaint> getData(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
-        return complaintDAO.getIntervalOfComplaintsWithoutPMGId(startIndex, endIndex);
+    public ComplaintDataPartitionDTO getData(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
+        ComplaintDataPartitionDTO dto = new ComplaintDataPartitionDTO();
+        dto.setAmount(complaintDAO.countUnasignedComplaints());
+        dto.setPartOfComplaints(complaintDAO.getIntervalOfUnassignedComplaints(startIndex, endIndex));
+        return dto;
     }
 }

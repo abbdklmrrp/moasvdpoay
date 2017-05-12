@@ -20,7 +20,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     private final static String SET_PMG_ID_SQL = "UPDATE COMPLAINTS SET PMG_ID = :pmgId, STATUS_ID = 2/* in processing */ WHERE ID = :id";
     private final static String GET_INTERVAL_WHERE_PMG_ID_IS_NULL_SORTED_BY_DATE_SQL = "SELECT * FROM\n" +
             "  (SELECT ID, ORDER_ID, CREATING_DATE, STATUS_ID, DESCRIPTION, PMG_ID, ROW_NUMBER() OVER (ORDER BY CREATING_DATE) R FROM COMPLAINTS)\n" +
-            "WHERE R > :startIndex AND R <= :endIndex";
+            "WHERE R > :startIndex AND R <= :endIndex AND PMG_ID IS NULL";
     private final static String GET_BY_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ID = :id";
     private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints(ORDER_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
             "VALUES(:orderId,:creatingDate,:statusId,:description)";
@@ -103,7 +103,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     }
 
     @Override
-    public List<Complaint> getIntervalOfComplaintsWithoutPMGId(int startIndex, int endIndex) {
+    public List<Complaint> getIntervalOfUnassignedComplaints(int startIndex, int endIndex) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("startIndex", startIndex);
         params.addValue("endIndex", endIndex);
@@ -126,11 +126,13 @@ public class ComplaintDAOImpl implements ComplaintDAO {
 
     @Override
     @Transactional
-    public boolean setPMGId(int complaintId, int pmgId) {
+    public boolean assignToUser(int complaintId, int pmgId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("pmgId", pmgId);
         params.addValue("id", complaintId);
-        return jdbcTemplate.update(SET_PMG_ID_SQL, params) > 0;
+        jdbcTemplate.update(SET_PMG_ID_SQL, params);//TODO
+        Complaint complaint = getById(complaintId);
+        return complaint.getPmgId() == pmgId;
     }
 
     @Override
@@ -151,7 +153,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     }
 
     @Override
-    public int countComplaintsWithoutPMGId() {
-        return jdbcTemplate.queryForObject(COUNT_COMPLAINTS_WHERE_PMG_ID_IS_NULL_SQL,new MapSqlParameterSource(), Integer.class);
+    public int countUnasignedComplaints() {
+        return jdbcTemplate.queryForObject(COUNT_COMPLAINTS_WHERE_PMG_ID_IS_NULL_SQL, new MapSqlParameterSource(), Integer.class);//TODO
     }
 }

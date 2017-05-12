@@ -72,18 +72,18 @@ public class ReportController {
             end.setTime(simpleDateFormat.parse(endDate));
         } catch (ParseException e) {
             logger.error("Wrong date format", e);
+            return null;
         }
         if (start.after(end)) {
             logger.error("Start date {} goes after end date {}", beginDate, endDate);
             return null;
         }
-        List<ReportData> list = null;
         try {
-            list = reportsService.getDataForReport(beginDate, endDate, region);
+             return reportsService.getDataForReport(beginDate, endDate, region);
         } catch (ReportCreatingException e) {
             logger.error("Can't get report data for web graph", e);
+            return null;
         }
-        return list;
     }
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
