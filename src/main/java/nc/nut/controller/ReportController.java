@@ -100,6 +100,7 @@ public class ReportController {
             reportMaker.makeReport(reportsService.getDataForReport(beginDate, endDate, region));
         } catch (WorkbookCreatingFailException | ReportCreatingException e) {
             logger.error("Error while downloading document", e);
+            return;
         }
         reportMaker.getExcelWorkbook().write(outputStream);
         outputStream.close();
