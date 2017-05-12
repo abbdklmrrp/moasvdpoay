@@ -10,23 +10,21 @@
                 <tr>
                     <td>Name</td>
                     <td>Type</td>
-                    <td>Description</td>
                     <td>Date end</td>
                     <td>Status</td>
                     <td>Action</td>
                 </tr>
                 <c:forEach var="orderRow" items="${ordersRows}">
                     <tr>
-                        <td>${orderRow.name}</td>
+                        <td><a href="#" id="showDescriptionOfProduct">${orderRow.name}</a>}</td>
                         <td>${orderRow.productType.name}</td>
-                        <td>${orderRow.description}</td>
                         <td><fmt:formatDate value="${orderRow.endDate.time}" type='date' pattern="dd-MM-yyyy"/></td>
                         <td>${orderRow.operationStatus.name}</td>
 
                                 <td id="action${orderRow.orderId}">
                                     <c:choose>
                                     <c:when test="${orderRow.operationStatus.name == 'Active'}">
-                                    <input type="button" class="btn btn-warning toggle-form-btn"
+                                    <input type="button" class="btn btn-warning"
                                            onclick="toggleFormFunc(${orderRow.orderId})" value="Suspend"></td>
                             </c:when>
                             <c:when test="${orderRow.operationStatus.name == 'Suspended'}">

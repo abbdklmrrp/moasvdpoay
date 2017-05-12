@@ -117,6 +117,14 @@ public interface ProductDao extends Dao<Product> {
     public List<Product> getAvailableTariffsForCustomers();
 
     /**
+     * Method returns all services that are available for customers.
+     * If there are no services for customer, method returns empty list.
+     *
+     * @return
+     */
+    public List<Product> getServicesAvailableForCustomer();
+
+    /**
      * Method returns tariff of customer according to customer id from params.
      * If no such customer or customer doesn`t have active tariff, method returns null.
      *
@@ -142,7 +150,7 @@ public interface ProductDao extends Dao<Product> {
      * @param tariffId id of tariff.
      * @return list of services.
      */
-    public List<Product> getServicesOfTariff(Integer tariffId);
+    List<Product> getServicesOfTariff(Integer tariffId);
 
     Integer getCountProductsWithSearch(String search);
 
@@ -151,6 +159,16 @@ public interface ProductDao extends Dao<Product> {
     List<Product> getProductForResidentialCustomerWithoutPrice();
 
     List<PriceByRegionDto> getProductPriceByRegion();
+
+    /**
+     * This method returns Product object in which <code>basePrice</code>
+     * will be determined by price configured for place in prices table.
+     *
+     * @param productId id of product
+     * @param placeId   id of place
+     * @return found Product
+     */
+    Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
 
 
 }

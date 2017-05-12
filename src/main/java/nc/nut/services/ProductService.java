@@ -207,7 +207,7 @@ public class ProductService {
         List<Order> orders = orderDao.getOrdersByCustomerId(user.getCustomerId());
         List<Product> productWithoutStatuses = user.getRole() == Role.RESIDENTIAL ?
                 productDao.getAllAvailableServicesByPlace(user.getPlaceId()) :
-                productDao.getAllServices();
+                productDao.getServicesAvailableForCustomer();
         Map<String, List<ProductCatalogRowDTO>> categoriesWithProducts = new HashMap<>();
         List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTariff(user.getId());
         for (Product product : productWithoutStatuses) {
@@ -217,7 +217,7 @@ public class ProductService {
             }
             List<ProductCatalogRowDTO> allProductCatalogRowsForCategoryDTO = categoriesWithProducts.get(categoryName);
             String status = getStatusForProductAsString(product, orders, servicesOfCurrentUserTariff);
-            Price price = null;
+            Price price;
             if (user.getRole() == Role.RESIDENTIAL) {
                 price = priceDao.getPriceByProductIdAndPlaceId(product.getId(), user.getPlaceId());
             } else {
@@ -234,7 +234,6 @@ public class ProductService {
      * This method takes product and returns status for it as String
      * If user does not have order for this product <code>Null</code> is returned.
      * If user has this product in his tariff <code>String</code> with value "In Tariff" returned.
-     * Helper method for {@link #getCategoriesWithProductsForUser(User)}
      *
      * @param product                  Product object
      * @param ordersByUser             orders
@@ -252,5 +251,12 @@ public class ProductService {
         }
         return null;
 
+    }
+
+    public Product getProductForUser(User currentUser, Integer productId) {
+        if (currentUser.getRole() == Role.BUSINESS) {
+            return productDao.getById(productId);
+        }
+        return productDao.findProductWithPriceSetByPlace(productId, currentUser.getPlaceId());
     }
 }

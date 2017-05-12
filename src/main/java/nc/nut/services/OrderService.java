@@ -38,15 +38,14 @@ public class OrderService {
     //  @Transactional
     public boolean suspendOrder(Calendar beginDate, Calendar endDate, Integer orderId) {
         PlannedTask suspendPlanTask = new PlannedTask();
-        PlannedTask activatedPlanTask = new PlannedTask();
-        activatedPlanTask.setActionDate(endDate);
-        activatedPlanTask.setOrderId(orderId);
-        activatedPlanTask.setStatus(OperationStatus.Active);
+        PlannedTask activatePlanTask = new PlannedTask();
+        activatePlanTask.setActionDate(endDate);
+        activatePlanTask.setOrderId(orderId);
+        activatePlanTask.setStatus(OperationStatus.Active);
         suspendPlanTask.setActionDate(beginDate);
         suspendPlanTask.setOrderId(orderId);
         suspendPlanTask.setStatus(OperationStatus.Suspended);
-        suspendPlanTask.setActionDate(beginDate);
-        boolean isActivatedPlanTaskSaved = plannedTaskDao.save(activatedPlanTask);
+        boolean isActivatedPlanTaskSaved = plannedTaskDao.save(activatePlanTask);
         if (!isActivatedPlanTaskSaved) {
             return false;
         }
@@ -69,5 +68,17 @@ public class OrderService {
     public boolean canOrderBeSuspendedWithinDates(Calendar beginDate, Calendar endDate, Integer orderId) {
         List<PlannedTask> plannedTasks = plannedTaskDao.getAllPlannedTaskForDates(beginDate, endDate, orderId);
         return plannedTasks.isEmpty();
+    }
+
+    /**
+     * This methods deactivates order. It marks it as deactivated in Orders
+     * table and deletes all planned tasks for this order from planned_tasks table.
+     *
+     * @param
+     * @return
+     */
+    //   @Transactional
+    public boolean deactivateOrderOfUserCompletely(Integer orderId) {
+        return false;
     }
 }

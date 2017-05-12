@@ -7,7 +7,7 @@ function activateService(serviceId) {
         data: {serviceId: serviceId},
         type: "POST",
         dataType: 'text',
-      //  async: false,
+        //  async: false,
         success: function (resultMsg) {
             swal(resultMsg);
             setNewProductStatus(serviceId)
@@ -17,38 +17,24 @@ function activateService(serviceId) {
             console.log("error");
         }
     })
-    // event.preventDefault();
 }
 function setNewProductStatus(serviceId) {
     jQuery.ajax({
-        url: 'getNewOrder',
+        url: 'getNewOrderStatus',
         data: {serviceId: serviceId},
         type: "GET",
         dataType: 'json',
-        success: function (order) {
+        success: function (newStatus) {
             var $statusElement = $('#' + serviceId);
             $statusElement.empty();
-            //TODO  fix new buttons
-            if (order.currentStatus === 'Active') {
-                var $newStatus = $('<input/>', {
-                    type: 'button',
-                    value: 'Deactivate',
-                    class: "btn btn-danger"
-                });
-                $newStatus.onclick = function () {
-                    deactivateService(serviceId);
-                }
-                // var $newStatus = document.createElement("INPUT");
-                // $newStatus.setAttribute("type", "button");
-                // $newStatus.setAttribute("value" ,"Deactivate");
-                // $newStatus.setAttribute("class", "btn btn-danger");
-                // $newStatus.addEventListener('click', function () {
-                //     deactivateService(serviceId);
-                // }, false);
-                $newStatus.appendTo($statusElement)
+
+            if (newStatus == 'Active') {
+
+                var $newStatus = "<input type=\"button\" onclick=\"deactivateService(" + serviceId + ")\" value=\"Deactivate\" class=\"btn btn-danger\">";
+                $statusElement.html($newStatus);
             }
             else {
-                $statusElement.html(order.currentStatus);
+                $statusElement.html(newStatus);
             }
         },
         error: function () {
@@ -83,19 +69,8 @@ function deactivateService(serviceId) {
                         });
                         var $statusElement = $('#' + serviceId);
                         $statusElement.empty();
-                        var $newStatus = $('<input/>', {
-                            type: 'button',
-                            value: 'Activate',
-                            class: "btn btn-success"
-                        });
-                        // $newStatus.addEventListener('click', function(){
-                        //     alert(serviceId);
-                        //     activateService(serviceId);
-                        // });
-                        $newStatus.onclick = function () {
-                            activateService(serviceId);
-                        }
-                        $newStatus.appendTo($statusElement);
+                        var $newStatus = "<input type=\"button\" onclick=\"activateService(" + serviceId + ")\" value=\"Activate\" class=\"btn btn-success\">";
+                        $statusElement.html($newStatus);
                     }
                     else {
                         swal("Sorry, an error occurred while deactivating this product for you!", "Please, try again", "error");
@@ -104,9 +79,9 @@ function deactivateService(serviceId) {
 
                 error: function () {
                     swal("Sorry, an error on server has occurred", "please, try again.", "error");
-                    console.log("error");
                 }
             })
+
         }
     )
     ;

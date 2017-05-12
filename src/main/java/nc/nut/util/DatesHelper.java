@@ -13,22 +13,19 @@ public class DatesHelper {
 
     /**
      * This method checks if dates for superdense of order are correct.
-     * End date should be after end date of Superdense.
+     * End date should be after end date of Suspense.
      * Begin date of superdense should not be before current date.
      * @param beginDate begin date of superdense
      * @param endDate end date of superdense
      * @return
      */
-    public static boolean areDatesCorrectForOrderSuspendence(Calendar beginDate, Calendar endDate){
+    public static boolean areDatesCorrectForOrderSuspense(Calendar beginDate, Calendar endDate) {
         Calendar currentDate = getCurrentDate();
-        if (endDate.before(beginDate)){
-            logger.error("Begin date is after start date");
+        if (endDate.before(beginDate) || currentDate.after(beginDate) || beginDate.compareTo(endDate) == 0) {
+            logger.error("Incorrect dates for orders suspense");
             return false;
         }
-        if (currentDate.after(beginDate)){
-            logger.error("Begin date is after current date");
-            return false;
-        }
+
         return true;
     }
 
