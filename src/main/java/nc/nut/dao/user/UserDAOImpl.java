@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class UserDAOImpl implements UserDAO {
 
-    private final static String FIND_BY_USERNAME = "SELECT * FROM AUTHORITIES WHERE USERNAME=:username";
+    private final static String FIND_BY_USERNAME = "SELECT * FROM AUTHORITIES WHERE USERNAME=:username AND ENABLE=1";
     private final static String FIND_ROLE = "SELECT id FROM ROLES WHERE NAME=:name";
     private final static String SAVE_USER = "INSERT INTO USERS(NAME,SURNAME,EMAIL,PHONE,PASSWORD,ADDRESS,ROLE_ID,PLACE_ID,CUSTOMER_ID,ENABLE) " +
             "VALUES(:name,:surname,:email,:phone,:password, :address, :roleId, :placeId, :customerId, :enable)";

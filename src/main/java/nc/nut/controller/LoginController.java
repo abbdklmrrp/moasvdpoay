@@ -31,7 +31,7 @@ public class LoginController {
     private SecurityAuthenticationHelper securityAuthenticationHelper;
 
     @RequestMapping({"/", "/login"})
-    String login() {
+    public String login() {
         User currentUser = securityAuthenticationHelper.getCurrentUser();
         if (currentUser != null) {
             return "redirect:index.htm";
@@ -40,7 +40,7 @@ public class LoginController {
     }
 
     @RequestMapping("/failure")
-    String failure(HttpServletRequest request, Model model) {
+    public String failure(HttpServletRequest request, Model model) {
         Object authenticationException = WebUtils.getSessionAttribute(request, WebAttributes.AUTHENTICATION_EXCEPTION);
 
         if (authenticationException instanceof AuthenticationException) {
