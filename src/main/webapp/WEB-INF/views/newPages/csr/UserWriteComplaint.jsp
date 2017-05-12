@@ -17,37 +17,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp"/>
-<div class="container">
-    <div class="col-md-2"></div>
-    <div class="col-md-8">
-        <h1 style="text-align: center">Write to support</h1>
-        <br>
-        <div class="col-md-2 col-sm-2"></div>
-        <div class="col-md-7 col-sm-7">
-            <div class="row">
-                <div class="col-md-5 col-sm-5"><h4>Choose product:</h4></div>
-                <div class="col-md-7 col-sm-7">
-                    <select id="products" name="products" class="form-control" aria-required="true">
-                        <c:forEach var="product" items="${productList}">
-                            <option value="${product.id}">${product.name}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-            </div>
-            <br>
-            <textarea id="description" name="description" cols="65" rows="15" style="text-align: center"></textarea>
-            <br>
-            <br>
-            <div class="row">
-                <div class="col-md-6"></div>
-                <div class="col-md-2"><button type="submit" class="btn btn-primary" onclick="saveComplaint()">  Send  </button></div>
-                <div class="col-md-4"></div>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-2"></div>
-    </div>
-    <div class="col-md-2"></div>
-</div>
+<jsp:include page="../includes/writeToSupport.jsp"/>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
@@ -63,7 +33,7 @@
             success: function (resultMsg) {
                 if (resultMsg === '"success"') {
                     swal({
-                        title: "The user was successfully sent.",
+                        title: "The complaint was successfully sent.",
                         type: "success"
                     });
                     $('#description').val("");

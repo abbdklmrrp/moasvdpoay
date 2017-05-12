@@ -24,18 +24,27 @@ public class UserController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
-    UserDAO dao;
+    private UserDAO dao;
 
-    private Logger logger = LoggerFactory.getLogger(AddProductController.class);
+    private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
 
-    private
-    @RequestMapping({"index"})
-    String index() {
-        return "user/index";
+    @RequestMapping({"/business/getProfile"})
+    public String indexBusiness() {
+        return "newPages/user/business/Profile";
+    }
+
+    @RequestMapping({"/residential/getProfile"})
+    public String indexResidential() {
+        return "newPages/user/residential/Profile";
+    }
+
+    @RequestMapping({"getProfile"})
+    public String indexEmployee() {
+        return "newPages/employee/Profile";
     }
 
     @RequestMapping(value = "profile", method = RequestMethod.GET)
-    ModelAndView getProfile() {
+    public ModelAndView getProfile() {
         User currentUser = securityAuthenticationHelper.getCurrentUser();
         nc.nut.dao.user.User user = dao.findByEmail(currentUser.getUsername());
         ModelAndView mv = new ModelAndView();
@@ -45,7 +54,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "profile", method = RequestMethod.POST)
-    String editInfo(@ModelAttribute("user")nc.nut.dao.user.User user){
+    public String editInfo(@ModelAttribute("user") nc.nut.dao.user.User user) {
         logger.warn(Integer.toString(user.getId()));
         logger.warn(Boolean.toString(dao.update(user)));
         return "redirect:profile";

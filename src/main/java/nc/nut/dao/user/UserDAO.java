@@ -28,10 +28,14 @@ public interface UserDAO extends Dao<User> {
 
     Integer getCountUsersWithSearch(String search);
 
-    List<User> getLimitedQuantityUsers(int start, int length,String sort, String search);
+    List<User> getLimitedQuantityUsers(int start, int length, String sort, String search);
 
     Integer getCountAllUsersWithSearch(String search);
 
-    List<User> getLimitedQuantityAllUsers(int start, int length,String sort, String search);
+    List<User> getLimitedQuantityAllUsers(int start, int length, String sort, String search);
+
+    Integer getCountUsersWithSearchOfCustomer(String search, int custID);
+
+    List<User> getLimitedQuantityUsersOfCustomer(int start, int length, String sort, String search, int custID);
 
 }

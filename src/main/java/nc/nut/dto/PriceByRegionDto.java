@@ -58,6 +58,13 @@ public class PriceByRegionDto {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("PriceByRegionDto{").append("productId=").append(productId).append(", productName='").append(productName).append('\'').append(", productDescription='").append(productDescription).append('\'').append(", placeName='").append(placeName).append('\'').append(", priceProduct=").append(priceProduct).append('}').toString();
+        return new StringBuilder()
+                .append("PriceByRegionDto{")
+                .append("productId=").append(productId)
+                .append(", productName='").append(productName).append('\'')
+                .append(", productDescription='").append(productDescription).append('\'')
+                .append(", placeName='").append(placeName).append('\'')
+                .append(", priceProduct=").append(priceProduct)
+                .append('}').toString();
     }
 }

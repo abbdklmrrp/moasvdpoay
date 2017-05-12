@@ -8,9 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Anna Rysakova on 07.05.2017.
- */
+
 @XmlAccessorType(XmlAccessType.NONE)
 @JsonTypeName("listData")
 public class ListHolder<T> {
@@ -43,9 +41,10 @@ public class ListHolder<T> {
 
     @Override
     public String toString() {
-        return "ListHolder{" +
-                "data size=" + data.size() +
-                ", totalCount=" + totalCount +
-                '}';
+        return new StringBuilder()
+                .append("ListHolder{")
+                .append("data size=").append(data.size())
+                .append(", totalCount=").append(totalCount)
+                .append('}').toString();
     }
 }

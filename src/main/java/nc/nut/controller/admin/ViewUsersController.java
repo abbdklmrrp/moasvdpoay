@@ -13,6 +13,9 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Moiseienko Petro
  * @since 09.05.2017.
@@ -25,46 +28,55 @@ public class ViewUsersController {
     @Resource
     private UserService userService;
 
+    private static Logger logger = LoggerFactory.getLogger(ViewUsersController.class);
+
     @RequestMapping(value = "getUsersPage", method = RequestMethod.GET)
     public ModelAndView getUsers() throws IOException {
         return new ModelAndView("newPages/admin/Users");
     }
+
     @RequestMapping(value = {"getUsers"}, method = RequestMethod.GET)
     public ListHolder getUsers(@ModelAttribute GridRequestDto request) {
-        String sort=request.getSort();
-        int start=request.getStartBorder();
-        int length=request.getEndBorder();
-        String search=request.getSearch();
-        List<User> data=userDAO.getLimitedQuantityAllUsers(start,length,sort,search);
-        int size=userDAO.getCountAllUsersWithSearch(search);
+        String sort = request.getSort();
+        int start = request.getStartBorder();
+        int length = request.getEndBorder();
+        String search = request.getSearch();
+        List<User> data = userDAO.getLimitedQuantityAllUsers(start, length, sort, search);
+        int size = userDAO.getCountAllUsersWithSearch(search);
+        logger.debug("Get users in interval:" + start + " : " + length);
         return ListHolder.create(data, size);
     }
-    @RequestMapping(value={"/activateUser"}, method=RequestMethod.POST)
+
+    @RequestMapping(value = {"/activateUser"}, method = RequestMethod.POST)
     @ResponseBody
-    public String activateUser(@RequestParam Integer userId){
-        System.out.println("kyky");
-        User user=userDAO.getUserById(userId);
-        String message="";
-            user.setEnable(1);
-            message="success";
-        boolean success=userService.updateUser(user);
-        if(!success){
-            message="Sorry, please try again";
+    public String activateUser(@RequestParam Integer userId) {
+        User user = userDAO.getUserById(userId);
+        String message = "";
+        user.setEnable(1);
+        boolean success = userService.updateUser(user);
+        if (!success) {
+            logger.error("Error in activating user:" + userId);
+            message = "Sorry, please try again";
+        } else {
+            message = "success";
+            logger.debug("User activated: " + userId);
         }
         return message;
     }
 
-    @RequestMapping(value={"/deactivateUser"}, method=RequestMethod.POST)
+    @RequestMapping(value = {"/deactivateUser"}, method = RequestMethod.POST)
     @ResponseBody
-    public String deactivateUser(@RequestParam Integer userId){
-        User user=userDAO.getUserById(userId);
-        System.out.println("kyky");
-        String message="";
+    public String deactivateUser(@RequestParam Integer userId) {
+        User user = userDAO.getUserById(userId);
+        String message = "";
         user.setEnable(0);
-        message="success";
-        boolean success=userService.updateUser(user);
-        if(!success){
-            message="Sorry, please try again";
+        boolean success = userService.updateUser(user);
+        if (!success) {
+            logger.error("Error in deactivating user:" + userId);
+            message = "Sorry, please try again";
+        } else {
+            message = "success";
+            logger.debug("User deactivated: " + userId);
         }
         return message;
     }

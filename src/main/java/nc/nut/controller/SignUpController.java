@@ -9,15 +9,15 @@ import nc.nut.dao.user.User;
 import nc.nut.dao.user.UserDAO;
 import nc.nut.googleMaps.ServiceGoogleMaps;
 import nc.nut.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -33,10 +33,11 @@ public class SignUpController {
     private CustomerDAO customerDAO;
     @Resource
     private UserService userService;
+    private static Logger logger = LoggerFactory.getLogger(SignUpController.class);
 
     @RequestMapping(method = RequestMethod.GET, value = "/registration")
     public ModelAndView registration() {
-        ModelAndView model = new ModelAndView("signUp");
+        ModelAndView model = new ModelAndView("newPages/Registration");
         model.addObject("user", new User());
         return model;
     }
@@ -77,9 +78,11 @@ public class SignUpController {
                                  @RequestParam(value = "userType") String userType) {
         user.setRole(Role.getRoleByName(userType));
         boolean success = userService.saveWithGeneratePassword(user);
-        if (!success) {
+        if (success) {
+            logger.debug("User created, email " + user.getEmail());
             return "newPages/admin/RegNewUser";
         } else {
+            logger.error("User creating failed");
             return "newPages/includes/error";
         }
     }
@@ -90,7 +93,8 @@ public class SignUpController {
                              @RequestParam(value = "companyName") String companyName,
                              @RequestParam(value = "secretKey") String secretKey) {
         user = setCustomerId(user, companyName, secretKey, userType);
-        if(user==null){
+        if (user == null) {
+            logger.error("Getting customer id failed");
             return "newPages/includes/error";
         }
         boolean success = userService.saveWithGeneratePassword(user);
@@ -101,10 +105,12 @@ public class SignUpController {
     private User setCustomerId(User user, String companyName, String secretKey, String userType) {
         user.setRole(Role.getRoleByName(userType));
         Integer customerId;
-        if (Role.Individual.equals(user.getRole())) {
+        if (Role.RESIDENTIAL.equals(user.getRole())) {
             Customer customer = new Customer(user.getEmail(), user.getPassword());
-            boolean success=customerDAO.save(customer);
-            if(!success){
+            customer.setCustomerType(CustomerType.Residential);
+            boolean success = customerDAO.save(customer);
+            if (!success) {
+                logger.error("Customer creating for residential user failed");
                 return null;
             }
             customerId = customerDAO.getCustomerId(user.getEmail(), user.getPassword());
@@ -123,15 +129,18 @@ public class SignUpController {
         customer.setCustomerType(CustomerType.Residential);
         boolean successCustomer = customerDAO.save(customer);
         if (!successCustomer) {
+            logger.error("Saving customer for residential user failed");
             return "newPages/includes/error";
         } else {
             customerId = customerDAO.getCustomerId(user.getEmail(), user.getPassword());
             user.setCustomerId(customerId);
-            user.setRole(Role.Individual);
+            user.setRole(Role.RESIDENTIAL);
             boolean success = userService.save(user);
             if (!success) {
+                logger.error("Saving user failed");
                 return "newPages/includes/error";
             } else {
+                logger.info("user successfully saved");
                 return "newPages/Login";
             }
         }

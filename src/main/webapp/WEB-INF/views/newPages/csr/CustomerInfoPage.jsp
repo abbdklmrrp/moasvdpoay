@@ -1,15 +1,15 @@
 <%--
   Created by IntelliJ IDEA.
   User: Nikita
-  Date: 11.05.2017
-  Time: 18:19
+  Date: 12.05.2017
+  Time: 0:29
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="Customers"/>
+        <jsp:param name="tittle" value="Customer Info Page"/>
     </jsp:include>
     <script type="text/javascript">
         google.load("jquery", "1.4.4");
@@ -17,7 +17,13 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp"/>
+
+
+<input hidden disabled id="custID" value="${customer.id}">
 <div class="container">
+    <h3 style="float: left">Name: ${customer.name}</h3>
+    <h3 style="float: right">Invoice: ${customer.invoice}</h3>
+    <br>
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
@@ -27,27 +33,17 @@
         </div>
     </div>
 
-    <div class="panel panel-default" id="customersIds">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-10" data-grid="title">
-                    Title
-                </div>
-                <div class="col-md-2" style="text-align:right;">
-                    <a href="javascript:" data-grid="pager-refresh">
-                        Refresh
-                    </a>
-                </div>
-            </div>
+    <div class="panel panel-default" id="productsIds">
+        <div class="panel-heading" style="visibility: visible">
+            <br>
         </div>
         <div class="panel-body">
             <div class="row" style="margin: 20px 0;">
                 <div class="col-md-2">
                     <select class="form-control" data-grid="pager-length">
+                        <option value="5">5</option>
                         <option value="10">10</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
+                        <option value="20">20</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -88,27 +84,54 @@
                         </div>
                         Name
                     </th>
-                    <th class="col-xs-2" data-grid-header="invoice" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="surname" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Invoice
+                        Surname
+                    </th>
+                    <th class="col-xs-2" data-grid-header="email" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Email
+                    </th>
+                    <th class="col-xs-2" data-grid-header="phone" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Phone
+                    </th>
+                    <th class="col-xs-2" data-grid-header="address" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Address
                     </th>
                     <th class="col-xs-2" data-grid-header="action">
                         Action
                     </th>
-                    <%--<th class="col-xs-6" data-grid-header="status">--%>
-                    <%--Status--%>
-                    <%--</th>--%>
                 </tr>
                 </thead>
                 <tbody>
                 <tr data-grid="row">
                     <td data-cell="name"></td>
-                    <td data-cell="invoice"></td>
+                    <td data-cell="surname"></td>
+                    <td data-cell="email"></td>
+                    <td data-cell="phone"></td>
+                    <td data-cell="address"></td>
                     <td data-cell="action"></td>
 
                 </tr>
@@ -144,26 +167,34 @@
         </div>
     </div>
 </div>
+
 <jsp:include page="../includes/footer.jsp"/>
+</body>
+</html>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>
+
 <script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
 <script>
     $().BooGrid({
-        id: 'customersIds',
-        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/allCustomers.json'}),
+        id: 'productsIds',
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/AllUsersOfCustomer.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ],
         renderers: {
             "action": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-success"  value="View" >').click(function () {
-                        location.href = '${pageContext.request.contextPath}/csr/getCustomerInfo/' + wv.id
+                return $('<input type="button" class="btn btn-success"  value="Details">').click(function () {
+                        location.href = '${pageContext.request.contextPath}/csr/getDetails?id=' + wv.id
                     }
                 );
             }
         }
     })
 </script>
-</body>
-</html>

@@ -86,7 +86,8 @@ public class TariffsController {
     @ResponseBody
     public List<Product> showServicesOfTariff(@RequestParam Integer tariffId) {
         logger.debug("Method showServicesOfTariff param tariffId: {}", tariffId);
-        List<Product> servicesOfTariff = productDao.getServicesOfTariff(tariffId);
+        List<Product> servicesOfTariff = productDao.
+                getServicesOfTariff(tariffId);
         return servicesOfTariff;
     }
 }

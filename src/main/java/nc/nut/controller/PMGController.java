@@ -1,11 +1,15 @@
 package nc.nut.controller;
 
+import nc.nut.dao.complaint.Complaint;
 import nc.nut.dao.complaint.ComplaintDAO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author Rysakova Anna
@@ -14,17 +18,27 @@ import javax.annotation.Resource;
 @RequestMapping({"pmg"})
 public class PMGController {
     @Resource
-    ComplaintDAO complaintDAO;
+    private ComplaintDAO complaintDAO;
 
     @RequestMapping({"index"})
-    String index() {
-        return "pmg/index";
+    public String index() {
+        return "newPages/pmg/Profile";
     }
 
     @RequestMapping(value = "allComplaints")
-    public ModelAndView getAllComplaints(){
-        ModelAndView modelAndView = new ModelAndView("newPages/pmg/allComplaints");
-        modelAndView.addObject("complaints", complaintDAO.getAllWithoutPMGId());
-        return modelAndView;
+    public String getAllComplaints() {
+        return "newPages/pmg/allComplaints";
+    }
+
+    @RequestMapping(value = "getLength")
+    @ResponseBody
+    public int getData() {
+        return complaintDAO.countComplaintsWithoutPMGId();
+    }
+
+    @RequestMapping(value = "getData")
+    @ResponseBody
+    public List<Complaint> getData(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
+        return complaintDAO.getIntervalOfComplaintsWithoutPMGId(startIndex, endIndex);
     }
 }

@@ -7,7 +7,7 @@ import nc.nut.dto.OrdersRowDTO;
 import nc.nut.dto.SuspendFormDTO;
 import nc.nut.security.SecurityAuthenticationHelper;
 import nc.nut.services.OrderService;
-import nc.nut.utils.DatesHelper;
+import nc.nut.util.DatesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

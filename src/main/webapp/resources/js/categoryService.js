@@ -27,7 +27,7 @@ $(document).ready(function () {
 
         // get
         $.ajax({
-            url: "/services/tariffs/" + this.value + ".json", success: function (result) {
+            url: "/admin/category/" + this.value + ".json", success: function (result) {
                 $('#selectto').empty();
 
                 for (var i = 0; i < result.length; i++) {

@@ -157,21 +157,6 @@ public class ProductService {
     /**
      * Rysakova Anna
      *
-     * @param arrayOfIdServices
-     * @param product
-     */
-    // TODO: 07.05.2017
-    public void updateTariffWithNewServices(Integer[] arrayOfIdServices, Product product) {
-        ArrayList<Integer> oldServiceIdList = getIdServicesOfTariff(product);
-        ArrayList<Integer> newServiceIdList = ProductUtil.convertArrayToCollection(arrayOfIdServices);
-
-//        productDao.fillInTariffWithServices(product.getId(), arrayOfIdServices);
-
-    }
-
-    /**
-     * Rysakova Anna
-     *
      * @param updateProduct
      */
     public boolean updateProduct(Product updateProduct) {
@@ -202,7 +187,7 @@ public class ProductService {
      * This method takes user and returns all products that can be applied to this user sorted
      * by categories.
      * It firstly gets all the products that can be shown to user depending on his place
-     * for Residential user or all products for Business user.
+     * for RESIDENTIAL user or all products for BUSINESS user.
      * For more details about user types see: {@link Role}
      * Then it gets all orders by this users customer's representatives.
      * Then it sorts all products by categories and determines status for
@@ -220,7 +205,7 @@ public class ProductService {
      */
     public Map<String, List<ProductCatalogRowDTO>> getCategoriesWithProductsForUser(User user) {
         List<Order> orders = orderDao.getOrdersByCustomerId(user.getCustomerId());
-        List<Product> productWithoutStatuses = user.getRole() == Role.Individual ?
+        List<Product> productWithoutStatuses = user.getRole() == Role.RESIDENTIAL ?
                 productDao.getAllAvailableServicesByPlace(user.getPlaceId()) :
                 productDao.getServicesAvailableForCustomer();
         Map<String, List<ProductCatalogRowDTO>> categoriesWithProducts = new HashMap<>();
@@ -232,8 +217,8 @@ public class ProductService {
             }
             List<ProductCatalogRowDTO> allProductCatalogRowsForCategoryDTO = categoriesWithProducts.get(categoryName);
             String status = getStatusForProductAsString(product, orders, servicesOfCurrentUserTariff);
-            Price price;
-            if (user.getRole() == Role.Individual) {
+            Price price = null;
+            if (user.getRole() == Role.RESIDENTIAL) {
                 price = priceDao.getPriceByProductIdAndPlaceId(product.getId(), user.getPlaceId());
             } else {
                 price = new Price(null, product.getId(), product.getBasePrice());

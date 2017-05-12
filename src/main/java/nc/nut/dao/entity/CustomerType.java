@@ -10,8 +10,8 @@ import java.util.Objects;
  * Created by Yuliya Pedash on 29.04.2017.
  */
 public enum CustomerType {
-    Business(1, "Business"),
-    Residential(2, "Residential");
+    Business(1, "BUSINESS"),
+    Residential(2, "RESIDENTIAL");
     private static Logger logger = LoggerFactory.getLogger(CustomerType.class);
     private static String WRONG_ID_ERROR_MSG = "Wrong id: ";
     private Integer id;

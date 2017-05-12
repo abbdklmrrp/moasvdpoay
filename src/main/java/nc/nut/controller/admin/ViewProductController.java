@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by Rysakova Anna on 01.05.2017.
+ * Created by Rysakova Anna on 01.05.2017., Nikita Alistratenko
  */
 @Controller
 @RequestMapping({"admin"})
@@ -31,6 +31,7 @@ public class ViewProductController {
     private ProductDao productDao;
     private static Logger logger = LoggerFactory.getLogger(ViewProductController.class);
 
+    // TODO: 11.05.2017 to delete
     @RequestMapping(value = "getAllProducts", method = RequestMethod.GET)
     public String getAllProducts(Model model) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -46,6 +47,7 @@ public class ViewProductController {
 
         Product foundProduct = productDao.getById(id);
         logger.debug("Receive request param product id named 'id', value={} ", id);
+        logger.info("QQQQQQ {} ", id);
 
         if (foundProduct.getId() == id) {
             logger.debug("Product found in database, id={} ", id);
@@ -76,13 +78,16 @@ public class ViewProductController {
      */
     @RequestMapping("disableEnableProduct")
     public ModelAndView setProductDisabledEnabled(@RequestParam(value = "id") int id, RedirectAttributes attributes) {
+        logger.debug("Product sent to get status changed, id = ", id);
         ModelAndView mw = new ModelAndView();
-        mw.setViewName("redirect:/admin/getAllProducts");
         if (productDao.disableEnableProductByID(id)) {
             attributes.addFlashAttribute("msg", "Product status has been changed");
+            logger.debug("Product status has been changed, id = ", id);
         } else {
             attributes.addFlashAttribute("msg", "Product status has not been changed");
+            logger.error("Product status has not been changed, id = ", id);
         }
+        mw.setViewName("redirect:/admin/getAllProducts");
         return mw;
     }
 }
