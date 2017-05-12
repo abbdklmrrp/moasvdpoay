@@ -56,7 +56,7 @@ public class ReportController {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         List<Place> regions = placeDAO.getAll();
         model.addAttribute("regions", regions);
-        return "newPages/"+user.getRole().getName().toLowerCase()+"/Statistics";
+        return "newPages/" + user.getRole().getName().toLowerCase() + "/Statistics";
     }
 
     @RequestMapping(value = "/data")

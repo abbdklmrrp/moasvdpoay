@@ -51,7 +51,12 @@ public class Place {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("Place{").append("id=").append(id).append(", parentId=").append(parentId).append(", name=").append(name).append('}').toString();
+        return new StringBuilder()
+                .append("Place{")
+                .append("id=").append(id)
+                .append(", parentId=").append(parentId)
+                .append(", name=").append(name)
+                .append('}').toString();
     }
 
     @Override

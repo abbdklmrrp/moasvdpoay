@@ -3,13 +3,10 @@ package nc.nut.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-
 /**
  * Created by Anna Rysakova on 06.05.2017.
  */
-@XmlAccessorType(XmlAccessType.NONE)
+// FIXME: 11.05.2017  services
 @JsonTypeName("category")
 public class ServicesByCategoryDto {
     @JsonProperty("id")

@@ -150,8 +150,6 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getProductForResidentialCustomerWithoutPrice();
 
-    List<PriceByRegionDto> getProductPriceByRegion();
-
     /**
      * This method returns Product object in which <code>basePrice</code>
      * will be determined by price configured for place in prices table.

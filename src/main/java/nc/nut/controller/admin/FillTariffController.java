@@ -7,6 +7,7 @@ import nc.nut.services.ProductService;
 import nc.nut.util.ProductUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -20,8 +21,8 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Rysakova Anna on 26.04.2017.
@@ -30,23 +31,22 @@ import java.util.Objects;
 @RequestMapping({"admin"})
 public class FillTariffController {
 
+    private static final String ERROR_UNIQUE_CATEGORY = "Category already exists";
+    private static final String ERROR_IN_CONNECTION = "Error with filling database";
+    private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
+    private static final String ERROR_EXIST_PRODUCT = "Sorry, product with such ID does not exist in the database";
+    private static Logger logger = LoggerFactory.getLogger(FillTariffController.class);
     @Resource
     private ProductDao productDao;
     @Resource
     private ProductService productService;
 
-    private static final String ERROR_UNIQUE_CATEGORY = "Category already exists";
-    private static final String ERROR_IN_CONNECTION = "Error with filling database";
-    private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
-
-    private static Logger logger = LoggerFactory.getLogger(FillTariffController.class);
-
     @RequestMapping(value = {"fillTariff"}, method = RequestMethod.GET)
     public ModelAndView fillTariffWithService(ModelAndView mav) {
         List<Product> tariffs = productDao.getAllFreeTariffs();
-        logger.debug("Get all the tariffs that are not filled with services");
+        logger.debug("Get all the tariffs that are not filled with services {} ", tariffs.toString());
         List<ProductCategories> productCategories = productDao.findProductCategories();
-        logger.debug("Get all service's categories");
+        logger.debug("Get all service's categories {} ", productCategories.toString());
 
         mav.addObject("allServices", productCategories);
         mav.addObject("tariffs", tariffs);
@@ -59,19 +59,22 @@ public class FillTariffController {
                                        @RequestParam(value = "selectedService") String services,
                                        ModelAndView mav) {
 
-        Product tariff = productDao.getById(tariffId);
-        logger.debug("Checked that the tariff exists {} ", tariff.toString());
+        try {
+            Product tariff = productDao.getById(tariffId);
+            logger.debug("Checked that the tariff exists {} ", tariff.toString());
+        } catch (DataAccessException ex) {
+            logger.error("Product with ID = {}  does not exist in the database ", tariffId);
+        }
 
-        if (Objects.equals(services, null) || Objects.equals(tariff, null)) {
-            logger.error("Incoming data error with services {} ", Objects.equals(services, null));
+        if (services == null) {
+            logger.error("Incoming data error with services ");
             mav.addObject("error", ERROR_FILL_IN_TARIFF_SERVICES);
-            logger.error("Incoming data error with tariff {} ", Objects.equals(tariff, null));
             mav.setViewName("admin/fillTariff");
             return mav;
         }
 
         Integer[] servicesIdArray = ProductUtil.convertStringToIntegerArray(services);
-        logger.debug("Convert a string array of service's ID to an integer array");
+        logger.debug("Convert a string array of service's ID to an integer array {} ", Arrays.toString(servicesIdArray));
 
         boolean checkUniqueCategoryServices = productService.isCategoriesUnique(servicesIdArray);
         logger.debug("Check that the new category does not exist in the database {} ", checkUniqueCategoryServices);

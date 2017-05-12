@@ -11,7 +11,7 @@ import nc.nut.dao.user.Role;
 import nc.nut.dao.user.User;
 import nc.nut.dto.ProductCatalogRowDTO;
 import nc.nut.dto.TariffServiceDto;
-import nc.nut.util.ProductUtil;
+import nc.nut.util.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,13 +26,13 @@ import java.util.*;
 @Service
 public class ProductService {
 
+    private static Logger logger = LoggerFactory.getLogger(ProductService.class);
     @Resource
     nc.nut.dao.order.OrderDao orderDao;
     @Resource
     private ProductDao productDao;
     @Resource
     private PriceDao priceDao;
-    private static Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     /**
      * Rysakova Anna
@@ -77,6 +77,7 @@ public class ProductService {
      * @return
      */
     public boolean isCategoriesUnique(Integer[] servicesIdArray) {
+        // FIXME: 11.05.2017 getServiceById hash mmap
         List<Product> allServices = productDao.getAllServices();
         Set<Integer> serviceCategoryId = new HashSet<>();
         for (Integer serviceId : servicesIdArray) {
@@ -97,16 +98,23 @@ public class ProductService {
      */
     public void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product) {
         List<Integer> oldServiceIdList = getIdServicesOfTariff(product);
-        List<Integer> newServicesId = ProductUtil.convertArrayToCollection(servicesId);
+        List<Integer> newServicesId = CollectionUtil.convertArrayToList(servicesId);
 
-        Collection uniqueServicesInFirstCollection = ProductUtil.getUniqueElementsInFirstCollection(oldServiceIdList, newServicesId);
-        Integer[] servicesToRemove = ProductUtil.convertCollectionToArray(uniqueServicesInFirstCollection);
-        ArrayList<TariffServiceDto> tariffServiceDtos = fillInDTOForBatchUpdate(product.getId(), servicesToRemove);
+        // FIXME: 11.05.2017 merge --oracle -- insert+delete+update at same time use batch --optional
+        Collection uniqueServicesInFirstCollection = CollectionUtil.getUniqueElementsInFirstCollection(oldServiceIdList, newServicesId);
+        // FIXME: 11.05.2017 convert to dto
+        Object[] servicesToRemove1 = CollectionUtil.convertCollectionToArray(uniqueServicesInFirstCollection);
+        // FIXME: 12.05.2017 generic
+        Integer[] integers = (Integer[]) servicesToRemove1;
+
+        ArrayList<TariffServiceDto> tariffServiceDtos = fillInDTOForBatchUpdate(product.getId(), integers);
         productDao.deleteServiceFromTariff(tariffServiceDtos);
 
-        uniqueServicesInFirstCollection = ProductUtil.getUniqueElementsInFirstCollection(newServicesId, oldServiceIdList);
-        Integer[] servicesToFillInTariff = ProductUtil.convertCollectionToArray(uniqueServicesInFirstCollection);
-        tariffServiceDtos = fillInDTOForBatchUpdate(product.getId(), servicesToFillInTariff);
+        uniqueServicesInFirstCollection = CollectionUtil.getUniqueElementsInFirstCollection(newServicesId, oldServiceIdList);
+        // FIXME: 12.05.2017  generic
+        Object[] servicesToFillInTariff = CollectionUtil.convertCollectionToArray(uniqueServicesInFirstCollection);
+        Integer[] integers1 = (Integer[]) servicesToFillInTariff;
+        tariffServiceDtos = fillInDTOForBatchUpdate(product.getId(), integers1);
         productDao.fillInTariffWithServices(tariffServiceDtos);
     }
 

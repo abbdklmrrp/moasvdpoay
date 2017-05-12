@@ -44,7 +44,6 @@ public class ProductDaoImpl implements ProductDao {
             "  INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID " +
             "WHERE PRICES.PLACE_ID = :place_id AND PRODUCT_ID = :product_id";
     private final static String FIND_ALL_PRODUCTS = "SELECT ID, TYPE_ID, NAME, DURATION, DESCRIPTION, BASE_PRICE, STATUS FROM PRODUCTS ORDER BY ID";
-
     private final static String FIND_SERVICES_BY_TARIFF = "SELECT " +
             "p.ID,\n" +
             "p.CATEGORY_ID,\n" +
@@ -782,20 +781,6 @@ public class ProductDaoImpl implements ProductDao {
             product.setId(rs.getInt("ID"));
             product.setName(rs.getString("NAME"));
             return product;
-        });
-        return products;
-    }
-
-    @Override
-    public List<PriceByRegionDto> getProductPriceByRegion() {
-        List<PriceByRegionDto> products = jdbcTemplate.query(FIND_PRODUCT_PRICE_BY_REGION, (rs, rowNum) -> {
-            PriceByRegionDto priceByRegionDto = new PriceByRegionDto();
-            priceByRegionDto.setProductId(rs.getInt("ID"));
-            priceByRegionDto.setProductName(rs.getString("NAME"));
-            priceByRegionDto.setProductDescription(rs.getString("DESCRIPTION"));
-            priceByRegionDto.setPlaceName(rs.getString("PLACE"));
-            priceByRegionDto.setPriceProduct(rs.getBigDecimal("PRICE"));
-            return priceByRegionDto;
         });
         return products;
     }

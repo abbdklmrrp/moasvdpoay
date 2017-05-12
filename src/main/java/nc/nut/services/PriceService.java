@@ -18,10 +18,9 @@ import java.util.Objects;
 @Component
 public class PriceService {
 
+    private static Logger logger = LoggerFactory.getLogger(ProductService.class);
     @Resource
     private ProductDao productDao;
-
-    private static Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     /**
      * This method fill the <code>ArrayList</code> with the values of the product ID
@@ -35,10 +34,11 @@ public class PriceService {
     public ArrayList<Price> fillInListWithProductPriceByRegion(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
         ArrayList<Price> listPriceByRegion = new ArrayList<>();
         logger.debug("Create list of product price by region {} ", listPriceByRegion);
-        for (int i = 0, j = 0; i < placeId.length; i++, j++) {
+        for (int i = 0; i < placeId.length; i++) {
             Price price = new Price();
             price.setProductId(productId);
             price.setPlaceId(placeId[i]);
+            // FIXME: 11.05.2017 
             price.setPrice(priceByRegion[i + 1]);
             listPriceByRegion.add(price);
             logger.debug("to list was add object Price {} ", price);
@@ -46,7 +46,7 @@ public class PriceService {
         return listPriceByRegion;
     }
 
-    public boolean isValidate(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
+    public boolean isValid(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
         if (Objects.equals(productId, null) || Objects.equals(placeId, null) || Objects.equals(priceByRegion, null)) {
             return false;
         }
@@ -55,9 +55,10 @@ public class PriceService {
         if (Objects.equals(product, null)) {
             return false;
         }
-        if (placeId.length != priceByRegion.length) {
-            return false;
-        }
+        // FIXME: 11.05.2017 
+//        if (placeId.length != priceByRegion.length) {
+//            return false;
+//        }
         for (int i = 0; i < placeId.length; i++) {
             if (Objects.equals(placeId[i], null) || Objects.equals(priceByRegion[i], null)) {
                 return false;

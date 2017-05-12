@@ -53,4 +53,13 @@ public class ProductCategories {
         return Objects.hash(getId(), getCategoryName(), getCategoryDescription());
     }
 
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("ProductCategories{")
+                .append("id=").append(id)
+                .append(", categoryName='").append(categoryName).append('\'')
+                .append(", categoryDescription='").append(categoryDescription).append('\'')
+                .append('}').toString();
+    }
 }

@@ -55,10 +55,10 @@ public class UsersDetailController {
         user.setId(id);
         boolean success = userService.updateUser(user);
         if (success) {
-            logger.debug("user updated: "+id);
+            logger.debug("user updated: " + id);
             modelAndView.addObject("user", user);
-        }else{
-            logger.error("user updating failed, userId "+id);
+        } else {
+            logger.error("user updating failed, userId " + id);
         }
         return modelAndView;
     }

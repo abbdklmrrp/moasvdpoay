@@ -20,31 +20,32 @@ import java.util.List;
  * @since 09.05.2017.
  */
 @RestController
-@RequestMapping({"csr","pmg"})
+@RequestMapping({"csr", "pmg"})
 public class ViewProductsController {
 
     @Resource
     private ProductDao productDao;
     private static Logger logger = LoggerFactory.getLogger(ViewProductsController.class);
 
-    @RequestMapping(value={"getPmgProductsPage"},method =RequestMethod.GET)
-    public ModelAndView getPmgProductsPage(){
+    @RequestMapping(value = {"getPmgProductsPage"}, method = RequestMethod.GET)
+    public ModelAndView getPmgProductsPage() {
         return new ModelAndView("newPages/pmg/Products");
     }
-    @RequestMapping(value={"getCsrProductsPage"},method = RequestMethod.GET)
-    public ModelAndView getCsrProductsPage(){
+
+    @RequestMapping(value = {"getCsrProductsPage"}, method = RequestMethod.GET)
+    public ModelAndView getCsrProductsPage() {
         return new ModelAndView("newPages/csr/Products");
     }
 
     @RequestMapping(value = {"getProducts"}, method = RequestMethod.GET)
-    public ListHolder servicesByTariff(@ModelAttribute GridRequestDto request) {
-        String sort=request.getSort();
-        int start=request.getStartBorder();
-        int length=request.getLength();
-        String search=request.getSearch();
+    public ListHolder getProducts(@ModelAttribute GridRequestDto request) {
+        String sort = request.getSort();
+        int start = request.getStartBorder();
+        int length = request.getLength();
+        String search = request.getSearch();
         logger.debug("Get products in interval:" + start + " : " + length);
-        List<Product> data=productDao.getLimitedQuantityProduct(start,length,sort,search);
-        int size=productDao.getCountProductsWithSearch(search);
+        List<Product> data = productDao.getLimitedQuantityProduct(start, length, sort, search);
+        int size = productDao.getCountProductsWithSearch(search);
         return ListHolder.create(data, size);
     }
 
