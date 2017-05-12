@@ -29,7 +29,7 @@ import java.util.List;
  * @since 02.05.2017.
  */
 @RestController
-@RequestMapping({"user","csr"})
+@RequestMapping({"user", "csr"})
 public class UserComplaintController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;

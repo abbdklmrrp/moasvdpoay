@@ -25,26 +25,27 @@ public class ProductsEndpoint {
     @Resource
     private ProductDao productDao;
 
-    @RequestMapping(value={"getProducts"}, method=RequestMethod.GET)
-    public ModelAndView getProducts(){
+    @RequestMapping(value = {"getProducts"}, method = RequestMethod.GET)
+    public ModelAndView getProducts() {
         return new ModelAndView("newPages/admin/Products");
     }
 
     @RequestMapping(value = {"all"}, method = RequestMethod.GET)
     public ListHolder servicesByTariff(@ModelAttribute GridRequestDto request) {
-        String sort=request.getSort();
-        if(!sort.isEmpty()){
-        String[] array=sort.split("=");
-        if("true".equals(array[1])){
-            sort=array[0]+" "+"ASC";
-        }else{
-            sort=array[0]+" "+"DESC";
-        }}
-        int start=request.getStartBorder();
-        int length=request.getLength();
-        String search=request.getSearch();
-        List<Product> data=productDao.getLimitedQuantityProduct(start,length,sort,search);
-        int size=productDao.getCountProductsWithSearch(search);
+        String sort = request.getSort();
+        if (!sort.isEmpty()) {
+            String[] array = sort.split("=");
+            if ("true".equals(array[1])) {
+                sort = array[0] + " " + "ASC";
+            } else {
+                sort = array[0] + " " + "DESC";
+            }
+        }
+        int start = request.getStartBorder();
+        int length = request.getLength();
+        String search = request.getSearch();
+        List<Product> data = productDao.getLimitedQuantityProduct(start, length, sort, search);
+        int size = productDao.getCountProductsWithSearch(search);
         return ListHolder.create(data, size);
     }
 }

@@ -89,7 +89,7 @@ public class AddProductController {
         }
         try {
             product = productService.getCategory(productCategory, product);
-            logger.debug("Set category for tariff {} ",product.getCategoryId());
+            logger.debug("Set category for tariff {} ", product.getCategoryId());
         } catch (DuplicateKeyException e) {
             logger.error(ERROR_EXIST_OF_CATEGORY, e);
             mav.addObject("error", ERROR_EXIST_OF_CATEGORY);
