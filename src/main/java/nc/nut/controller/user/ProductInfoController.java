@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * Created by Yuliya Pedash on 12.05.2017.
  */
 @Controller
-@RequestMapping({"residential", "business", "csr", "employee"})
+@RequestMapping({"residential/orders", "business/orders", "csr", "employee"})
 public class ProductInfoController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
@@ -31,7 +31,7 @@ public class ProductInfoController {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Product product = productService.getProductForUser(currentUser, productId);
         model.addAttribute("product", product);
-        return "newPages/" + currentUser.getRole().getName().toLowerCase() + "/Product";
+        return "newPages/" + currentUser.getRole().getNameInLowwerCase() + "/Product";
     }
 
 }

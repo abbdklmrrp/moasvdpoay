@@ -65,9 +65,9 @@ public class OrderDaoImpl implements OrderDao {
             "   p.NAME,\n" +
             "   p.TYPE_ID,\n" +
             "   p.DURATION,\n" +
-            "   p.DESCRIPTION,\n" +
             "   op_his.OPERATION_DATE,\n" +
-            "   o.CURRENT_STATUS_ID\n" +
+            "   o.CURRENT_STATUS_ID, \n" +
+            " p.id product_id " +
             "FROM ORDERS o\n" +
             "   JOIN (SELECT\n" +
             "            OPERATION_DATE,\n" +

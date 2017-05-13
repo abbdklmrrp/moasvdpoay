@@ -6,11 +6,13 @@
     </jsp:include>
 </head>
 <body>
-<div class="row">
+<jsp:include page="../includes/headers/businessHeader.jsp"/>
     <jsp:include page="../includes/product.jsp"/>
-    <jsp:include page="../includes/footer.jsp"/>
+<div class="row">
     <a href="<%=request.getContextPath()%>/business/orders" method="get" class="btn btn-info"> <span
             class="glyphicon glyphicon-menu-left"></span> Back</a>
+    <jsp:include page="../includes/footer.jsp"/>
+</div>
 </div>
 </body>
 </html>

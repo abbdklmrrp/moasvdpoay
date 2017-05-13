@@ -6,7 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
@@ -14,6 +15,7 @@ import javax.sql.DataSource;
  * Created by Rysakova Anna on 20.04.2017.
  */
 @Configuration
+@EnableTransactionManagement
 @PropertySource("classpath:db/oracle.properties")
 //@PropertySource("classpath:ANN_DB.properties")
 public class PersistenceConfig {
@@ -57,8 +59,10 @@ public class PersistenceConfig {
     public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
-//    @Bean
-//    public DataSourceTransactionManager transactionManager(DataSource dataSource){
-//        return new DataSourceTransactionManager(dataSource);
-//    }
+
+    @Bean
+    public DataSourceTransactionManager transactionManager() {
+        final DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource());
+        return transactionManager;
+    }
 }
