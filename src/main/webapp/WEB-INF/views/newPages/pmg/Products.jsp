@@ -12,7 +12,9 @@
     </script>
 </head>
 <body>
-<jsp:include page="../includes/headers/pmgHeader.jsp"/>
+    <jsp:include page="../includes/headers/pmgHeader.jsp">
+        <jsp:param name="pageName" value="Products"/>
+    </jsp:include>
 <div class="container">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">

@@ -7,7 +7,9 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/csrHeader.jsp"/>
+<jsp:include page="../includes/headers/csrHeader.jsp">
+    <jsp:param name="pageName" value="RegNewUser"/>
+</jsp:include>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
     <form action="${contextPath}/csr/signUpUser"  modelAttribute="user" method="post">
         <div class="login-form">

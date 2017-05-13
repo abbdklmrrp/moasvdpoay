@@ -13,7 +13,9 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/adminHeader.jsp"/>
+<jsp:include page="../includes/headers/adminHeader.jsp">
+    <jsp:param name="pageName" value="fillTariffsPrices"/>
+</jsp:include>
 <form method="post" modelAttribute="priceByRegionDto"
       action="${pageContext.request.contextPath}/admin/fillTariffsPrices">
 

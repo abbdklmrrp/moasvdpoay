@@ -8,7 +8,9 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/pmgHeader.jsp"/>
+    <jsp:include page="../includes/headers/pmgHeader.jsp">
+        <jsp:param name="pageName" value="allComplaints"/>
+    </jsp:include>
 <div class="container">
     <h3 id="header-all-complaints" class="hide" style="text-align: center">All complaints</h3>
     <h3 id="header-no-complaints" style="text-align: center">No complaints</h3>

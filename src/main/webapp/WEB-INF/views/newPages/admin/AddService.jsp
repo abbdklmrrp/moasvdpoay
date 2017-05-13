@@ -8,7 +8,9 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/adminHeader.jsp"/>
+<jsp:include page="../includes/headers/adminHeader.jsp">
+    <jsp:param name="pageName" value="AddService"/>
+</jsp:include>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
     <form method="POST" modelAttribute="product" action="<%=request.getContextPath()%>/admin/addService">
         <div class="login-form">

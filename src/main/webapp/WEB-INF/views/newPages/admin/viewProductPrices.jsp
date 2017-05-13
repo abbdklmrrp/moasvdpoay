@@ -13,7 +13,9 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/adminHeader.jsp"/>
+<jsp:include page="../includes/headers/adminHeader.jsp">
+    <jsp:param name="pageName" value="viewProductPrices"/>
+</jsp:include>
 
 <div class="container">
     <h3 style="text-align: center">Product price by region</h3>

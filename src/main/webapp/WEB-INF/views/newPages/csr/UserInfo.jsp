@@ -14,7 +14,9 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/csrHeader.jsp"/>
+<jsp:include page="../includes/headers/csrHeader.jsp">
+    <jsp:param name="pageName" value="UserInfo"/>
+</jsp:include>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
     <form id="details-form" modelAttribute="user" action="${contextPath}/csr/editUser" method="post">
         <div class="login-form">
