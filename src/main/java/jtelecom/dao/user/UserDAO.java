@@ -38,5 +38,9 @@ public interface UserDAO extends Dao<User> {
 
     List<User> getLimitedQuantityUsersOfCustomer(int start, int length, String sort, String search, int custID);
 
+    List<User> getLimitedQuantityEmployeesOfCustomer(int start, int length, String sort, String search, int customerId);
+
+    Integer getCountEmployeesWithSearchOfCustomer(String search,int customerId);
+
     boolean isUnique(User user);
 }

@@ -4,6 +4,7 @@ import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
+import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,17 +20,24 @@ import java.util.List;
  * @since 09.05.2017.
  */
 @RestController
-@RequestMapping({"admin"})
+@RequestMapping({"admin", "business"})
 public class ViewUsersController {
     private static Logger logger = LoggerFactory.getLogger(ViewUsersController.class);
     @Resource
     private UserDAO userDAO;
     @Resource
     private UserService userService;
+    @Resource
+    private SecurityAuthenticationHelper securityAuthenticationHelper;
 
     @RequestMapping(value = "getUsersPage", method = RequestMethod.GET)
-    public ModelAndView getUsers() throws IOException {
+    public ModelAndView getUsersPage() throws IOException {
         return new ModelAndView("newPages/admin/Users");
+    }
+
+    @RequestMapping(value = "getEmployeesPage", method = RequestMethod.GET)
+    public ModelAndView getEmployeesPage() throws IOException {
+        return new ModelAndView("newPages/business/Employees");
     }
 
     @RequestMapping(value = {"getUsers"}, method = RequestMethod.GET)
@@ -43,6 +51,21 @@ public class ViewUsersController {
         logger.debug("Get users in interval:" + start + " : " + length);
         return ListHolder.create(data, size);
     }
+
+    @RequestMapping(value={"getEmployees"}, method=RequestMethod.GET)
+    public ListHolder getEmployees(@ModelAttribute GridRequestDto requestDto){
+        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        Integer customerId=user.getCustomerId();
+        String sort = requestDto.getSort();
+        int start = requestDto.getStartBorder();
+        int length = requestDto.getEndBorder();
+        String search = requestDto.getSearch();
+        List<User> data = userDAO.getLimitedQuantityEmployeesOfCustomer(start, length, sort, search,customerId);
+        int size = userDAO.getCountEmployeesWithSearchOfCustomer(search,customerId);
+        logger.debug("Get users in interval:" + start + " : " + length);
+        return ListHolder.create(data, size);
+    }
+
 
     @RequestMapping(value = {"/activateUser"}, method = RequestMethod.POST)
     @ResponseBody
