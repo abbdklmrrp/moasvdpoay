@@ -48,7 +48,7 @@
     });
     function forwardTo(complaintId) {
         console.log(complaintId);
-        return location.href = '${pageContext.request.contextPath}/pmg/getProfile'
+        return location.href = '${pageContext.request.contextPath}/pmg/complaintInfo?id='+complaintId;
     }
 </script>
 </body>
