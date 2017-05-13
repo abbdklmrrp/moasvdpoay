@@ -7,7 +7,7 @@
 </head>
 <body>
     <jsp:include page="../includes/headers/businessHeader.jsp"/>
-    <jsp:include page="../includes/zaglushka.jsp"/>
+    <jsp:include page="../includes/registrationForm.jsp"/>
     <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
