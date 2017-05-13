@@ -47,20 +47,11 @@
         </div>
     </form>
 </div>
+<h2 style="text-align: center" id="infoMessage" hidden disabled="true">${msg}</h2>
 <jsp:include page="../includes/footer.jsp"/>
 <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhhghVMdW1rIbJCJupKdngdNk0k5JwaQE&libraries=places"></script>
 <script>
-    function Selected(a) {
-        var label = a.value;
-        if (label == "BUSINESS") {
-            var d = document.getElementById("Block1");
-            d.style.display = 'block';
-        } else {
-            document.getElementById("Block1").style.display = 'none';
-        }
-    }
-
     function initialize() {
 
         var input = document.getElementById('address');
@@ -68,6 +59,15 @@
     }
 
     google.maps.event.addDomListener(window, 'load', initialize);
+
+    window.onload = function () {
+        if (document.getElementById('infoMessage').innerHTML.trim() != '') {
+            sweetAlert(document.getElementById('infoMessage').innerHTML);
+        }
+    };
+    setTimeout(function () {
+        document.getElementById("message").style.display = "none";
+    }, 4000);
 </script>
 </body>
 </html>
