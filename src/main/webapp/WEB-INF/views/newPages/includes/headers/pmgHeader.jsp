@@ -23,10 +23,10 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'Users'}">
-                        <li class="active"><a href="">Users</a></li>
+                        <li class="active"><a href="${pageContext.request.contextPath}/pmg/getUsersPage">Users</a></li>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="">Users</a></li>
+                        <li><a href="${pageContext.request.contextPath}/pmg/getUsersPage">Users</a></li>
                     </c:otherwise>
                 </c:choose>
                 <c:choose>

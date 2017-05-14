@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -49,7 +50,7 @@ public class AddProductController {
     }
 
     @RequestMapping(value = {"addTariff"}, method = RequestMethod.POST)
-    public ModelAndView createService(Product product, ModelAndView mav) {
+    public ModelAndView createService(Product product, ModelAndView mav, RedirectAttributes ra) {
         product.setProductType(ProductType.Tariff);
         boolean isEmptyFieldsOfTariff = productService.isEmptyFieldOfProduct(product);
         logger.debug("Check that the incoming tariff fields are not empty {} ", isEmptyFieldsOfTariff);
@@ -59,7 +60,8 @@ public class AddProductController {
             mav.setViewName("admin/addTariff");
             return mav;
         }
-        boolean isSave = productDao.save(product);
+        Integer isSave = productDao.saveProduct(product);
+        ra.addFlashAttribute("productId", isSave);
         logger.debug("Save product was success {} ", isSave);
         mav.setViewName("redirect:/admin/fillTariff");
         return mav;

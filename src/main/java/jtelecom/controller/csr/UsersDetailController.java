@@ -25,7 +25,7 @@ import java.util.List;
  * @since 28.04.2017.
  */
 @RestController
-@RequestMapping({"csr"})
+@RequestMapping({"csr","pmg"})
 public class UsersDetailController {
     @Resource
     private UserDAO userDAO;
