@@ -39,7 +39,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_ENABLED_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 AND STATUS=1 ORDER BY ID";
     private final static String FIND_PRODUCT_BY_ID = "SELECT * FROM PRODUCTS WHERE ID=:id";
     private final static String SELECT_PRODUCT_BY_ID_BASE_PRICE_SET_BY_PLACE_SQL = "SELECT id, type_id, category_id, name, duration, need_processing, DESCRIPTION,\n" +
-            "  status, price AS base_price\n" +
+            "  status,customer_type_id, price AS base_price\n" +
             "  FROM PRODUCTS\n" +
             "  INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID " +
             "WHERE PRICES.PLACE_ID = :place_id AND PRODUCT_ID = :product_id";
@@ -217,7 +217,8 @@ public class ProductDaoImpl implements ProductDao {
             " name, " +
             " description, " +
             " status," +
-            " base_price FROM Products " +
+            " base_price," +
+            " customer_type_id FROM Products " +
             " WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariffId)";
 
     private final static String SELECT_LIMITED_PRODUCTS = "select *\n" +
