@@ -33,7 +33,7 @@ public class ViewProductController {
     public ModelAndView getDetailsProduct(@RequestParam(value = "id") int id,
                                           ModelAndView mav,
                                           HttpSession session) {
-// FIXME: 12.05.2017
+// FIXME: 14.05.2017 validate product
         try {
             Product tariff = productDao.getById(id);
             logger.debug("Checked that the tariff exists {} ", tariff.toString());
@@ -51,7 +51,7 @@ public class ViewProductController {
 
         if (foundProduct.getProductType() == ProductType.Service) {
             logger.debug("Product type is {} ", foundProduct.getCategoryId());
-            mav.setViewName("admin/updateService");
+            mav.setViewName("newPages/admin/updateService");
         }
         if (foundProduct.getProductType() == ProductType.Tariff) {
             logger.debug("Product type is {} ", foundProduct.getCategoryId());
@@ -61,7 +61,7 @@ public class ViewProductController {
             logger.debug("Get all service's categories {}", productCategories.toString());
             mav.addObject("allServices", productCategories);
             mav.addObject("servicesByTariff", servicesByTariff);
-            mav.setViewName("admin/updateTariff");
+            mav.setViewName("newPages/admin/updateTariff");
         }
         return mav;
     }

@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping({"admin"})
-public class FillPriceByRegion {
+public class UpdatePriceInRegions {
 
     private static final String ERROR_IN_CONNECTION = "Error with filling database";
     private static final String ERROR_FILL_IN_PRICE_BY_PRODUCT = "Please, check that the region was selected and price input";
@@ -38,8 +38,8 @@ public class FillPriceByRegion {
     @Resource
     private PriceDao priceDao;
 
-    @RequestMapping(value = {"fillTariffsPrices"}, method = RequestMethod.GET)
-    public ModelAndView getRegionForFill(ModelAndView mav) {
+    @RequestMapping(value = {"updateProductPrice"}, method = RequestMethod.GET)
+    public ModelAndView getPriceByRegion(ModelAndView mav) {
 
         List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
         logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
@@ -49,7 +49,7 @@ public class FillPriceByRegion {
         return mav;
     }
 
-    @RequestMapping(value = {"fillTariffsPrices"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"updateProductPrice"}, method = RequestMethod.POST)
     public ModelAndView fillPriceByRegion(ModelAndView mav, HttpSession session,
                                           @RequestParam(value = "placeId") Integer[] placeId,
                                           @RequestParam(value = "priceByRegion") BigDecimal[] priceByRegion

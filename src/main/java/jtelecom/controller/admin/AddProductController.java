@@ -1,5 +1,6 @@
 package jtelecom.controller.admin;
 
+import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
 import jtelecom.dao.product.ProductDao;
@@ -12,9 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -50,7 +51,7 @@ public class AddProductController {
     }
 
     @RequestMapping(value = {"addTariff"}, method = RequestMethod.POST)
-    public ModelAndView createService(Product product, ModelAndView mav, RedirectAttributes ra) {
+    public ModelAndView createService(Product product, ModelAndView mav, HttpSession session) {
         product.setProductType(ProductType.Tariff);
         boolean isEmptyFieldsOfTariff = productService.isEmptyFieldOfProduct(product);
         logger.debug("Check that the incoming tariff fields are not empty {} ", isEmptyFieldsOfTariff);
@@ -61,7 +62,7 @@ public class AddProductController {
             return mav;
         }
         Integer isSave = productDao.saveProduct(product);
-        ra.addFlashAttribute("productId", isSave);
+        session.setAttribute("productId", isSave);
         logger.debug("Save product was success {} ", isSave);
         mav.setViewName("redirect:/admin/fillTariff");
         return mav;
@@ -97,7 +98,12 @@ public class AddProductController {
         }
         boolean isSave = productDao.save(product);
         logger.debug("Save product was success {} ", isSave);
-        mav.setViewName("redirect:/admin/getProfile");
+        if (product.getCustomerType() == CustomerType.Residential) {
+            mav.setViewName("redirect:/admin/fillTariffsPrices");
+        }
+        if (product.getCustomerType() == CustomerType.Business) {
+            mav.setViewName("redirect:/admin/getProfile");
+        }
         return mav;
     }
 }
