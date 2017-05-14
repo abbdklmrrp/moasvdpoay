@@ -23,10 +23,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping({"csr"})
-public class CsrUserOrdersController {
+public class OperationHistoryController {
     @Resource
     private OperationHistoryDao operationHistoryDao;
-    private static Logger logger = LoggerFactory.getLogger(CsrUserOrdersController.class);
+    private static Logger logger = LoggerFactory.getLogger(OperationHistoryController.class);
 
     @RequestMapping(value = "userOrders", method = RequestMethod.POST)
     public ModelAndView viewOrders() throws IOException {

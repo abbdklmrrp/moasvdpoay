@@ -28,7 +28,7 @@
     var rowTemplate = findRowTemplate(root);
 
     // state
-    var length = 10;
+    var length =findPageLength(root);
     var currentPage = 1;
     var lastLength;
     var lastResponse;

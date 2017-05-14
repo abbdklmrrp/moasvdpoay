@@ -33,7 +33,7 @@
         renderers: {
             "action": function (pv, wv, grid) {
                 return $('<input type="button" class="btn btn-success"  value="Details">').click( function(){
-                        <%--location.href='${contextPath}/pmg/getDetails?id=' + wv.id--%>
+                        location.href='${contextPath}/pmg/getDetails?id=' + wv.id
                     }
                 );
             }
