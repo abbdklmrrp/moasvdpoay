@@ -27,7 +27,7 @@
                         <li class="active"><a href="<%=request.getContextPath()%>/business/getEmployeesPage">Employees</a></li>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="<%=request.getContextPath()%>/business/regEmployee">Registration</a></li>
+                        <li><a href="<%=request.getContextPath()%>/business/getEmployeesPage">Employees</a></li>
                     </c:otherwise>
                 </c:choose>
                 <c:choose>

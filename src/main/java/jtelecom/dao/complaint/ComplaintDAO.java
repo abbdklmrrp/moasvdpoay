@@ -11,16 +11,19 @@ import jtelecom.dao.interfaces.Dao;
 import java.util.List;
 
 /**
- * @author Alistratenko Nikita
+ * @author Revniuk Aleksandr
  */
 public interface ComplaintDAO extends Dao<Complaint> {
+
     /**
-     * This method returns all complaints by concrete CSR.
+     * This method returns list of complaints assigned to concrete user.
      *
-     * @param id id of CSR
+     * @param pmgId user id
+     * @param startIndex index of first row
+     * @param endIndex index of last row
      * @return list of complaints
      */
-    List<Complaint> getByPMGId(int id);
+    List<Complaint> getIntervalOfAssignedComplaints(int pmgId,int startIndex, int endIndex);
 
     /**
      * This method returns all complaints by concrete order.
@@ -31,10 +34,10 @@ public interface ComplaintDAO extends Dao<Complaint> {
     List<Complaint> getByOrderId(int id);
 
     /**
-     * This method returns interval of unassigned complaints.
+     * This method returns list of unassigned complaints.
      *
-     * @param startIndex start index of interval
-     * @param endIndex end index of interval
+     * @param startIndex index of first row
+     * @param endIndex index of last row
      * @return list of complaints
      */
     List<Complaint> getIntervalOfUnassignedComplaints(int startIndex, int endIndex);
@@ -56,7 +59,7 @@ public interface ComplaintDAO extends Dao<Complaint> {
     List<Complaint> getByStatusID(int id);
 
     /**
-     * This method set PMG id for complaint.
+     * This method assign user to concrete complaint.
      *
      * @param complaintId id of complaint
      * @param pmgId       id of PMG
@@ -68,7 +71,7 @@ public interface ComplaintDAO extends Dao<Complaint> {
      * This method changes status of complaint.
      *
      * @param complaintId id of complaint
-     * @param statusId    new id for status in complaint
+     * @param statusId    new id of status
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
     boolean changeStatus(int complaintId, int statusId);
@@ -77,16 +80,23 @@ public interface ComplaintDAO extends Dao<Complaint> {
      * This method changes description of complaint.
      *
      * @param complaintId id of complaint
-     * @param description new description for complaint
+     * @param description new description
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
     boolean changeDescription(int complaintId, String description);
 
     /**
-     * This method returns amount of complaints where PMG id is NULL.
+     * This method returns amount of unassigned complaints.
      *
      * @return amount of complaints
      */
-    int countUnasignedComplaints();
+    int countUnassignedComplaintsToUser();
+
+    /**
+     * This method returns amount of complaints assigned to concrete user.
+     *
+     * @return amount of complaints
+     */
+    int countAssignedComplaintsToUser(int pmgId);
 
 }

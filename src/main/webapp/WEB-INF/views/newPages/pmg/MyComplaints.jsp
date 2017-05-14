@@ -1,18 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="All complaints"/>
+        <jsp:param name="tittle" value="My complaints"/>
     </jsp:include>
 </head>
 <body>
-    <jsp:include page="../includes/headers/pmgHeader.jsp">
-        <jsp:param name="pageName" value="Complaints"/>
-    </jsp:include>
+<jsp:include page="../includes/headers/pmgHeader.jsp">
+    <jsp:param name="pageName" value="Complaints"/>
+</jsp:include>
 <div class="container">
-    <h3 id="header-all-complaints" class="hide" style="text-align: center">All complaints</h3>
+    <h3 id="header-all-complaints" class="hide" style="text-align: center">My complaints</h3>
     <h3 id="header-no-complaints" style="text-align: center">No complaints</h3>
     <div class="row">
         <div class="table-responsive">
@@ -43,7 +42,7 @@
             showPrevNext: true,
             hidePageNumbers: false,
             perPage: 10
-        }, 'getData');
+        }, 'getDataByPMG');
 
     });
     function forwardTo(complaintId) {
