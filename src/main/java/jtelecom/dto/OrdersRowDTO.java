@@ -12,15 +12,15 @@ public class OrdersRowDTO {
     private final Integer orderId;
     private final String name;
     private final ProductType productType;
-    private final String description;
+    private final Integer productId;
     private final Calendar endDate;
     private final OperationStatus operationStatus;
 
-    public OrdersRowDTO(Integer orderId, String name, ProductType productType, String description, Calendar endDate, OperationStatus operationStatus) {
+    public OrdersRowDTO(Integer orderId, String name, ProductType productType, Integer productId, Calendar endDate, OperationStatus operationStatus) {
         this.orderId = orderId;
         this.name = name;
         this.productType = productType;
-        this.description = description;
+        this.productId = productId;
         this.endDate = endDate;
         this.operationStatus = operationStatus;
     }
@@ -37,8 +37,8 @@ public class OrdersRowDTO {
         return productType;
     }
 
-    public String getDescription() {
-        return description;
+    public Integer getProductId() {
+        return productId;
     }
 
     public Calendar getEndDate() {

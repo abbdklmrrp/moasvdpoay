@@ -11,39 +11,42 @@
                     <h3 style="text-align: center">There are no orders now!</h3>
                 </c:when>
                 <c:otherwise>
-                <table border="1" class="table table-striped table-hover">
-                    <tr>
-                        <td>Name</td>
-                        <td>Type</td>
-                        <td>Date end</td>
-                        <td>Status</td>
-                        <td>Action</td>
-                    </tr>
-                    <c:forEach var="orderRow" items="${ordersRows}">
+                    <table border="1" class="table table-striped table-hover">
                         <tr>
-                            <td><a href="#" id="showDescriptionOfProduct">${orderRow.name}</a></td>
-                            <td>${orderRow.productType.name}</td>
-                            <td><fmt:formatDate value="${orderRow.endDate.time}" type='date' pattern="dd-MM-yyyy"/></td>
-                            <td>${orderRow.operationStatus.name}</td>
+                            <td>Name</td>
+                            <td>Type</td>
+                            <td>Date end</td>
+                            <td>Status</td>
+                            <td>Action</td>
+                        </tr>
+                        <c:forEach var="orderRow" items="${ordersRows}">
+                            <tr>
+                                <td>
+                                    <a href="<%=request.getContextPath()%>/${userRole}/orders/product?productId=${orderRow.productId}"
+                                       id="showDescriptionOfProduct">${orderRow.name}</a></td>
+                                <td>${orderRow.productType.name}</td>
+                                <td><fmt:formatDate value="${orderRow.endDate.time}" type='date'
+                                                    pattern="dd-MM-yyyy"/></td>
+                                <td>${orderRow.operationStatus.name}</td>
 
-                                    <td id="action${orderRow.orderId}">
-                                        <c:choose>
-                                        <c:when test="${orderRow.operationStatus.name == 'Active'}">
-                                        <input type="button" class="btn btn-warning"
-                                               onclick="toggleFormFunc(${orderRow.orderId})" value="Suspend"></td>
+                                <td id="action${orderRow.orderId}">
+                                    <c:choose>
+                                    <c:when test="${orderRow.operationStatus.name == 'Active'}">
+                                    <input type="button" class="btn btn-warning"
+                                           onclick="toggleFormFunc(${orderRow.orderId})" value="Suspend"></td>
                                 </c:when>
                                 <c:when test="${orderRow.operationStatus.name == 'Suspended'}">
-                                 <input type="button" class="btn btn-success"
-                                               onclick="activateOrderAfterSuspend(${orderRow.orderId})" value="Activate">
+                                    <input type="button" class="btn btn-success"
+                                           onclick="activateOrderAfterSuspend(${orderRow.orderId})" value="Activate">
                                 </c:when>
                                 <c:otherwise>
-                                  -
+                                    -
                                 </c:otherwise>
-                            </c:choose>
-                        </td>
-                        </tr>
-                    </c:forEach>
-                </table>
+                                </c:choose>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
                 </c:otherwise>
             </c:choose>
         </div>

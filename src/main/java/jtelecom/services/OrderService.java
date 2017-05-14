@@ -5,7 +5,9 @@ import jtelecom.dao.order.OrderDao;
 import jtelecom.dao.plannedTask.PlannedTask;
 import jtelecom.dao.plannedTask.PlannedTaskDao;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.List;
@@ -19,8 +21,7 @@ public class OrderService {
     private PlannedTaskDao plannedTaskDao;
     @Resource
     private OrderDao orderDao;
-
-    //private static Logger logger = LoggerFactory.getLogger(OrderService.class);
+    private static Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     /**
      * This method performs all operations needed for suspense of order.
@@ -34,8 +35,7 @@ public class OrderService {
      * @param orderId   order id
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
-    //todo transactins
-    //  @Transactional
+    @Transactional
     public boolean suspendOrder(Calendar beginDate, Calendar endDate, Integer orderId) {
         PlannedTask suspendPlanTask = new PlannedTask();
         PlannedTask activatePlanTask = new PlannedTask();
@@ -47,6 +47,7 @@ public class OrderService {
         suspendPlanTask.setStatus(OperationStatus.Suspended);
         boolean isActivatedPlanTaskSaved = plannedTaskDao.save(activatePlanTask);
         if (!isActivatedPlanTaskSaved) {
+            logger.error("Unable to save activated planned task to database {}", activatePlanTask);
             return false;
         }
         Calendar currentDate = Calendar.getInstance();
@@ -77,7 +78,7 @@ public class OrderService {
      * @param
      * @return
      */
-    //   @Transactional
+    @Transactional
     public boolean deactivateOrderOfUserCompletely(Integer orderId) {
         return false;
     }

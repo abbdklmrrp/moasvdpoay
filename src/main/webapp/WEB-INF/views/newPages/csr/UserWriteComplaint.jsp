@@ -16,7 +16,9 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/csrHeader.jsp"/>
+<jsp:include page="../includes/headers/csrHeader.jsp">
+    <jsp:param name="pageName" value="UserWriteComplaint"/>
+</jsp:include>
 <jsp:include page="../includes/writeToSupport.jsp"/>
 <jsp:include page="../includes/footer.jsp"/>
 </body>

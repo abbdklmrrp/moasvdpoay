@@ -31,13 +31,13 @@ public interface ComplaintDAO extends Dao<Complaint> {
     List<Complaint> getByOrderId(int id);
 
     /**
-     * This method returns interval of complaints where PMGId is NULL.
+     * This method returns interval of unassigned complaints.
      *
      * @param startIndex start index of interval
      * @param endIndex end index of interval
      * @return list of complaints
      */
-    List<Complaint> getIntervalOfComplaintsWithoutPMGId(int startIndex, int endIndex);
+    List<Complaint> getIntervalOfUnassignedComplaints(int startIndex, int endIndex);
 
     /**
      * This method returns all complaints by place.
@@ -56,13 +56,13 @@ public interface ComplaintDAO extends Dao<Complaint> {
     List<Complaint> getByStatusID(int id);
 
     /**
-     * This method set PMG id for complaint and change status.
+     * This method set PMG id for complaint.
      *
      * @param complaintId id of complaint
      * @param pmgId       id of PMG
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
-    boolean setPMGId(int complaintId, int pmgId);
+    boolean assignToUser(int complaintId, int pmgId);
 
     /**
      * This method changes status of complaint.
@@ -87,6 +87,6 @@ public interface ComplaintDAO extends Dao<Complaint> {
      *
      * @return amount of complaints
      */
-    int countComplaintsWithoutPMGId();
+    int countUnasignedComplaints();
 
 }

@@ -6,10 +6,10 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/pmgHeader.jsp"/>
-<div class="container">
+<jsp:include page="../includes/headers/pmgHeader.jsp">
+    <jsp:param name="pageName" value="MyComplaints"/>
+</jsp:include>
 
-</div>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>

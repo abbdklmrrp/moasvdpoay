@@ -23,6 +23,7 @@ import java.util.List;
  * Created by Yuliya Pedash on 07.05.2017.
  */
 @Controller
+@RequestMapping({"residential", "business", "csr"})
 public class UsersOrdersController {
     //todo to file
     private final static String SUCCESS_MSG = "Thank you! Your order will be suspended from %s to %s.";
@@ -42,26 +43,31 @@ public class UsersOrdersController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
 
-    @RequestMapping(value = {"residential/orders"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"orders"}, method = RequestMethod.GET)
     public String showOrdersForUser(Model model) {
-        showOrders(model);
-        return "newPages/residential/Orders";
-    }
-
-    @RequestMapping(value = {"business/orders"}, method = RequestMethod.GET)
-    public String showOrdersForBusinessUser(Model model) {
-        showOrders(model);
-        return "newPages/business/Orders";
-    }
-
-    private void showOrders(Model model) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        String userRoleLowerCase = user.getRole().getNameInLowwerCase();
         logger.debug("Current user: {}", user.toString());
         List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
         model.addAttribute("ordersRows", ordersRows);
+        model.addAttribute("userRole", userRoleLowerCase);
+        return "newPages/" + userRoleLowerCase + "/Orders";
     }
 
-    @RequestMapping(value = {"/residential/suspend", "/business/suspend"}, method = RequestMethod.POST)
+//    @RequestMapping(value = {"business/orders"}, method = RequestMethod.GET)
+//    public String showOrdersForBusinessUser(Model model) {
+//        showOrders(model);
+//        return "newPages/business/Orders";
+//    }
+//
+//    private void showOrders(Model model) {
+//        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+//        logger.debug("Current user: {}", user.toString());
+//        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
+//        model.addAttribute("ordersRows", ordersRows);
+//    }
+
+    @RequestMapping(value = {"suspend", "suspend"}, method = RequestMethod.POST)
     @ResponseBody
     public String suspendOrder(@RequestBody SuspendFormDTO suspendFormDTO) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -86,7 +92,7 @@ public class UsersOrdersController {
 
     }
 
-    @RequestMapping(value = {"/residential/activateAfterSuspend", "/business/activateAfterSuspend"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"activateAfterSuspend", "activateAfterSuspend"}, method = RequestMethod.POST)
     @ResponseBody
     public Boolean activateAfterSuspend(@RequestParam Integer orderId) {
         Boolean wasOrderActivated = orderDao.activateOrder(orderId);

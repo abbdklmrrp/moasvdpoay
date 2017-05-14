@@ -3,13 +3,12 @@ package jtelecom.controller.csr;
 
 import jtelecom.dao.customer.Customer;
 import jtelecom.dao.customer.CustomerDAO;
-import jtelecom.dao.entity.CustomerType;
-import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
+import jtelecom.services.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +31,8 @@ public class CustomerController {
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
     private UserDAO userDAO;
+    @Resource
+    private CustomerService customerService;
 
     private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
@@ -39,39 +40,7 @@ public class CustomerController {
     int custID = 0;
 
 
-    @RequestMapping(value = {"getCreateCustomer"}, method = RequestMethod.GET)
-    public ModelAndView getCreateCustomer() {
-        ModelAndView modelAndView = new ModelAndView();
-        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        if (user.getRole().equals(Role.Admin)) {
-            modelAndView.setViewName("newPages/admin/RegNewCustomer");
-        } else {
-            modelAndView.setViewName("newPages/csr/RegNewCustomer");
-        }
-        modelAndView.addObject("customer", new Customer());
 
-        return modelAndView;
-    }
-
-    @RequestMapping(value = {"createCustomer"}, method = RequestMethod.POST)
-    public ModelAndView createCustomer(Customer customer) {
-        ModelAndView modelAndView = new ModelAndView();
-        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        if (user.getRole().equals(Role.Admin)) {
-            modelAndView.setViewName("newPages/admin/RegNewCustomer");
-        } else {
-            modelAndView.setViewName("newPages/csr/RegNewCustomer");
-        }
-        customer.setCustomerType(CustomerType.Business);
-        boolean success = customerDAO.save(customer);
-        if (!success) {
-            logger.error("Can't create customer");
-            modelAndView.setViewName("newPages/includes/error");
-        } else {
-            logger.debug("created customer " + customer.getName());
-        }
-        return modelAndView;
-    }
 
     @RequestMapping(value = {"getCustomers"}, method = RequestMethod.GET)
     public ModelAndView getProducts() {

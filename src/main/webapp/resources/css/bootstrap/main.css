@@ -75,7 +75,7 @@ a:focus {
   min-width: 180px;
 }
 body > section {
-  padding: 50px 0;
+  padding: 0;
 }
 .turquoise,
 .green-sea,
@@ -1098,5 +1098,5 @@ footer .container {
 }
 
 #tbl-all-complaints tbody tr:hover{
-  background-color: #bdc3c7;
+  opacity: 0.75;
 }

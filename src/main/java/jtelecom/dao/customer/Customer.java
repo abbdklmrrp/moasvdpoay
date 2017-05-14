@@ -25,6 +25,10 @@ public class Customer {
         this.secretKey = secretKey;
     }
 
+    public Customer(String name) {
+        this.name = name;
+    }
+
     public Customer() {
 
     }

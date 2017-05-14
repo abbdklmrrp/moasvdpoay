@@ -6,17 +6,18 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<container>
+<div class="container">
+    <h1>${product.name}</h1>
     <div class="row">
-        <label>Name: </label>${product.name}
+        <label>Name:</label> ${product.name}
     </div>
     <div class="row">
-        <label>Description: </label>${product.description}
+        <label>Description:</label> ${product.description}
     </div>
     <div class="row">
-        <label>Price: </label>${product.basePrice}
+        <label>Price:</label> ${product.basePrice} hryvnas
     </div>
     <div class="row">
-        <label>Processing Strategy: </label>${product.processingStrategy}
+        <label>Processing Strategy:</label> ${product.processingStrategy.name}
     </div>
-</container>
+

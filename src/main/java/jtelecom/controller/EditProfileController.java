@@ -1,5 +1,7 @@
 package jtelecom.controller;
 
+
+
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -112,6 +115,28 @@ public class EditProfileController {
         }
         attributes.addFlashAttribute("msg", errorMessage);
         return "redirect:/" + sessionUser.getRole().getNameInLowwerCase() + "/getProfile";
+    }
+
+    @RequestMapping(value = "editUser", method = RequestMethod.POST)
+    public ModelAndView editUserProfile(User user, HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView("newPages/csr/UserInfo");
+        String message = "";
+        Integer id = (Integer) session.getAttribute("userId");
+        user.setId(id);
+        String place = serviceGoogleMaps.getRegion(user.getAddress());
+        Integer placeId = userDAO.findPlaceId(place);
+        user.setPlaceId(placeId);
+        boolean success = userService.updateUser(user);
+        if (success) {
+            message = "User successfully updated";
+            logger.debug("user updated: " + id);
+        } else {
+            message = "User updating failed";
+            logger.error("user updating failed, userId " + id);
+        }
+        modelAndView.addObject("msg", message);
+        modelAndView.addObject("user", user);
+        return modelAndView;
     }
 
 }

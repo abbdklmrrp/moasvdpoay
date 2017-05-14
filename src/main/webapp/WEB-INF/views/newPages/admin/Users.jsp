@@ -12,7 +12,9 @@
     </script>
 </head>
 <body>
-<jsp:include page="../includes/headers/adminHeader.jsp"/>
+<jsp:include page="../includes/headers/adminHeader.jsp">
+    <jsp:param name="pageName" value="Users"/>
+</jsp:include>
 <div class="container">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
