@@ -11,10 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -42,15 +39,15 @@ public class FillTariffController {
     private ProductService productService;
 
     @RequestMapping(value = {"fillTariff"}, method = RequestMethod.GET)
-    public ModelAndView fillTariffWithService(ModelAndView mav) {
-        List<Product> tariffs = productDao.getAllFreeTariffs();
-        logger.debug("Get all the tariffs that are not filled with services {} ", tariffs.toString());
+    public ModelAndView fillTariffWithService(ModelAndView mav,
+                                              @ModelAttribute("productId") Integer productId) {
+        logger.debug("Get all tariff ID {} ", productId);
         List<ProductCategories> productCategories = productDao.findProductCategories();
         logger.debug("Get all service's categories {} ", productCategories.toString());
 
-        mav.addObject("allServices", productCategories);
-        mav.addObject("tariffs", tariffs);
-        mav.setViewName("admin/fillTariff");
+//        ra.addFlashAttribute("productId", productId);
+        mav.addObject("productCategories", productCategories);
+        mav.setViewName("newPages/admin/fillTariff");
         return mav;
     }
 
@@ -63,6 +60,7 @@ public class FillTariffController {
             Product tariff = productDao.getById(tariffId);
             logger.debug("Checked that the tariff exists {} ", tariff.toString());
         } catch (DataAccessException ex) {
+            mav.addObject("error", ERROR_EXIST_PRODUCT);
             logger.error("Product with ID = {}  does not exist in the database ", tariffId);
         }
 

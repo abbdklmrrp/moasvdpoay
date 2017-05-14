@@ -1,6 +1,7 @@
 package jtelecom.dao.product;
 
 import jtelecom.dao.interfaces.Dao;
+import jtelecom.dto.ServicesByCategoryDto;
 import jtelecom.dto.TariffServiceDto;
 
 import java.util.ArrayList;
@@ -159,7 +160,7 @@ public interface ProductDao extends Dao<Product> {
      */
     Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
 
-    List<Product> getActiveProductsByCustomerId(Integer customerId);
+    Integer saveProduct(Product product);
 
-
+    List<ServicesByCategoryDto> findServicesByCategoryId(Integer categoryId);
 }

@@ -1098,5 +1098,5 @@ footer .container {
 }
 
 #tbl-all-complaints tbody tr:hover{
-  background-color: #bdc3c7;
+  opacity: 0.75;
 }

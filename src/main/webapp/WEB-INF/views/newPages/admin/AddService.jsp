@@ -75,7 +75,7 @@
             <div class="form-group row">
                 <label class="col-sm-4 control-label">Customer type</label>
                 <div class="col-sm-8">
-                    <select name="customerType" class="form-control" id="customerTypeId" required>
+                    <select name="customerType" class="form-control" id="customerTypeId">
                         <option value="Business">Business</option>
                         <option value="Residential">Residential</option>
                     </select></div>
@@ -83,7 +83,7 @@
             <div class="form-group row">
                 <label class="col-sm-4 control-label">Duration in days</label>
                 <div class="col-sm-8">
-                    <select name="durationInDays" class="form-control" id="durationInDays" required>
+                    <select name="durationInDays" class="form-control" id="durationInDays">
                         <option value="365">365</option>
                     </select>
                 </div>

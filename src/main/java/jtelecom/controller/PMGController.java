@@ -1,15 +1,15 @@
 package jtelecom.controller;
 
-import jtelecom.dao.complaint.Complaint;
 import jtelecom.dao.complaint.ComplaintDAO;
 import jtelecom.dto.ComplaintDataPartitionDTO;
+import jtelecom.repositories.FullComplaintInfoRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author Rysakova Anna
@@ -19,6 +19,9 @@ import java.util.List;
 public class PMGController {
     @Resource
     private ComplaintDAO complaintDAO;
+
+    @Resource
+    private FullComplaintInfoRepository fullComplaintInfoRepository;
 
     @RequestMapping(value = "allComplaints")
     public String getAllComplaints() {
@@ -32,5 +35,11 @@ public class PMGController {
         dto.setAmount(complaintDAO.countUnasignedComplaints());
         dto.setPartOfComplaints(complaintDAO.getIntervalOfUnassignedComplaints(startIndex, endIndex));
         return dto;
+    }
+
+    @RequestMapping(value = "complaintInfo")
+    public String compalintInfo(Model model,@RequestParam(name = "id")int id){
+        model.addAttribute("complaint", fullComplaintInfoRepository.getById(id));
+        return "newPages/pmg/ComplaintInfo";
     }
 }
