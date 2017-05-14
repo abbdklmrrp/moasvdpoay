@@ -22,7 +22,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
             "  (SELECT ID, ORDER_ID, CREATING_DATE, STATUS_ID, DESCRIPTION, PMG_ID, ROW_NUMBER() OVER (ORDER BY CREATING_DATE) R FROM COMPLAINTS)\n" +
             "WHERE R > :startIndex AND R <= :endIndex AND PMG_ID IS NULL";
     private final static String GET_BY_ID_SQL = "SELECT * FROM COMPLAINTS WHERE ID = :id";
-    private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints(ORDER_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
+    private final static String INSERT_COMPLAINT_SQL = "INSERT INTO Complaints (ORDER_ID,CREATING_DATE,STATUS_ID,DESCRIPTION) \n" +
             "VALUES(:orderId,:creatingDate,:statusId,:description)";
     private final static String UPDATE_STATUS_ID_SQL = "UPDATE COMPLAINTS SET STATUS_ID = :statusId WHERE ID = :id";
     private final static String UPDATE_DESCRIPTION_SQL = "UPDATE COMPLAINTS SET DESCRIPTION = :description WHERE ID = :id";

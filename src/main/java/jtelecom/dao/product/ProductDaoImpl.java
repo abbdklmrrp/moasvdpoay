@@ -158,14 +158,12 @@ public class ProductDaoImpl implements ProductDao {
 //            "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
 
     private final static String SELECT_ACTIVE_PRODUCTS_FOR_CUSTOMER = "SELECT " +
-            "Products.id id, " +
-            "Products.name name " +
-            "FROM Products " +
-            "JOIN Orders ON Orders.product_id = Products.id " +
-            "WHERE (Orders.current_status_id = 1/* Active */ " +
-            "       OR Orders.current_status_id = 2/* Suspended */ " +
-            "       OR Orders.current_status_id = 4/* In processing */) " +
-            "AND Orders.user_id IN (SELECT id FROM Users WHERE customer_id = " +
+            " Products.id id, " +
+            " Products.name name " +
+            " FROM Products " +
+            " JOIN Orders ON Orders.product_id = Products.id " +
+            " WHERE Orders.CURRENT_STATUS_ID<>3 "+
+            " AND Orders.user_id IN (SELECT id FROM Users WHERE customer_id = " +
             "                                           (SELECT customer_id FROM USERS WHERE id = :id))";
     private final static String DEACTIVATE_TARIFF_OF_USER_SQL = "UPDATE Orders SET current_status_id = 3/* Deactivated */" +
             "WHERE user_id IN (SELECT id FROM Users WHERE customer_id = (SELECT customer_id FROM Users WHERE id = :userId )) " +
@@ -254,6 +252,11 @@ public class ProductDaoImpl implements ProductDao {
             "FROM PRODUCTS product\n" +
             "  JOIN PRICES price ON (product.ID = price.PRODUCT_ID)\n" +
             "  JOIN PLACES place ON (price.PLACE_ID = place.ID)";
+
+    private final static String SELECT_BY_CUSTOMER_ID="Select * from PRODUCTS\n" +
+            "where id IN \n" +
+            "      (Select id from ORDERS where user_id in \n" +
+            "                                   (Select id from users where customer_id=:customerId))";
 
     @Autowired
     @Qualifier("dataSource")
@@ -809,5 +812,11 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("place_id", placeId);
         return jdbcTemplate.queryForObject(SELECT_PRODUCT_BY_ID_BASE_PRICE_SET_BY_PLACE_SQL, params, productRowMapper);
 
+    }
+
+    @Override
+    public List<Product> getActiveProductsByCustomerId(Integer customerId) {
+        MapSqlParameterSource params=new MapSqlParameterSource("customerId",customerId);
+        return jdbcTemplate.query(SELECT_BY_CUSTOMER_ID,params,new ProductRowMapper());
     }
 }

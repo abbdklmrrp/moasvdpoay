@@ -48,31 +48,32 @@ public class UserComplaintController {
     }
 
     @RequestMapping(value = "getCsrComplaint", method = RequestMethod.GET)
-    public ModelAndView writeComplaint(HttpSession session) {
+    public ModelAndView getCsrComplaint(HttpSession session) {
         Integer id = (Integer) session.getAttribute("userId");
         ModelAndView modelAndView = getProducts(id);
         modelAndView.setViewName("newPages/csr/UserWriteComplaint");
         return modelAndView;
     }
 
-    @RequestMapping(value = "/writeComplaint", method = RequestMethod.POST)
+
+    @RequestMapping(value = "writeComplaint", method = RequestMethod.POST)
     @ResponseBody
     public String writeComplaint(@RequestParam(value = "productId") int productId,
                                  @RequestParam(value = "description") String description) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        return saveComplaint(user.getId(), productId, description);
+        return save(user.getId(), productId, description);
     }
 
-    @RequestMapping(value = "/saveComplaint", method = RequestMethod.POST)
+    @RequestMapping(value = "saveComplaint", method = RequestMethod.POST)
     @ResponseBody
     public String saveComplaint(@RequestParam(value = "productId") int productId,
                                 @RequestParam(value = "description") String description, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("userId");
-        return saveComplaint(userId, productId, description);
+        return save(userId, productId, description);
 
     }
 
-    private String saveComplaint(int userId, int productId, String description) {
+    private String save(int userId, int productId, String description) {
         String message;
         Calendar calendar = Calendar.getInstance();
         Integer orderId = orderDAO.getOrderIdByUserIdAndProductId(userId, productId);

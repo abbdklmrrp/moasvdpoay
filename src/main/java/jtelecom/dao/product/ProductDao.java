@@ -159,5 +159,7 @@ public interface ProductDao extends Dao<Product> {
      */
     Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
 
+    List<Product> getActiveProductsByCustomerId(Integer customerId);
+
 
 }
