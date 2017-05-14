@@ -37,13 +37,26 @@
                         <li><a href="${pageContext.request.contextPath}/pmg/getPmgProductsPage">Products</a></li>
                     </c:otherwise>
                 </c:choose>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Complaints<i class="icon-angle-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="">My complaints</a></li>
-                        <li><a href="${pageContext.request.contextPath}/pmg/allComplaints">All complaints</a></li>
-                    </ul>
-                </li>
+                <c:choose>
+                    <c:when test="${param.pageName == 'Complaints'}">
+                        <li class="dropdown active">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Complaints<i class="icon-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="${pageContext.request.contextPath}/pmg/myComplaints">My complaints</a></li>
+                                <li><a href="${pageContext.request.contextPath}/pmg/allComplaints">All complaints</a></li>
+                            </ul>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Complaints<i class="icon-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="${pageContext.request.contextPath}/pmg/myComplaints">My complaints</a></li>
+                                <li><a href="${pageContext.request.contextPath}/pmg/allComplaints">All complaints</a></li>
+                            </ul>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'Statistics'}">
                         <li class="active"><a href="${pageContext.request.contextPath}/pmg/statistics">Statistics</a>

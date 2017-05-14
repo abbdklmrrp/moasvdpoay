@@ -5,6 +5,8 @@ import jtelecom.dao.complaint.ComplaintStatus;
 import java.util.Calendar;
 
 /**
+ * This class created to transport detailed information about complaint.
+ *
  * @author Aleksandr Revniuk
  */
 public class FullComplaintInfoDTO {
@@ -12,6 +14,7 @@ public class FullComplaintInfoDTO {
     private Calendar creatingDate;
     private String description;
     private ComplaintStatus status;
+    private Integer pmgId;
     private String productName;
     private String userName;
     private String userSurname;
@@ -47,6 +50,14 @@ public class FullComplaintInfoDTO {
 
     public void setStatus(ComplaintStatus status) {
         this.status = status;
+    }
+
+    public Integer getPmgId() {
+        return pmgId;
+    }
+
+    public void setPmgId(Integer pmgId) {
+        this.pmgId = pmgId;
     }
 
     public String getProductName() {
@@ -88,6 +99,7 @@ public class FullComplaintInfoDTO {
                 ", creatingDate=" + creatingDate +
                 ", description='" + description + '\'' +
                 ", status=" + status +
+                ", pmgId=" + pmgId +
                 ", productName='" + productName + '\'' +
                 ", userName='" + userName + '\'' +
                 ", userSurname='" + userSurname + '\'' +
