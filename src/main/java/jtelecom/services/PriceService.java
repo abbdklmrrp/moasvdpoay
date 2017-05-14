@@ -34,14 +34,16 @@ public class PriceService {
     public ArrayList<Price> fillInListWithProductPriceByRegion(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
         ArrayList<Price> listPriceByRegion = new ArrayList<>();
         logger.debug("Create list of product price by region {} ", listPriceByRegion);
-        for (int i = 0; i < placeId.length; i++) {
-            Price price = new Price();
-            price.setProductId(productId);
-            price.setPlaceId(placeId[i]);
-            // FIXME: 11.05.2017 
-            price.setPrice(priceByRegion[i + 1]);
-            listPriceByRegion.add(price);
-            logger.debug("to list was add object Price {} ", price);
+        // TODO: 14.05.2017 limit array size
+        for (int i = 0; i < priceByRegion.length; i++) {
+            if (placeId[i] != null & priceByRegion[i] != null) {
+                Price price = new Price();
+                price.setProductId(productId);
+                price.setPlaceId(placeId[i]);
+                price.setPrice(priceByRegion[i]);
+                listPriceByRegion.add(price);
+                logger.debug("to list was add object Price {} ", price);
+            }
         }
         return listPriceByRegion;
     }
@@ -52,19 +54,6 @@ public class PriceService {
         }
         Product product = productDao.getById(productId);
         logger.debug("Checked that the product exists {} ", product.toString());
-        if (Objects.equals(product, null)) {
-            return false;
-        }
-        // FIXME: 11.05.2017 
-//        if (placeId.length != priceByRegion.length) {
-//            return false;
-//        }
-        for (int i = 0; i < placeId.length; i++) {
-            if (Objects.equals(placeId[i], null) || Objects.equals(priceByRegion[i], null)) {
-                return false;
-            }
-        }
-
-        return true;
+        return !Objects.equals(product, null);
     }
 }
