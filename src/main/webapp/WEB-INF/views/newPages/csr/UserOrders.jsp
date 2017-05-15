@@ -19,7 +19,9 @@
     </script>
 </head>
 <body>
-<jsp:include page="../includes/headers/csrHeader.jsp"/>
+<jsp:include page="../includes/headers/csrHeader.jsp">
+    <jsp:param name="pageName" value="UserOrders"/>
+</jsp:include>
 <div class="container">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
@@ -144,16 +146,16 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
-<script src="${contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
-<script src="${contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>
 
-<script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
-<script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
-<script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${contextPath}/csr/getOperationHistory.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/getOperationHistory.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ]

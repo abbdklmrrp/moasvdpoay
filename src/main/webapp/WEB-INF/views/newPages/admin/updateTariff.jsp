@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<form method="POST" name="Form" action="${contextPath}/admin/updateTariff">
+<form method="POST" name="Form" action="${pageContext.request.contextPath}/admin/updateTariff">
     <div class="login-form">
 
         <h1>Fill or leave empty</h1>
@@ -104,7 +104,7 @@
 
         <button type="submit" class="log-btn">Save</button>
         <br>
-        <h2><a href="${contextPath}/doLogout">Logout</a></h2>
+        <h2><a href="${pageContext.request.contextPath}/doLogout">Logout</a></h2>
     </div>
 </form>
 </body>

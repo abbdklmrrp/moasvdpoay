@@ -6,7 +6,9 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/businessHeader.jsp"/>
+<jsp:include page="../includes/headers/businessHeader.jsp">
+    <jsp:param name="pageName" value="Products"/>
+</jsp:include>
     <jsp:include page="../includes/product.jsp"/>
 <%--<div class="row">--%>
 <%--<a href="<%=request.getContextPath()%>/business/orders" method="get" class="btn btn-info"> <span--%>

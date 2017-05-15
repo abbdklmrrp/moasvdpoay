@@ -31,7 +31,7 @@
 
 </form>
 <script class="cssdeck" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-<%--<script src="${contextPath}/resources/js/bootstrap.min.js"></script>--%>
+<%--<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>--%>
 
 
 </body>

@@ -154,11 +154,13 @@ public class ProductService {
      */
     private ArrayList<TariffServiceDto> fillInDTOForBatchUpdate(Integer idTariff, Integer[] arrayOfIdServices) {
         ArrayList<TariffServiceDto> products = new ArrayList<>();
-        for (Integer idService : arrayOfIdServices) {
-            TariffServiceDto tariffServiceDto = new TariffServiceDto();
-            tariffServiceDto.setIdTariff(idTariff);
-            tariffServiceDto.setIdService(idService);
-            products.add(tariffServiceDto);
+        for (int i = 0; i < arrayOfIdServices.length; i++) {
+            if (arrayOfIdServices[i] != null) {
+                TariffServiceDto tariffServiceDto = new TariffServiceDto();
+                tariffServiceDto.setIdTariff(idTariff);
+                tariffServiceDto.setIdService(arrayOfIdServices[i]);
+                products.add(tariffServiceDto);
+            }
         }
         return products;
     }

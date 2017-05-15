@@ -107,6 +107,28 @@ public class UserDAOImpl implements UserDAO {
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
+
+    private static final String SELECT_COUNT_EMPLOYEES_BY_CUSTOMER="Select count(ID)\n" +
+            "  from Users " +
+            "WHERE ROLE_ID=6 AND CUSTOMER_ID=:customerId AND " +
+            " ( name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern )";
+
+    private static final String SELECT_EMPLOYEES_BY_CUSTOMER="select *"+
+        "from ( select a.*, rownum rnum\n" +
+        "       from ( Select * from USERS " +
+            "WHERE ROLE_ID=6 AND CUSTOMER_ID=:customerId AND " +
+        "  (name like :pattern " +
+        " OR surname like :pattern " +
+        " OR email like :pattern " +
+        " OR phone like :pattern " +
+        " OR address like :pattern) " +
+        " ORDER BY %s) a\n" +
+        "       where rownum <= :length )\n" +
+        "       where rnum > :start";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -341,5 +363,27 @@ public class UserDAOImpl implements UserDAO {
         params.addValue("custID", custID);
         params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.query(sql, params, new UserRowMapper());
+    }
+
+    @Override
+    public List<User> getLimitedQuantityEmployeesOfCustomer(int start, int length, String sort, String search, int customerId) {
+        if (sort.isEmpty()) {
+            sort = "ID";
+        }
+        String sql = String.format(SELECT_EMPLOYEES_BY_CUSTOMER, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("customerId",customerId);
+        params.addValue("start", start);
+        params.addValue("length", length);
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.query(sql, params, new UserRowMapper());
+    }
+
+    @Override
+    public Integer getCountEmployeesWithSearchOfCustomer(String search, int customerId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("customerId",customerId);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_EMPLOYEES_BY_CUSTOMER, params, Integer.class);
     }
 }

@@ -7,10 +7,10 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/csrHeader.jsp"/>
-<div class="container">
+<jsp:include page="../includes/headers/csrHeader.jsp">
+    <jsp:param name="pageName" value="MyOrders"/>
+</jsp:include>
 
-</div>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>

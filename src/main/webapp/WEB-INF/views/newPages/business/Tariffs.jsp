@@ -7,7 +7,9 @@
     </jsp:include>
 </head>
 <body>
-    <jsp:include page="../includes/headers/businessHeader.jsp"/>
+    <jsp:include page="../includes/headers/businessHeader.jsp">
+        <jsp:param name="pageName" value="Tariffs"/>
+    </jsp:include>
     <jsp:include page="../includes/tariffs.jsp"/>
     <jsp:include page="../includes/footer.jsp"/>
 </body>

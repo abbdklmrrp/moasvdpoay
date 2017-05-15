@@ -4,9 +4,6 @@ import jtelecom.dao.place.Place;
 import jtelecom.dao.place.PlaceDAO;
 import jtelecom.dao.price.Price;
 import jtelecom.dao.price.PriceDao;
-import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
-import jtelecom.dto.PriceByRegionDto;
 import jtelecom.services.PriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,8 +34,6 @@ public class FillPriceByRegion {
     @Resource
     private PlaceDAO placeDAO;
     @Resource
-    private ProductDao productDao;
-    @Resource
     private PriceService priceService;
     @Resource
     private PriceDao priceDao;
@@ -45,31 +41,30 @@ public class FillPriceByRegion {
     @RequestMapping(value = {"fillTariffsPrices"}, method = RequestMethod.GET)
     public ModelAndView getRegionForFill(ModelAndView mav) {
 
-        List<Product> products = productDao.getProductForResidentialCustomerWithoutPrice();
-        logger.debug("Get all the tariffs that are not filled with services {} ", products.toString());
         List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
         logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
 
-        mav.addObject("products", products);
         mav.addObject("placesForFillInTariff", placesForFillInTariff);
-        mav.addObject("priceByRegionDto", new PriceByRegionDto());
-
         mav.setViewName("newPages/admin/fillTariffsPrices");
         return mav;
     }
 
     @RequestMapping(value = {"fillTariffsPrices"}, method = RequestMethod.POST)
-    public ModelAndView fillPriceByRegion(ModelAndView mav,
-                                          @RequestParam(value = "productId") Integer productId,
+    public ModelAndView fillPriceByRegion(ModelAndView mav, HttpSession session,
                                           @RequestParam(value = "placeId") Integer[] placeId,
                                           @RequestParam(value = "priceByRegion") BigDecimal[] priceByRegion
     ) {
+        Integer productId = (Integer) session.getAttribute("productId");
         boolean isValid = priceService.isValid(productId, placeId, priceByRegion);
         if (!isValid) {
             logger.error("Incoming data of place ID and is not correct {} {}",
                     Arrays.toString(placeId), Arrays.toString(priceByRegion));
+            List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
+            logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
+
+            mav.addObject("placesForFillInTariff", placesForFillInTariff);
             mav.addObject("error", ERROR_FILL_IN_PRICE_BY_PRODUCT);
-            mav.setViewName("admin/fillTariff");
+            mav.setViewName("newPages/admin/fillTariffsPrices");
             return mav;
         }
 
@@ -78,12 +73,16 @@ public class FillPriceByRegion {
             boolean isFillPrice = priceDao.fillPriceOfProductByRegion(priceArrayList);
             logger.debug("Fill in tariff with services to database with success {} ", isFillPrice);
         } catch (DataIntegrityViolationException ex) {
-            logger.error("Error with filling database {} ", ex);
+            logger.error("Error with filling database {} ", ex.getMessage());
+            List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
+            logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
+
+            mav.addObject("placesForFillInTariff", placesForFillInTariff);
             mav.addObject("error ", ERROR_IN_CONNECTION);
-            mav.setViewName("admin/fillTariff");
+            mav.setViewName("newPages/admin/fillTariffsPrices");
             return mav;
         }
-
+        session.removeAttribute("productId");
         mav.setViewName("redirect:/admin/getProfile");
         return mav;
 

@@ -8,7 +8,9 @@
     <link href="<c:url value="/resources/css/sweet-alert.css"/>" rel="stylesheet"/>
 </head>
 <body>
-<jsp:include page="../includes/headers/pmgHeader.jsp"/>
+    <jsp:include page="../includes/headers/pmgHeader.jsp">
+        <jsp:param name="pageName" value="Statistics"/>
+    </jsp:include>
 <jsp:include page="../includes/report.jsp"/>
 <jsp:include page="../includes/footer.jsp"/>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

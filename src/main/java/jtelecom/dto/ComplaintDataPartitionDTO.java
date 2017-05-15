@@ -6,7 +6,9 @@ import jtelecom.dao.complaint.Complaint;
 import java.util.List;
 
 /**
- * Created by aleksandr on 12.05.17.
+ * This class created to send part of complaints and length of all in one object, need for pagination.
+ *
+ * @author Revniuk Aleksandr
  */
 public class ComplaintDataPartitionDTO {
     private Integer amount;

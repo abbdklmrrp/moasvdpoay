@@ -13,7 +13,7 @@
 <head>
     <title>Unconnected products</title>
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css">
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/basic.css" rel="stylesheet"/>
     <spring:url value="/resources/js/jquery-1.12.1.min.js"
                 var="jqueryJs" />
     <script src="${jqueryJs}"></script>
@@ -50,8 +50,8 @@
                     "mData": "id",
                     "bSortable": false,
                     "mRender": function(data) {
-                        return '<a class="btn btn-info btn-sm" href=${contextPath}/csr/getDetails?id='+data+'>' +"Connect"+'</a>',
-                        '<a class="btn btn-info btn-sm" href=${contextPath}/csr/getDetails?id='+data+'>' +"Deactive"+'</a>' ;
+                        return '<a class="btn btn-info btn-sm" href=${pageContext.request.contextPath}/csr/getDetails?id='+data+'>' +"Connect"+'</a>',
+                        '<a class="btn btn-info btn-sm" href=${pageContext.request.contextPath}/csr/getDetails?id='+data+'>' +"Deactive"+'</a>' ;
                     }}
             ],
             "paging":true

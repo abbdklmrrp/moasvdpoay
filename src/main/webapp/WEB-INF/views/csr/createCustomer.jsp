@@ -11,11 +11,11 @@
 <head>
     <title>Create Customer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/basic.css" rel="stylesheet"/>
     <script class="cssdeck" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 </head>
 <body>
-<form action="${contextPath}/csr/createCustomer" modelAttribute="customer" method="post">
+<form action="${pageContext.request.contextPath}/csr/createCustomer" modelAttribute="customer" method="post">
     <div class="login-form">
         <h2>Create new customer</h2>
             <div class="form-group ">

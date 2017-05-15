@@ -12,7 +12,7 @@
 <head>
     <title>Write complaint</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/basic.css" rel="stylesheet"/>
     <%-- <script class="cssdeck" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>--%>
     <spring:url value="/resources/js/jquery-1.12.1.min.js"
                 var="jqueryJs"/>
@@ -45,7 +45,7 @@
         <button type="submit" class="log-btn" id="bth-search" onclick="searchViaAjax()">Search</button>
     </div>
 </form>
-<form method="post" action="${contextPath}/csr/writeComplaint">
+<form method="post" action="${pageContext.request.contextPath}/csr/writeComplaint">
     <div class="right-login">
         <div class="form-group ">
             Product
@@ -94,7 +94,7 @@
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "${contextPath}/csr/getSearchUser",
+            url: "${pageContext.request.contextPath}/csr/getSearchUser",
             data: JSON.stringify(search),
             dataType: 'json',
             timeout: 100000,
@@ -143,7 +143,7 @@
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "${contextPath}/csr/getSearchProduct",
+            url: "${pageContext.request.contextPath}/csr/getSearchProduct",
             data: JSON.stringify(search),
             dataType: 'json',
             timeout: 100000,

@@ -13,7 +13,9 @@
     </script>
 </head>
 <body>
-<jsp:include page="../includes/headers/csrHeader.jsp"/>
+<jsp:include page="../includes/headers/csrHeader.jsp">
+    <jsp:param name="pageName" value="Products"/>
+</jsp:include>
 <div class="container">
     <div class="grid-progress-bar-placeholder">
     <div class="progress grid-progress-bar" style="display: none;" id="progressId">
@@ -160,13 +162,13 @@
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
-<script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
-<script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
-<script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${contextPath}/csr/getProducts.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/getProducts.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ]

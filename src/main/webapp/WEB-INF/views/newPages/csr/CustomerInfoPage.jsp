@@ -16,7 +16,9 @@
     </script>
 </head>
 <body>
-<jsp:include page="../includes/headers/csrHeader.jsp"/>
+<jsp:include page="../includes/headers/csrHeader.jsp">
+    <jsp:param name="pageName" value="CustomerInfoPage"/>
+</jsp:include>
 
 
 <input hidden disabled id="custID" value="${customer.id}">

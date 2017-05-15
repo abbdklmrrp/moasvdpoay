@@ -1,6 +1,6 @@
 package jtelecom.dao.product;
 
-import jtelecom.dao.user.UserDAO;
+import jtelecom.dto.ServicesByCategoryDto;
 import jtelecom.dto.TariffServiceDto;
 import jtelecom.mail.Mailer;
 import jtelecom.util.querybuilders.LimitedProductsQueryBuilder;
@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,7 +41,7 @@ public class ProductDaoImpl implements ProductDao {
     private final static String FIND_ENABLED_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 AND STATUS=1 ORDER BY ID";
     private final static String FIND_PRODUCT_BY_ID = "SELECT * FROM PRODUCTS WHERE ID=:id";
     private final static String SELECT_PRODUCT_BY_ID_BASE_PRICE_SET_BY_PLACE_SQL = "SELECT id, type_id, category_id, name, duration, need_processing, DESCRIPTION,\n" +
-            "  status, price AS base_price\n" +
+            "  status,customer_type_id, price AS base_price\n" +
             "  FROM PRODUCTS\n" +
             "  INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID " +
             "WHERE PRICES.PLACE_ID = :place_id AND PRODUCT_ID = :product_id";
@@ -217,7 +219,8 @@ public class ProductDaoImpl implements ProductDao {
             " name, " +
             " description, " +
             " status," +
-            " base_price FROM Products " +
+            " base_price," +
+            " customer_type_id FROM Products " +
             " WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariffId)";
 
     private final static String SELECT_LIMITED_PRODUCTS = "select *\n" +
@@ -286,6 +289,13 @@ public class ProductDaoImpl implements ProductDao {
             "  INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID\n" +
             "WHERE TYPE_ID = 2\n AND STATUS = 1 /*Active*/ " +
             " AND place_id = :place_id";
+
+    private static final String FIND_SERVICES_BY_CATEGORY_ID = "SELECT\n" +
+            "  ID,\n" +
+            "  NAME\n" +
+            "FROM PRODUCTS\n" +
+            "WHERE CATEGORY_ID = :categoryId";
+
     @Autowired
     @Qualifier("dataSource")
     private DataSource dataSource;
@@ -295,10 +305,6 @@ public class ProductDaoImpl implements ProductDao {
     private ProductCategoriesRowMapper categoriesRowMapper;
     @Resource
     private ProductRowMapper productRowMapper;
-    @Resource
-    private UserDAO userDAO;
-    @Resource
-    private Mailer mailer;
     @Resource
     private TariffRowMapper tariffRowMapper;
 
@@ -323,6 +329,23 @@ public class ProductDaoImpl implements ProductDao {
         int isUpdate = jdbcTemplate.update(ADD_PRODUCT, params);
         return isUpdate > 0;
 
+    }
+
+    @Override
+    public Integer saveProduct(Product product) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("typeId", product.getProductType().getId());
+        params.addValue("categoryId", product.getCategoryId());
+        params.addValue("nameProduct", product.getName());
+        params.addValue("duration", product.getDurationInDays());
+        params.addValue("customerTypeId", product.getCustomerType().getId());
+        params.addValue("needProcessing", product.getProcessingStrategy().getId());
+        params.addValue("description", product.getDescription());
+        params.addValue("status", product.getStatus().getId());
+        params.addValue("basePrice", product.getBasePrice());
+        KeyHolder key = new GeneratedKeyHolder();
+        Integer productID = jdbcTemplate.update(ADD_PRODUCT, params, key, new String[]{"ID"});
+        return key.getKey().intValue();
     }
 
     /**
@@ -822,6 +845,11 @@ public class ProductDaoImpl implements ProductDao {
         return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
     }
 
+    /**
+     * Anna
+     *
+     * @return
+     */
     @Override
     public List<Product> getProductForResidentialCustomerWithoutPrice() {
         List<Product> products = jdbcTemplate.query(FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE, (rs, rowNum) -> {
@@ -840,6 +868,18 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("place_id", placeId);
         return jdbcTemplate.queryForObject(SELECT_PRODUCT_BY_ID_BASE_PRICE_SET_BY_PLACE_SQL, params, productRowMapper);
 
+    }
+
+    @Override
+    public List<ServicesByCategoryDto> findServicesByCategoryId(Integer categoryId) {
+        MapSqlParameterSource params = new MapSqlParameterSource("categoryId", categoryId);
+        List<ServicesByCategoryDto> servicesByCategoryDtos = jdbcTemplate.query(FIND_SERVICES_BY_CATEGORY_ID, params, (rs, rowNum) -> {
+            ServicesByCategoryDto service = new ServicesByCategoryDto();
+            service.setId(rs.getInt("ID"));
+            service.setName(rs.getString("NAME"));
+            return service;
+        });
+        return servicesByCategoryDtos;
     }
 
     @Override

@@ -12,7 +12,9 @@
     </script>
 </head>
 <body>
-<jsp:include page="../includes/headers/adminHeader.jsp"/>
+<jsp:include page="../includes/headers/adminHeader.jsp">
+    <jsp:param name="pageName" value="Products"/>
+</jsp:include>
 <div class="container">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
@@ -26,7 +28,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-10" data-grid="title">
-                    Title
+                    All products
                 </div>
                 <div class="col-md-2" style="text-align:right;">
                     <a href="javascript:" data-grid="pager-refresh">
@@ -160,20 +162,20 @@
     </div>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
-<script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
-<script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
-<script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${contextPath}/admin/all.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/admin/all.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ],
         renderers: {
             "action": function (pv, wv, grid) {
                 return $('<input type="button" class="btn btn-success"  value="Edit" >').click( function(){
-                        location.href='${contextPath}/admin/getDetailsProduct?id=' + wv.id
+                        location.href='${pageContext.request.contextPath}/admin/getDetailsProduct?id=' + wv.id
                     }
                 );
             }

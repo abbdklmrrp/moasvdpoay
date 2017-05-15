@@ -15,7 +15,7 @@
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 </head>
 <body>
-<form method="POST" modelAttribute="product" action="${contextPath}/admin/addTariff">
+<form method="POST" modelAttribute="product" action="${pageContext.request.contextPath}/admin/addTariff">
     <div class="login-form">
         <h1>ENTER NEW TARIFF</h1><br>
 
@@ -79,7 +79,7 @@
         </div>
         <button type="submit" class="log-btn">Save</button>
         <br>
-        <h2><a href="${contextPath}/doLogout">Logout</a></h2>
+        <h2><a href="${pageContext.request.contextPath}/doLogout">Logout</a></h2>
 
     </div>
 </form>

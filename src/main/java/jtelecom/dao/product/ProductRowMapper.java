@@ -1,5 +1,6 @@
 package jtelecom.dao.product;
 
+import jtelecom.dao.entity.CustomerType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ class ProductRowMapper implements RowMapper<Product> {
         product.setCategoryId(rs.getInt("category_id"));
         product.setDurationInDays(rs.getInt("duration"));
         product.setProductType(ProductType.getProductTypeFromId(rs.getInt("type_id")));
+        product.setCustomerType(CustomerType.getCustomerTypeFromId(rs.getInt("customer_type_id")));
         return product;
     }
 }

@@ -20,7 +20,7 @@
                             Registration</h5></a>
                     </div>
                     <c:if test="${not empty error}">
-                        <р4 style="text-align: center; color: #ce001b;">${error}</р4>
+                        <h4 style="text-align: center; color: #ce001b;">${error}</h4>
                     </c:if>
                     <br>
                     <div style="text-align: center">

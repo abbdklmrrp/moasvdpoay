@@ -47,12 +47,12 @@ public class UpdateProductController {
         Integer id = (Integer) session.getAttribute("productId");
         logger.debug("Receive service's id {} ", id);
         product.setId(id);
-        logger.debug("Write ID to product {} ", product.getId());
+        logger.debug("Set ID product {} ", product.getId());
         boolean isUpdate = productService.updateProduct(product);
-        logger.debug("Service was update {} ", isUpdate);
+        logger.debug("Service was update with result {} ", isUpdate);
         session.removeAttribute("productId");
         logger.debug("Attribute 'productId' was removed from session");
-        mav.setViewName("redirect:/admin/getProfile");
+        mav.setViewName("redirect:/admin/getProducts");
         return mav;
     }
 

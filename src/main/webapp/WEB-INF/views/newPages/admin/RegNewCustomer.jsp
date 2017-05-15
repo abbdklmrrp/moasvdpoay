@@ -6,9 +6,11 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/adminHeader.jsp"/>
+<jsp:include page="../includes/headers/adminHeader.jsp">
+    <jsp:param name="pageName" value="RegNewCustomer"/>
+</jsp:include>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
-    <form action="${contextPath}/admin/createCustomer" modelAttribute="customer" method="post">
+    <form action="${pageContext.request.contextPath}/admin/createCustomer" modelAttribute="customer" method="post">
         <div class="login-form">
             <h1 style="text-align: center">Registration new customer</h1>
             <div class="form-group ">

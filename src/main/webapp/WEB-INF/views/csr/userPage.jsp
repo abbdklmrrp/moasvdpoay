@@ -11,12 +11,12 @@
 <html>
 <head>
     <title>User's details</title>
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/basic.css" rel="stylesheet"/>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhhghVMdW1rIbJCJupKdngdNk0k5JwaQE&libraries=places"></script>
 
 </head>
 <body>
-<form  id="details-form" modelAttribute="user" action="${contextPath}/csr/editUser" method="post">
+<form  id="details-form" modelAttribute="user" action="${pageContext.request.contextPath}/csr/editUser" method="post">
 <div class="left-hight-login">
     <div class="form-group form-group-lg">
         <label class="col-sm-2 control-label">Name</label><br>
@@ -52,19 +52,19 @@
 </div>
 </form>
 <div class="right-login">
-    <form action="${contextPath}/csr/userTariffs" method="post">
+    <form action="${pageContext.request.contextPath}/csr/userTariffs" method="post">
         <button type="submit" class="log-btn">Tariffs</button>
     </form>
-    <form action="${contextPath}/csr/userServices" method="post">
+    <form action="${pageContext.request.contextPath}/csr/userServices" method="post">
         <button type="submit" class="log-btn">Services</button>
     </form>
-    <form action="${contextPath}/csr/userOrders" method="post">
+    <form action="${pageContext.request.contextPath}/csr/userOrders" method="post">
         <button type="submit" class="log-btn">Orders</button>
     </form>
-    <form action="${contextPath}/csr/writeComplaint" method="post">
+    <form action="${pageContext.request.contextPath}/csr/writeComplaint" method="post">
         <button type="submit" class="log-btn">Write complain</button>
     </form>
-    <form action="${conextPath}/csr/sendPassword" method="post">
+    <form action="${pageContext.request.contextPath}/csr/sendPassword" method="post">
         <button type="submit" class="log-btn">Send password</button>
     </form>
 </div>
