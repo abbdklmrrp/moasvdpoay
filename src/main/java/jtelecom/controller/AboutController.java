@@ -9,8 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class AboutController {
 
-    @RequestMapping(value = "/about")
-    public String about() {
-        return "newPages/About";
+    @RequestMapping(value = "/forBusiness")
+    public String forBusiness() {
+        return "newPages/ForBusiness";
     }
+
+    @RequestMapping(value = "/forCustomers")
+    public String forPrivateCustomers() {
+        return "newPages/ForPrivateCustomers";
+    }
+
+
 }

@@ -96,7 +96,7 @@ public class TariffsController {
         return productDao.getServicesOfTariff(tariffId);
     }
 
-    @RequestMapping(value = {"/userTariffs"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"userTariffs"})
     public String showTariffsForUser(Model model, HttpSession session) {
         List<Product> tariffs;
         Integer userId = (Integer) session.getAttribute("userId");
