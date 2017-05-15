@@ -66,14 +66,14 @@
     </form>
 </div>
 
-<%--<form action="${contextPath}/csr/userTariffs" method="post">--%>
-<%--<button type="submit" class="log-btn">Tariffs</button>--%>
-<%--</form>--%>
+<form action="${contextPath}/csr/userTariffs" method="POST">
+    <button type="submit" class="btn btn-primary">User tariffs</button>
+</form>
 <%--<form action="${contextPath}/csr/userServices" method="post">--%>
 <%--<button type="submit" class="log-btn">Services</button>--%>
 <%--</form>--%>
-<form action="${pageContext.request.contextPath}/csr/userOrders" method="post">
-    <button type="submit" class="log-btn">Orders</button>
+<form action="${pageContext.request.contextPath}/csr/userOrders" method="POST">
+    <button type="submit" class="btn btn-primary">User orders</button>
 </form>
 <form action="${pageContext.request.contextPath}/csr/getCsrComplaint" method="get">
     <button type="submit" class="log-btn">Write complain</button>
