@@ -29,8 +29,6 @@ import java.util.Map;
 @Service
 public class ProductDaoImpl implements ProductDao {
 
-    private static Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
-
     private final static String FIND_ALL_CATEGORIES = "SELECT * FROM PRODUCT_CATEGORIES";
     private final static String FIND_CATEGORY = "SELECT ID FROM PRODUCT_CATEGORIES WHERE NAME=:name";
     private final static String FIND_TYPES = "SELECT NAME FROM PRODUCT_TYPES";
@@ -44,20 +42,21 @@ public class ProductDaoImpl implements ProductDao {
             "  INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID " +
             "WHERE PRICES.PLACE_ID = :place_id AND PRODUCT_ID = :product_id";
     private final static String FIND_ALL_PRODUCTS = "SELECT ID, TYPE_ID, NAME, DURATION, DESCRIPTION, BASE_PRICE, STATUS FROM PRODUCTS ORDER BY ID";
-    private final static String FIND_SERVICES_BY_TARIFF = "SELECT " +
-            "p.ID,\n" +
-            "p.CATEGORY_ID,\n" +
-            "p.NAME\n" +
+    private final static String FIND_SERVICES_BY_TARIFF = "SELECT\n" +
+            "  p.ID,\n" +
+            "  p.CATEGORY_ID,\n" +
+            "  category.NAME CATEGORY_NAME,\n" +
+            "  p.NAME\n," +
+            "  ts.TARIFF_ID TARIFF_ID\n" +
             "FROM PRODUCTS p\n" +
-            "JOIN TARIFF_SERVICES ts ON (p.ID=ts.SERVICE_ID)\n " +
-            "WHERE ts.TARIFF_ID=:tariffId";
-
+            "  JOIN TARIFF_SERVICES ts ON (p.ID = ts.SERVICE_ID)\n" +
+            "  JOIN PRODUCT_CATEGORIES CATEGORY ON (p.CATEGORY_ID = CATEGORY.ID)\n" +
+            "WHERE ts.TARIFF_ID = :tariffId";
     private final static String FIND_ALL_SERVICES = "SELECT prod.ID, prod.NAME, prod.DESCRIPTION,prod.DURATION,prod.NEED_PROCESSING,\n" +
             "prod.TYPE_ID,prod.CATEGORY_ID\n" +
             "FROM PRODUCTS prod JOIN PRODUCT_TYPES pTypes ON (prod.TYPE_ID=pTypes.ID)\n" +
             "JOIN PRODUCT_CATEGORIES pCategories ON (prod.CATEGORY_ID=pCategories.ID)\n" +
             "WHERE prod.STATUS=1 AND pTypes.name='Service' AND pCategories.name=:categoryName";
-
     private final static String FIND_SERVICES_NOT_IN_TARIFF = "SELECT\n" +
             "  p.ID,\n" +
             "  p.CATEGORY_ID,\n" +
@@ -67,7 +66,6 @@ public class ProductDaoImpl implements ProductDao {
             "WHERE p.ID NOT IN (SELECT ts.SERVICE_ID\n" +
             "                   FROM TARIFF_SERVICES ts\n" +
             "                   WHERE ts.TARIFF_ID = :tariffId) AND p.TYPE_ID = 2";
-
     private final static String FIND_ALL_SERVICES_WITH_CATEGORY = "SELECT " +
             "prod.ID, " +
             "prod.NAME, " +
@@ -77,18 +75,20 @@ public class ProductDaoImpl implements ProductDao {
             "JOIN PRODUCT_TYPES pTypes ON (prod.TYPE_ID=pTypes.ID) " +
             "JOIN PRODUCT_CATEGORIES pCategories ON (prod.CATEGORY_ID=pCategories.ID) " +
             "WHERE prod.STATUS=1 AND pTypes.name='Service'";
-
     private final static String FIND_ALL_FREE_TARIFFS = "SELECT p.ID,\n" +
             "p.NAME\n" +
             "FROM PRODUCTS p\n" +
             "JOIN PRODUCT_TYPES ptype ON(p.TYPE_ID=ptype.ID)\n" +
             "LEFT JOIN TARIFF_SERVICES ts ON(p.ID=ts.TARIFF_ID)\n" +
             "WHERE ptype.name='Tariff' AND ts.TARIFF_ID IS NULL";
-
-    private final static String UPDATE_SERVICE = "UPDATE PRODUCTS SET NAME=:name," +
-            "DURATION=:duration,NEED_PROCESSING=:needProcessing," +
-            "DESCRIPTION=:description,STATUS=:status,BASE_PRICE=:basePrice WHERE ID=:id";
-
+    private final static String UPDATE_SERVICE = "UPDATE PRODUCTS SET NAME=:name,\n" +
+            "DURATION=:duration,\n" +
+            "NEED_PROCESSING=:needProcessing,\n" +
+            "DESCRIPTION=:description,\n" +
+            "STATUS=:status,\n" +
+            "BASE_PRICE=:basePrice,\n" +
+            "CUSTOMER_TYPE_ID=:customerType\n" +
+            " WHERE ID=:id";
     private final static String ADD_TARIFF_SERVICE = "INSERT INTO TARIFF_SERVICES(TARIFF_ID,SERVICE_ID) VALUES(:tariffId,:serviceId)";
     private final static String ADD_CATEGORY = "INSERT INTO PRODUCT_CATEGORIES(NAME,DESCRIPTION) VALUES(:name,:description)";
     private final static String ADD_PRODUCT = "INSERT INTO PRODUCTS(TYPE_ID,CATEGORY_ID,NAME,DURATION,CUSTOMER_TYPE_ID," +
@@ -142,22 +142,14 @@ public class ProductDaoImpl implements ProductDao {
             "  JOIN TARIFF_SERVICES\n" +
             "    ON p1.ID = TARIFF_SERVICES.TARIFF_ID\n" +
             "  JOIN PRODUCTS p2 ON p2.ID = TARIFF_SERVICES.SERVICE_ID";
-
     private final static String DELETE_SERVICE_FROM_TARIFF = "DELETE FROM TARIFF_SERVICES " +
             "WHERE TARIFF_ID=:idTariff AND SERVICE_ID=:idService ";
-
     private final static String DISABLE_ENABLE_PRODUCT = "UPDATE Products SET status=:status WHERE id=:id";
-
     private final static String FIND_PRODUCT_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME," +
             "prod.description AS DESCRIPTION, prod.DURATION AS duration " +
             "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
             " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
             "WHERE ord.USER_ID = :id AND status.NAME != 'Deactivated'";
-//    private final static String FIND_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME " +
-//            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
-//            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
-//            "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
-
     private final static String SELECT_ACTIVE_PRODUCTS_FOR_CUSTOMER = "SELECT " +
             "Products.id id, " +
             "Products.name name " +
@@ -168,6 +160,10 @@ public class ProductDaoImpl implements ProductDao {
             "       OR Orders.current_status_id = 4/* In processing */) " +
             "AND Orders.user_id IN (SELECT id FROM Users WHERE customer_id = " +
             "                                           (SELECT customer_id FROM USERS WHERE id = :id))";
+    //    private final static String FIND_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME " +
+//            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
+//            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
+//            "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
     private final static String DEACTIVATE_TARIFF_OF_USER_SQL = "UPDATE Orders SET current_status_id = 3/* Deactivated */" +
             "WHERE user_id IN (SELECT id FROM Users WHERE customer_id = (SELECT customer_id FROM Users WHERE id = :userId )) " +
             "AND product_id = :tariffId " +
@@ -220,7 +216,6 @@ public class ProductDaoImpl implements ProductDao {
             " base_price," +
             " customer_type_id FROM Products " +
             " WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariffId)";
-
     private final static String SELECT_LIMITED_PRODUCTS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from PRODUCTS " +
@@ -231,14 +226,12 @@ public class ProductDaoImpl implements ProductDao {
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
-
     private static final String SELECT_COUNT = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
             " WHERE name LIKE :pattern " +
             " OR description LIKE :pattern " +
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern ";
-
     private final static String FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE = "SELECT\n" +
             "  product.ID,\n" +
             "  product.NAME\n" +
@@ -246,7 +239,6 @@ public class ProductDaoImpl implements ProductDao {
             "WHERE product.ID NOT IN (SELECT price.PRODUCT_ID\n" +
             "                         FROM PRICES price)\n" +
             "      AND product.CUSTOMER_TYPE_ID = 2";
-
     private final static String FIND_PRODUCT_PRICE_BY_REGION = "SELECT\n" +
             "  product.ID,\n" +
             "  product.NAME,\n" +
@@ -256,13 +248,12 @@ public class ProductDaoImpl implements ProductDao {
             "FROM PRODUCTS product\n" +
             "  JOIN PRICES price ON (product.ID = price.PRODUCT_ID)\n" +
             "  JOIN PLACES place ON (price.PLACE_ID = place.ID)";
-
     private static final String FIND_SERVICES_BY_CATEGORY_ID = "SELECT\n" +
             "  ID,\n" +
             "  NAME\n" +
             "FROM PRODUCTS\n" +
             "WHERE CATEGORY_ID = :categoryId";
-
+    private static Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
     @Autowired
     @Qualifier("dataSource")
     private DataSource dataSource;
@@ -356,8 +347,8 @@ public class ProductDaoImpl implements ProductDao {
         List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDtos.size());
         for (TariffServiceDto person : tariffServiceDtos) {
             batchValues.add(
-                    new MapSqlParameterSource("tariffId", person.getIdTariff())
-                            .addValue("serviceId", person.getIdService())
+                    new MapSqlParameterSource("tariffId", person.getTariffId())
+                            .addValue("serviceId", person.getServiceId())
                             .getValues());
         }
         jdbcTemplate.batchUpdate(ADD_TARIFF_SERVICE, batchValues.toArray(new Map[tariffServiceDtos.size()]));
@@ -501,6 +492,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("description", product.getDescription());
         params.addValue("status", product.getStatus().getId());
         params.addValue("basePrice", product.getBasePrice());
+        params.addValue("customerType", product.getCustomerType().getId());
         params.addValue("id", product.getId());
         int isUpdate = jdbcTemplate.update(UPDATE_SERVICE, params);
         return isUpdate > 0;
@@ -672,18 +664,20 @@ public class ProductDaoImpl implements ProductDao {
     /**
      * Rysakova Anna
      *
-     * @param product
+     * @param tariffId
      * @return
      */
     @Override
-    public List<Product> getServicesByTariff(Product product) {
+    public List<TariffServiceDto> getServicesByTariff(Integer tariffId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("tariffId", product.getId());
-        List<Product> productList = jdbcTemplate.query(FIND_SERVICES_BY_TARIFF, params, (rs, rowNum) -> {
-            Product productTmp = new Product();
-            productTmp.setId(rs.getInt("ID"));
-            productTmp.setName(rs.getString("NAME"));
+        params.addValue("tariffId", tariffId);
+        List<TariffServiceDto> productList = jdbcTemplate.query(FIND_SERVICES_BY_TARIFF, params, (rs, rowNum) -> {
+            TariffServiceDto productTmp = new TariffServiceDto();
+            productTmp.setServiceId(rs.getInt("ID"));
+            productTmp.setServiceName(rs.getString("NAME"));
             productTmp.setCategoryId(rs.getInt("CATEGORY_ID"));
+            productTmp.setTariffId(rs.getInt("TARIFF_ID"));
+            productTmp.setCategoryName(rs.getString("CATEGORY_NAME"));
             return productTmp;
         });
         return productList;
@@ -721,8 +715,8 @@ public class ProductDaoImpl implements ProductDao {
         List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDtos.size());
         for (TariffServiceDto person : tariffServiceDtos) {
             batchValues.add(
-                    new MapSqlParameterSource("idTariff", person.getIdTariff())
-                            .addValue("idService", person.getIdService())
+                    new MapSqlParameterSource("idTariff", person.getTariffId())
+                            .addValue("idService", person.getServiceId())
                             .getValues());
         }
         jdbcTemplate.batchUpdate(DELETE_SERVICE_FROM_TARIFF, batchValues.toArray(new Map[tariffServiceDtos.size()]));
