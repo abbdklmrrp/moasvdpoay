@@ -18,7 +18,8 @@
 <div class="container">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
-            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
+                 aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                 <span class="sr-only">in progress</span>
             </div>
         </div>
@@ -78,36 +79,46 @@
                 <tr>
                     <th class="col-xs-2" data-grid-header="name" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
                         </div>
                         Name
                     </th>
                     <th class="col-xs-2" data-grid-header="description" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
                         </div>
                         Description
                     </th>
                     <th class="col-xs-2" data-grid-header="duration" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
                         </div>
                         Duration
                     </th>
                     <th class="col-xs-2" data-grid-header="base_price" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
                         </div>
                         Price
                     </th>
                     <th class="col-xs-2" data-grid-header="type_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
                         </div>
                         Type
                     </th>
@@ -174,8 +185,8 @@
         ],
         renderers: {
             "action": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-success"  value="Edit" >').click( function(){
-                        location.href='${contextPath}/admin/getDetailsProduct?id=' + wv.id
+                return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
+                    location.href = '${contextPath}/admin/getDetailsProduct?id=' + wv.id
                     }
                 );
             }
