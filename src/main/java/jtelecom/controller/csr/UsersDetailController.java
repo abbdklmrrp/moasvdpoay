@@ -3,6 +3,7 @@ package jtelecom.controller.csr;
 
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
+import jtelecom.security.SecurityAuthenticationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -29,12 +30,15 @@ import java.util.List;
 public class UsersDetailController {
     @Resource
     private UserDAO userDAO;
+    @Resource
+    private SecurityAuthenticationHelper securityAuthenticationHelper;
     private static Logger logger = LoggerFactory.getLogger(UsersDetailController.class);
 
 
     @RequestMapping(value = "getUsersPage", method = RequestMethod.GET)
     public ModelAndView getUsers() throws IOException {
-        return new ModelAndView("newPages/csr/Users");
+        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        return new ModelAndView("newPages/"+user.getRole().getNameInLowwerCase()+"/Users");
     }
 
     @RequestMapping(value = {"getUsers"}, method = RequestMethod.GET)

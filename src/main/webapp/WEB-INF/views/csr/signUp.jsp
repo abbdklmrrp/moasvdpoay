@@ -11,13 +11,13 @@
 <head>
     <title>Sign up</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
-    <script src="${contextPath}/resources/js/user.type.js"></script>
+    <link href="${pageContext.request.contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <script src="${pageContext.request.contextPath}/resources/js/user.type.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhhghVMdW1rIbJCJupKdngdNk0k5JwaQE&libraries=places"></script>
 
 </head>
 <body>
-<form action="${contextPath}/csr/signUpUser" method="post">
+<form action="${pageContext.request.contextPath}/csr/signUpUser" method="post">
     <div class="login-form">
         <h1>Sign up</h1>
         <div class="form-group ">

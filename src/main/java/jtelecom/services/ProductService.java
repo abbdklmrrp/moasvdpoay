@@ -4,7 +4,6 @@ package jtelecom.services;
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
 import jtelecom.dao.order.OrderDao;
-import jtelecom.dao.price.Price;
 import jtelecom.dao.price.PriceDao;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
@@ -218,31 +217,66 @@ public class ProductService {
      * @return Map with Key - category name, Value - data transfer object
      * @see ProductCatalogRowDTO
      */
-    public Map<String, List<ProductCatalogRowDTO>> getCategoriesWithProductsForUser(User user) {
-        List<Order> orders = orderDao.getOrdersByCustomerId(user.getCustomerId());
-        List<Product> productWithoutStatuses = user.getRole() == Role.RESIDENTIAL ?
-                productDao.getAllAvailableServicesByPlace(user.getPlaceId()) :
-                productDao.getServicesAvailableForCustomer();
-        Map<String, List<ProductCatalogRowDTO>> categoriesWithProducts = new HashMap<>();
-        List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTariff(user.getId());
-        for (Product product : productWithoutStatuses) {
-            String categoryName = productDao.getProductCategoryById(product.getCategoryId()).getCategoryName();
-            if (!categoriesWithProducts.containsKey(categoryName)) {
-                categoriesWithProducts.put(categoryName, new ArrayList<>());
-            }
-            List<ProductCatalogRowDTO> allProductCatalogRowsForCategoryDTO = categoriesWithProducts.get(categoryName);
-            String status = getStatusForProductAsString(product, orders, servicesOfCurrentUserTariff);
-            Price price;
-            if (user.getRole() == Role.RESIDENTIAL) {
-                price = priceDao.getPriceByProductIdAndPlaceId(product.getId(), user.getPlaceId());
-            } else {
-                price = new Price(null, product.getId(), product.getBasePrice());
-            }
-            ProductCatalogRowDTO productCatalogRowDTO = new ProductCatalogRowDTO(product, status, price);
-            allProductCatalogRowsForCategoryDTO.add(productCatalogRowDTO);
+//    public Map<String, List<ProductCatalogRowDTO>> getCategoriesWithProductsForUser(User user) {
+//        List<Order> orders = orderDao.getOrdersByCustomerId(user.getCustomerId());
+//        List<Product> productWithoutStatuses = user.getRole() == Role.RESIDENTIAL ?
+//                productDao.getAllAvailableServicesByPlace(user.getPlaceId()) :
+//                productDao.getServicesAvailableForCustomer();
+//        Map<String, List<ProductCatalogRowDTO>> categoriesWithProducts = new HashMap<>();
+//        List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTariff(user.getId());
+//        for (Product product : productWithoutStatuses) {
+//            String categoryName = productDao.getProductCategoryById(product.getCategoryId()).getCategoryName();
+//            if (!categoriesWithProducts.containsKey(categoryName)) {
+//                categoriesWithProducts.put(categoryName, new ArrayList<>());
+//            }
+//            List<ProductCatalogRowDTO> allProductCatalogRowsForCategoryDTO = categoriesWithProducts.get(categoryName);
+//            String status = getStatusForProductAsString(product, orders, servicesOfCurrentUserTariff);
+//            Price price;
+//            if (user.getRole() == Role.RESIDENTIAL) {
+//                price = priceDao.getPriceByProductIdAndPlaceId(product.getId(), user.getPlaceId());
+//            } else {
+//                price = new Price(null, product.getId(), product.getBasePrice());
+//            }
+//            ProductCatalogRowDTO productCatalogRowDTO = new ProductCatalogRowDTO(product, status);
+//            allProductCatalogRowsForCategoryDTO.add(productCatalogRowDTO);
+//
+//        }
+//        return categoriesWithProducts;
+//    }
 
+    /**
+     * Yuiya Pedash
+     *
+     * @param start
+     * @param length
+     * @param sort
+     * @param search
+     * @param user
+     * @param categoryId
+     * @return
+     */
+    public List<ProductCatalogRowDTO> getLimitedServicesForUser(User user, Integer start, Integer length, String sort, String search, Integer categoryId) {
+        Map<Integer, String> productCategories = new HashMap<>();
+        List<Order> orders = orderDao.getOrdersByCustomerId(user.getCustomerId());
+        List<Product> products = user.getRole() == Role.RESIDENTIAL ?
+                productDao.getLimitedServicesForResidential(start, length, sort, search, categoryId, user.getPlaceId()) :
+                productDao.getLimitedServicesForBusiness(start, length, sort, search, categoryId);
+        List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTariff(user.getId());
+        List<ProductCatalogRowDTO> productCatalogRowDTOS = new ArrayList<>();
+        for (Product product : products) {
+            String categoryName;
+            Integer productCategoryId = product.getCategoryId();
+            if (productCategories.containsKey(productCategoryId)) {
+                categoryName = productCategories.get(product.getCategoryId());
+            } else {
+                categoryName = productDao.getProductCategoryById(product.getCategoryId()).getCategoryName();
+                productCategories.put(categoryId, categoryName);
+            }
+            String status = getStatusForProductAsString(product, orders, servicesOfCurrentUserTariff);
+            ProductCatalogRowDTO productCatalogRowDTO = new ProductCatalogRowDTO(product.getId(), product.getName(), categoryName, product.getBasePrice(), status);
+            productCatalogRowDTOS.add(productCatalogRowDTO);
         }
-        return categoriesWithProducts;
+        return productCatalogRowDTOS;
     }
 
     /**
@@ -268,10 +302,30 @@ public class ProductService {
 
     }
 
+    /**
+     * Yuliya Pedash
+     *
+     * @return
+     */
     public Product getProductForUser(User currentUser, Integer productId) {
         if (currentUser.getRole() == Role.BUSINESS) {
             return productDao.getById(productId);
         }
         return productDao.findProductWithPriceSetByPlace(productId, currentUser.getPlaceId());
+    }
+
+    /**
+     * Yuliya Pedash
+     *
+     * @param user
+     * @param search
+     * @param categoryId
+     * @return
+     */
+    public Integer getCountForServicesWithSearch(User user, String search, Integer categoryId) {
+        return user.getRole() == Role.RESIDENTIAL ?
+                productDao.getCountForLimitedServicesForResidential(search, categoryId, user.getPlaceId()) :
+                productDao.getCountForLimitedServicesForBusiness(search, categoryId);
+
     }
 }

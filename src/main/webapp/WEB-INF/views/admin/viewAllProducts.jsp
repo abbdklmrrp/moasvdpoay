@@ -12,7 +12,7 @@
 <html>
 <head>
     <title>Products</title>
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/basic.css" rel="stylesheet"/>
     <spring:url value="/resources/js/jquery-1.12.1.min.js"
                 var="jqueryJs"/>
     <script src="${jqueryJs}"></script>
@@ -22,9 +22,9 @@
         google.load("jquery", "1.4.4");
     </script>
     <!-- Bootstrap core CSS -->
-    <link href="${contextPath}/resources/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/resources/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="${contextPath}/resources/css/bootstrap/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/resources/css/bootstrap/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <style>
         table td {
@@ -187,9 +187,9 @@
 
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-<!--[if lt IE 9]><script src="${contextPath}/resources/js/bootstrap/ie8-responsive-file-warning.js"></script><![endif]-->
-<script src="${contextPath}/resources/js/bootstrap/ie-emulation-modes-warning.js"></script>
-<script src="${contextPath}/resources/js/jquery-1.12.1.min.js"></script>
+<!--[if lt IE 9]><script src="${pageContext.request.contextPath}/resources/js/bootstrap/ie8-responsive-file-warning.js"></script><![endif]-->
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap/ie-emulation-modes-warning.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery-1.12.1.min.js"></script>
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -197,16 +197,16 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
-<script src="${contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
-<script src="${contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>
 
-<script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
-<script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
-<script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${contextPath}/products/all.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/products/all.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ],

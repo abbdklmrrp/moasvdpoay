@@ -95,7 +95,7 @@ public class UsersOrdersController {
     @RequestMapping(value = {"activateAfterSuspend", "activateAfterSuspend"}, method = RequestMethod.POST)
     @ResponseBody
     public Boolean activateAfterSuspend(@RequestParam Integer orderId) {
-        Boolean wasOrderActivated = orderDao.activateOrder(orderId);
+        Boolean wasOrderActivated = orderService.activateOrderAfterSuspense(orderId);
         if (wasOrderActivated) {
             logger.info("Successful order activation, order id: {} ", orderId);
         } else {

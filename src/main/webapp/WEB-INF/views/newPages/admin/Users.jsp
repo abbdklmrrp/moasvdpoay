@@ -24,14 +24,14 @@
 <![endif]-->
 
 
-<script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
-<script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
-<script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
-<script src="${contextPath}/resources/js/usersForAdmin.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/usersForAdmin.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${contextPath}/admin/getUsers.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/admin/getUsers.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ],

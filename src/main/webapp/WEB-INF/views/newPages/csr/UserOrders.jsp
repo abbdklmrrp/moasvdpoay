@@ -20,12 +20,16 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp">
-    <jsp:param name="pageName" value="UserOrders"/>
+    <jsp:param name="pageName" value="Users"/>
+</jsp:include>
+<jsp:include page="../includes/csrTabMenuBegin.jsp">
+    <jsp:param name="page" value="Orders"/>
 </jsp:include>
 <div class="container">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
-            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
+                 aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                 <span class="sr-only">in progress</span>
             </div>
         </div>
@@ -83,22 +87,28 @@
                 <tr>
                     <th class="col-xs-2" data-grid-header="order_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
                         </div>
                         Order
                     </th>
                     <th class="col-xs-2" data-grid-header="operation_date" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
                         </div>
                         Date
                     </th>
                     <th class="col-xs-2" data-grid-header="status_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:" data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:" data-grid-header-sortable-down="down"></a>
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
                         </div>
                         Status
                 </tr>
@@ -106,7 +116,7 @@
                 <tbody>
                 <tr data-grid="row">
                     <td data-cell="order_id"></td>
-                    <td  data-cell="operation_date" data-type="date" data-format-string="Do MMMM YYYY"></td>
+                    <td data-cell="operation_date" data-type="date" data-format-string="Do MMMM YYYY"></td>
                     <td data-cell="status_id"></td>
                 </tr>
                 </tbody>
@@ -139,6 +149,7 @@
         </div>
     </div>
 </div>
+<jsp:include page="../includes/csrTabMenuEnd.jsp"/>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
@@ -146,16 +157,16 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
-<script src="${contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
-<script src="${contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>
 
-<script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
-<script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
-<script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${contextPath}/csr/getOperationHistory.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/getOperationHistory.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ]

@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * Created by Yuliya Pedash on 12.05.2017.
  */
 @Controller
-@RequestMapping({"residential/orders", "business/orders", "csr", "employee"})
+@RequestMapping({"residential", "business", "csr", "employee"})
 public class ProductInfoController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;

@@ -9,15 +9,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>USER</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/basic.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="login-form">
     <h1>User PAGE</h1>
     <div class="form-group "><br>
-        <h2><a href="${contextPath}/user/getProfile">Profile</a></h2><br>
+        <h2><a href="${pageContext.request.contextPath}/user/getProfile">Profile</a></h2><br>
         <a href="<%=request.getContextPath()%>/user/orderService">OrderService</a><br>
-        <a href="${contextPath}/user/getComplaint">Write Complaint</a><br>
+        <a href="${pageContext.request.contextPath}/user/getComplaint">Write Complaint</a><br>
         <a href="<%=request.getContextPath()%>/doLogout">Logout</a>
         <a href="<%=request.getContextPath()%>/user/orders">Orders</a>
 

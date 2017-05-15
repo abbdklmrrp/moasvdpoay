@@ -14,7 +14,6 @@
     <jsp:include page="../includes/footer.jsp"/>
     <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhhghVMdW1rIbJCJupKdngdNk0k5JwaQE&libraries=places"></script>
-    <script type="text/javascript" src="<c:url value="/resources/js/profile.js"/>"></script>
 </body>
 </html>
 

@@ -28,7 +28,7 @@ function showServicesOfTariff(tariffId) {
  *
  * @param tariffId id of tariff.
  */
-function activateTariff(tariffId, currentTariffId) {
+function activateTariff(tariffId, userId, currentTariffId) {
     swal({
             title: "Are you sure?",
             text: "This tariff will be activated!",
@@ -41,20 +41,21 @@ function activateTariff(tariffId, currentTariffId) {
         function () {
             $.ajax({
                 url: 'activateTariff',
-                data: {tariffId: tariffId},
+                data: {tariffId: tariffId, userId: userId},
                 type: "POST",
                 success: function (status) {
                     if (status == "success") {
                         swal("Success", "Tariff was activated!", "success");
-                        var respContent = "";
-                        respContent += "<input type=\"button\" name=\"" + tariffId + "\" onclick=\"deactivateTariff(" + tariffId + ")\" value=\"Deactivate\" class=\"btn btn-danger\">";
+                        var respContent = "<input type=\"button\" name=\"" + tariffId + "\" onclick=\"deactivateTariff(" + tariffId + ","+ userId +")\" value=\"Deactivate\" class=\"btn btn-danger\">";
                         $("#" + tariffId).html(respContent);
                         if (currentTariffId != "") {
                             var buttonOldTariff = "";
-                            buttonOldTariff += "<input type=\"button\" name=\"" + currentTariffId + "\" onclick=\"activateTariff(" + currentTariffId + "," + tariffId + ")\" value=\"Activate\" class=\"btn btn-success\">";
+                            buttonOldTariff += "<input type=\"button\" name=\"" + currentTariffId + "\" onclick=\"activateTariff(" + currentTariffId + "," + userId + "," + tariffId + ")\" value=\"Activate\" class=\"btn btn-success\">";
                             $("#" + currentTariffId).html(buttonOldTariff);
                         }
-                        updateMethodParamsInAllButtonsOfTariffPage(tariffId);
+                        var currentUserTariff = document.getElementsByClassName(tariffId);
+                        $("#currentUserTariff").html("Current tariff: " + currentUserTariff[0].innerHTML);
+                        updateMethodParamsInAllButtonsOfTariffPage(tariffId, userId);
                     } else {
                         swal("Can`t activate", "Please try again later.");
                     }
@@ -72,7 +73,7 @@ function activateTariff(tariffId, currentTariffId) {
  *
  * @param tariffId id of tariff.
  */
-function deactivateTariff(tariffId) {
+function deactivateTariff(tariffId, userId) {
     swal({
             title: "Are you sure?",
             text: "This tariff will be deactivated!",
@@ -85,14 +86,14 @@ function deactivateTariff(tariffId) {
         function () {
             $.ajax({
                 url: 'deactivateTariff',
-                data: {tariffId: tariffId},
+                data: {tariffId: tariffId, userId: userId},
                 type: "POST",
                 success: function (status) {
                     if (status == "success") {
                         swal("Success", "Tariff was deactivated!", "success");
-                        var respContent = "";
-                        respContent += "<input type=\"button\" onclick=\"activateTariff(" + tariffId + ")\" value=\"Activate\" class=\"btn btn-success\">";
+                        var respContent = "<input type=\"button\" onclick=\"activateTariff(" + tariffId + "," + userId + ")\" value=\"Activate\" class=\"btn btn-success\">";
                         $("#" + tariffId).html(respContent);
+                        $("#currentUserTariff").html("No tariff now");
                     } else {
                         swal("Can`t deactivate", "Please try again later.");
                     }
@@ -110,12 +111,12 @@ function deactivateTariff(tariffId) {
  *
  * @param tariffId new current tariff id.
  */
-function updateMethodParamsInAllButtonsOfTariffPage(tariffId) {
+function updateMethodParamsInAllButtonsOfTariffPage(tariffId, userId) {
     var allButtons = document.getElementsByTagName('input');
     for (var i = 0; i < allButtons.length; i++) {
         var updatedButton = "";
         if (allButtons[i].value == 'Activate') {
-            updatedButton += "<input type=\"button\" name=\"" + allButtons[i].name + "\" onclick=\"activateTariff(" + allButtons[i].name + "," + tariffId + ")\" value=\"Activate\" class=\"btn btn-success\">";
+            updatedButton += "<input type=\"button\" name=\"" + allButtons[i].name + "\" onclick=\"activateTariff(" + allButtons[i].name + "," + userId + "," + tariffId + ")\" value=\"Activate\" class=\"btn btn-success\">";
             $("#" + allButtons[i].name).html(updatedButton);
         }
     }

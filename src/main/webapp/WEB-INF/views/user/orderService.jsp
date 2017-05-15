@@ -13,8 +13,8 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="<c:url value="/resources/css/sweet-alert.css"/>" rel="stylesheet">
-    <script type="text/javascript" src="<c:url value="${contextPath}/resources/js/orderService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="${contextPath}/resources/js/sweet-alert.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="${pageContext.request.contextPath}/resources/js/orderService.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="${pageContext.request.contextPath}/resources/js/sweet-alert.min.js"/>"></script>
 
 </head>
 <body>
