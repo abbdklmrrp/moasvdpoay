@@ -1,9 +1,8 @@
 package jtelecom.controller.admin;
 
-import jtelecom.dao.place.Place;
 import jtelecom.dao.place.PlaceDAO;
-import jtelecom.dao.price.Price;
 import jtelecom.dao.price.PriceDao;
+import jtelecom.dto.PriceByRegionDto;
 import jtelecom.services.PriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,13 +37,13 @@ public class UpdatePriceInRegions {
     private PriceDao priceDao;
 
     @RequestMapping(value = {"updateProductPrice"}, method = RequestMethod.GET)
-    public ModelAndView getPriceByRegion(ModelAndView mav) {
+    public ModelAndView getPriceByRegion(ModelAndView mav, HttpSession session) {
+        Integer productId = (Integer) session.getAttribute("productId");
+        List<PriceByRegionDto> placesAndPrice = priceDao.getAllRegionsAndProductPriceInRegionByProductId(productId);
+        logger.debug("Get all places and product prices if it exist {} ", placesAndPrice.toString());
 
-        List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
-        logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
-
-        mav.addObject("placesForFillInTariff", placesForFillInTariff);
-        mav.setViewName("newPages/admin/fillTariffsPrices");
+        mav.addObject("placesAndPrice", placesAndPrice);
+        mav.setViewName("newPages/admin/updateProductPrices");
         return mav;
     }
 
@@ -59,31 +57,31 @@ public class UpdatePriceInRegions {
         if (!isValid) {
             logger.error("Incoming data of place ID and is not correct {} {}",
                     Arrays.toString(placeId), Arrays.toString(priceByRegion));
-            List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
-            logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
+            List<PriceByRegionDto> placesAndPrice = priceDao.getAllRegionsAndProductPriceInRegionByProductId(productId);
+            logger.debug("Get all places and product prices if it exist {} ", placesAndPrice.toString());
 
-            mav.addObject("placesForFillInTariff", placesForFillInTariff);
+            mav.addObject("placesAndPrice", placesAndPrice);
             mav.addObject("error", ERROR_FILL_IN_PRICE_BY_PRODUCT);
-            mav.setViewName("newPages/admin/fillTariffsPrices");
+            mav.setViewName("newPages/admin/updateProductPrices");
+
             return mav;
         }
 
         try {
-            ArrayList<Price> priceArrayList = priceService.fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
-            boolean isFillPrice = priceDao.fillPriceOfProductByRegion(priceArrayList);
-            logger.debug("Fill in tariff with services to database with success {} ", isFillPrice);
+            priceService.updateProductPriceInRegions(productId, placeId, priceByRegion);
+            logger.debug("Update price in regions by product ");
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {} ", ex.getMessage());
-            List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
-            logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
+            List<PriceByRegionDto> placesAndPrice = priceDao.getAllRegionsAndProductPriceInRegionByProductId(productId);
+            logger.debug("Get all places and product prices if it exist {} ", placesAndPrice.toString());
 
-            mav.addObject("placesForFillInTariff", placesForFillInTariff);
-            mav.addObject("error ", ERROR_IN_CONNECTION);
-            mav.setViewName("newPages/admin/fillTariffsPrices");
+            mav.addObject("placesAndPrice", placesAndPrice);
+            mav.addObject("error", ERROR_FILL_IN_PRICE_BY_PRODUCT);
+            mav.setViewName("newPages/admin/updateProductPrices");
             return mav;
         }
         session.removeAttribute("productId");
-        mav.setViewName("redirect:/admin/getProfile");
+        mav.setViewName("redirect:/admin/getProducts");
         return mav;
 
     }

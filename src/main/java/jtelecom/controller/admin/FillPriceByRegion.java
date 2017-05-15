@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -69,7 +68,7 @@ public class FillPriceByRegion {
         }
 
         try {
-            ArrayList<Price> priceArrayList = priceService.fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
+            List<Price> priceArrayList = priceService.fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
             boolean isFillPrice = priceDao.fillPriceOfProductByRegion(priceArrayList);
             logger.debug("Fill in tariff with services to database with success {} ", isFillPrice);
         } catch (DataIntegrityViolationException ex) {
@@ -83,7 +82,7 @@ public class FillPriceByRegion {
             return mav;
         }
         session.removeAttribute("productId");
-        mav.setViewName("redirect:/admin/getProfile");
+        mav.setViewName("redirect:/admin/getProducts");
         return mav;
 
     }
