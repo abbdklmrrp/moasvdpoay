@@ -12,11 +12,11 @@ public interface PlannedTaskDao extends Dao<PlannedTask> {
 
     /**
      * This method deletes all planed tasks from database for particular order.
-     *
-     * @param orderId id of order
-     * @return <code>true</code> if rows were deleted, <code>false</code> otherwise
+     * @param productId
+     * @param userId
+     * @return
      */
-    boolean deleteAllPlannedTasksForOrder(Integer orderId);
+    boolean deleteAllPlannedTasksForProductOfUser(Integer productId, Integer userId);
 
     /**
      * This method gets all planned tasks, which have action date scheduled from <code>beginDate</code>
@@ -27,4 +27,12 @@ public interface PlannedTaskDao extends Dao<PlannedTask> {
      * @return list of <code>PlannedTask</code> objects
      */
     List<PlannedTask> getAllPlannedTaskForDates(Calendar beginDate, Calendar endDate, Integer orderId);
+
+    /**
+     * This method
+     *
+     * @param orderId
+     * @return
+     */
+    boolean deleteNextPlannedTask(Integer orderId);
 }

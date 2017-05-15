@@ -1,7 +1,7 @@
 package jtelecom.controller.csr;
 
-import jtelecom.dao.entity.OperationHistoryDao;
-import jtelecom.dao.entity.OperationHistoryRecord;
+import jtelecom.dao.operationHistory.OperationHistoryDao;
+import jtelecom.dao.operationHistory.OperationHistoryRecord;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import org.slf4j.Logger;
@@ -23,10 +23,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping({"csr"})
-public class CsrUserOrdersController {
+public class OperationHistoryController {
     @Resource
     private OperationHistoryDao operationHistoryDao;
-    private static Logger logger = LoggerFactory.getLogger(CsrUserOrdersController.class);
+    private static Logger logger = LoggerFactory.getLogger(OperationHistoryController.class);
 
     @RequestMapping(value = "userOrders", method = RequestMethod.POST)
     public ModelAndView viewOrders() throws IOException {

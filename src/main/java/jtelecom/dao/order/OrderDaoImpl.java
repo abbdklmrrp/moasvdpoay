@@ -1,5 +1,7 @@
 package jtelecom.dao.order;
 
+import jtelecom.dao.entity.OperationStatus;
+import jtelecom.dao.product.ProductType;
 import jtelecom.dto.OrdersRowDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yuliya Pedash on 27.04.2017.
@@ -38,7 +41,7 @@ public class OrderDaoImpl implements OrderDao {
     private final static String DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT_SQL = "UPDATE ORDERS " +
             "SET CURRENT_STATUS_ID = 3 /*deactivated operation status id*/ " +
             "WHERE PRODUCT_ID = :product_id " +
-            "      AND USER_ID = :user_id";
+            "      AND USER_ID = :user_id AND CURRENT_STATUS_ID <> 3 /*deactivated operation status id*/";
     private final static String SUSPEND_ORDER_SQL = "UPDATE ORDERS " +
             "SET CURRENT_STATUS_ID = 2 /*suspended operation status id*/ " +
             "WHERE ID = :id ";
@@ -77,6 +80,34 @@ public class OrderDaoImpl implements OrderDao {
             "   JOIN PRODUCTS p ON p.ID = o.PRODUCT_ID\n" +
             "   JOIN USERS u ON u.ID = o.USER_ID\n" +
             "WHERE o.CURRENT_STATUS_ID <> 3 AND u.CUSTOMER_ID =:cust_id";
+
+    private static final String SELECT_INTERVAL_ORDERS_BY_USER_ID="SELECT * FROM(" +
+            "Select id , name, description, type_id, current_status_id, ROW_NUMBER() OVER (ORDER BY %s) R " +
+            " FROM \n" +
+            " (Select orders.id id, " +
+            " products.name name, \n" +
+            " products.DESCRIPTION description, \n" +
+            " products.type_id type_id, \n" +
+            "  orders.CURRENT_STATUS_ID current_status_id \n" +
+            " from orders join products on (orders.PRODUCT_ID=products.id) join (SELECT \n" +
+            "       OPERATION_DATE, \n" +
+            "            ORDER_ID \n" +
+            "         FROM OPERATIONS_HISTORY \n" +
+            "         WHERE ID IN (SELECT MIN(ID) \n" +
+            "                      FROM OPERATIONS_HISTORY \n" +
+            "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = orders.ID \n" +
+            " where USER_ID=(select customer_id from users where id=:userId) and orders.CURRENT_STATUS_ID<>3)) \n" +
+            " where R>:start and R<=:length and name like :pattern ";
+
+    private static final String SELECT_COUNT_ORDERS_BY_USER_ID="Select COUNT(ROWNUM) COUNT \n" +
+            " from orders join products on (orders.PRODUCT_ID=products.id) join (SELECT \n" +
+            "       OPERATION_DATE, \n" +
+            "            ORDER_ID \n" +
+            "         FROM OPERATIONS_HISTORY \n" +
+            "         WHERE ID IN (SELECT MIN(ID) \n" +
+            "                      FROM OPERATIONS_HISTORY \n" +
+            "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = orders.ID \n" +
+            " where USER_ID=(select customer_id from users where id=:userId) and orders.CURRENT_STATUS_ID<>3 AND PRODUCTS.NAME LIKE :pattern";
 
     @Override
     public Order getById(int id) {
@@ -154,10 +185,6 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.queryForObject(SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL, params, orderRowMapper);
     }
 
-//    @Override
-//    public Calendar getEndDateOfOrderActive(Integer orderId) {
-//        return null;
-//    }
 
     /**
      * {@inheritDoc}
@@ -188,5 +215,34 @@ public class OrderDaoImpl implements OrderDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", orderId);
         return jdbcTemplate.update(ACTIVATE_ORDER_SQL, params) > 0;
+    }
+
+    @Override
+    public Integer getCountOrdersByUserId(Integer userId, String search) {
+        MapSqlParameterSource params=new MapSqlParameterSource("userId",userId);
+        params.addValue("pattern","%"+search+"%");
+        return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_BY_USER_ID,params,Integer.class);
+    }
+
+    @Override
+    public List<OrdersRowDTO> getIntervalOrdersBuUserId(int start, int length, String sort, String search, int userId) {
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        if(sort.isEmpty()){
+            sort="ID";
+        }
+        params.addValue("start",start);
+        params.addValue("length",length);
+        params.addValue("pattern","%"+search+"%");
+        params.addValue("userId",userId);
+        String sql=String.format(SELECT_INTERVAL_ORDERS_BY_USER_ID,sort);
+        List<OrdersRowDTO> orders=jdbcTemplate.query(sql,params,(resultSet,rownum)->{
+            String name = resultSet.getString("name");
+            Integer orderId = resultSet.getInt("id");
+            ProductType productType = ProductType.getProductTypeFromId(resultSet.getInt("type_id"));
+            OperationStatus operationStatus = OperationStatus.getOperationStatusFromId(resultSet.getInt("current_status_id"));
+            String description=resultSet.getString("description");
+            return new OrdersRowDTO(orderId,name,description,productType,operationStatus);
+        });
+        return orders;
     }
 }

@@ -160,6 +160,14 @@ public interface ProductDao extends Dao<Product> {
      */
     Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
 
+    List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId);
+
+    List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId);
+
+    Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId);
+
+    Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId);
+
     Integer saveProduct(Product product);
 
     List<ServicesByCategoryDto> findServicesByCategoryId(Integer categoryId);
