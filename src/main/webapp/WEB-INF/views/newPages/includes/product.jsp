@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <div class="container">
     <h1>${product.name}</h1>
     <div class="row">
@@ -20,4 +21,9 @@
     <div class="row">
         <label>Processing Strategy:</label> ${product.processingStrategy.name}
     </div>
+    <jsp:include page="../includes/product.jsp"/>
+    <a href="<%=request.getContextPath()%>/${userRole}/orders" class="btn btn-info"> <span
+            class="glyphicon glyphicon-menu-left"></span> Back</a>
+</div>
+<jsp:include page="../includes/footer.jsp"/>
 

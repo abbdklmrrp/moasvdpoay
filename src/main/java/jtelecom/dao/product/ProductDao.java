@@ -159,5 +159,86 @@ public interface ProductDao extends Dao<Product> {
      */
     Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
 
+    List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId);
+
+    List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId);
+
+    Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId);
+
+    Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId);
+
+//    /**
+//     * created by Yuliya Pedash
+//     * @param start
+//     * @param length
+//     * @param sort
+//     * @param search
+//     * @return
+//     */
+//    List<Product> getLimitedProductsForBusinessWithSearch(Integer start, Integer length, String sort, String search);
+//
+//    /**
+//     * created by Yuliya Pedash
+//     * @param start
+//     * @param length
+//     * @param sort
+//     * @return
+//     */
+//    List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort);
+//
+//    /**
+//     * created by Yuliya Pedash
+//     * @param start
+//     * @param length
+//     * @param sort
+//     * @return
+//     */
+//    List<Product> getLimitedProductsForResidentialBasePriceDefinedByPlace(Integer start, Integer length, String sort, Integer placeId);
+//
+//    /**
+//     * created by Yuliya Pedash
+//     * @param start
+//     * @param length
+//     * @param sort
+//     * @return
+//     */
+//    List<Product> getLimitedProductsForResidentialBasePriceDefinedByPlaceWithSearch(Integer start, Integer length, String sort, String search, Integer placeId);
+//
+//    /**
+//     * created by Yuliya Pedash
+//     * @param start
+//     * @param length
+//     * @param sort
+//     * @param search
+//     * @return
+//     */
+//    List<Product> getLimitedProductsForBusinessWithSearchByCategory(Integer start, Integer length, String sort, String search, Integer categoryId);
+//
+//    /**
+//     * created by Yuliya Pedash
+//     * @param start
+//     * @param length
+//     * @param sort
+//     * @return
+//     */
+//    List<Product> getLimitedProductsForBusinessByCategory(Integer start, Integer length, String sort,Integer categoryId);
+//
+//    /**
+//     * created by Yuliya Pedash
+//     * @param start
+//     * @param length
+//     * @param sort
+//     * @return
+//     */
+//    List<Product> getLimitedProductsForResidentialBasePriceDefinedByPlaceByCategory(Integer start, Integer length, String sort, Integer placeId, Integer categoryId);
+//
+//    /**
+//     * created by Yuliya Pedash
+//     * @param start
+//     * @param length
+//     * @param sort
+//     * @return
+//     */
+//    List<Product> getLimitedProductsForResidentialBasePriceDefinedByPlaceWithSearchByCategory(Integer start, Integer length, String sort, String search, Integer placeId, Integer categoryId);
 
 }
