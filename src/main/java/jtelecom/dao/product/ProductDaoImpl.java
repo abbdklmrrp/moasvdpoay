@@ -377,7 +377,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void fillInTariffWithServices(ArrayList<TariffServiceDto> tariffServiceDtos) {
+    public void fillInTariffWithServices(List<TariffServiceDto> tariffServiceDtos) {
 
         List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDtos.size());
         for (TariffServiceDto person : tariffServiceDtos) {
@@ -746,7 +746,7 @@ public class ProductDaoImpl implements ProductDao {
      * @return
      */
     @Override
-    public void deleteServiceFromTariff(ArrayList<TariffServiceDto> tariffServiceDtos) {
+    public void deleteServiceFromTariff(List<TariffServiceDto> tariffServiceDtos) {
         List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDtos.size());
         for (TariffServiceDto person : tariffServiceDtos) {
             batchValues.add(
