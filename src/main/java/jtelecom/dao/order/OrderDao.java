@@ -1,6 +1,7 @@
 package jtelecom.dao.order;
 
 import jtelecom.dao.interfaces.Dao;
+import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.dto.OrdersRowDTO;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public interface OrderDao extends Dao<Order> {
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
     boolean suspendOrder(Integer orderId);
+
     /**
      * This method sets 'Activated' status for particular order.
      *
@@ -74,7 +76,11 @@ public interface OrderDao extends Dao<Order> {
 
     Integer getCountOrdersByUserId(Integer userId, String search);
 
-    List<OrdersRowDTO> getIntervalOrdersBuUserId(int start, int length,String sort, String search, int userId);
+    List<FullInfoOrderDTO> getIntervalOrdersBuUserId(int start, int length, String sort, String search, int userId);
+
+    Integer getCountOrdersWithoutCsr(String search);
+
+    List<FullInfoOrderDTO> getIntervalOrdersWithoutCsr(int start, int length, String sort, String search);
 
 
 }

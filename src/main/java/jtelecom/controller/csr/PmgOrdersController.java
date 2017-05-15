@@ -3,6 +3,7 @@ package jtelecom.controller.csr;
 import jtelecom.dao.operationHistory.OperationHistoryDao;
 import jtelecom.dao.operationHistory.OperationHistoryRecord;
 import jtelecom.dao.order.OrderDao;
+import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.dto.OperationHistoryDataPartitionDTO;
 import jtelecom.dto.OrdersRowDTO;
 import jtelecom.grid.GridRequestDto;
@@ -33,7 +34,7 @@ public class PmgOrdersController {
         String sort = request.getSort();
         String search = request.getSearch();
         Integer count = orderDao.getCountOrdersByUserId(userId, search);
-        List<OrdersRowDTO> orders = orderDao.getIntervalOrdersBuUserId(start, length, sort, search, userId);
+        List<FullInfoOrderDTO> orders = orderDao.getIntervalOrdersBuUserId(start, length, sort, search, userId);
         return ListHolder.create(orders, count);
     }
 
