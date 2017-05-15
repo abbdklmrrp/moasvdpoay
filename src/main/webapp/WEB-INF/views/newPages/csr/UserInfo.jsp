@@ -17,18 +17,9 @@
 <jsp:include page="../includes/headers/csrHeader.jsp">
     <jsp:param name="pageName" value="Users"/>
 </jsp:include>
-<div class="navbar-fixed-left">
-    <div class="row">
-        <aside class="leftside col-lg-2 col-md-2 col-sm-2 col-xs-1">
-            <div class="collapse navbar-collapse" id="mobilkat" >
-                <ul class="nav navbar-nav navbar-dikey">
-                    <li class="wet-asphalt active-tab"><a href="#">User prifile</a></li>
-                    <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/userOrders">Orders</a></li>
-                    <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/getCsrComplaint">Write complain</a></li>
-                </ul>
-            </div>
-        </aside>
-        <main class="col-lg-10 col-md-10 col-sm-10 col-xs-11">
+<jsp:include page="../includes/csrTabMenuBegin.jsp">
+    <jsp:param name="page" value="UserInfo"/>
+</jsp:include>
             <div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
                 <form id="details-form" modelAttribute="user" action="${pageContext.request.contextPath}/csr/editUser" method="post">
                     <div class="login-form">
@@ -77,10 +68,7 @@
                     </div>
                 </form>
             </div>
-        </main>
-    </div>
-</div>
-
+<jsp:include page="../includes/csrTabMenuEnd.jsp"/>
 
 <%--<form action="${contextPath}/csr/userTariffs" method="post">--%>
 <%--<button type="submit" class="log-btn">Tariffs</button>--%>
