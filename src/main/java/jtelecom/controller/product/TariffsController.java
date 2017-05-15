@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -51,14 +53,20 @@ public class TariffsController {
             model.addAttribute("currentTariff", currentTariff);
         }
         model.addAttribute("tariffs", tariffs);
+        model.addAttribute("userId", -1);
         return "newPages/" + currentUser.getRole().getName().toLowerCase() + "/Tariffs";
     }
 
     @RequestMapping(value = {"activateTariff"}, method = RequestMethod.POST)
     @ResponseBody
-    public String activateTariff(@RequestParam Integer tariffId) {
+    public String activateTariff(@RequestParam Integer tariffId,@RequestParam Integer userId) {
         logger.debug("Method activateTariff param tariffId: {}", tariffId);
-        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        User currentUser;
+        if (userId == -1) {
+            currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        } else {
+            currentUser = userDAO.getUserById(userId);
+        }
         logger.debug("Current user: {}", currentUser.toString());
         Boolean statusOperation = productDao.activateTariff(currentUser.getId(), tariffId);
         logger.debug("Status activation of tariff: {}", statusOperation);
@@ -67,9 +75,14 @@ public class TariffsController {
 
     @RequestMapping(value = {"deactivateTariff"}, method = RequestMethod.POST)
     @ResponseBody
-    public String deactivateTariff(@RequestParam Integer tariffId) {
+    public String deactivateTariff(@RequestParam Integer tariffId,@RequestParam Integer userId) {
         logger.debug("Method deactivateTariff param tariffId: {}", tariffId);
-        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        User currentUser;
+        if (userId == -1) {
+            currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        } else {
+            currentUser = userDAO.getUserById(userId);
+        }
         logger.debug("Current user: {}", currentUser.toString());
         Boolean statusOperation = productDao.deactivateTariff(currentUser.getId(), tariffId);
         logger.debug("Status deactivation of tariff: {}", statusOperation);
@@ -81,5 +94,26 @@ public class TariffsController {
     public List<Product> showServicesOfTariff(@RequestParam Integer tariffId) {
         logger.debug("Method showServicesOfTariff param tariffId: {}", tariffId);
         return productDao.getServicesOfTariff(tariffId);
+    }
+
+    @RequestMapping(value = {"userTariffs"})
+    public String showTariffsForUser(Model model, HttpSession session) {
+        List<Product> tariffs;
+        Integer userId = (Integer) session.getAttribute("userId");
+        User currentUser = userDAO.getUserById(userId);
+        logger.debug("Current user: {}", currentUser.toString());
+        Product currentTariff = productDao.getCurrentCustomerTariff(currentUser.getCustomerId());
+        if (currentUser.getRole().equals(Role.RESIDENTIAL)) {
+            tariffs = productDao.getAvailableTariffsByPlace(currentUser.getPlaceId());
+        } else {
+            tariffs = productDao.getAvailableTariffsForCustomers();
+        }
+        if (currentTariff != null) {
+            logger.debug("Current tariff of user: {}", currentTariff.toString());
+            model.addAttribute("currentTariff", currentTariff);
+        }
+        model.addAttribute("tariffs", tariffs);
+        model.addAttribute("userId", userId);
+        return "newPages/csr/UserTariffs";
     }
 }

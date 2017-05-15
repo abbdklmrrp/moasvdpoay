@@ -28,7 +28,7 @@ public class OperationHistoryController {
     private OperationHistoryDao operationHistoryDao;
     private static Logger logger = LoggerFactory.getLogger(OperationHistoryController.class);
 
-    @RequestMapping(value = "userOrders", method = RequestMethod.POST)
+    @RequestMapping(value = "userOrders", method = RequestMethod.GET)
     public ModelAndView viewOrders() throws IOException {
         return new ModelAndView("newPages/csr/UserOrders");
     }

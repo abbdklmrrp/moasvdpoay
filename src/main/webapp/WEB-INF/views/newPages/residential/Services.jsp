@@ -11,5 +11,6 @@
         <jsp:param name="pageName" value="Services"/>
     </jsp:include>
     <jsp:include page="../includes/services.jsp"/>
+    <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>

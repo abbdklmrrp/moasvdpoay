@@ -31,10 +31,26 @@ public class PriceDaoImp implements PriceDao {
             "  product.NAME,\n" +
             "  product.DESCRIPTION,\n" +
             "  place.NAME PLACE,\n" +
+            "  place.ID PLACE_ID,\n" +
             "  price.PRICE\n" +
             "FROM PRODUCTS product\n" +
             "  JOIN PRICES price ON (product.ID = price.PRODUCT_ID)\n" +
             "  JOIN PLACES place ON (price.PLACE_ID = place.ID) WHERE product.ID=:productId";
+    private final static String FIND_ALL_PLACES_AND_PRICE_AT_PLACES = "SELECT\n" +
+            "  PLACES.ID,\n" +
+            "  PLACES.NAME,\n" +
+            "  price.PRICE,\n" +
+            "  price.PRODUCT_ID\n" +
+            "FROM places\n" +
+            "  LEFT JOIN (SELECT *\n" +
+            "             FROM prices\n" +
+            "             WHERE PRODUCT_ID = :productId) price ON (places.id = price.PLACE_ID)\n" +
+            "WHERE PLACES.PARENT_ID IS NOT NULL\n" +
+            "ORDER BY PLACES.NAME";
+    private final static String FIND_ALL_PRICE_INFO_BY_PRODUCT = "SELECT * FROM PRICES\n" +
+            " WHERE PRODUCT_ID=:productId";
+    private final static String DELETE_PRODUCT_PRICE_FROM_REGION = "DELETE FROM PRICES\n" +
+            "WHERE PRODUCT_ID=:productId AND PLACE_ID=:placeId";
     private static String SELECT_PRICE_BY_PRODUCT_AND_PLACE_SQL = "SELECT PRICES.PLACE_ID, PRICES.PRODUCT_ID, PRICES.PRICE" +
             "  FROM PRICES WHERE PRODUCT_ID = :product_id AND PLACE_ID = :place_id";
     @Resource
@@ -69,7 +85,7 @@ public class PriceDaoImp implements PriceDao {
     }
 
     @Override
-    public boolean fillPriceOfProductByRegion(ArrayList<Price> priceByRegion) {
+    public boolean fillPriceOfProductByRegion(List<Price> priceByRegion) {
         List<Map<String, Object>> batchValues = new ArrayList<>(priceByRegion.size());
         for (Price price : priceByRegion) {
             batchValues.add(
@@ -113,10 +129,49 @@ public class PriceDaoImp implements PriceDao {
             priceByRegionDto.setProductName(rs.getString("NAME"));
             priceByRegionDto.setProductDescription(rs.getString("DESCRIPTION"));
             priceByRegionDto.setPlaceName(rs.getString("PLACE"));
+            priceByRegionDto.setPlaceId(rs.getInt("PLACE_ID"));
             priceByRegionDto.setPriceProduct(rs.getBigDecimal("PRICE"));
             return priceByRegionDto;
         });
     }
 
+    @Override
+    public List<PriceByRegionDto> getAllRegionsAndProductPriceInRegionByProductId(Integer productId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("productId", productId);
+        return jdbcTemplate.query(FIND_ALL_PLACES_AND_PRICE_AT_PLACES, params, (rs, rowNum) -> {
+            PriceByRegionDto priceByRegionDto = new PriceByRegionDto();
+            priceByRegionDto.setPlaceId(rs.getInt("ID"));
+            priceByRegionDto.setProductId(rs.getInt("PRODUCT_ID"));
+            priceByRegionDto.setPlaceName(rs.getString("NAME"));
+            priceByRegionDto.setPriceProduct(rs.getBigDecimal("PRICE"));
+            return priceByRegionDto;
+        });
+    }
 
+    @Override
+    public List<Price> getPriceInRegionInfoByProduct(int productId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("productId", productId);
+        return jdbcTemplate.query(FIND_ALL_PRICE_INFO_BY_PRODUCT, params, (rs, rowNum) -> {
+            Price price = new Price();
+            price.setPlaceId(rs.getInt("PLACE_ID"));
+            price.setProductId(rs.getInt("PRODUCT_ID"));
+            price.setPrice(rs.getBigDecimal("PRICE"));
+            return price;
+        });
+    }
+
+    @Override
+    public boolean deleteProductPriceInRegion(List<Price> priceInRegion) {
+        List<Map<String, Object>> batchValues = new ArrayList<>(priceInRegion.size());
+        for (Price price : priceInRegion) {
+            batchValues.add(
+                    new MapSqlParameterSource("productId", price.getProductId())
+                            .addValue("placeId", price.getPlaceId())
+                            .getValues());
+        }
+        int[] isInsert = jdbcTemplate.batchUpdate(DELETE_PRODUCT_PRICE_FROM_REGION, batchValues.toArray(new Map[priceInRegion.size()]));
+        return isInsert.length != 0;
+    }
 }

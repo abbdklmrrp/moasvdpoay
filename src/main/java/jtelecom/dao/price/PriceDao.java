@@ -3,7 +3,6 @@ package jtelecom.dao.price;
 import jtelecom.dao.interfaces.Dao;
 import jtelecom.dto.PriceByRegionDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,11 +21,17 @@ public interface PriceDao extends Dao<Price> {
      */
     Price getPriceByProductIdAndPlaceId(Integer productId, Integer placeId);
 
-    boolean fillPriceOfProductByRegion(ArrayList<Price> priceByRegionDtos);
+    boolean fillPriceOfProductByRegion(List<Price> priceByRegionDtos);
 
     List<PriceByRegionDto> getPriceInRegionsForAllProducts();
 
     List<PriceByRegionDto> getPriceInRegionsByProduct(int productId);
+
+    List<PriceByRegionDto> getAllRegionsAndProductPriceInRegionByProductId(Integer productId);
+
+    List<Price> getPriceInRegionInfoByProduct(int productId);
+
+    boolean deleteProductPriceInRegion(List<Price> priceInRegion);
 
 
 }

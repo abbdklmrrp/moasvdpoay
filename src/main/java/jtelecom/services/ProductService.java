@@ -126,10 +126,10 @@ public class ProductService {
      * @return
      */
     private ArrayList<Integer> getIdServicesOfTariff(Product product) {
-        List<Product> serviceList = productDao.getServicesByTariff(product);
+        List<TariffServiceDto> serviceList = productDao.getServicesByTariff(product.getId());
         ArrayList<Integer> serviceIdList = new ArrayList<>();
-        for (Product product1 : serviceList) {
-            serviceIdList.add(product1.getId());
+        for (TariffServiceDto product1 : serviceList) {
+            serviceIdList.add(product1.getServiceId());
         }
         return serviceIdList;
     }
@@ -157,8 +157,8 @@ public class ProductService {
         for (int i = 0; i < arrayOfIdServices.length; i++) {
             if (arrayOfIdServices[i] != null) {
                 TariffServiceDto tariffServiceDto = new TariffServiceDto();
-                tariffServiceDto.setIdTariff(idTariff);
-                tariffServiceDto.setIdService(arrayOfIdServices[i]);
+                tariffServiceDto.setTariffId(idTariff);
+                tariffServiceDto.setServiceId(arrayOfIdServices[i]);
                 products.add(tariffServiceDto);
             }
         }
@@ -190,6 +190,9 @@ public class ProductService {
         }
         if (!Objects.equals(updateProduct.getBasePrice(), product.getBasePrice())) {
             product.setBasePrice(updateProduct.getBasePrice());
+        }
+        if (updateProduct.getCustomerType() != product.getCustomerType()) {
+            product.setCustomerType(updateProduct.getCustomerType());
         }
         return productDao.update(product);
     }
