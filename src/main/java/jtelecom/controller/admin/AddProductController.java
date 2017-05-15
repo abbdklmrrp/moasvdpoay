@@ -71,7 +71,7 @@ public class AddProductController {
     @RequestMapping(value = {"addService"}, method = RequestMethod.POST)
     public ModelAndView createService(ModelAndView mav,
                                       ProductCategories productCategory,
-                                      Product product) {
+                                      Product product, HttpSession session) {
         product.setProductType(ProductType.Service);
         boolean isEmptyFieldsOfService = productService.isEmptyFieldOfProduct(product);
         logger.debug("Check that the incoming tariff fields are not empty {} ", isEmptyFieldsOfService);
@@ -96,9 +96,10 @@ public class AddProductController {
             mav.setViewName("admin/addService");
             return mav;
         }
-        boolean isSave = productDao.save(product);
-        logger.debug("Save product was success {} ", isSave);
+        Integer isSave = productDao.saveProduct(product);
+        logger.debug("Save product was success with id {} ", isSave);
         if (product.getCustomerType() == CustomerType.Residential) {
+            session.setAttribute("productId", isSave);
             mav.setViewName("redirect:/admin/fillTariffsPrices");
         }
         if (product.getCustomerType() == CustomerType.Business) {

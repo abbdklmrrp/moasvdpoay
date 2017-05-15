@@ -80,7 +80,7 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getAllProducts();
 
-    List<Product> getServicesByTariff(Product product);
+    List<TariffServiceDto> getServicesByTariff(Integer tariffId);
 
 //    List<Product> getServicesNotInTariff(Product product);
 

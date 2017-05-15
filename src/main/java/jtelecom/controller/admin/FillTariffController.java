@@ -42,14 +42,11 @@ public class FillTariffController {
     private ProductService productService;
 
     @RequestMapping(value = {"fillTariff"}, method = RequestMethod.GET)
-    public ModelAndView fillTariffWithService(ModelAndView mav
-//            ,                                              @ModelAttribute("productId") Integer productId
-    ) {
+    public ModelAndView fillTariffWithService(ModelAndView mav) {
 
         Map<String, List<Product>> allServicesWithCategory = productDao.getAllServicesWithCategory();
         logger.debug("Get all service's categories {} ", allServicesWithCategory.toString());
 
-//        ra.addFlashAttribute("productId", productId);
         mav.addObject("allServicesWithCategory", allServicesWithCategory);
         mav.setViewName("newPages/admin/fillTariff");
         return mav;

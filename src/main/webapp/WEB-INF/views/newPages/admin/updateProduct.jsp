@@ -19,7 +19,7 @@
     <jsp:param name="pageName" value="AddService"/>
 </jsp:include>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
-    <form method="POST" modelAttribute="product" action="${pageContext.request.contextPath}/admin/updateService">
+    <form method="POST" modelAttribute="product" action="${pageContext.request.contextPath}/admin/updateProduct">
         <div class="login-form">
             <h1 style="text-align: center">Update service</h1>
 
@@ -97,6 +97,9 @@
             </div>
             <c:if test="${product.customerType eq 'Residential'}">
                 <a href="${pageContext.request.contextPath}/admin/updateProductPrice">Update price by region</a>
+            </c:if><br>
+            <c:if test="${product.productType eq 'Tariff'}">
+                <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff">Update services in tariff</a>
             </c:if>
         </div>
     </form>
