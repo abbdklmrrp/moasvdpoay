@@ -14,15 +14,5 @@
 <jsp:include page="includes/registrationForm.jsp"/>
 <h2 style="text-align: center" id="infoMessage" hidden disabled="true">${msg}</h2>
 <jsp:include page="includes/footer.jsp"/>
-<script>
-    window.onload = function () {
-        if (document.getElementById('infoMessage').innerHTML.trim() != '') {
-            sweetAlert(document.getElementById('infoMessage').innerHTML);
-        }
-    };
-    setTimeout(function () {
-        document.getElementById("message").style.display = "none";
-    }, 4000);
-</script>
 </body>
 </html>
