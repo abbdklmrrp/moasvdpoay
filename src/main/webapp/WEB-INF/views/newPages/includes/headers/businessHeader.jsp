@@ -24,7 +24,8 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'Employees'}">
-                        <li class="active"><a href="<%=request.getContextPath()%>/business/getEmployeesPage">Employees</a></li>
+                        <li class="active"><a
+                                href="<%=request.getContextPath()%>/business/getEmployeesPage">Employees</a></li>
                     </c:when>
                     <c:otherwise>
                         <li><a href="<%=request.getContextPath()%>/business/getEmployeesPage">Employees</a></li>
@@ -48,7 +49,8 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'Services'}">
-                        <li class="active"><a href="<%=request.getContextPath()%>/business/orderService">Services</a></li>
+                        <li class="active"><a href="<%=request.getContextPath()%>/business/orderService">Services</a>
+                        </li>
                     </c:when>
                     <c:otherwise>
                         <li><a href="<%=request.getContextPath()%>/business/orderService">Services</a></li>
@@ -56,7 +58,8 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'WriteToSupport'}">
-                        <li class="active"><a href="<%=request.getContextPath()%>/business/getComplaint">Write to support</a></li>
+                        <li class="active"><a href="<%=request.getContextPath()%>/business/getComplaint">Write to
+                            support</a></li>
                     </c:when>
                     <c:otherwise>
                         <li><a href="<%=request.getContextPath()%>/business/getComplaint">Write to support</a></li>
@@ -64,10 +67,11 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'RegEmployee'}">
-                        <li class="active"><a href="<%=request.getContextPath()%>/business/regEmployee">Registration</a></li>
+                        <li class="active"><a href="<%=request.getContextPath()%>/business/regEmployee">Employee
+                            registration</a></li>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="<%=request.getContextPath()%>/business/regEmployee">Registration</a></li>
+                        <li><a href="<%=request.getContextPath()%>/business/regEmployee">Employee registration</a></li>
                     </c:otherwise>
                 </c:choose>
                 <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>
