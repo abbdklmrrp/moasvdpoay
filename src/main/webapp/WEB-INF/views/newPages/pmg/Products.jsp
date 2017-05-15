@@ -8,7 +8,7 @@
         <jsp:param name="tittle" value="Products"/>
     </jsp:include>
     <script type="text/javascript">
-        google.load("jquery", "1.4.4");
+        google.load("jquery", "1.12.1");
     </script>
 </head>
 <body>

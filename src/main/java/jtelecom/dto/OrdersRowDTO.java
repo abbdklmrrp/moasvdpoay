@@ -10,7 +10,6 @@ import java.util.Calendar;
  * Created by Yuliya Pedash on 07.05.2017.
  */
 public class OrdersRowDTO {
-    @JsonProperty("id")
     private final Integer orderId;
     private final String name;
     private String description;

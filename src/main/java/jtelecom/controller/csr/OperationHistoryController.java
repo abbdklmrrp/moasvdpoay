@@ -1,7 +1,7 @@
 package jtelecom.controller.csr;
 
-import jtelecom.dao.entity.OperationHistoryDao;
-import jtelecom.dao.entity.OperationHistoryRecord;
+import jtelecom.dao.operationHistory.OperationHistoryDao;
+import jtelecom.dao.operationHistory.OperationHistoryRecord;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import org.slf4j.Logger;
