@@ -82,12 +82,12 @@
 <%--<form action="${pageContext.request.contextPath}/csr/getCsrComplaint" method="get">--%>
     <%--<button type="submit" class="log-btn">Write complain</button>--%>
 <%--</form>--%>
-<form action="${pageContext.request.contextPath}/csr/userOrders" method="POST">
-    <button type="submit" class="btn btn-primary">User orders</button>
-</form>
-<form action="${pageContext.request.contextPath}/csr/getCsrComplaint" method="get">
-    <button type="submit" class="log-btn">Write complain</button>
-</form>
+<%--<form action="${pageContext.request.contextPath}/csr/userOrders" method="POST">--%>
+    <%--<button type="submit" class="btn btn-primary">User orders</button>--%>
+<%--</form>--%>
+<%--<form action="${pageContext.request.contextPath}/csr/getCsrComplaint" method="get">--%>
+    <%--<button type="submit" class="log-btn">Write complain</button>--%>
+<%--</form>--%>
 <%--<form action="${conextPath}/csr/sendPassword" method="post">--%>
 <%--<button type="submit" class="log-btn">Send password</button>--%>
 <%--</form>--%>
