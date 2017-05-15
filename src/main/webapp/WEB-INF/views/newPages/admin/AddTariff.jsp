@@ -19,7 +19,7 @@
     <jsp:param name="pageName" value="AddTariff"/>
 </jsp:include>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
-    <form method="POST" modelAttribute="product" action="${contextPath}/admin/addTariff">
+    <form method="POST" modelAttribute="product" action="${pageContext.request.contextPath}/admin/addTariff">
         <div class="login-form">
             <h1 style="text-align: center;">Create new tariff</h1>
 

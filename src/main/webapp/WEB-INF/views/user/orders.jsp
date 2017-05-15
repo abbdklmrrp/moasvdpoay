@@ -58,6 +58,6 @@
            <%--onclick="suspendOrder()" value="Suspend">--%>
     <%--<br/>--%>
 <%--</form>--%>
-<script type="text/javascript" src="<c:url value="${contextPath}/resources/js/suspendOrder.js"/>"></script>
+<script type="text/javascript" src="<c:url value="${pageContext.request.contextPath}/resources/js/suspendOrder.js"/>"></script>
 </body>
 </html>

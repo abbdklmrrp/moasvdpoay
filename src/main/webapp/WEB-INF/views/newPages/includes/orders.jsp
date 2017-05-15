@@ -72,4 +72,4 @@
     </div>
 </div>
 <link href="<c:url value="/resources/css/sweet-alert.css"/>" rel="stylesheet">
-<script type="text/javascript" src="<c:url value="${contextPath}/resources/js/sweet-alert.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="${pageContext.request.contextPath}/resources/js/sweet-alert.min.js"/>"></script>

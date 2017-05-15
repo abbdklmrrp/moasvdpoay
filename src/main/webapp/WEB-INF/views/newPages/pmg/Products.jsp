@@ -159,13 +159,13 @@
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
-<script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
-<script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
-<script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${contextPath}/pmg/getProducts.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/pmg/getProducts.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ]

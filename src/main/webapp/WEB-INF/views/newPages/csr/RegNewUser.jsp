@@ -11,7 +11,7 @@
     <jsp:param name="pageName" value="RegNewUser"/>
 </jsp:include>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
-    <form action="${contextPath}/csr/signUpUser"  modelAttribute="user" method="post">
+    <form action="${pageContext.request.contextPath}/csr/signUpUser"  modelAttribute="user" method="post">
         <div class="login-form">
             <h1 style="text-align: center">Registration new user</h1>
             <div class="form-group ">

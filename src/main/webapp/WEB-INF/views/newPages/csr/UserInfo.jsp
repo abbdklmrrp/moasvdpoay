@@ -18,7 +18,7 @@
     <jsp:param name="pageName" value="UserInfo"/>
 </jsp:include>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
-    <form id="details-form" modelAttribute="user" action="${contextPath}/csr/editUser" method="post">
+    <form id="details-form" modelAttribute="user" action="${pageContext.request.contextPath}/csr/editUser" method="post">
         <div class="login-form">
             <h1 style="text-align: center">Personal information</h1>
             <br>
@@ -72,10 +72,10 @@
 <%--<form action="${contextPath}/csr/userServices" method="post">--%>
 <%--<button type="submit" class="log-btn">Services</button>--%>
 <%--</form>--%>
-<form action="${contextPath}/csr/userOrders" method="post">
+<form action="${pageContext.request.contextPath}/csr/userOrders" method="post">
     <button type="submit" class="log-btn">Orders</button>
 </form>
-<form action="${contextPath}/csr/getCsrComplaint" method="get">
+<form action="${pageContext.request.contextPath}/csr/getCsrComplaint" method="get">
     <button type="submit" class="log-btn">Write complain</button>
 </form>
 <%--<form action="${conextPath}/csr/sendPassword" method="post">--%>
