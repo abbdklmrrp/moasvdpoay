@@ -17,7 +17,9 @@ public class Product {
     @JsonProperty("type_id")
     private ProductType productType;
     private ProcessingStrategy processingStrategy;
+    @JsonProperty("name")
     private String name;
+    @JsonProperty("description")
     private String description;
     private ProductStatus status;
     @JsonProperty("base_price")

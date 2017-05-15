@@ -4,34 +4,64 @@ package jtelecom.dto;
  * Created by Anna Rysakova on 08.05.2017.
  */
 public class TariffServiceDto {
-    private Integer idTariff;
-    private Integer idService;
+    private Integer tariffId;
+    private Integer serviceId;
+    private Integer categoryId;
+    private String serviceName;
+    private String categoryName;
 
     public TariffServiceDto() {
     }
 
-    public Integer getIdTariff() {
-        return idTariff;
+    public Integer getTariffId() {
+        return tariffId;
     }
 
-    public void setIdTariff(Integer idTariff) {
-        this.idTariff = idTariff;
+    public void setTariffId(Integer tariffId) {
+        this.tariffId = tariffId;
     }
 
-    public Integer getIdService() {
-        return idService;
+    public Integer getServiceId() {
+        return serviceId;
     }
 
-    public void setIdService(Integer idService) {
-        this.idService = idService;
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     @Override
     public String toString() {
         return new StringBuilder()
                 .append("TariffServiceDto{")
-                .append("idTariff=").append(idTariff)
-                .append(", idService=").append(idService)
+                .append("tariffId=").append(tariffId)
+                .append(", serviceId=").append(serviceId)
+                .append(", categoryId=").append(categoryId)
+                .append(", serviceName='").append(serviceName).append('\'')
+                .append(", categoryName='").append(categoryName).append('\'')
                 .append('}').toString();
     }
 }

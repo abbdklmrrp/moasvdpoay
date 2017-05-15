@@ -21,7 +21,13 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
     private final static String SELECT_PLANNED_TASKS_BY_DATES_SQL = "SELECT * FROM PLANNED_TASKS WHERE\n" +
             "ORDER_ID = :order_id AND " +
             "  ACTION_DATE BETWEEN  TO_DATE(:begin_date, 'YYYY-MM-DD') AND TO_DATE(:end_date, 'YYYY-MM-DD') ";
-
+    private final static String DELETE_PLANNED_TASKS_FOR_ORDER_OF_PRODUCT_FOR_USER_SQL = "DELETE FROM PLANNED_TASKS\n" +
+            "  WHERE ORDER_ID IN (SELECT  MAX(ID) FROM ORDERS\n" +
+            "  WHERE PRODUCT_ID = :product_id AND USER_ID = :user_id\n" +
+            "  AND CURRENT_STATUS_ID <> 3 /*Deactivated*/)";
+    private final static String DELETE_NEXT_PLANNED_TASK_FOR_ACTIVATION_FOR_PRODUCT_USER_SQL = "DELETE FROM PLANNED_TASKS\n" +
+            "WHERE ACTION_DATE = (SELECT MIN(ACTION_DATE) FROM PLANNED_TASKS\n" +
+            "WHERE ORDER_ID = :order_id AND STATUS_ID = 1/*Active*/) AND ORDER_ID = :order_id AND STATUS_ID = 1 /*Active*/";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
@@ -51,8 +57,11 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
     /**
      * {@inheritDoc}
      */
-    public boolean deleteAllPlannedTasksForOrder(Integer orderId) {
-        return false;
+    public boolean deleteAllPlannedTasksForProductOfUser(Integer productId, Integer userId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("product_id", productId);
+        params.addValue("user_id", userId);
+        return jdbcTemplate.update(DELETE_PLANNED_TASKS_FOR_ORDER_OF_PRODUCT_FOR_USER_SQL, params) > 0;
     }
 
     @Override
@@ -60,6 +69,9 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
         throw new UnsupportedOperationException("This operation is not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<PlannedTask> getAllPlannedTaskForDates(Calendar beginDate, Calendar endDate, Integer orderId) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -69,5 +81,15 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
         params.addValue("order_id", orderId);
         return jdbcTemplate.query(SELECT_PLANNED_TASKS_BY_DATES_SQL, params, plannedTaskRowMapper);
 
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean deleteNextPlannedTask(Integer orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("order_id", orderId);
+        return jdbcTemplate.update(DELETE_PLANNED_TASKS_FOR_ORDER_OF_PRODUCT_FOR_USER_SQL, params) > 0;
     }
 }

@@ -43,7 +43,7 @@ public class OrderDaoImpl implements OrderDao {
     private final static String DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT_SQL = "UPDATE ORDERS " +
             "SET CURRENT_STATUS_ID = 3 /*deactivated operation status id*/ " +
             "WHERE PRODUCT_ID = :product_id " +
-            "      AND USER_ID = :user_id";
+            "      AND USER_ID = :user_id AND CURRENT_STATUS_ID <> 3 /*deactivated operation status id*/";
     private final static String SUSPEND_ORDER_SQL = "UPDATE ORDERS " +
             "SET CURRENT_STATUS_ID = 2 /*suspended operation status id*/ " +
             "WHERE ID = :id ";
@@ -211,10 +211,6 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.queryForObject(SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL, params, orderRowMapper);
     }
 
-//    @Override
-//    public Calendar getEndDateOfOrderActive(Integer orderId) {
-//        return null;
-//    }
 
     /**
      * {@inheritDoc}

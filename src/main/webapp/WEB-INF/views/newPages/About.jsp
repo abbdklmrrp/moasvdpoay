@@ -6,9 +6,8 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="includes/headers/emptyHeader.jsp">
-    <jsp:param name="text" value="Login"/>
-    <jsp:param name="link" value=""/>
+<jsp:include page="includes/headers/aboutHeader.jsp">
+    <jsp:param name="pageName" value="about"/>
 </jsp:include>
 
 <section class="container" style="align-self: center">
@@ -27,8 +26,6 @@
     </div>
     <div class="col-md-4"></div>
 </section>
-
-
 <jsp:include page="includes/footer.jsp"/>
 </body>
 </html>

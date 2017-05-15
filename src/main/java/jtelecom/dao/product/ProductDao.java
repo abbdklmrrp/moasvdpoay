@@ -4,7 +4,6 @@ import jtelecom.dao.interfaces.Dao;
 import jtelecom.dto.ServicesByCategoryDto;
 import jtelecom.dto.TariffServiceDto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getAllFreeTariffs();
 
-    void fillInTariffWithServices(ArrayList<TariffServiceDto> tariffServiceDtos);
+    void fillInTariffWithServices(List<TariffServiceDto> tariffServiceDtos);
 
     boolean addCategory(ProductCategories categories);
 
@@ -80,11 +79,11 @@ public interface ProductDao extends Dao<Product> {
 
     List<Product> getAllProducts();
 
-    List<Product> getServicesByTariff(Product product);
+    List<TariffServiceDto> getServicesByTariff(Integer tariffId);
 
 //    List<Product> getServicesNotInTariff(Product product);
 
-    void deleteServiceFromTariff(ArrayList<TariffServiceDto> tariffServiceDtos);
+    void deleteServiceFromTariff(List<TariffServiceDto> tariffServiceDtos);
 
     boolean disableEnableProductByID(int id);
 
@@ -159,6 +158,14 @@ public interface ProductDao extends Dao<Product> {
      * @return found Product
      */
     Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
+
+    List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId);
+
+    List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId);
+
+    Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId);
+
+    Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId);
 
     Integer saveProduct(Product product);
 

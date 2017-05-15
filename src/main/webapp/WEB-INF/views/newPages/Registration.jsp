@@ -7,22 +7,20 @@
 </head>
 <%-- action="${pageContext.request.contextPath}/userRegistration" modelAttribute="user" method="post"--%>
 <body>
-<jsp:include page="includes/headers/emptyHeader.jsp">
-    <jsp:param name="text" value="About"/>
-    <jsp:param name="link" value="about"/>
+<jsp:include page="includes/headers/aboutHeader.jsp">
+    <jsp:param name="pageName" value="registration"/>
 </jsp:include>
+<br>
+<br>
 <jsp:include page="includes/registrationForm.jsp"/>
-<h2 style="text-align: center" id="infoMessage" hidden disabled="true">${msg}</h2>
 <jsp:include page="includes/footer.jsp"/>
 <script>
     window.onload = function () {
-        if (document.getElementById('infoMessage').innerHTML.trim() != '') {
-            sweetAlert(document.getElementById('infoMessage').innerHTML);
+        var result = "${msg}";
+        if (result != '') {
+            sweetAlert(result);
         }
     };
-    setTimeout(function () {
-        document.getElementById("message").style.display = "none";
-    }, 4000);
 </script>
 </body>
 </html>

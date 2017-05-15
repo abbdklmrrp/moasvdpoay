@@ -4,10 +4,11 @@ import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.OrderDao;
 import jtelecom.dao.plannedTask.PlannedTask;
 import jtelecom.dao.plannedTask.PlannedTaskDao;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.List;
@@ -79,7 +80,25 @@ public class OrderService {
      * @return
      */
     @Transactional
-    public boolean deactivateOrderOfUserCompletely(Integer orderId) {
-        return false;
+    public boolean deactivateOrderForProductOfUserCompletely(Integer productId, Integer userId) {
+        plannedTaskDao.deleteAllPlannedTasksForProductOfUser(productId, userId);
+        return orderDao.deactivateOrderOfUserForProduct(productId, userId);
+    }
+
+    /**
+     * This methods deletes planned task that was supposed to run
+     * when order was determined to be activated to be suspense. Then it
+     * marks marks it with 'Active" status in database.
+     * {@link OperationStatus} for details on statuses.
+     *
+     * @param orderId id of order
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     * @see PlannedTaskDao#deleteNextPlannedTask(Integer)
+     * @see OrderDao#activateOrder(Integer)
+     */
+    @Transactional
+    public boolean activateOrderAfterSuspense(Integer orderId) {
+        plannedTaskDao.deleteNextPlannedTask(orderId);
+        return orderDao.activateOrder(orderId);
     }
 }
