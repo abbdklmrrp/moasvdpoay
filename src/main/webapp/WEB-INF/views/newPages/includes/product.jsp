@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Yuliya Pedash
@@ -22,8 +23,14 @@
         <label>Processing Strategy:</label> ${product.processingStrategy.name}
     </div>
     <jsp:include page="../includes/product.jsp"/>
-    <a href="<%=request.getContextPath()%>/${userRole}/orders" class="btn btn-info"> <span
-            class="glyphicon glyphicon-menu-left"></span> Back</a>
+    <button onclick="goBack()" class="btn btn-info"> <span
+            class="glyphicon glyphicon-menu-left"></span> Back
+    </button>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 

@@ -2,7 +2,6 @@ package jtelecom.dao.product;
 
 import jtelecom.dto.ServicesByCategoryDto;
 import jtelecom.dto.TariffServiceDto;
-import jtelecom.mail.Mailer;
 import jtelecom.util.querybuilders.LimitedProductsQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +125,7 @@ public class ProductDaoImpl implements ProductDao {
             " JOIN Prices ON Prices.product_id = prod.id " +
             " WHERE Prices.place_id = :placeId " +
             " AND prod.type_id = 1/* Tariff */";
-    private final static String SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL = "SELECT\n" +
+    private final static String SELECT_ALL_SERVICES_OF_USER_CURRENT_TARIFF_SQL = "SELECT\n" +
             "  p2.ID,\n" +
             "  p2.NAME,\n" +
             "  p2.DESCRIPTION,\n" +
@@ -136,7 +135,8 @@ public class ProductDaoImpl implements ProductDao {
             "  p2.NEED_PROCESSING,\n" +
             "  p2.DESCRIPTION,\n" +
             "  p2.STATUS,\n" +
-            "  p2.BASE_PRICE\n " +
+            "  p2.BASE_PRICE,\n " +
+            "  p2.CUSTOMER_TYPE_ID " +
             "FROM PRODUCTS p1\n" +
             "  JOIN ORDERS ON ORDERS.PRODUCT_ID = p1.ID\n" +
             "                 AND ORDERS.USER_ID = :id\n" +
@@ -820,7 +820,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> getAllServicesByCurrentUserTariff(Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", userId);
-        return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TERIFF_SQL, params, new ProductRowMapper());
+        return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TARIFF_SQL, params, new ProductRowMapper());
     }
 
     @Override

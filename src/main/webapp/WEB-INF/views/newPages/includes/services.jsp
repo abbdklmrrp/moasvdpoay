@@ -4,14 +4,13 @@
 
 <div class="container">
     <div class="row">
+        <h1 style="text-align: center">Services Catalog</h1>
         <div class="col-md-4">
-            <ul class="nav navbar-nav nav-dropdown">
-                <li class="dropdown">
+            <ul class="nav navbar-nav cat-dropdown">
+                <li class="dropdown cat-dropdown ">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Categories </a>
-                    <ul class="dropdown-menu">
-                        <li id="${productCategory.categoryName}">
-                            <a href="<%=request.getContextPath()%>/${userRole}/orderService">All Categories</a>
-                        </li>
+                    <ul class="dropdown-menu cat-dropdown-menu">
+                        <li><a href="<%=request.getContextPath()%>/${userRole}/orderService">All Categories</a></li>
                         <li class="divider"></li>
                         <c:forEach var="productCategory" items="${productsCategories}">
 
@@ -24,9 +23,21 @@
                     </ul>
                 </li>
             </ul>
+            <%--<div class="dropdown">--%>
+            <%--<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example--%>
+            <%--<span class="caret"></span></button>--%>
+            <%--<ul class="dropdown-menu">--%>
+            <%--<li><a href="<%=request.getContextPath()%>/${userRole}/orderService">All Categories</a></li>--%>
+            <%--<li class="divider"></li>--%>
+            <%--<c:forEach var="productCategory" items="${productsCategories}">--%>
+
+            <%--<li id="cateogry${productCategory.id}">--%>
+            <%--<a href="<%=request.getContextPath()%>/${userRole}/orderService?category=${productCategory.categoryName}">${productCategory.categoryName}</a>--%>
+            <%--</li>--%>
+            <%--</ul>--%>
+            <%--</div>--%>
         </div>
         <div class="col-md-8">
-            <h1 style="text-align: center">Services Catalog</h1>
             <br>
             <c:choose>
                 <c:when test="${not empty msg}">
@@ -242,6 +253,9 @@
                     return $('<div id=service' + wv.productId + '><input type="button" class="btn btn-danger"  value="Deactivate" onclick="deactivateService(' + wv.productId + ')"></div>');
                 }
             }
+        },
+        "name": function (pv, wv, grid) {
+            return $('<a href=<%=request.getContextPath()%>/${userRole}/product?productId=' + wv.productId + '>' + wv.name + '</a>')
         }
 
     })
