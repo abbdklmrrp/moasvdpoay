@@ -1,5 +1,6 @@
-package jtelecom.dao.entity;
+package jtelecom.dao.operationHistory;
 
+import jtelecom.dao.entity.OperationStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 

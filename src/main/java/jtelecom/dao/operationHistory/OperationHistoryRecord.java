@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jtelecom.dao.entity;
+package jtelecom.dao.operationHistory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jtelecom.dao.entity.OperationStatus;
 
 import java.util.Calendar;
 
@@ -32,19 +33,19 @@ public class OperationHistoryRecord {
         this.status = status;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 
