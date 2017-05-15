@@ -1,8 +1,10 @@
 package jtelecom.services;
 
 import jtelecom.dao.price.Price;
+import jtelecom.dao.price.PriceDao;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDao;
+import jtelecom.util.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -21,6 +24,8 @@ public class PriceService {
     private static Logger logger = LoggerFactory.getLogger(ProductService.class);
     @Resource
     private ProductDao productDao;
+    @Resource
+    private PriceDao priceDao;
 
     /**
      * This method fill the <code>ArrayList</code> with the values of the product ID
@@ -31,7 +36,7 @@ public class PriceService {
      * @param priceByRegion price of product by <code>placeId</code> region
      * @return <code>ArrayList</code> of product id, place id , price in this region
      */
-    public ArrayList<Price> fillInListWithProductPriceByRegion(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
+    public List<Price> fillInListWithProductPriceByRegion(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
         ArrayList<Price> listPriceByRegion = new ArrayList<>();
         logger.debug("Create list of product price by region {} ", listPriceByRegion);
         // TODO: 14.05.2017 limit array size
@@ -55,5 +60,18 @@ public class PriceService {
         Product product = productDao.getById(productId);
         logger.debug("Checked that the product exists {} ", product.toString());
         return !Objects.equals(product, null);
+    }
+
+    public void updateProductPriceInRegions(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
+        List<Price> oldPriceInfo = priceDao.getPriceInRegionInfoByProduct(productId);
+        List<Price> newPriceInfo = fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
+
+        List<Price> uniqueServicesInFirstCollection = (List<Price>) CollectionUtil
+                .getUniqueElementsInFirstCollection(oldPriceInfo, newPriceInfo);
+        priceDao.deleteProductPriceInRegion(uniqueServicesInFirstCollection);
+
+        uniqueServicesInFirstCollection = (List<Price>) CollectionUtil
+                .getUniqueElementsInFirstCollection(newPriceInfo, oldPriceInfo);
+        priceDao.fillPriceOfProductByRegion(uniqueServicesInFirstCollection);
     }
 }
