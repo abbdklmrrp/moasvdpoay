@@ -1,3 +1,9 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Anna Rysakova
+  Date: 9.05.2017
+  Time: 9:28
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -11,29 +17,22 @@
 <jsp:include page="../includes/headers/adminHeader.jsp">
     <jsp:param name="pageName" value="AddService"/>
 </jsp:include>
-<form action="/admin/fillTariff" method="post">
+<form modelAttribute="priceByRegionDto"
+      action="${pageContext.request.contextPath}/admin/updateProductPrices" method="post">
     <div class="container">
         <div class="col-md-2"></div>
         <div class="col-md-8">
-            <h1 style="text-align: center">Fill in tariff with services</h1>
+            <h1 style="text-align: center">Fill in tariff with price by region</h1>
             <br>
             <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                 <tr>
-                    <th>Category</th>
-                    <th>Services</th>
+                    <th>Region</th>
+                    <th>Product price</th>
                 </tr>
-                <c:forEach var="servcesByCategory" items="${allServicesWithCategory}">
+                <c:forEach var="place" items="${placesForFillInTariff}">
                     <tr>
-                        <td>${servcesByCategory.key}</td>
-                        <td>
-                            <select name="selectedService">
-                                <option value="">-</option>
-                                <c:forEach var="product" items="${servcesByCategory.value}">
-                                    <option value="${product.id}">${product.name}</option>
-                                </c:forEach>
-                            </select>
-                        </td>
-
+                        <td><input type="hidden" name="placeId" value="${place.id}">${place.name}</td>
+                        <td><input type="text" name="priceByRegion" value=""></td>
                     </tr>
                 </c:forEach>
             </table>

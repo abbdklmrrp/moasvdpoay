@@ -14,4 +14,7 @@ public interface PlaceDAO {
     List<Place> getAll();
 
     List<Place> getPlacesForFillInTariff();
+
+    Integer getPlaceIdByName(String placeName);
+
 }

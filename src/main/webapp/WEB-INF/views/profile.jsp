@@ -10,12 +10,12 @@
 <html>
 <head>
     <title>Profile</title>
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/basic.css" rel="stylesheet"/>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhhghVMdW1rIbJCJupKdngdNk0k5JwaQE&libraries=places"></script>
 
 </head>
 <body>
-<form  id="details-form" modelAttribute="user" action="${contextPath}/${pattern}/editProfile" method="post">
+<form  id="details-form" modelAttribute="user" action="${pageContext.request.contextPath}/${pattern}/editProfile" method="post">
     <div class="login-form">
         <div class="form-group form-group-lg">
             <label class="col-sm-2 control-label">Name</label><br>

@@ -11,10 +11,10 @@
 <head>
     <title>Complaint</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link href="${contextPath}/resources/css/basic.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/basic.css" rel="stylesheet"/>
 </head>
 <body>
-<form method="post" action="${contextPath}/user/writeComplaint">
+<form method="post" action="${pageContext.request.contextPath}/user/writeComplaint">
     <div class="login-form">
         <div class="form-group ">
             Product

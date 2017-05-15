@@ -117,4 +117,6 @@ public class PriceDaoImp implements PriceDao {
             return priceByRegionDto;
         });
     }
+
+
 }
