@@ -67,8 +67,8 @@
             <div class="form-group row">
                 <label class="col-sm-4 control-label">Base price</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" placeholder="0 "
-                           id="basePrice" name="basePrice" required>
+                    <input type="number" class="form-control" placeholder="0 "
+                           id="basePrice" name="basePrice" onchange="handlePrice(this)" required>
                     <i class="fa fa-user"></i>
                 </div>
             </div>
@@ -83,9 +83,9 @@
             <div class="form-group row">
                 <label class="col-sm-4 control-label">Duration in days</label>
                 <div class="col-sm-8">
-                    <select name="durationInDays" class="form-control" id="durationInDays">
-                        <option value="365">365</option>
-                    </select>
+                    <input type="number" name="durationInDays" class="form-control" placeholder="365"
+                           onchange="handleChange(this)">
+                    <i class="fa fa-user"></i>
                 </div>
             </div>
             <div class="form-group row">
@@ -126,6 +126,18 @@
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
     google.load("jquery", "1.4.4");
+</script>
+<script>
+    function handleChange(input) {
+        if (input.value < 0) input.value = 0;
+        if (input.value > 365) input.value = 365;
+    }
+</script>
+<script>
+    function handlePrice(input) {
+        if (input.value < 0) input.value = 0;
+        if (input.value > 999) input.value = 999;
+    }
 </script>
 <script src="<c:url value="/resources/js/newCategoryService.js"/>"></script>
 </body>
