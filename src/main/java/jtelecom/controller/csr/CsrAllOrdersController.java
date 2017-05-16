@@ -46,13 +46,14 @@ public class CsrAllOrdersController {
     @RequestMapping(value = "orderInfo", method = RequestMethod.POST)
     public String orderInfo(@RequestParam(value = "orderId") int orderId) {
         FullInfoOrderDTO order = orderDao.getOrderInfoByOrderId(orderId);
+        order.setOrderId(orderId);
         return order.infoMessage();
     }
 
-    @RequestMapping(value="assignOrder", method=RequestMethod.POST)
-    public String assignOrder(@RequestParam(value="orderId")int orderId){
-        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        boolean success=orderDao.assignToUser(user.getId(),orderId);
-        return success ? "success":"fail";
+    @RequestMapping(value = "assignOrder", method = RequestMethod.POST)
+    public String assignOrder(@RequestParam(value = "orderId") int orderId) {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        boolean success = orderDao.assignToUser(user.getId(), orderId);
+        return success ? "success" : "fail";
     }
 }
