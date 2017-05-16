@@ -52,16 +52,16 @@ public class ViewUsersController {
         return ListHolder.create(data, size);
     }
 
-    @RequestMapping(value={"getEmployees"}, method=RequestMethod.GET)
-    public ListHolder getEmployees(@ModelAttribute GridRequestDto requestDto){
-        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        Integer customerId=user.getCustomerId();
+    @RequestMapping(value = {"getEmployees"}, method = RequestMethod.GET)
+    public ListHolder getEmployees(@ModelAttribute GridRequestDto requestDto) {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        Integer customerId = user.getCustomerId();
         String sort = requestDto.getSort();
         int start = requestDto.getStartBorder();
         int length = requestDto.getEndBorder();
         String search = requestDto.getSearch();
-        List<User> data = userDAO.getLimitedQuantityEmployeesOfCustomer(start, length, sort, search,customerId);
-        int size = userDAO.getCountEmployeesWithSearchOfCustomer(search,customerId);
+        List<User> data = userDAO.getLimitedQuantityEmployeesOfCustomer(start, length, sort, search, customerId);
+        int size = userDAO.getCountEmployeesWithSearchOfCustomer(search, customerId);
         logger.debug("Get users in interval:" + start + " : " + length);
         return ListHolder.create(data, size);
     }

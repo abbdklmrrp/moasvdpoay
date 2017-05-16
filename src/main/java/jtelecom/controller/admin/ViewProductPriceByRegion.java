@@ -26,9 +26,6 @@ public class ViewProductPriceByRegion {
 
     @RequestMapping(value = "viewAllProducts", method = RequestMethod.GET)
     public ModelAndView getAllProductPrice(ModelAndView mav) {
-        List<PriceByRegionDto> productPriceForRegions = priceDao.getPriceInRegionsForAllProducts();
-        logger.debug("Receive product price by region {} ", productPriceForRegions.toString());
-        mav.addObject("productPriceByRegion", productPriceForRegions);
         mav.setViewName("newPages/admin/viewProductPrices");
         return mav;
     }
