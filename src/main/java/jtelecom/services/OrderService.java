@@ -1,9 +1,12 @@
 package jtelecom.services;
 
 import jtelecom.dao.entity.OperationStatus;
+import jtelecom.dao.order.Order;
 import jtelecom.dao.order.OrderDao;
 import jtelecom.dao.plannedTask.PlannedTask;
 import jtelecom.dao.plannedTask.PlannedTaskDao;
+import jtelecom.dao.product.Product;
+import jtelecom.util.DatesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -100,5 +103,20 @@ public class OrderService {
     public boolean activateOrderAfterSuspense(Integer orderId) {
         plannedTaskDao.deleteNextPlannedTask(orderId);
         return orderDao.activateOrder(orderId);
+    }
+
+    /**
+     * This method will add to planned tasks  date of deactivation of order
+     *
+     * @param product
+     * @param order
+     * @return
+     */
+    public boolean activateOrder(Product product, Order order) {
+        Calendar deactivateOrderDate = DatesHelper.getCurrentDate();
+        deactivateOrderDate.add(Calendar.DATE, product.getDurationInDays());
+        Integer orderId = orderDao.saveAndGetGeneratedId(order);
+        PlannedTask deactPlannedTask = new PlannedTask(OperationStatus.Deactivated, orderId, deactivateOrderDate);
+        return plannedTaskDao.save(deactPlannedTask);
     }
 }

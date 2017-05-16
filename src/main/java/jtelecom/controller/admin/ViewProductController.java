@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 /**
  * Created by Rysakova Anna on 01.05.2017., Nikita Alistratenko
@@ -26,10 +26,9 @@ public class ViewProductController {
     @Resource
     private ProductDao productDao;
 
-    @RequestMapping(value = "getDetailsProduct", method = RequestMethod.GET)
-    public ModelAndView getDetailsProduct(@RequestParam(value = "id") int id,
-                                          ModelAndView mav,
-                                          HttpSession session) {
+    @RequestMapping(value = "getDetailsProduct={id}", method = RequestMethod.GET)
+    public ModelAndView getDetailsProduct(@PathVariable(value = "id") int id,
+                                          ModelAndView mav) {
 // FIXME: 14.05.2017 validate product
         try {
             Product tariff = productDao.getById(id);
@@ -42,7 +41,6 @@ public class ViewProductController {
         logger.debug("Receive request param product id named 'id', value={} ", id);
 
         logger.debug("Product found in database, id={} ", id);
-        session.setAttribute("productId", id);
         logger.debug("Save to session ID of product {} ", id);
         mav.addObject("product", foundProduct);
 

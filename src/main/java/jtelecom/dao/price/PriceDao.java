@@ -23,8 +23,6 @@ public interface PriceDao extends Dao<Price> {
 
     boolean fillPriceOfProductByRegion(List<Price> priceByRegionDtos);
 
-    List<PriceByRegionDto> getPriceInRegionsForAllProducts();
-
     List<PriceByRegionDto> getPriceInRegionsByProduct(int productId);
 
     List<PriceByRegionDto> getAllRegionsAndProductPriceInRegionByProductId(Integer productId);
@@ -33,5 +31,6 @@ public interface PriceDao extends Dao<Price> {
 
     boolean deleteProductPriceInRegion(List<Price> priceInRegion);
 
+    List<PriceByRegionDto> getLimitedQuantityProductPricesInRegions(int start, int length, String sort, String search);
 
 }

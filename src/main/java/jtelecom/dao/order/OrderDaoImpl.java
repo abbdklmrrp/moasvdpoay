@@ -5,15 +5,17 @@ import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.product.ProductType;
 import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.dto.OrdersRowDTO;
+import jtelecom.util.querybuilders.LimitedProductsQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Yuliya Pedash on 27.04.2017.
@@ -63,25 +65,25 @@ public class OrderDaoImpl implements OrderDao {
             "  PRODUCT_ID = :product_id\n" +
             "  AND USER_ID = :user_id\n " +
             "AND CURRENT_STATUS_ID <> 3 /*Deactivated status*/";
-    private final static String SELECT_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT\n" +
-            "   o.id,\n" +
-            "   p.NAME,\n" +
-            "   p.TYPE_ID,\n" +
-            "   p.DURATION,\n" +
-            "   op_his.OPERATION_DATE,\n" +
-            "   o.CURRENT_STATUS_ID, \n" +
-            " p.id product_id " +
-            "FROM ORDERS o\n" +
-            "   JOIN (SELECT\n" +
-            "            OPERATION_DATE,\n" +
-            "            ORDER_ID\n" +
-            "         FROM OPERATIONS_HISTORY\n" +
-            "         WHERE ID IN (SELECT MIN(ID)\n" +
-            "                      FROM OPERATIONS_HISTORY\n" +
-            "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = o.ID\n" +
-            "   JOIN PRODUCTS p ON p.ID = o.PRODUCT_ID\n" +
-            "   JOIN USERS u ON u.ID = o.USER_ID\n" +
-            "WHERE o.CURRENT_STATUS_ID <> 3 AND u.CUSTOMER_ID =:cust_id";
+//    private final static String SELECT_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT\n" +
+//            "   o.id,\n" +
+//            "   p.NAME,\n" +
+//            "   p.TYPE_ID,\n" +
+//            "   p.DURATION,\n" +
+//            "   op_his.OPERATION_DATE,\n" +
+//            "   o.CURRENT_STATUS_ID, \n" +
+//            " p.id product_id " +
+//            "FROM ORDERS o\n" +
+//            "   JOIN (SELECT\n" +
+//            "            OPERATION_DATE,\n" +
+//            "            ORDER_ID\n" +
+//            "         FROM OPERATIONS_HISTORY\n" +
+//            "         WHERE ID IN (SELECT MIN(ID)\n" +
+//            "                      FROM OPERATIONS_HISTORY\n" +
+//            "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = o.ID\n" +
+//            "   JOIN PRODUCTS p ON p.ID = o.PRODUCT_ID\n" +
+//            "   JOIN USERS u ON u.ID = o.USER_ID\n" +
+//            "WHERE o.CURRENT_STATUS_ID <> 3 AND u.CUSTOMER_ID =:cust_id";
 
     private static final String SELECT_INTERVAL_ORDERS_BY_USER_ID = "SELECT * FROM(" +
             "Select id , product_name, description, product_type, current_status_id, ROW_NUMBER() OVER (ORDER BY %s) R " +
@@ -101,7 +103,30 @@ public class OrderDaoImpl implements OrderDao {
             " where USER_ID=(select customer_id from users where id=:userId) and orders.CURRENT_STATUS_ID<>3)) \n" +
             " where R>:start and R<=:length and product_name like :pattern ";
 
-    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
+//    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
+//            " where R>:start and R<=:length and name like :pattern ";
+    private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT\n" +
+            "  o.id           order_id,\n" +
+            "  p.name,\n" +
+            "  p.id           product_id,\n" +
+            "  p.type_id      product_type,\n" +
+            "  op_status.name operation_status,\n" +
+            "  pt.action_date end_date,\n" +
+            "  rownum\n " +
+            "FROM ORDERS o\n" +
+            "  JOIN PRODUCTS p ON o.PRODUCT_ID = p.ID\n" +
+            "  JOIN USERS u ON u.id = o.USER_ID\n" +
+            "  JOIN OPERATION_STATUS op_status ON o.CURRENT_STATUS_ID = op_status.id\n" +
+            "  LEFT JOIN  PLANNED_TASKS pt ON o.ID = pt.ORDER_ID " +
+            "WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n " +
+            "       AND pt.STATUS_ID = 3 /*Deactivation*/ AND rownum <= :length AND rownum > :start";
+    private final String SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT COUNT(*) " +
+            "FROM ORDERS o\n" +
+            "  JOIN USERS u ON u.id = o.USER_ID\n" +
+            "  LEFT JOIN  PLANNED_TASKS pt ON o.ID = pt.ORDER_ID\n" +
+            "WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n" +
+            "       AND pt.STATUS_ID = 3 /*Deactivation*/";
+    private static final String SELECT_COUNT_ORDERS_BY_USER_ID="Select COUNT(ROWNUM) COUNT \n" +
             " from orders join products on (orders.PRODUCT_ID=products.id) join (SELECT \n" +
             "       OPERATION_DATE, \n" +
             "            ORDER_ID \n" +
@@ -215,6 +240,15 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.update(INSERT_ORDER, paramsForOrder) > 0;
     }
 
+    public Integer saveAndGetGeneratedId(Order order) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        MapSqlParameterSource paramsForOrder = new MapSqlParameterSource();
+        paramsForOrder.addValue("product_id", order.getProductId());
+        paramsForOrder.addValue("user_id", order.getUserId());
+        paramsForOrder.addValue("cur_status_id", order.getCurrentStatus().getId());
+        jdbcTemplate.update(INSERT_ORDER, paramsForOrder, keyHolder, new String[]{"ID"});
+        return new Integer(keyHolder.getKey().intValue());
+    }
     @Override
     public boolean delete(Order order) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -276,10 +310,21 @@ public class OrderDaoImpl implements OrderDao {
      * {@inheritDoc}
      */
     @Override
-    public List<OrdersRowDTO> getOrderRowsBDTOByCustomerId(Integer customerId) {
+    public List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer length, String search, String sort, Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
+        String query = LimitedProductsQueryBuilder.getQuery(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
+        params.addValue("start", start);
+        params.addValue("length", length);
         params.addValue("cust_id", customerId);
-        return jdbcTemplate.query(SELECT_ORDERS_DTO_BY_CUSTOMER_ID_SQL, params, new OrdersRowDTORowMapper());
+        return jdbcTemplate.query(query, params, new OrdersRowDTORowMapper());
+    }
+
+    @Override
+    public Integer getCountOrderRowsDTOByCustomerId(String search, String sort, Integer customerId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        String query = LimitedProductsQueryBuilder.getQuery(SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
+        params.addValue("cust_id", customerId);
+        return jdbcTemplate.queryForObject(query, params, Integer.class);
     }
 
     /**
@@ -461,3 +506,4 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.queryForObject(SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID, params, Integer.class);
     }
 }
+

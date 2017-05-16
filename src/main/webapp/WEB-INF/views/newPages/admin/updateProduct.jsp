@@ -11,18 +11,19 @@
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="Create service"/>
+        <jsp:param name="tittle" value="UpdateProduct"/>
     </jsp:include>
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
-    <jsp:param name="pageName" value="AddService"/>
+    <jsp:param name="pageName" value="UpdateProduct"/>
 </jsp:include>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
-    <form method="POST" modelAttribute="product" action="${pageContext.request.contextPath}/admin/updateProduct">
+    <form method="POST" modelAttribute="product"
+          action="${pageContext.request.contextPath}/admin/updateProduct=${product.id}">
         <div class="login-form">
-            <h1 style="text-align: center">Update service</h1>
-
+            <h1 style="text-align: center">Update product</h1>
+            <a href="${pageContext.request.contextPath}/admin/getProducts">Back</a>
             <c:if test="${not empty error}">
                 <span style="float:right ; color: #10CE88;">${error}</span>
             </c:if>
@@ -83,9 +84,9 @@
                 <label class="col-sm-4 control-label">Select status service</label>
                 <div class="col-sm-8">
                     <div class="row">
-                        <input type="radio" name="status" class="col-sm-1" value="Available">
+                        <input type="radio" name="status" class="col-sm-1" value="Available" checked>
                         <label class="col-sm-5 control-label">Available</label>
-                        <input type="radio" name="status" class="col-sm-1" value="NotAvailable" checked>
+                        <input type="radio" name="status" class="col-sm-1" value="NotAvailable">
                         <label class="col-sm-5 control-label">Not Available</label>
                     </div>
                 </div>
@@ -96,10 +97,12 @@
                 <div class="col-sm-4 col-xs-0"></div>
             </div>
             <c:if test="${product.customerType eq 'Residential'}">
-                <a href="${pageContext.request.contextPath}/admin/updateProductPrice">Update price by region</a>
+                <a href="${pageContext.request.contextPath}/admin/updateProductPrice=${product.id}">Update price by
+                    region</a>
             </c:if><br>
             <c:if test="${product.productType eq 'Tariff'}">
-                <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff">Update services in tariff</a>
+                <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff=${product.id}">Update services
+                    in tariff</a>
             </c:if>
         </div>
     </form>

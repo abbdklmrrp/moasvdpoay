@@ -1,26 +1,29 @@
 package jtelecom.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.product.ProductType;
-
-import java.util.Calendar;
 
 /**
  * Created by Yuliya Pedash on 07.05.2017.
  */
 public class OrdersRowDTO {
-    private final Integer orderId;
-    private final String name;
-    private String description;
-    @JsonProperty("type_id")
-    private final ProductType productType;
-    private  Integer productId;
-    private  Calendar endDate;
-    @JsonProperty("current_status_id")
-    private final OperationStatus operationStatus;
+    @JsonProperty("order_id")
+    private Integer orderId;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("end_date")
+    private String endDate;
+    @JsonProperty("product_type")
+    private ProductType productType;
+    @JsonProperty("product_id")
+    private Integer productId;
+    @JsonProperty("operation_status")
+    private String operationStatus;
 
-    public OrdersRowDTO(Integer orderId, String name, ProductType productType, Integer productId, Calendar endDate, OperationStatus operationStatus) {
+    public OrdersRowDTO() {
+    }
+
+    public OrdersRowDTO(Integer orderId, String name, ProductType productType, Integer productId, String endDate, String operationStatus) {
         this.orderId = orderId;
         this.name = name;
         this.productType = productType;
@@ -29,39 +32,51 @@ public class OrdersRowDTO {
         this.operationStatus = operationStatus;
     }
 
-    public OrdersRowDTO(Integer orderId, String name, String description, ProductType productType, OperationStatus operationStatus) {
-        this.orderId = orderId;
-        this.name = name;
-        this.description = description;
-        this.productType = productType;
-        this.operationStatus = operationStatus;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     public Integer getOrderId() {
         return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public ProductType getProductType() {
         return productType;
+    }
+
+    public void setProductType(ProductType productType) {
+        this.productType = productType;
     }
 
     public Integer getProductId() {
         return productId;
     }
 
-    public Calendar getEndDate() {
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public String getEndDate() {
         return endDate;
     }
 
-    public OperationStatus getOperationStatus() {
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getOperationStatus() {
         return operationStatus;
+    }
+
+    public void setOperationStatus(String operationStatus) {
+        this.operationStatus = operationStatus;
     }
 }

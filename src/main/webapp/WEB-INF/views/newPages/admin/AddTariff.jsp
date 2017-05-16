@@ -53,8 +53,8 @@
                 <label class="col-sm-4 control-label">Customer type</label>
                 <div class="col-sm-8">
                     <select name="customerType" class="form-control" id="customerTypeId">
-                        <option value="Business">Business</option>
                         <option value="Residential">Residential</option>
+                        <option value="Business">Business</option>
                     </select></div>
             </div>
         </div>

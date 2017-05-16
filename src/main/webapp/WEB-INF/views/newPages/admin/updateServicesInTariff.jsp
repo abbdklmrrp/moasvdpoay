@@ -19,11 +19,16 @@
 <jsp:include page="../includes/headers/adminHeader.jsp">
     <jsp:param name="pageName" value="UpdateServicesInTariff"/>
 </jsp:include>
-<form action="/admin/updateServicesInTariff" method="post">
+<jsp:include page="../includes/footer.jsp"/>
+<form action="${pageContext.request.contextPath}/admin/updateServicesInTariff=${servicesByTariff.get(0).tariffId}"
+      method="post">
     <div class="container">
         <div class="col-md-2"></div>
         <div class="col-md-8">
             <h1 style="text-align: center">Fill in tariff with services</h1>
+            <span style="left: auto">
+                            <a href="${pageContext.request.contextPath}/admin/getDetailsProduct=${servicesByTariff.get(0).tariffId}">Back</a>
+            </span>
             <br>
             <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                 <tr>

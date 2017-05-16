@@ -22,7 +22,6 @@
     <div class="row">
         <label>Processing Strategy:</label> ${product.processingStrategy.name}
     </div>
-    <jsp:include page="../includes/product.jsp"/>
     <button onclick="goBack()" class="btn btn-info"> <span
             class="glyphicon glyphicon-menu-left"></span> Back
     </button>

@@ -63,15 +63,15 @@ public class ExcelReportDataWriter {
         Chart chart = drawing.createChart(anchor);
         ChartLegend legend = chart.getOrCreateLegend();
         legend.setPosition(LegendPosition.TOP_RIGHT);
-        LineChartData data = chart.getChartDataFactory().createLineChartData();
+        ScatterChartData data = chart.getChartDataFactory().createScatterChartData();
         ValueAxis bottomAxis = chart.getChartAxisFactory().createValueAxis(AxisPosition.BOTTOM);
         ValueAxis leftAxis = chart.getChartAxisFactory().createValueAxis(AxisPosition.LEFT);
         leftAxis.setCrosses(AxisCrosses.AUTO_ZERO);
         ChartDataSource<String> xAxisData = DataSources.fromStringCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 0, 0));
         ChartDataSource<Number> yAxisData1 = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 1, 1));
         ChartDataSource<Number> yAxisData2 = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 2, 2));
-        data.addSeries(xAxisData, yAxisData2).setTitle("Reports");
-        data.addSeries(xAxisData, yAxisData1).setTitle("Complaints");
+        data.addSerie(xAxisData, yAxisData2).setTitle("Reports");
+        data.addSerie(xAxisData, yAxisData1).setTitle("Complaints");
         chart.plot(data, bottomAxis, leftAxis);
     }
 

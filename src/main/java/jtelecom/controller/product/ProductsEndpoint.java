@@ -1,7 +1,9 @@
 package jtelecom.controller.product;
 
+import jtelecom.dao.price.PriceDao;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDao;
+import jtelecom.dto.PriceByRegionDto;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import org.slf4j.Logger;
@@ -24,6 +26,8 @@ public class ProductsEndpoint {
     private static Logger logger = LoggerFactory.getLogger(ProductsEndpoint.class);
     @Resource
     private ProductDao productDao;
+    @Resource
+    private PriceDao priceDao;
 
     @RequestMapping(value = {"getProducts"}, method = RequestMethod.GET)
     public ModelAndView getProducts() {
@@ -37,6 +41,17 @@ public class ProductsEndpoint {
         int length = request.getLength();
         String search = request.getSearch();
         List<Product> data = productDao.getLimitedQuantityProduct(start, length, sort, search);
+        int size = productDao.getCountProductsWithSearch(search);
+        return ListHolder.create(data, size);
+    }
+
+    @RequestMapping(value = {"productsPriceInRegions"}, method = RequestMethod.GET)
+    public ListHolder productsPriceInRegions(@ModelAttribute GridRequestDto request) {
+        String sort = request.getSort();
+        int start = request.getStartBorder();
+        int length = request.getLength();
+        String search = request.getSearch();
+        List<PriceByRegionDto> data = priceDao.getLimitedQuantityProductPricesInRegions(start, length, sort, search);
         int size = productDao.getCountProductsWithSearch(search);
         return ListHolder.create(data, size);
     }
