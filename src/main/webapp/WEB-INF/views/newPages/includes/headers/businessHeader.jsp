@@ -56,6 +56,13 @@
                         <li><a href="<%=request.getContextPath()%>/business/orderService">Services</a></li>
                     </c:otherwise>
                 </c:choose>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">History<i class="icon-angle-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="${pageContext.request.contextPath}/business/operationsHistory">Operation history</a></li>
+                        <li><a href="${pageContext.request.contextPath}/business/complaintHistory">Complaint history</a></li>
+                    </ul>
+                </li>
                 <c:choose>
                     <c:when test="${param.pageName == 'WriteToSupport'}">
                         <li class="active"><a href="<%=request.getContextPath()%>/business/getComplaint">Write to

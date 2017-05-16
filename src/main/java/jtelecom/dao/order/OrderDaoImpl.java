@@ -505,5 +505,6 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("csrId", csrId);
         return jdbcTemplate.queryForObject(SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID, params, Integer.class);
     }
+
 }
 

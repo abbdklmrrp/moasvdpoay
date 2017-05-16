@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * This class need to get full information about concrete complaint.
@@ -36,6 +37,34 @@ public class FullComplaintInfoRepository {
             "  INNER JOIN USERS ON ORDERS.USER_ID = USERS.ID\n" +
             "WHERE COMPLAINTS.ID = :complaintId";
 
+    private static final String SELECT_FULL_INFO_COMPLAINT_BY_USER_ID = "Select * from ( \n" +
+            "Select creatingDate,DESCRIPTION,STATUS_ID,productName, ROW_NUMBER() OVER (ORDER BY %s) R from ( \n" +
+            "SELECT \n" +
+            " COMPLAINTS.CREATING_DATE creatingDate, \n" +
+            "  COMPLAINTS.DESCRIPTION description , \n" +
+            "  COMPLAINTS.STATUS_ID status_id, \n" +
+            "  PRODUCTS.NAME productName \n" +
+            "FROM COMPLAINTS \n" +
+            "  INNER JOIN ORDERS ON COMPLAINTS.ORDER_ID = ORDERS.ID \n" +
+            "  INNER JOIN PRODUCTS ON ORDERS.PRODUCT_ID = PRODUCTS.ID \n" +
+            "  INNER JOIN USERS ON ORDERS.USER_ID = USERS.ID \n" +
+            "WHERE USERS.ID IN (SELECT ID FROM USERS WHERE CUSTOMER_ID=(SELECT CUSTOMER_ID FROM USERS WHERE ID=:userId)))) \n" +
+            "where R>:start and R<=:length AND (productName like :pattern)";
+    private static final String SELECT_COUNT_OF_COMPLAINT_BY_USER_ID = "Select count(*) from ( \n" +
+            " Select creatingDate,DESCRIPTION,STATUS_ID,productName, ROW_NUMBER() OVER (ORDER BY creatingDate) R from ( \n" +
+            " SELECT \n" +
+            " COMPLAINTS.CREATING_DATE creatingDate, \n" +
+            "  COMPLAINTS.DESCRIPTION description ,\n" +
+            "  COMPLAINTS.STATUS_ID status_id, \n" +
+            "  PRODUCTS.NAME productName \n" +
+            " FROM COMPLAINTS \n" +
+            "  INNER JOIN ORDERS ON COMPLAINTS.ORDER_ID = ORDERS.ID \n" +
+            "  INNER JOIN PRODUCTS ON ORDERS.PRODUCT_ID = PRODUCTS.ID \n" +
+            "  INNER JOIN USERS ON ORDERS.USER_ID = USERS.ID \n" +
+            " WHERE USERS.ID IN (SELECT ID FROM USERS WHERE CUSTOMER_ID=(SELECT CUSTOMER_ID FROM USERS WHERE ID=:userId)))) \n" +
+            " where productName like :pattern";
+
+
     /**
      * This method return complaint by id.
      *
@@ -61,5 +90,35 @@ public class FullComplaintInfoRepository {
             complaint.setUserPhone(rs.getString("PHONE"));
             return complaint;
         });
+    }
+
+    public Integer getCountComplaintsByUserId(int userId, String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", userId);
+        params.addValue("pattern", "%"+search+"%");
+        return jdbcTemplate.queryForObject(SELECT_COUNT_OF_COMPLAINT_BY_USER_ID, params, Integer.class);
+    }
+    public List<FullComplaintInfoDTO> getIntervalComplaintsByUserId(int start, int length, String sort, String search,int userId){
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        if (sort.isEmpty()) {
+            sort = "creatingDate";
+        }
+        params.addValue("start", start);
+        params.addValue("length", length);
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("userId", userId);
+        String sql = String.format(SELECT_FULL_INFO_COMPLAINT_BY_USER_ID, sort);
+        return jdbcTemplate.query(sql,params,(rs,rownum)->{
+            FullComplaintInfoDTO complaint=new FullComplaintInfoDTO();
+            Calendar date = new GregorianCalendar();
+            rs.getDate("creatingDate", date);
+            complaint.setCreatingDate(date);
+            complaint.setProductName(rs.getString("productName"));
+            complaint.setDescription(rs.getString("description"));
+            Integer statusId = rs.getInt("status_id");
+            complaint.setStatus(ComplaintStatus.getOperationStatusById(statusId));
+            return complaint;
+        });
+
     }
 }

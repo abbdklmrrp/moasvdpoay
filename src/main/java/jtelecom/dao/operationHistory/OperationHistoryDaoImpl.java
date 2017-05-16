@@ -23,7 +23,8 @@ public class OperationHistoryDaoImpl implements OperationHistoryDao {
             "     from OPERATIONS_HISTORY \n" +
             "       join ORDERS on OPERATIONS_HISTORY.ORDER_ID = ORDERS.ID \n" +
             "       join products on ORDERS.PRODUCT_ID=PRODUCTS.id \n" +
-            "       WHERE ORDER_ID IN (SELECT ID FROM ORDERS WHERE USER_ID=:userId))) \n" +
+            "       WHERE ORDER_ID IN (SELECT ID FROM ORDERS WHERE USER_ID IN (Select id from users where customer_id= " +
+            " (Select customer_id from users where id=:userId))))) \n" +
             "    where R>:start and R<=:length AND (product_name LIKE :pattern or operation_date like :pattern)";
 
     private final static String SELECT_COUNT_OPERATION_FOR_USER="Select count(*) from ( Select " +
@@ -31,7 +32,8 @@ public class OperationHistoryDaoImpl implements OperationHistoryDao {
             "from OPERATIONS_HISTORY \n" +
             "  join ORDERS on OPERATIONS_HISTORY.ORDER_ID = ORDERS.ID \n" +
             "  join products on ORDERS.PRODUCT_ID=PRODUCTS.id \n" +
-            "WHERE ORDER_ID IN (SELECT ID FROM ORDERS WHERE USER_ID=:userId)) \n" +
+            "WHERE ORDER_ID IN (SELECT ID FROM ORDERS WHERE USER_ID IN (Select id from users where customer_id= " +
+            " (Select customer_id from users where id=:userId)))) \n" +
             "where product_name like :pattern or operation_date like :pattern";
 
     private final static String SELECT_COUNT_OF_OPERATIONS_BY_ORDER_ID="SELECT COUNT(ID) \n" +
