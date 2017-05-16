@@ -82,5 +82,9 @@ public interface OrderDao extends Dao<Order> {
 
     List<FullInfoOrderDTO> getIntervalOrdersWithoutCsr(int start, int length, String sort, String search);
 
+    FullInfoOrderDTO getOrderInfoByOrderId(Integer orderId);
+
+    boolean assignToUser(int csrId, int orderId);
+
 
 }

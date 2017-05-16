@@ -110,7 +110,7 @@
             <table class="table table-striped table-bordered table-hover" data-grid="grid">
                 <thead>
                 <tr>
-                    <th class="col-xs-2" data-grid-header="name" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="product_name" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
@@ -128,7 +128,7 @@
                         </div>
                         Description
                     </th>
-                    <th class="col-xs-2" data-grid-header="type_id" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="product_type" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
@@ -153,9 +153,9 @@
                 </thead>
                 <tbody>
                 <tr data-grid="row">
-                    <td data-cell="name"></td>
+                    <td data-cell="product_name"></td>
                     <td data-cell="description"></td>
-                    <td data-cell="type_id"></td>
+                    <td data-cell="product_type"></td>
                     <td data-cell="current_status_id"></td>
                     <td data-cell="history"></td>
 
@@ -235,7 +235,7 @@
         ],
         renderers: {
             "history": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-success"  value="View" onclick="showHistory('+wv.orderId+')">');
+                return $('<input type="button" class="btn btn-success"  value="View" onclick="showHistory('+wv.order_id+')">');
             }
         }
     });

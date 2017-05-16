@@ -156,4 +156,19 @@ public class FullInfoOrderDTO {
                 ", customerType=" + customerType +
                 '}';
     }
+
+    public String infoMessage(){
+        String message = "Order's info: " +
+                "\nProduct name: " + productName +
+                "\nProduct description: " + description +
+                "\nType of product: " + productType.getName() +
+                "\nType of customer: " + customerType.getName() +
+                "\nRegion: " + place +
+                "\nOrdering date: " + actionDate +
+                "\nCustomer's info: " +
+                "\nName: " + userName +
+                "\nSurname: " + userSurname +
+                "\nPhone: " + phone;
+        return message;
+    }
 }

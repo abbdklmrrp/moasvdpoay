@@ -175,6 +175,8 @@
 <script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/orderInfo.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/orderAssign.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
@@ -184,13 +186,10 @@
         ],
         renderers: {
             "info":function (pv,wv,grid) {
-                return $('<input type="button" class="btn btn-primary"  value="View">')
+                return $('<input type="button" class="btn btn-primary" onclick="orderInfo('+wv.order_id+')" value="View">')
             },
             "action": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-success"  value="Assign">').click( function(){
-                        <%--location.href='${pageContext.request.contextPath}/csr/assignToMe?id=' + wv.orderId--%>
-                    }
-                );
+                return $('<div id=assign' + wv.order_id + '><input type="button" class="btn btn-success" onclick="assignToMe('+wv.order_id+')" value="Assign"></div>')
             }
         }
     })

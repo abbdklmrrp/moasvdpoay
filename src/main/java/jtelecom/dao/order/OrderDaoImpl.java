@@ -84,12 +84,12 @@ public class OrderDaoImpl implements OrderDao {
             "WHERE o.CURRENT_STATUS_ID <> 3 AND u.CUSTOMER_ID =:cust_id";
 
     private static final String SELECT_INTERVAL_ORDERS_BY_USER_ID = "SELECT * FROM(" +
-            "Select id , name, description, type_id, current_status_id, ROW_NUMBER() OVER (ORDER BY %s) R " +
+            "Select id , product_name, description, product_type, current_status_id, ROW_NUMBER() OVER (ORDER BY %s) R " +
             " FROM \n" +
             " (Select orders.id id, " +
-            " products.name name, \n" +
+            " products.name product_name, \n" +
             " products.DESCRIPTION description, \n" +
-            " products.type_id type_id, \n" +
+            " products.type_id product_type, \n" +
             "  orders.CURRENT_STATUS_ID current_status_id \n" +
             " from orders join products on (orders.PRODUCT_ID=products.id) join (SELECT \n" +
             "       OPERATION_DATE, \n" +
@@ -99,7 +99,7 @@ public class OrderDaoImpl implements OrderDao {
             "                      FROM OPERATIONS_HISTORY \n" +
             "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = orders.ID \n" +
             " where USER_ID=(select customer_id from users where id=:userId) and orders.CURRENT_STATUS_ID<>3)) \n" +
-            " where R>:start and R<=:length and name like :pattern ";
+            " where R>:start and R<=:length and product_name like :pattern ";
 
     private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
             " from orders join products on (orders.PRODUCT_ID=products.id) join (SELECT \n" +
@@ -134,6 +134,17 @@ public class OrderDaoImpl implements OrderDao {
             " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             " WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id IS NULL) \n" +
             "  WHERE product_name LIKE :pattern OR operation_date LIKE :pattern OR place LIKE :pattern";
+    private static String SELECT_ORDER_INFO_BY_ORDER_ID="SELECT  \n" +
+            " PRODUCTS.name product_name,PRODUCTS.TYPE_ID product_type, products.CUSTOMER_TYPE_ID customer_type, \n" +
+            " products.DESCRIPTION description,orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, \n" +
+            " PLACES. NAME place, users.name user_name, users.surname user_surname, users.phone user_phone \n" +
+            " FROM ORDERS JOIN \n" +
+            "  (SELECT * FROM OPERATIONS_HISTORY WHERE STATUS_ID=4) a ON (ORDERS.id=a.ORDER_ID) \n" +
+            "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
+            "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
+            "  WHERE orders.id=:orderId";
+
+    private final static String SET_CSR_ID="UPDATE ORDERS SET CSR_ID=:csrId WHERE ID=:orderId AND CSR_ID IS NULL";
 
     @Override
     public Order getById(int id) {
@@ -262,9 +273,9 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("userId", userId);
         String sql = String.format(SELECT_INTERVAL_ORDERS_BY_USER_ID, sort);
         List<FullInfoOrderDTO> orders = jdbcTemplate.query(sql, params, (resultSet, rownum) -> {
-            String name = resultSet.getString("name");
+            String name = resultSet.getString("product_name");
             Integer orderId = resultSet.getInt("id");
-            ProductType productType = ProductType.getProductTypeFromId(resultSet.getInt("type_id"));
+            ProductType productType = ProductType.getProductTypeFromId(resultSet.getInt("product_type"));
             OperationStatus operationStatus = OperationStatus.getOperationStatusFromId(resultSet.getInt("current_status_id"));
             String description = resultSet.getString("description");
             return new FullInfoOrderDTO(orderId, name, description, productType, operationStatus);
@@ -299,5 +310,32 @@ public class OrderDaoImpl implements OrderDao {
             return order;
         });
         return orders;
+    }
+
+    @Override
+    public FullInfoOrderDTO getOrderInfoByOrderId(Integer orderId) {
+        MapSqlParameterSource params=new MapSqlParameterSource("orderId",orderId);
+        return jdbcTemplate.queryForObject(SELECT_ORDER_INFO_BY_ORDER_ID,params,(rs,rownum)->{
+            FullInfoOrderDTO order = new FullInfoOrderDTO();
+            order.setProductName(rs.getString("product_name"));
+            order.setDescription(rs.getString("description"));
+            order.setProductType(ProductType.getProductTypeFromId(rs.getInt("product_type")));
+            order.setCustomerType(CustomerType.getCustomerTypeFromId(rs.getInt("customer_type")));
+            order.setOrderId(rs.getInt("order_id"));
+            order.setActionDate(rs.getString("operation_date"));
+            order.setPlace(rs.getString("place"));
+            order.setUserName(rs.getString("user_name"));
+            order.setUserSurname(rs.getString("user_surname"));
+            order.setPhone(rs.getString("user_phone"));
+            return order;
+        });
+    }
+
+    @Override
+    public boolean assignToUser(int csrId, int orderId) {
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("csrId",csrId);
+        params.addValue("orderId",orderId);
+        return jdbcTemplate.update(SET_CSR_ID,params)>0;
     }
 }
