@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Created by Yuliya Pedash on 24.04.2017.
  */
-@SessionScope
+
 @Controller
 @RequestMapping({"residential", "business", "csr", "employee"})
 public class ServiceOrderController {
