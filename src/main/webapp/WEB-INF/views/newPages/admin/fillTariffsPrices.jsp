@@ -17,6 +17,7 @@
 <jsp:include page="../includes/headers/adminHeader.jsp">
     <jsp:param name="pageName" value="AddService"/>
 </jsp:include>
+<jsp:include page="../includes/footer.jsp"/>
 <form modelAttribute="priceByRegionDto"
       action="${pageContext.request.contextPath}/admin/fillTariffsPrices" method="post">
     <div class="container">

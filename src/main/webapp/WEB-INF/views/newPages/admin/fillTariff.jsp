@@ -4,13 +4,14 @@
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="Fill tariff with servics"/>
+        <jsp:param name="tittle" value="Fill in tariff with service"/>
     </jsp:include>
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
-    <jsp:param name="pageName" value="FillTariffWithService"/>
+    <jsp:param name="pageName" value="FillTariff"/>
 </jsp:include>
+<jsp:include page="../includes/footer.jsp"/>
 <form action="/admin/fillTariff" method="post">
     <div class="container">
         <div class="col-md-2"></div>

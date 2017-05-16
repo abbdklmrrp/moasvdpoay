@@ -86,23 +86,23 @@
                         </div>
                         Name
                     </th>
-                    <th class="col-xs-2" data-grid-header="description" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="type_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Description
+                        Type
                     </th>
-                    <th class="col-xs-2" data-grid-header="duration" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="customerType" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Duration
+                        Customer type
                     </th>
                     <th class="col-xs-2" data-grid-header="base_price" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
@@ -113,14 +113,14 @@
                         </div>
                         Price
                     </th>
-                    <th class="col-xs-2" data-grid-header="type_id" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="duration" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Type
+                        Duration
                     </th>
                     <th class="col-xs-2" data-grid-header="action">
                         Action
@@ -133,10 +133,10 @@
                 <tbody>
                 <tr data-grid="row">
                     <td data-cell="name"></td>
-                    <td data-cell="description"></td>
-                    <td data-cell="duration"></td>
-                    <td data-cell="base_price"></td>
                     <td data-cell="type_id"></td>
+                    <td data-cell="customerType"></td>
+                    <td data-cell="base_price"></td>
+                    <td data-cell="duration"></td>
                     <td data-cell="action"></td>
 
                 </tr>
@@ -186,7 +186,7 @@
         renderers: {
             "action": function (pv, wv, grid) {
                 return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
-                    location.href = '${contextPath}/admin/getDetailsProduct?id=' + wv.id
+                    location.href = '${contextPath}/admin/getDetailsProduct=' + wv.id
                     }
                 );
             }
