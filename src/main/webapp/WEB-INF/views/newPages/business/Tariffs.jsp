@@ -12,5 +12,17 @@
     </jsp:include>
     <jsp:include page="../includes/tariffs.jsp"/>
     <jsp:include page="../includes/footer.jsp"/>
+    <script type="text/javascript" src="<c:url value="/resources/js/tariffsPagination.js"/>"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#myTable').pageMe({
+                pagerSelector: '#myPager',
+                showPrevNext: true,
+                hidePageNumbers: false,
+                perPage: 4
+            }, 'allTariffs');
+        });
+    </script>
 </body>
 </html>

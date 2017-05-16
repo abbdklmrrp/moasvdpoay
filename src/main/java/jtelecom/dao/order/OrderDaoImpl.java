@@ -188,16 +188,12 @@ public class OrderDaoImpl implements OrderDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
         params.addValue("productId", productId);
-        //method queryForObject throws only unchecked exception. If database table doesn't exist
-        //rows according with such parameters method returns null. Moiseienko Petro
-//        try {
-//            return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
-//        } catch (Exception e) {
-//            logger.debug("There are no user`s orders with such params.");
-//            return null;
-//        }
-        return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
-
+        try {
+            return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
+        } catch (Exception e) {
+            logger.debug("There are no user`s orders with such params.");
+            return null;
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ import jtelecom.dao.product.ProductDao;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
+import jtelecom.dto.TariffsDataPartitionDTO;
 import jtelecom.security.SecurityAuthenticationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,24 +38,33 @@ public class TariffsController {
 
     private static Logger logger = LoggerFactory.getLogger(TariffsController.class);
 
-    @RequestMapping(value = {"/tariffs"}, method = RequestMethod.GET)
-    public String showTariffsForUser(Model model) {
-        List<Product> tariffs;
+    @RequestMapping(value = "tariffs")
+    public String showAvailableTariffsForUser() {
+        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        return "newPages/" + currentUser.getRole().getNameInLowwerCase() + "/Tariffs";
+    }
+
+    @RequestMapping(value = "availableUserTariffs")
+    public String showAvailableTariffsForCSR() {
+        return "newPages/csr/UserTariffs";
+    }
+
+    @RequestMapping(value = {"allTariffs"}, method = RequestMethod.GET)
+    @ResponseBody
+    public TariffsDataPartitionDTO showTariffsForUser(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
+        TariffsDataPartitionDTO dto = new TariffsDataPartitionDTO();
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user: {}", currentUser.toString());
-        Product currentTariff = productDao.getCurrentCustomerTariff(currentUser.getCustomerId());
+        dto.setCurrentTariff(productDao.getCurrentCustomerTariff(currentUser.getCustomerId()));
+        logger.debug("Current tariff of user: {}", dto.getCurrentTariff());
         if (currentUser.getRole().equals(Role.RESIDENTIAL)) {
-            tariffs = productDao.getAvailableTariffsByPlace(currentUser.getPlaceId());
+            dto.setQuantityOfAllTariffs(productDao.getQuantityOfAllAvailableTariffsByPlaceId(currentUser.getPlaceId()));
+            dto.setPartOfTariffs(productDao.getIntervalOfTariffsByPlace(currentUser.getPlaceId(), startIndex, endIndex));
         } else {
-            tariffs = productDao.getAvailableTariffsForCustomers();
+            dto.setQuantityOfAllTariffs(productDao.getQuantityOfAllAvailableTariffsForCustomers());
+            dto.setPartOfTariffs(productDao.getIntervalOfTariffsForCustomers(startIndex, endIndex));
         }
-        if (currentTariff != null) {
-            logger.debug("Current tariff of user: {}", currentTariff.toString());
-            model.addAttribute("currentTariff", currentTariff);
-        }
-        model.addAttribute("tariffs", tariffs);
-        model.addAttribute("userId", -1);
-        return "newPages/" + currentUser.getRole().getName().toLowerCase() + "/Tariffs";
+        return dto;
     }
 
     @RequestMapping(value = {"activateTariff"}, method = RequestMethod.POST)
@@ -97,23 +107,23 @@ public class TariffsController {
     }
 
     @RequestMapping(value = {"userTariffs"})
-    public String showTariffsForUser(Model model, HttpSession session) {
-        List<Product> tariffs;
+    @ResponseBody
+    public TariffsDataPartitionDTO showTariffsForUser(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex, HttpSession session) {
+        TariffsDataPartitionDTO dto = new TariffsDataPartitionDTO();
         Integer userId = (Integer) session.getAttribute("userId");
         User currentUser = userDAO.getUserById(userId);
         logger.debug("Current user: {}", currentUser.toString());
-        Product currentTariff = productDao.getCurrentCustomerTariff(currentUser.getCustomerId());
+        dto.setCurrentTariff(productDao.getCurrentCustomerTariff(currentUser.getCustomerId()));
+        logger.debug("Current tariff of user: {}", dto.getCurrentTariff());
         if (currentUser.getRole().equals(Role.RESIDENTIAL)) {
-            tariffs = productDao.getAvailableTariffsByPlace(currentUser.getPlaceId());
+            dto.setQuantityOfAllTariffs(productDao.getQuantityOfAllAvailableTariffsByPlaceId(currentUser.getPlaceId()));
+            dto.setPartOfTariffs(productDao.getIntervalOfTariffsByPlace(currentUser.getPlaceId(), startIndex, endIndex));
+            dto.setUserId(userId);
         } else {
-            tariffs = productDao.getAvailableTariffsForCustomers();
+            dto.setQuantityOfAllTariffs(productDao.getQuantityOfAllAvailableTariffsForCustomers());
+            dto.setPartOfTariffs(productDao.getIntervalOfTariffsForCustomers(startIndex, endIndex));
+            dto.setUserId(userId);
         }
-        if (currentTariff != null) {
-            logger.debug("Current tariff of user: {}", currentTariff.toString());
-            model.addAttribute("currentTariff", currentTariff);
-        }
-        model.addAttribute("tariffs", tariffs);
-        model.addAttribute("userId", userId);
-        return "newPages/csr/UserTariffs";
+        return dto;
     }
 }
