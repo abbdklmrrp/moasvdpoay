@@ -7,7 +7,10 @@ import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -19,8 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping({"csr"})
-public class CsrMyOrdersController {
-
+public class CsrOrderHistoryController {
     @Resource
     private OrderDao orderDao;
     @Resource
@@ -28,13 +30,12 @@ public class CsrMyOrdersController {
     @Resource
     private UserDAO userDAO;
 
-    @RequestMapping(value = "getMyOrdersPage", method = RequestMethod.GET)
+    @RequestMapping(value = "getHistoryOrdersPage", method = RequestMethod.GET)
     public ModelAndView getMyOrdersPage() {
-        return new ModelAndView("newPages/csr/MyOrders");
+        return new ModelAndView("newPages/csr/OrderHistory");
     }
 
-
-    @RequestMapping(value = "getMyOrders", method = RequestMethod.GET)
+    @RequestMapping(value = "getHistoryOrders", method = RequestMethod.GET)
     public ListHolder getAllOrders(@ModelAttribute GridRequestDto requestDto) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Integer csrId = user.getId();
@@ -42,25 +43,10 @@ public class CsrMyOrdersController {
         Integer length = requestDto.getEndBorder();
         String sort = requestDto.getSort();
         String search = requestDto.getSearch();
-        Integer count = orderDao.getCountOfInprocessingOrdersByCsrId(csrId, search);
-        List<FullInfoOrderDTO> orders = orderDao.getIntervalInprocessingOrdersByCsrId(start, length, sort, search, csrId);
+        Integer count = orderDao.getCountOfProcessedOrdersByCsrId(csrId, search);
+        System.out.println(count);
+        List<FullInfoOrderDTO> orders = orderDao.getIntervalProccesedOrdersByCsrId(start, length, sort, search, csrId);
+        System.out.println(orders.size());
         return ListHolder.create(orders, count);
     }
-
-    @RequestMapping(value = "getOrderPage")
-    public ModelAndView getOrderPage(@RequestParam(name = "id") Integer orderId) {
-        ModelAndView modelAndView = new ModelAndView("newPages/csr/OrderPage");
-        FullInfoOrderDTO order = orderDao.getOrderInfoByOrderId(orderId);
-        modelAndView.addObject("order", order);
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "activateOrder", method = RequestMethod.POST)
-    public String activateOrder(@RequestParam(value = "orderId") int orderId) {
-        System.out.println("hey");
-        boolean success = orderDao.activateOrder(orderId);
-        return success ? "success" : "fail";
-    }
-
-
 }

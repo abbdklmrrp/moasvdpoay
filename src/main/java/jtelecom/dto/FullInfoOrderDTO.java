@@ -39,7 +39,7 @@ public class FullInfoOrderDTO {
         this.operationStatus = operationStatus;
     }
 
-    public FullInfoOrderDTO(){
+    public FullInfoOrderDTO() {
 
     }
 
@@ -157,7 +157,7 @@ public class FullInfoOrderDTO {
                 '}';
     }
 
-    public String infoMessage(){
+    public String infoMessage() {
         String message = "Order's info: " +
                 "\nProduct name: " + productName +
                 "\nProduct description: " + description +

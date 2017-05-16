@@ -134,43 +134,66 @@ public class OrderDaoImpl implements OrderDao {
             " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             " WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id IS NULL) \n" +
             "  WHERE product_name LIKE :pattern OR operation_date LIKE :pattern OR place LIKE :pattern";
-    private static String SELECT_ORDER_INFO_BY_ORDER_ID="SELECT  \n" +
+    private static String SELECT_ORDER_INFO_BY_ORDER_ID = "SELECT  \n" +
             " PRODUCTS.name product_name,PRODUCTS.TYPE_ID product_type, products.CUSTOMER_TYPE_ID customer_type, \n" +
             " products.DESCRIPTION description,orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, \n" +
             " PLACES. NAME place, users.name user_name, users.surname user_surname, users.phone user_phone \n" +
             " FROM ORDERS JOIN \n" +
-            "  (SELECT * FROM OPERATIONS_HISTORY WHERE STATUS_ID=4) a ON (ORDERS.id=a.ORDER_ID) \n" +
+            "  (SELECT MIN(OPERATION_DATE) operation_date,Order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=4 Group by order_id) a ON (ORDERS.id=a.ORDER_ID) \n" +
             "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
             "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             "  WHERE orders.id=:orderId";
 
-    private final static String SET_CSR_ID="UPDATE ORDERS SET CSR_ID=:csrId WHERE ID=:orderId AND CSR_ID IS NULL";
+    private final static String SET_CSR_ID = "UPDATE ORDERS SET CSR_ID=:csrId WHERE ID=:orderId AND CSR_ID IS NULL";
 
-    private final static String SELECT_INPROCESSING_ORDERS_BY_CSR_ID="SELECT * FROM ( \n" +
+    private final static String SELECT_INPROCESSING_ORDERS_BY_CSR_ID = "SELECT * FROM ( \n" +
             "  SELECT product_name,product_type,customer_type,order_id, \n" +
             "  TO_CHAR(operation_date,'YYYY-MM-DD') operation_date,place, \n" +
             "  ROW_NUMBER() OVER (ORDER BY %s) R FROM  ( \n" +
             "  SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID product_type, products.CUSTOMER_TYPE_ID customer_type, \n" +
             "  orders.id order_id,a.OPERATION_DATE operation_date, PLACES. NAME place \n" +
             "  FROM ORDERS JOIN \n" +
-            "  (SELECT * FROM OPERATIONS_HISTORY WHERE STATUS_ID=4) a ON (ORDERS.id=a.ORDER_ID) \n" +
+            "  (SELECT MIN(OPERATION_DATE) operation_date,Order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=4 Group by order_id) a ON (ORDERS.id=a.ORDER_ID) \n" +
             "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
             "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             "  WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id=:csrId)) \n" +
             "  WHERE R>:start AND R<=:length AND (operation_date LIKE :pattern \n" +
             "  OR product_name LIKE :pattern OR place LIKE :pattern)";
-    private final static String SELECT_COUNT_INPROCESSING_ORDERS_BY_CSR_ID="SELECT COUNT(rownum) FROM " +
+    private final static String SELECT_COUNT_INPROCESSING_ORDERS_BY_CSR_ID = "SELECT COUNT(rownum) FROM " +
             " (SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID, products.CUSTOMER_TYPE_ID customer_type, \n" +
             " orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, PLACES. NAME place \n" +
             " FROM ORDERS JOIN \n" +
-            " (SELECT * FROM OPERATIONS_HISTORY WHERE STATUS_ID=4) a ON (ORDERS.id=a.ORDER_ID) \n" +
+            " (SELECT MIN(OPERATION_DATE) operation_date,Order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=4 Group by order_id) a ON (ORDERS.id=a.ORDER_ID) \n" +
             " JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
             " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             " WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id=:csrId) \n" +
             "  WHERE product_name LIKE :pattern OR operation_date LIKE :pattern OR place LIKE :pattern";
-    private final static String ACTIVATE_INPROCESSING_ORDER="UPDATE ORDERS SET " +
+    private final static String ACTIVATE_INPROCESSING_ORDER = "UPDATE ORDERS SET " +
             "CURRENT_STATUS_ID=1" +
             "WHERE ID=:orderId AND CURRENT_STATUS_ID=4";
+
+    private final static String SELECT_PROCESSED_ORDERS_BY_CSR_ID = "SELECT * FROM ( \n" +
+            "  SELECT product_name,product_type,customer_type,order_id, \n" +
+            "  TO_CHAR(operation_date,'YYYY-MM-DD') operation_date,place, \n" +
+            "  ROW_NUMBER() OVER (ORDER BY %s) R FROM  ( \n" +
+            "  SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID product_type, products.CUSTOMER_TYPE_ID customer_type, \n" +
+            "  orders.id order_id,a.OPERATION_DATE operation_date, PLACES. NAME place \n" +
+            "  FROM ORDERS JOIN \n" +
+            "  (SELECT min(OPERATION_DATE) operation_date,order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=1 GROUP BY ORDER_ID) a ON (ORDERS.id=a.ORDER_ID) \n" +
+            "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
+            "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
+            "  WHERE  orders.csr_id=:csrId)) \n" +
+            "  WHERE R>:start AND R<=:length AND (operation_date LIKE :pattern \n" +
+            "  OR product_name LIKE :pattern OR place LIKE :pattern)";
+    private static final String SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID = "SELECT COUNT(rownum) FROM " +
+            " (SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID, products.CUSTOMER_TYPE_ID customer_type, \n" +
+            " orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, PLACES. NAME place \n" +
+            " FROM ORDERS JOIN \n" +
+            " (SELECT min(OPERATION_DATE) operation_date,order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=1 GROUP BY ORDER_ID) a ON (ORDERS.id=a.ORDER_ID) \n" +
+            " JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
+            " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
+            " WHERE orders.csr_id=:csrId) \n" +
+            "  WHERE product_name LIKE :pattern OR operation_date LIKE :pattern OR place LIKE :pattern";
 
     @Override
     public Order getById(int id) {
@@ -311,19 +334,20 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public Integer getCountOrdersWithoutCsr(String search) {
-        MapSqlParameterSource params = new MapSqlParameterSource("pattern", "%"+search+"%");
+        MapSqlParameterSource params = new MapSqlParameterSource("pattern", "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_WITHOUT_CSR, params, Integer.class);
     }
 
+    //TODO rowmapper
     @Override
     public List<FullInfoOrderDTO> getIntervalOrdersWithoutCsr(int start, int length, String sort, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        if(sort.isEmpty()){
-            sort="order_id";
+        if (sort.isEmpty()) {
+            sort = "order_id";
         }
         params.addValue("start", start);
         params.addValue("length", length);
-        params.addValue("pattern", "%"+search+"%");
+        params.addValue("pattern", "%" + search + "%");
         String sql = String.format(SELECT_ALL_ORDERS_WITHOUT_CSR, sort);
         List<FullInfoOrderDTO> orders = jdbcTemplate.query(sql, params, (rs, rownum) -> {
             FullInfoOrderDTO order = new FullInfoOrderDTO();
@@ -340,8 +364,8 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public FullInfoOrderDTO getOrderInfoByOrderId(Integer orderId) {
-        MapSqlParameterSource params=new MapSqlParameterSource("orderId",orderId);
-        return jdbcTemplate.queryForObject(SELECT_ORDER_INFO_BY_ORDER_ID,params,(rs,rownum)->{
+        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
+        return jdbcTemplate.queryForObject(SELECT_ORDER_INFO_BY_ORDER_ID, params, (rs, rownum) -> {
             FullInfoOrderDTO order = new FullInfoOrderDTO();
             order.setProductName(rs.getString("product_name"));
             order.setDescription(rs.getString("description"));
@@ -359,30 +383,31 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public boolean assignToUser(int csrId, int orderId) {
-        MapSqlParameterSource params=new MapSqlParameterSource();
-        params.addValue("csrId",csrId);
-        params.addValue("orderId",orderId);
-        return jdbcTemplate.update(SET_CSR_ID,params)>0;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("csrId", csrId);
+        params.addValue("orderId", orderId);
+        return jdbcTemplate.update(SET_CSR_ID, params) > 0;
     }
 
     @Override
     public Integer getCountOfInprocessingOrdersByCsrId(int csrId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("pattern", "%"+search+"%");
-        params.addValue("csrId",csrId);
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("csrId", csrId);
         return jdbcTemplate.queryForObject(SELECT_COUNT_INPROCESSING_ORDERS_BY_CSR_ID, params, Integer.class);
     }
 
+    //TODO rowmapper
     @Override
     public List<FullInfoOrderDTO> getIntervalInprocessingOrdersByCsrId(int start, int length, String sort, String search, int csrId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        if(sort.isEmpty()){
-            sort="order_id";
+        if (sort.isEmpty()) {
+            sort = "order_id";
         }
         params.addValue("start", start);
         params.addValue("length", length);
-        params.addValue("pattern", "%"+search+"%");
-        params.addValue("csrId",csrId);
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("csrId", csrId);
         String sql = String.format(SELECT_INPROCESSING_ORDERS_BY_CSR_ID, sort);
         List<FullInfoOrderDTO> orders = jdbcTemplate.query(sql, params, (rs, rownum) -> {
             FullInfoOrderDTO order = new FullInfoOrderDTO();
@@ -399,7 +424,40 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public boolean activatedOrder(int orderId) {
-        MapSqlParameterSource params=new MapSqlParameterSource("orderId",orderId);
-        return jdbcTemplate.update(ACTIVATE_INPROCESSING_ORDER,params)>0;
+        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
+        return jdbcTemplate.update(ACTIVATE_INPROCESSING_ORDER, params) > 0;
+    }
+
+    //TODO rowmapper
+    @Override
+    public List<FullInfoOrderDTO> getIntervalProccesedOrdersByCsrId(int start, int length, String sort, String search, int csrId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        if (sort.isEmpty()) {
+            sort = "order_id";
+        }
+        params.addValue("start", start);
+        params.addValue("length", length);
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("csrId", csrId);
+        String sql = String.format(SELECT_PROCESSED_ORDERS_BY_CSR_ID, sort);
+        List<FullInfoOrderDTO> orders = jdbcTemplate.query(sql, params, (rs, rownum) -> {
+            FullInfoOrderDTO order = new FullInfoOrderDTO();
+            order.setProductName(rs.getString("product_name"));
+            order.setProductType(ProductType.getProductTypeFromId(rs.getInt("product_type")));
+            order.setCustomerType(CustomerType.getCustomerTypeFromId(rs.getInt("customer_type")));
+            order.setOrderId(rs.getInt("order_id"));
+            order.setActionDate(rs.getString("operation_date"));
+            order.setPlace(rs.getString("place"));
+            return order;
+        });
+        return orders;
+    }
+
+    @Override
+    public Integer getCountOfProcessedOrdersByCsrId(int csrId, String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("csrId", csrId);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID, params, Integer.class);
     }
 }

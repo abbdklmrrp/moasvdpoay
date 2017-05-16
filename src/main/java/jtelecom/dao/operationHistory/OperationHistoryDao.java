@@ -1,5 +1,8 @@
 package jtelecom.dao.operationHistory;
 
+import jtelecom.dto.FullComplaintInfoDTO;
+import jtelecom.dto.FullInfoOrderDTO;
+
 import java.util.List;
 
 /**
@@ -8,9 +11,9 @@ import java.util.List;
  */
 public interface OperationHistoryDao {
 
-    List<OperationHistoryRecord> getOperationHistoryByUserId(Integer userId,int start,int length, String order);
+    List<FullInfoOrderDTO> getOperationHistoryByUserId(Integer userId, int start, int length, String order, String search);
 
-    Integer getCountOperationForUser(Integer userId);
+    Integer getCountOperationForUser(Integer userId, String search);
 
     Integer getCountOperationsByOrderId(int orderId);
 

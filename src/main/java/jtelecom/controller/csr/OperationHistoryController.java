@@ -2,6 +2,7 @@ package jtelecom.controller.csr;
 
 import jtelecom.dao.operationHistory.OperationHistoryDao;
 import jtelecom.dao.operationHistory.OperationHistoryRecord;
+import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import org.slf4j.Logger;
@@ -37,11 +38,14 @@ public class OperationHistoryController {
     public ListHolder getOperationHistory(@ModelAttribute GridRequestDto request, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("userId");
         String sort = request.getSort();
+        String search=request.getSearch();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
+        System.out.println(request.toString());
         logger.debug("Get operation history in interval:" + start + " : " + length);
-        List<OperationHistoryRecord> data = operationHistoryDao.getOperationHistoryByUserId(userId, start, length, sort);
-        int size = operationHistoryDao.getCountOperationForUser(userId);
+        List<FullInfoOrderDTO> data = operationHistoryDao.getOperationHistoryByUserId(userId, start, length, sort,search);
+        int size = operationHistoryDao.getCountOperationForUser(userId,search);
+        System.out.println(size+" "+data.size());
         return ListHolder.create(data, size);
     }
 

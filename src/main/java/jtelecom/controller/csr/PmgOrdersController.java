@@ -36,13 +36,13 @@ public class PmgOrdersController {
         return ListHolder.create(orders, count);
     }
 
-    @RequestMapping(value = "getHistory",method = RequestMethod.GET)
+    @RequestMapping(value = "getHistory", method = RequestMethod.GET)
     public ListHolder getData(@RequestParam(name = "start") int startIndex,
-                                             @RequestParam(name = "end") int endIndex,
-                                             @RequestParam(name="orderId") int orderId) {
-        Integer amount=operationHistoryDao.getCountOperationsByOrderId(orderId);
-        List<OperationHistoryRecord> history=operationHistoryDao.getIntervalOfOperationsByOrderId(startIndex,endIndex,orderId);
-        return ListHolder.create(history,amount);
+                              @RequestParam(name = "end") int endIndex,
+                              @RequestParam(name = "orderId") int orderId) {
+        Integer amount = operationHistoryDao.getCountOperationsByOrderId(orderId);
+        List<OperationHistoryRecord> history = operationHistoryDao.getIntervalOfOperationsByOrderId(startIndex, endIndex, orderId);
+        return ListHolder.create(history, amount);
 
 
     }

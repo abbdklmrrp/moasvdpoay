@@ -1,32 +1,15 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Petro
-  Date: 09.05.2017
-  Time: 23:21
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ include file="../includes/head.jsp" %>
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="User Orders"/>
+        <jsp:param name="tittle" value="All orders"/>
     </jsp:include>
-    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-        google.load("jquery", "1.4.4");
-    </script>
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp">
-    <jsp:param name="pageName" value="Users"/>
+    <jsp:param name="All orders" value=""/>
 </jsp:include>
-<jsp:include page="../includes/csrTabMenuBegin.jsp">
-    <jsp:param name="page" value="Orders"/>
-</jsp:include>
-<button  class="btn btn-primary" onclick="showHistory()">Show history</button>
-<div class="container" id="table" style=display:none;">
+<div class="container">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
@@ -40,7 +23,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-10" data-grid="title">
-                    Operations
+                    Orders
                 </div>
                 <div class="col-md-2" style="text-align:right;">
                     <a href="javascript:" data-grid="pager-refresh">
@@ -53,8 +36,10 @@
             <div class="row" style="margin: 20px 0;">
                 <div class="col-md-2">
                     <select class="form-control" data-grid="pager-length">
-                        <option value="5">5</option>
                         <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -93,7 +78,25 @@
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Product name
+                        Name
+                    </th>
+                    <th class="col-xs-2" data-grid-header="product_type" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Type
+                    </th>
+                    <th class="col-xs-2" data-grid-header="customer_type" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Customer type
                     </th>
                     <th class="col-xs-2" data-grid-header="operation_date" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
@@ -102,31 +105,41 @@
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Date
+                        Processed date
                     </th>
-                    <th class="col-xs-2" data-grid-header="current_status_id" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="place" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Status
+                        Region
+                    </th>
+                    <th class="col-xs-1" data-grid-header="info">
+                        Info
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr data-grid="row" >
+                <tr data-grid="row">
                     <td data-cell="product_name"></td>
+                    <td data-cell="product_type"></td>
+                    <td data-cell="customer_type"></td>
                     <td data-cell="operation_date"></td>
-                    <td data-cell="current_status_id"></td>
+                    <td data-cell="place"></td>
+                    <td data-cell="info"></td>
+
                 </tr>
                 </tbody>
             </table>
             <div class="row" style="margin: 20px 0;">
                 <div class="col-md-2">
                     <select class="form-control" data-grid="pager-length">
-                        <option value="5">5</option>
                         <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
                     </select>
                 </div>
                 <div class="col-md-10">
@@ -149,38 +162,28 @@
             </div>
         </div>
     </div>
+
+
 </div>
-<jsp:include page="../includes/csrTabMenuEnd.jsp"/>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
-
-<script src="${pageContext.request.contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>
-
 <script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/orderInfo.js"></script>
 <script>
-    function showHistory() {
-        if ($("#table").is(":hidden")) {
-            $().BooGrid({
-                id: 'productsIds',
-                ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/getOperationHistory.json'}),
-                listeners: [
-                    new ElementListener($('#progressId'))
-                ]
-            })
-            $("#table").show("slow");
-
-        } else {
-
-            $("#table").hide("slow");
-
+    $().BooGrid({
+        id: 'productsIds',
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/getHistoryOrders.json'}),
+        listeners: [
+            new ElementListener($('#progressId'))
+        ],
+        renderers: {
+            "info":function (pv,wv,grid) {
+                return $('<input type="button" class="btn btn-primary" onclick="orderInfo('+wv.order_id+')" value="View">')
+            }
         }
-
-    }
+    })
 </script>
+

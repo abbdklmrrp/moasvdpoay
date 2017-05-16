@@ -35,6 +35,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="${pageContext.request.contextPath}/csr/getAllOrdersPage">All orders</a></li>
                         <li><a href="${pageContext.request.contextPath}/csr/getMyOrdersPage">My orders</a></li>
+                        <li><a href="${pageContext.request.contextPath}/csr/getHistoryOrdersPage">History</a></li>
                     </ul>
                 </li>
                 <c:choose>

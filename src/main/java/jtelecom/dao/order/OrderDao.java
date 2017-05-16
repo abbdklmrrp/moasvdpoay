@@ -91,4 +91,8 @@ public interface OrderDao extends Dao<Order> {
     List<FullInfoOrderDTO> getIntervalInprocessingOrdersByCsrId(int start, int length, String sort, String search, int csrId);
 
     boolean activatedOrder(int orderId);
+
+    List<FullInfoOrderDTO> getIntervalProccesedOrdersByCsrId(int start,int length,String sort, String search,int csrId);
+
+    Integer getCountOfProcessedOrdersByCsrId(int csrId, String search);
 }
