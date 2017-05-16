@@ -43,6 +43,7 @@ public interface OrderDao extends Dao<Order> {
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
     boolean suspendOrder(Integer orderId);
+
     /**
      * This method sets 'Activated' status for particular order.
      *
@@ -61,20 +62,21 @@ public interface OrderDao extends Dao<Order> {
      */
     Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId);
 
-    /**
-     * This method returns Order Row DTO object by customer id.
-     * For forming this object it gets data on all orders of users of
-     * customer with given id.
-     *
-     * @param customerId id of customer
-     * @return OrdersRowDTO object
-     * @see OrdersRowDTO for details
-     */
-    List<OrdersRowDTO> getOrderRowsBDTOByCustomerId(Integer customerId);
-
     Integer getCountOrdersByUserId(Integer userId, String search);
 
-    List<OrdersRowDTO> getIntervalOrdersBuUserId(int start, int length,String sort, String search, int userId);
 
+    /**
+     * Yuliya
+     *
+     * @param order
+     * @return
+     */
+    Integer saveAndGetGeneratedId(Order order);
+
+    List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer length, String search, String sort, Integer customerId);
+
+    Integer getCountOrderRowsDTOByCustomerId(String search, String sort, Integer customerId);
+
+    List<OrdersRowDTO> getIntervalOrdersBuUserId(int start, int length, String sort, String search, int userId);
 
 }

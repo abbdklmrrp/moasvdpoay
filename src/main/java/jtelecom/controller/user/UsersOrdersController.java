@@ -5,6 +5,8 @@ import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.OrdersRowDTO;
 import jtelecom.dto.SuspendFormDTO;
+import jtelecom.grid.GridRequestDto;
+import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.OrderService;
 import jtelecom.util.DatesHelper;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.annotation.SessionScope;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -22,6 +25,7 @@ import java.util.List;
 /**
  * Created by Yuliya Pedash on 07.05.2017.
  */
+@SessionScope
 @Controller
 @RequestMapping({"residential", "business", "csr"})
 public class UsersOrdersController {
@@ -30,7 +34,7 @@ public class UsersOrdersController {
     private final static String DATE_ERROR_MSG = "Unable to suspend your order. Please, check the dates you've entered.";
     private final static String FAIL_SUSPEND_ERROR_MSG = "Sorry! An error occurred while suspending your order. Please, try again.";
     private final static String CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG = "Unable to suspend your order within these dates, because you have other planned tasks that can interrupt superdense process.";
-
+    User user;
     @Resource
     private OrderDao orderDao;
     @Resource
@@ -45,11 +49,11 @@ public class UsersOrdersController {
 
     @RequestMapping(value = {"orders"}, method = RequestMethod.GET)
     public String showOrdersForUser(Model model) {
-        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         String userRoleLowerCase = user.getRole().getNameInLowwerCase();
         logger.debug("Current user: {}", user.toString());
-        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
-        model.addAttribute("ordersRows", ordersRows);
+//        List<OrdersRowDTO> ordersRows = orderDao.getLimitedOrderRowsDTOByCustomerId(, user.getCustomerId());
+//        model.addAttribute("ordersRows", ordersRows);
         model.addAttribute("userRole", userRoleLowerCase);
         return "newPages/" + userRoleLowerCase + "/Orders";
     }
@@ -63,10 +67,21 @@ public class UsersOrdersController {
 //    private void showOrders(Model model) {
 //        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
 //        logger.debug("Current user: {}", user.toString());
-//        List<OrdersRowDTO> ordersRows = orderDao.getOrderRowsBDTOByCustomerId(user.getCustomerId());
+//        List<OrdersRowDTO> ordersRows = orderDao.getLimitedOrderRowsDTOByCustomerId(user.getCustomerId());
 //        model.addAttribute("ordersRows", ordersRows);
 //    }
-
+@RequestMapping(value = {"getOrders"}, method = RequestMethod.GET)
+@ResponseBody
+public ListHolder showServices(@ModelAttribute GridRequestDto request) {
+    String sort = request.getSort();
+    int start = request.getStartBorder();
+    int length = request.getEndBorder();
+    String search = request.getSearch();
+    List<OrdersRowDTO> products = orderDao.getLimitedOrderRowsDTOByCustomerId(start, length, search, sort, user.getCustomerId());
+    int size = orderDao.getCountOrderRowsDTOByCustomerId(search, sort, user.getCustomerId());
+    logger.debug("Get orders in interval:" + start + " : " + length);
+    return ListHolder.create(products, size);
+}
     @RequestMapping(value = {"suspend", "suspend"}, method = RequestMethod.POST)
     @ResponseBody
     public String suspendOrder(@RequestBody SuspendFormDTO suspendFormDTO) {

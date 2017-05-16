@@ -1,15 +1,12 @@
 package jtelecom.dao.order;
 
-import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.product.ProductType;
 import jtelecom.dto.OrdersRowDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
 
 
 /**
@@ -18,17 +15,15 @@ import java.util.GregorianCalendar;
 public class OrdersRowDTORowMapper implements RowMapper<OrdersRowDTO> {
     @Override
     public OrdersRowDTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        Date creationDate = resultSet.getDate("operation_date");
-        Calendar finalDateCal = new GregorianCalendar();
-        int duration = resultSet.getInt("duration");
-        String name = resultSet.getString("name");
-        Integer orderId = resultSet.getInt("id");
-        ProductType productType = ProductType.getProductTypeFromId(resultSet.getInt("type_id"));
-        Integer productId = resultSet.getInt("product_id");
-        OperationStatus operationStatus = OperationStatus.getOperationStatusFromId(resultSet.getInt("current_status_id"));
-        finalDateCal.setTime(creationDate);
-        finalDateCal.add(Calendar.DATE, duration);
+        OrdersRowDTO ordersRowDTO = new OrdersRowDTO();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        ordersRowDTO.setName(resultSet.getString("name"));
+        ordersRowDTO.setOperationStatus(resultSet.getString("operation_status"));
+        ordersRowDTO.setOrderId(resultSet.getInt("order_id"));
+        ordersRowDTO.setProductId(resultSet.getInt("product_id"));
+        ordersRowDTO.setProductType(ProductType.getProductTypeFromId(resultSet.getInt("product_type")));
+        ordersRowDTO.setEndDate(simpleDateFormat.format(resultSet.getDate("end_date")));
+        return ordersRowDTO;
 
-        return new OrdersRowDTO(orderId, name, productType, productId, finalDateCal, operationStatus);
     }
 }

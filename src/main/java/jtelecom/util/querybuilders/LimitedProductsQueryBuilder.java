@@ -6,11 +6,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
  * Created by Yuliya Pedash on 15.05.2017.
  */
 public class LimitedProductsQueryBuilder {
-    private final static StringBuffer SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL = new StringBuffer("SELECT\n" +
-            "  products.*,\n" +
-            "  rownum\n" +
-            "FROM products\n" +
-            "WHERE rownum <= :length AND rownum > :start AND TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/");
     private static final String SEARCH_SQL = " AND LOWER(name) LIKE LOWER('%s') || '%%' ";
     private static final String CATEGORY_SQL = " AND category_id = ";
     private static final String ORDER_BY_SQL = " ORDER BY ";
@@ -32,6 +27,9 @@ public class LimitedProductsQueryBuilder {
             }
             if (sort.contains("category")) {
                 sort = sort.replace("category", "category_id");
+            }
+            if (sort.contains("product_name")) {
+                sort = sort.replace("product_name", "name");
             }
             queryStringBuffer.append(ORDER_BY_SQL + sort);
         }

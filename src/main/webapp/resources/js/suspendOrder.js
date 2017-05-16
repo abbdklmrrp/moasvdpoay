@@ -90,7 +90,7 @@ function activateOrderAfterSuspend(orderId) {
                     title: "Activation of order was successful",
                     type: "success"
                 });
-                var $actionContainerElement = $("#action" + orderId);
+                var $actionContainerElement = $("#order" + orderId);
                 $actionContainerElement.empty();
                 var newSuspendAction = "<input type=\"button\" onclick=\"toggleFormFunc(" + orderId + ")\" value=\"Suspend\" class=\"btn btn-warning\">";
                 $actionContainerElement.html(newSuspendAction);

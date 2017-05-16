@@ -22,8 +22,8 @@ public class PlannedTask {
     public PlannedTask() {
     }
 
-    public PlannedTask(int id, OperationStatus status, int orderId, Calendar actionDate) {
-        this.id = id;
+    public PlannedTask(OperationStatus status, int orderId, Calendar actionDate) {
+
         this.status = status;
         this.orderId = orderId;
         this.actionDate = actionDate;
