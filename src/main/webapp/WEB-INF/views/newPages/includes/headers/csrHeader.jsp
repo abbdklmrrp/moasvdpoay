@@ -33,7 +33,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Orders<i class="icon-angle-down"></i></a>
                     <ul class="dropdown-menu">
-                        <li><a href="">All orders</a></li>
+                        <li><a href="${pageContext.request.contextPath}/csr/getAllOrdersPage">All orders</a></li>
                         <li><a href="">My orders</a></li>
                     </ul>
                 </li>

@@ -1,6 +1,4 @@
-/**
- * Created by Petro on 09.05.2017.
- */
+
 function activateUser(userId) {
     $.ajax({
         url: 'activateUser',

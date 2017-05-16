@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<div class="container">
+<div class="container" style="margin-bottom: 30px;">
     <div class="col-md-2"></div>
     <div class="col-md-8">
         <h1 style="text-align: center">Write to support</h1>
@@ -30,4 +30,5 @@
     </div>
     <div class="col-md-2"></div>
 </div>
+
 

@@ -16,8 +16,6 @@
                         <input type="password" class="form-control" placeholder="Password" id="Password"
                                name="password">
                         <i class="fa fa-lock"></i>
-                        <a href="<%=request.getContextPath()%>/registration"><h5 style="text-align: right">
-                            Registration</h5></a>
                     </div>
                     <c:if test="${not empty error}">
                         <h4 style="text-align: center; color: #ce001b;">${error}</h4>

@@ -12,6 +12,7 @@ public class PriceByRegionDto {
     private String productDescription;
     private String placeName;
     private BigDecimal priceProduct;
+    private Integer placeId;
 
     public PriceByRegionDto() {
     }
@@ -56,6 +57,14 @@ public class PriceByRegionDto {
         this.priceProduct = priceProduct;
     }
 
+    public Integer getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(Integer placeId) {
+        this.placeId = placeId;
+    }
+
     @Override
     public String toString() {
         return new StringBuilder()
@@ -65,6 +74,7 @@ public class PriceByRegionDto {
                 .append(", productDescription='").append(productDescription).append('\'')
                 .append(", placeName='").append(placeName).append('\'')
                 .append(", priceProduct=").append(priceProduct)
+                .append(", placeId=").append(placeId)
                 .append('}').toString();
     }
 }

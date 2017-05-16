@@ -98,25 +98,16 @@ public class ProductService {
      * @param product
      */
     public void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product) {
-        List<Integer> oldServiceIdList = getIdServicesOfTariff(product);
-        List<Integer> newServicesId = CollectionUtil.convertArrayToList(servicesId);
+        List<TariffServiceDto> oldServiceList = productDao.getServicesByTariff(product.getId());
+        List<TariffServiceDto> newServiceList = fillInDTOForBatchUpdate(product.getId(), servicesId);
 
-        // FIXME: 11.05.2017 merge --oracle -- insert+delete+update at same time use batch --optional
-        Collection uniqueServicesInFirstCollection = CollectionUtil.getUniqueElementsInFirstCollection(oldServiceIdList, newServicesId);
-        // FIXME: 11.05.2017 convert to dto
-        Object[] servicesToRemove1 = CollectionUtil.convertCollectionToArray(uniqueServicesInFirstCollection);
-        // FIXME: 12.05.2017 generic
-        Integer[] integers = (Integer[]) servicesToRemove1;
+        List<TariffServiceDto> uniqueServicesInFirstCollection = (List<TariffServiceDto>) CollectionUtil
+                .getUniqueElementsInFirstCollection(oldServiceList, newServiceList);
+        productDao.deleteServiceFromTariff(uniqueServicesInFirstCollection);
 
-        ArrayList<TariffServiceDto> tariffServiceDtos = fillInDTOForBatchUpdate(product.getId(), integers);
-        productDao.deleteServiceFromTariff(tariffServiceDtos);
-
-        uniqueServicesInFirstCollection = CollectionUtil.getUniqueElementsInFirstCollection(newServicesId, oldServiceIdList);
-        // FIXME: 12.05.2017  generic
-        Object[] servicesToFillInTariff = CollectionUtil.convertCollectionToArray(uniqueServicesInFirstCollection);
-        Integer[] integers1 = (Integer[]) servicesToFillInTariff;
-        tariffServiceDtos = fillInDTOForBatchUpdate(product.getId(), integers1);
-        productDao.fillInTariffWithServices(tariffServiceDtos);
+        uniqueServicesInFirstCollection = (List<TariffServiceDto>) CollectionUtil
+                .getUniqueElementsInFirstCollection(newServiceList, oldServiceList);
+        productDao.fillInTariffWithServices(uniqueServicesInFirstCollection);
     }
 
     /**
@@ -126,10 +117,10 @@ public class ProductService {
      * @return
      */
     private ArrayList<Integer> getIdServicesOfTariff(Product product) {
-        List<Product> serviceList = productDao.getServicesByTariff(product);
+        List<TariffServiceDto> serviceList = productDao.getServicesByTariff(product.getId());
         ArrayList<Integer> serviceIdList = new ArrayList<>();
-        for (Product product1 : serviceList) {
-            serviceIdList.add(product1.getId());
+        for (TariffServiceDto product1 : serviceList) {
+            serviceIdList.add(product1.getServiceId());
         }
         return serviceIdList;
     }
@@ -157,8 +148,8 @@ public class ProductService {
         for (int i = 0; i < arrayOfIdServices.length; i++) {
             if (arrayOfIdServices[i] != null) {
                 TariffServiceDto tariffServiceDto = new TariffServiceDto();
-                tariffServiceDto.setIdTariff(idTariff);
-                tariffServiceDto.setIdService(arrayOfIdServices[i]);
+                tariffServiceDto.setTariffId(idTariff);
+                tariffServiceDto.setServiceId(arrayOfIdServices[i]);
                 products.add(tariffServiceDto);
             }
         }
@@ -190,6 +181,9 @@ public class ProductService {
         }
         if (!Objects.equals(updateProduct.getBasePrice(), product.getBasePrice())) {
             product.setBasePrice(updateProduct.getBasePrice());
+        }
+        if (updateProduct.getCustomerType() != product.getCustomerType()) {
+            product.setCustomerType(updateProduct.getCustomerType());
         }
         return productDao.update(product);
     }

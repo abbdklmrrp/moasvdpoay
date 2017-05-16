@@ -17,8 +17,7 @@
 <jsp:include page="../includes/headers/adminHeader.jsp">
     <jsp:param name="pageName" value="AddService"/>
 </jsp:include>
-<form modelAttribute="priceByRegionDto"
-      action="${pageContext.request.contextPath}/admin/updateProductPrices" method="post">
+<form action="${pageContext.request.contextPath}/admin/updateProductPrice" method="post">
     <div class="container">
         <div class="col-md-2"></div>
         <div class="col-md-8">
@@ -29,10 +28,10 @@
                     <th>Region</th>
                     <th>Product price</th>
                 </tr>
-                <c:forEach var="place" items="${placesForFillInTariff}">
+                <c:forEach var="place" items="${placesAndPrice}">
                     <tr>
-                        <td><input type="hidden" name="placeId" value="${place.id}">${place.name}</td>
-                        <td><input type="text" name="priceByRegion" value=""></td>
+                        <td><input type="hidden" name="placeId" value="${place.placeId}">${place.placeName}</td>
+                        <td><input type="text" name="priceByRegion" value="${place.priceProduct}"></td>
                     </tr>
                 </c:forEach>
             </table>

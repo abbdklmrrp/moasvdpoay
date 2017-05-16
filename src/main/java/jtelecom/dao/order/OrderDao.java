@@ -1,6 +1,7 @@
 package jtelecom.dao.order;
 
 import jtelecom.dao.interfaces.Dao;
+import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.dto.OrdersRowDTO;
 
 import java.util.List;
@@ -64,6 +65,15 @@ public interface OrderDao extends Dao<Order> {
 
     Integer getCountOrdersByUserId(Integer userId, String search);
 
+    List<FullInfoOrderDTO> getIntervalOrdersBuUserId(int start, int length, String sort, String search, int userId);
+
+    Integer getCountOrdersWithoutCsr(String search);
+
+    List<FullInfoOrderDTO> getIntervalOrdersWithoutCsr(int start, int length, String sort, String search);
+
+    FullInfoOrderDTO getOrderInfoByOrderId(Integer orderId);
+
+    boolean assignToUser(int csrId, int orderId);
 
     /**
      * Yuliya
@@ -77,6 +87,5 @@ public interface OrderDao extends Dao<Order> {
 
     Integer getCountOrderRowsDTOByCustomerId(String search, String sort, Integer customerId);
 
-    List<OrdersRowDTO> getIntervalOrdersBuUserId(int start, int length, String sort, String search, int userId);
 
 }
