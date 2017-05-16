@@ -7,6 +7,7 @@ import jtelecom.dao.product.ProcessingStrategy;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
 import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.ProductCatalogRowDTO;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,6 +36,7 @@ import java.util.List;
 @Controller
 @RequestMapping({"residential", "business", "csr", "employee"})
 public class ServiceOrderController {
+    private static final Long RECORDS_PER_PAGE = 10l;
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
@@ -48,29 +51,34 @@ public class ServiceOrderController {
     private OrderDao orderDao;
     @Resource
     private ProductService productService;
-
+    User currentUser;
     private static Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
 
-    private final static String NO_PRODUCTS_FOR_YOU_MSG = "Sorry! There are no products for you yet here.";
-    private final static String ORDER_IN_PROCESS_MSG = "Your order on %s is in process. We will contact you later.";
-    private final static String SERVICE_WAS_ACTIVATED_MSG = "Service %s has been activated. Enjoy using it!";
-    private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing your order. Please, try again!";
+    private final static String NO_PRODUCTS_FOR_YOU_MSG = "Sorry! There are no products yet here.";
+    private final static String ORDER_IN_PROCESS_MSG = "Your order on %s is in process. It will be activated after processing.";
+    private final static String SERVICE_WAS_ACTIVATED_MSG = "Service %s has been activated. Thank you!";
+    private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing this order. Please, try again!";
 
     @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
-    public String getUsers(Model model, @RequestParam(required = false) Integer categoryId) throws IOException {
-        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-//        ModelAndView modelAndView = new ModelAndView("newPages/" + currentUser.getRole().getNameInLowwerCase() + "/Services");
+    public String getUsers(Model model, @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String categoryName, HttpSession session) throws IOException {
+        this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
+        if (currentUser.getRole() == Role.CSR) {
+            this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
+        }
         this.categoryId = categoryId;
+        model.addAttribute("categoryName", categoryName == null ?
+                "All categories" : categoryName);
         List<ProductCategories> productCategories = productDao.findProductCategories();
         model.addAttribute("productsCategories", productCategories);
-        model.addAttribute("userRole", currentUser.getRole().getNameInLowwerCase());
-        return "newPages/" + currentUser.getRole().getNameInLowwerCase() + "/Services";
+        model.addAttribute("userRole", userRoleLowerCase);
+        return "newPages/" + userRoleLowerCase + "/Services";
     }
+
 
     @RequestMapping(value = {"Services"}, method = RequestMethod.GET)
     @ResponseBody
     public ListHolder showServices(@ModelAttribute GridRequestDto request) {
-        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
@@ -108,21 +116,20 @@ public class ServiceOrderController {
     @RequestMapping(value = {"activateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String activateService(@RequestParam Integer serviceId) {
-        Product chosenProduct = productDao.getById(serviceId);
+        Product product = productDao.getById(serviceId);
         Order order = new Order();
-        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         String msg;
         order.setProductId(serviceId);
         order.setUserId(currentUser.getId());
-        if (chosenProduct.getProcessingStrategy() == ProcessingStrategy.NeedProcessing) {
+        if (product.getProcessingStrategy() == ProcessingStrategy.NeedProcessing) {
             order.setCurrentStatus(OperationStatus.InProcessing);
-            msg = String.format(ORDER_IN_PROCESS_MSG, chosenProduct.getName());
+            msg = String.format(ORDER_IN_PROCESS_MSG, product.getName());
         } else {
             order.setCurrentStatus(OperationStatus.Active);
-            msg = String.format(SERVICE_WAS_ACTIVATED_MSG, chosenProduct.getName());
+            msg = String.format(SERVICE_WAS_ACTIVATED_MSG, product.getName());
 
         }
-        boolean isActivated = orderDao.save(order);
+        boolean isActivated = orderService.activateOrder(product, order);
         if (!isActivated) {
             msg = ERROR_PLACING_ORDER_MSG;
             logger.warn("Error while placing order: {} ", order.toString());
@@ -135,7 +142,6 @@ public class ServiceOrderController {
     @RequestMapping(value = {"getNewOrderStatus"}, method = RequestMethod.GET)
     @ResponseBody
     public String getNewOrderStatus(@RequestParam Integer serviceId) {
-        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Order newOrder = orderDao.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
         logger.debug("Gotten  order of user: {} ", newOrder);
         return newOrder.getCurrentStatus().getName();
@@ -150,7 +156,6 @@ public class ServiceOrderController {
     @RequestMapping(value = {"deactivateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String deactivateOrder(@RequestParam Integer serviceId) {
-        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Boolean wasDeactivated = orderService.deactivateOrderForProductOfUserCompletely(serviceId, currentUser.getId());
         if (wasDeactivated) {
             logger.info("Successful deactivation of order (product_id : {}, user_id: {})", serviceId,

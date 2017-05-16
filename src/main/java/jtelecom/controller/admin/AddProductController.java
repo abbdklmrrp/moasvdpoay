@@ -58,7 +58,7 @@ public class AddProductController {
         if (isEmptyFieldsOfTariff) {
             logger.error("Incoming request has empty fields");
             mav.addObject("error", ERROR_WRONG_FIELDS);
-            mav.setViewName("admin/addTariff");
+            mav.setViewName("newPages/admin/addTariff");
             return mav;
         }
         Integer isSave = productDao.saveProduct(product);
@@ -84,7 +84,7 @@ public class AddProductController {
             List<ProductCategories> productCategories = productDao.findProductCategories();
             logger.debug("Get all service's categories {} ", productCategories.toString());
             mav.addObject("productCategories", productCategories);
-            mav.setViewName("admin/addService");
+            mav.setViewName("newPages/admin/addService");
             return mav;
         }
         try {
@@ -93,7 +93,7 @@ public class AddProductController {
         } catch (DuplicateKeyException e) {
             logger.error(ERROR_EXIST_OF_CATEGORY, e);
             mav.addObject("error", ERROR_EXIST_OF_CATEGORY);
-            mav.setViewName("admin/addService");
+            mav.setViewName("newPages/admin/addService");
             return mav;
         }
         Integer isSave = productDao.saveProduct(product);

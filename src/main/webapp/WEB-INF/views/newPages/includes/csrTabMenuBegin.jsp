@@ -21,6 +21,26 @@
                         </c:otherwise>
                     </c:choose>
                     <c:choose>
+                        <c:when test="${param.page == 'UserServices'}">
+                            <li class="wet-asphalt active-tab"><a
+                                    href="${pageContext.request.contextPath}/csr/orderService">User Services</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/orderService">User
+                                Services</a></li>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test="${param.page == 'UserOrders'}">
+                            <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/orders">Current
+                                Orders</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/orders">Current
+                                Orders</a></li>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose>
                         <c:when test="${param.page == 'Orders'}">
                             <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/userOrders">Orders</a></li>
                         </c:when>
