@@ -1,4 +1,7 @@
 <div class="container">
+    <h1 style="text-align: center">Employees</h1>
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
@@ -161,6 +164,6 @@
             </div>
         </div>
     </div>
-
-
+    </div>
+    <div class="col-md-1"></div>
 </div>

@@ -125,6 +125,30 @@ public class ProductDaoImpl implements ProductDao {
             " JOIN Prices ON Prices.product_id = prod.id " +
             " WHERE Prices.place_id = :placeId " +
             " AND prod.type_id = 1/* Tariff */";
+    private final static String SELECT_INTERVAL_TARIFFS_BY_PLACE_SQL = "SELECT * FROM "+
+            " (SELECT" +
+            " prod.id," +
+            " prod.duration," +
+            " prod.type_id," +
+            " prod.need_processing," +
+            " prod.name," +
+            " prod.description," +
+            " prod.status," +
+            " prod.category_id," +
+            " Prices.price base_price," +
+            " ROW_NUMBER() OVER (ORDER BY prod.id) Num" +
+            " FROM Products prod" +
+            " JOIN Prices ON Prices.product_id = prod.id " +
+            " WHERE Prices.place_id = :placeId " +
+            " AND prod.type_id = 1/* Tariff */)" +
+            " WHERE Num > :startIndex" +
+            " AND Num <= :endIndex";
+    private final static String SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_BY_PLACE_ID_SQL = "SELECT" +
+            " COUNT(*)" +
+            " FROM Products"+
+            " JOIN Prices ON Prices.product_id = products.id " +
+            " WHERE Prices.place_id = :placeId " +
+            " AND products.type_id = 1/* Tariff */";
     private final static String SELECT_ALL_SERVICES_OF_USER_CURRENT_TARIFF_SQL = "SELECT\n" +
             "  p2.ID,\n" +
             "  p2.NAME,\n" +
@@ -185,6 +209,28 @@ public class ProductDaoImpl implements ProductDao {
             "base_price " +
             "FROM Products " +
             "WHERE customer_type_id = 1 /* Business */";
+    private final static String SELECT_INTERVAL_TARIFFS_FOR_CUSTOMERS_SQL = "SELECT * FROM" +
+            " (SELECT" +
+            " prod.id," +
+            " prod.duration," +
+            " prod.type_id," +
+            " prod.need_processing," +
+            " prod.name," +
+            " prod.description," +
+            " prod.status," +
+            " prod.category_id," +
+            " prod.base_price," +
+            " ROW_NUMBER() OVER (ORDER BY prod.id) Num" +
+            " FROM Products prod" +
+            " WHERE customer_type_id = 1 /* Business */" +
+            " AND type_id = 1/* Tariff */)" +
+            " WHERE Num > :startIndex" +
+            " AND Num <= :endIndex";
+    private final static String SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_FOR_CUSTOMERS_SQL = "SELECT" +
+            " COUNT(*)" +
+            " FROM Products"+
+            " WHERE customer_type_id = 1 /* Business */" +
+            " AND type_id = 1/* Tariff */";
     private final static String SELECT_SERVICES_FOR_CUSTOMERS_SQL = "SELECT * " +
             "FROM Products " +
             "WHERE customer_type_id = 1 /* Business */ " +
@@ -558,8 +604,57 @@ public class ProductDaoImpl implements ProductDao {
         try {
             return jdbcTemplate.query(SELECT_TARIFFS_BY_PLACE_SQL, params, tariffRowMapper);
         } catch (Exception e) {
-            logger.debug("There are no tariffs in pce with id {}", placeId);
+            logger.debug("There are no tariffs in place with id {}", placeId);
             return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Bulgakov Anton
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Product> getIntervalOfTariffsByPlace(Integer placeId, Integer startIndex, Integer endIndex) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("placeId", placeId);
+        params.addValue("startIndex", startIndex);
+        params.addValue("endIndex", endIndex);
+        try {
+            return jdbcTemplate.query(SELECT_INTERVAL_TARIFFS_BY_PLACE_SQL, params, tariffRowMapper);
+        } catch (Exception e) {
+            logger.debug("There are no tariffs in place with id {}", placeId);
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Bulgakov Anton
+     * {@inheritDoc}
+     */
+    @Override
+    public Integer getQuantityOfAllAvailableTariffsByPlaceId(Integer placeId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("placeId", placeId);
+        try {
+            return jdbcTemplate.queryForObject(SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_BY_PLACE_ID_SQL, params, Integer.class);
+        } catch (Exception e) {
+            logger.debug("There are no available tariffs for user.");
+            return null;
+        }
+    }
+
+    /**
+     * Bulgakov Anton
+     * {@inheritDoc}
+     */
+    @Override
+    public Integer getQuantityOfAllAvailableTariffsForCustomers () {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        try {
+            return jdbcTemplate.queryForObject(SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_FOR_CUSTOMERS_SQL, params, Integer.class);
+        } catch (Exception e) {
+            logger.debug("There are no available tariffs for customers.");
+            return null;
         }
     }
 
@@ -589,6 +684,25 @@ public class ProductDaoImpl implements ProductDao {
             return new ArrayList<>();
         }
     }
+
+    /**
+     * Bulgakov Anton
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Product> getIntervalOfTariffsForCustomers(Integer startIndex, Integer endIndex) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("startIndex", startIndex);
+        params.addValue("endIndex", endIndex);
+        try {
+            return jdbcTemplate.query(SELECT_INTERVAL_TARIFFS_FOR_CUSTOMERS_SQL, params, tariffRowMapper);
+        } catch (Exception e) {
+            logger.debug("There are no tariffs for customers.");
+            return new ArrayList<>();
+        }
+    }
+
+
 
     /**
      * Bulgakov Anton

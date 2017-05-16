@@ -14,10 +14,10 @@
                     </c:choose>
                     <c:choose>
                         <c:when test="${param.page == 'UserTariffs'}">
-                            <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/userTariffs">User tariffs</a></li>
+                            <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/availableUserTariffs">User tariffs</a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/userTariffs">User tariffs</a></li>
+                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/availableUserTariffs">User tariffs</a></li>
                         </c:otherwise>
                     </c:choose>
                     <c:choose>

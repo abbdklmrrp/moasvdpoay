@@ -66,6 +66,25 @@ public interface ProductDao extends Dao<Product> {
     List<Product> getAvailableTariffsByPlace(Integer placeId);
 
     /**
+     * Method returns list of tariffs from interval with first and end number from params.
+     * If there are no tariffs in this place, method returns empty list.
+     *
+     * @param placeId id of place.
+     * @param startIndex number of the first tariff.
+     * @param endIndex number of the end tariff.
+     * @return list with Tariffs from interval.
+     */
+    List<Product> getIntervalOfTariffsByPlace(Integer placeId, Integer startIndex, Integer endIndex);
+
+    /**
+     * Method returns quantity of all tariffs are available in place with id from params. If there are no tariffs in this place, method returns null.
+     *
+     * @param placeId id of place.
+     * @return quantity of tariffs.
+     */
+    Integer getQuantityOfAllAvailableTariffsByPlaceId(Integer placeId);
+
+    /**
      * This method returns all services that are included in current user's Tariff.
      *
      * @param userId id of user
@@ -106,6 +125,22 @@ public interface ProductDao extends Dao<Product> {
      * @return list of tariffs.
      */
     List<Product> getAvailableTariffsForCustomers();
+
+    /**
+     * Method returns list of tariffs for customers from interval with borders from params.
+     * If there are no tariffs in this place, method returns empty list.
+     * @param startIndex number of first tariff.
+     * @param endIndex number of end tariff.
+     * @return list of tariff from interval.
+     */
+    List<Product> getIntervalOfTariffsForCustomers(Integer startIndex, Integer endIndex);
+
+    /**
+     * Method returns quantity of all tariffs are available for customers. If there are no tariffs in this place, method returns null.
+     *
+     * @return quantity of tariffs.
+     */
+    Integer getQuantityOfAllAvailableTariffsForCustomers();
 
     /**
      * Method returns all services that are available for customers.

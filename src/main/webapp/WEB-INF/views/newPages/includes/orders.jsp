@@ -2,8 +2,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <div class="container">
     <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
             <h1 style="text-align: center">Orders</h1>
             <br>
             <%--<c:choose>--%>
@@ -43,7 +43,7 @@
                                 <option value="200">200</option>
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <nav>
                                 <ul class="pagination" style="margin:0px !important;" data-grid="pager">
                                     <li data-grid="pager-prev">
@@ -60,7 +60,7 @@
                                 </ul>
                             </nav>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <form class="form-inline" data-grid="search">
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="Query">
@@ -188,7 +188,7 @@
             <%--</c:otherwise>--%>
             <%--</c:choose>--%>
         </div>
-        <div class="col-md-2"></div>
+        <div class="col-md-1"></div>
     </div>
     <div class="row" style="{margin-bottom:50px;}" align="center">
         <form id="formWithDates" class="form-horizontal">
