@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
-  User: Petro
-  Date: 09.05.2017
-  Time: 23:21
+  User: Yuliya Pedash
+  Date: 16.05.2017
+  Time: 11:01
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -10,12 +10,12 @@
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="User services"/>
+        <jsp:param name="tittle" value="User orders"/>
     </jsp:include>
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp">
-    <jsp:param name="pageName" value="UserService"/>
+    <jsp:param name="pageName" value="UserOrders"/>
 </jsp:include>
 <jsp:include page="../includes/orders.jsp"/>
 <jsp:include page="../includes/footer.jsp"/>

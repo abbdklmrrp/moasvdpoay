@@ -1,6 +1,9 @@
 /**
  * Created by Yuliya Pedash on 06.05.2017.
  */
+$(document).ready(function () {
+    $(".dropdown-toggle").dropdown();
+});
 function activateService(serviceId) {
     $.ajax({
         url: 'activateService',

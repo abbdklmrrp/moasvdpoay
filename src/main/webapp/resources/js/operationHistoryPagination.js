@@ -69,8 +69,8 @@ $.fn.pageMe = function (opts, dataURL, orderId) {
             data: {start: startAt, end: endOn, orderId: orderId},
             async: false,
             success: function (response) {
-                numItems = response.amount;
-                list = response.partOfOperations;
+                numItems = response.total;
+                list = response.data;
                 listLen = list.length;
                 numberOfPage = page;
             },

@@ -3,8 +3,7 @@ package jtelecom.controller.csr;
 import jtelecom.dao.operationHistory.OperationHistoryDao;
 import jtelecom.dao.operationHistory.OperationHistoryRecord;
 import jtelecom.dao.order.OrderDao;
-import jtelecom.dto.OperationHistoryDataPartitionDTO;
-import jtelecom.dto.OrdersRowDTO;
+import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import org.springframework.web.bind.annotation.*;
@@ -33,19 +32,17 @@ public class PmgOrdersController {
         String sort = request.getSort();
         String search = request.getSearch();
         Integer count = orderDao.getCountOrdersByUserId(userId, search);
-        List<OrdersRowDTO> orders = orderDao.getIntervalOrdersBuUserId(start, length, sort, search, userId);
+        List<FullInfoOrderDTO> orders = orderDao.getIntervalOrdersBuUserId(start, length, sort, search, userId);
         return ListHolder.create(orders, count);
     }
 
     @RequestMapping(value = "getHistory",method = RequestMethod.GET)
-    public OperationHistoryDataPartitionDTO getData(@RequestParam(name = "start") int startIndex,
+    public ListHolder getData(@RequestParam(name = "start") int startIndex,
                                              @RequestParam(name = "end") int endIndex,
                                              @RequestParam(name="orderId") int orderId) {
         Integer amount=operationHistoryDao.getCountOperationsByOrderId(orderId);
         List<OperationHistoryRecord> history=operationHistoryDao.getIntervalOfOperationsByOrderId(startIndex,endIndex,orderId);
-        OperationHistoryDataPartitionDTO historyDto=new OperationHistoryDataPartitionDTO(amount,history);
-        System.out.println(historyDto);
-        return historyDto;
+        return ListHolder.create(history,amount);
 
 
     }

@@ -1,55 +1,14 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="User Info"/>
+        <jsp:param name="tittle" value="All orders"/>
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/pmgHeader.jsp">
-    <jsp:param name="pageName" value="User Info"/>
+<jsp:include page="../includes/headers/csrHeader.jsp">
+    <jsp:param name="All orders" value=""/>
 </jsp:include>
-<div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
-    <div class="login-form">
-        <h1 style="text-align: center">Personal information</h1>
-        <br>
-        <div class="form-group form-group-lg">
-            <label class="col-sm-2 control-label">Name</label>
-            <div class="col-sm-10">
-                <input style="border-bottom-width: 0;" type="text" class="form-control disabled" name="name"
-                       id="name" value=${user.name} readonly><br>
-            </div>
-        </div>
-        <div class="form-group form-group-lg">
-            <label class="col-sm-2 control-label">Surname</label><br>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="surname" id="surname"
-                       value=${user.surname} readonly><br>
-            </div>
-        </div>
-        <div class="form-group form-group-lg">
-            <label class="col-sm-2 control-label">Email</label><br>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" name="email" id="email"
-                       value=${user.email} readonly><br>
-            </div>
-        </div>
-        <div class="form-group form-group-lg">
-            <label class="col-sm-2 control-label">Phone</label><br>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="phone" id="phone" value="${user.phone}" readonly><br>
-            </div>
-        </div>
-        <div class="form-group form-group-lg">
-            <label class="col-sm-2 control-label">Address</label><br>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="address" id="address" value="${user.address}" readonly><br>
-            </div>
-        </div>
-    </div>
-</div>
-<br>
 <div class="container">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
@@ -64,7 +23,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-10" data-grid="title">
-                    Products
+                    Orders
                 </div>
                 <div class="col-md-2" style="text-align:right;">
                     <a href="javascript:" data-grid="pager-refresh">
@@ -78,7 +37,9 @@
                 <div class="col-md-2">
                     <select class="form-control" data-grid="pager-length">
                         <option value="10">10</option>
-                        <option value="5">5</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -119,15 +80,6 @@
                         </div>
                         Name
                     </th>
-                    <th class="col-xs-2" data-grid-header="description" data-grid-header-sortable="true">
-                        <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                               data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                               data-grid-header-sortable-down="down"></a>
-                        </div>
-                        Description
-                    </th>
                     <th class="col-xs-2" data-grid-header="product_type" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
@@ -135,29 +87,52 @@
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Product type
+                        Type
                     </th>
-                    <th class="col-xs-2" data-grid-header="current_status_id" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="customer_type" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Status
+                        Customer type
                     </th>
-                    <th class="col-xs-2" data-grid-header="history">
-                        History
+                    <th class="col-xs-2" data-grid-header="operation_date" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Ordering date
+                    </th>
+                    <th class="col-xs-2" data-grid-header="place" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Region
+                    </th>
+                    <th class="col-xs-1" data-grid-header="info">
+                        Info
+                    </th>
+                    <th class="col-xs-1" data-grid-header="action">
+                        Action
                     </th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr data-grid="row">
                     <td data-cell="product_name"></td>
-                    <td data-cell="description"></td>
                     <td data-cell="product_type"></td>
-                    <td data-cell="current_status_id"></td>
-                    <td data-cell="history"></td>
+                    <td data-cell="customer_type"></td>
+                    <td data-cell="operation_date"></td>
+                    <td data-cell="place"></td>
+                    <td data-cell="info"></td>
+                    <td data-cell="action"></td>
 
                 </tr>
                 </tbody>
@@ -166,7 +141,9 @@
                 <div class="col-md-2">
                     <select class="form-control" data-grid="pager-length">
                         <option value="10">10</option>
-                        <option value="5">5</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
                     </select>
                 </div>
                 <div class="col-md-10">
@@ -189,66 +166,31 @@
             </div>
         </div>
     </div>
-</div>
-<div class="container" >
-    <h3 id="header-operations" class="hide" style="text-align: center">Operations</h3>
-    <div class="row">
-        <div class="table-responsive">
-            <table class="table table-bordered hide" id="tbl-operations">
-                <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Operation</th>
-                </tr>
-                </thead>
-                <tbody id="myTable">
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-12 text-center">
-            <ul class="pagination" id="myPager"></ul>
-        </div>
-    </div>
+
+
 </div>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
-<%--<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>--%>
-<%--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>--%>
-<%--<![endif]-->--%>
-
-<%--<script src="${contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>--%>
-<%--<script src="${contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>--%>
-
-<script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
-<script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
-<script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
-<script type="text/javascript" src="<c:url value="/resources/js/operationHistoryPagination.js"/>"></script>
-
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/orderInfo.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/orderAssign.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${contextPath}/pmg/getOrders.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/getAllOrders.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ],
         renderers: {
-            "history": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-success"  value="View" onclick="showHistory('+wv.order_id+')">');
+            "info":function (pv,wv,grid) {
+                return $('<input type="button" class="btn btn-primary" onclick="orderInfo('+wv.order_id+')" value="View">')
+            },
+            "action": function (pv, wv, grid) {
+                return $('<div id=assign' + wv.order_id + '><input type="button" class="btn btn-success" onclick="assignToMe('+wv.order_id+')" value="Assign"></div>')
             }
         }
-    });
-    function showHistory(orderId) {
-        $('#myTable').empty();
-        $('#myPager').empty();
-        $('#myTable').pageMe({
-            pagerSelector: '#myPager',
-            showPrevNext: true,
-            hidePageNumbers: false,
-            perPage: 5
-        }, 'getHistory',orderId);
-
-    };
-
+    })
 </script>
