@@ -8,7 +8,7 @@
             <h4 id="currentUserTariff"></h4>
         </div>
         <div class="table-responsive">
-            <table border="1" class="table table-striped table-hover" id="tableServiceCatalog">
+            <table border="1" class="table table-striped table-hover" id="tableTariffsCatalog">
                 <thead>
                     <tr>
                         <th>Name</th>
