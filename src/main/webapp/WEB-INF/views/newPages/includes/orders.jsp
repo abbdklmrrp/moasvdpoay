@@ -231,8 +231,11 @@
         ],
         renderers: {
             "action": function (pv, wv, grid) {
-                if (wv.operation_status == '"Suspended"') {
+                if (wv.operation_status == "Suspended") {
                     return $('<div id=order' + wv.order_id + '><input type="button" class="btn btn-success"  value="Activate" onclick="activateOrderAfterSuspend(' + wv.order_id + ')"><input type="button" class="btn btn-warning"  value="Suspend" onclick="toggleFormFunc(' + wv.order_id + ')"></div>');
+                }
+                if (wv.operation_status == "In Processing") {
+                    return $('-');
                 }
                 else {
                     return $('<div id=order' + wv.order_id + '><input type="button" class="btn btn-warning"  value="Suspend" onclick="toggleFormFunc(' + wv.order_id + ')"></div>');

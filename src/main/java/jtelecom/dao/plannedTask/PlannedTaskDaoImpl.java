@@ -28,6 +28,7 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
     private final static String DELETE_NEXT_PLANNED_TASK_FOR_ACTIVATION_FOR_PRODUCT_USER_SQL = "DELETE FROM PLANNED_TASKS\n" +
             "WHERE ACTION_DATE = (SELECT MIN(ACTION_DATE) FROM PLANNED_TASKS\n" +
             "WHERE ORDER_ID = :order_id AND STATUS_ID = 1/*Active*/) AND ORDER_ID = :order_id AND STATUS_ID = 1 /*Active*/";
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
@@ -90,6 +91,11 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
     public boolean deleteNextPlannedTask(Integer orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("order_id", orderId);
-        return jdbcTemplate.update(DELETE_PLANNED_TASKS_FOR_ORDER_OF_PRODUCT_FOR_USER_SQL, params) > 0;
+        return jdbcTemplate.update(DELETE_NEXT_PLANNED_TASK_FOR_ACTIVATION_FOR_PRODUCT_USER_SQL, params) > 0;
+    }
+
+    @Override
+    public boolean selectAllPlannedTasksForUserOrder(Integer userId) {
+        return false;
     }
 }
