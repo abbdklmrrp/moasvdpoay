@@ -6,36 +6,39 @@
     <div class="row">
         <h1 style="text-align: center">Services Catalog</h1>
         <div class="col-md-4">
-            <ul class="nav navbar-nav cat-dropdown">
-                <li class="dropdown cat-dropdown ">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Categories </a>
-                    <ul class="dropdown-menu cat-dropdown-menu">
-                        <li><a href="<%=request.getContextPath()%>/${userRole}/orderService">All Categories</a></li>
-                        <li class="divider"></li>
-                        <c:forEach var="productCategory" items="${productsCategories}">
-
-                            <li id="${productCategory.categoryName}">
-                                <a href="<%=request.getContextPath()%>/${userRole}/orderService?category=${productCategory.categoryName}">${productCategory.categoryName}</a>
-                            </li>
-                            <li class="divider"></li>
-                        </c:forEach>
-
-                    </ul>
-                </li>
-            </ul>
-            <%--<div class="dropdown">--%>
-            <%--<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example--%>
-            <%--<span class="caret"></span></button>--%>
-            <%--<ul class="dropdown-menu">--%>
+            <%--<ul class="nav navbar-nav cat-dropdown">--%>
+            <%--<li class="dropdown cat-dropdown ">--%>
+            <%--<a href="#" class="dropdown-toggle" data-toggle="dropdown"> Categories </a>--%>
+            <%--<ul class="dropdown-menu cat-dropdown-menu">--%>
             <%--<li><a href="<%=request.getContextPath()%>/${userRole}/orderService">All Categories</a></li>--%>
             <%--<li class="divider"></li>--%>
             <%--<c:forEach var="productCategory" items="${productsCategories}">--%>
 
-            <%--<li id="cateogry${productCategory.id}">--%>
+            <%--<li id="${productCategory.categoryName}">--%>
             <%--<a href="<%=request.getContextPath()%>/${userRole}/orderService?category=${productCategory.categoryName}">${productCategory.categoryName}</a>--%>
             <%--</li>--%>
+            <%--<li class="divider"></li>--%>
+            <%--</c:forEach>--%>
+
             <%--</ul>--%>
-            <%--</div>--%>
+            <%--</li>--%>
+            <%--</ul>--%>
+            <h2>${categoryName}</h2>
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Categories
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li id="category"><a href="<%=request.getContextPath()%>/${userRole}/orderService">All
+                        Categories</a></li>
+                    <li class="divider"></li>
+                    <c:forEach var="productCategory" items="${productsCategories}">
+
+                        <li id="category${productCategory.id}">
+                            <a href="<%=request.getContextPath()%>/${userRole}/orderService?categoryId=${productCategory.id}">${productCategory.categoryName}</a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </div>
         </div>
         <div class="col-md-8">
             <br>
@@ -105,7 +108,7 @@
                             <table class="table table-striped table-bordered table-hover" data-grid="grid">
                                 <thead>
                                 <tr>
-                                    <th class="col-xs-2" data-grid-header="name"
+                                    <th class="col-xs-2" data-grid-header="product_name"
                                         data-grid-header-sortable="true">
                                         <div class="pull-right order-by">
                                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
@@ -141,7 +144,7 @@
                                 </thead>
                                 <tbody>
                                 <tr data-grid="row">
-                                    <td data-cell="name"></td>
+                                    <td data-cell="product_name"></td>
                                     <td data-cell="price"></td>
                                     <td data-cell="category"></td>
                                     <td data-cell="action"></td>
@@ -252,10 +255,10 @@
                 else {
                     return $('<div id=service' + wv.productId + '><input type="button" class="btn btn-danger"  value="Deactivate" onclick="deactivateService(' + wv.productId + ')"></div>');
                 }
-            }
-        },
-        "name": function (pv, wv, grid) {
+            },
+            "product_name": function (pv, wv, grid) {
             return $('<a href=<%=request.getContextPath()%>/${userRole}/product?productId=' + wv.productId + '>' + wv.name + '</a>')
+        }
         }
 
     })

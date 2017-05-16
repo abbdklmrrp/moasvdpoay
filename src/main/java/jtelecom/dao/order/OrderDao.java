@@ -63,17 +63,6 @@ public interface OrderDao extends Dao<Order> {
      */
     Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId);
 
-    /**
-     * This method returns Order Row DTO object by customer id.
-     * For forming this object it gets data on all orders of users of
-     * customer with given id.
-     *
-     * @param customerId id of customer
-     * @return OrdersRowDTO object
-     * @see OrdersRowDTO for details
-     */
-    List<OrdersRowDTO> getOrderRowsBDTOByCustomerId(Integer customerId);
-
     Integer getCountOrdersByUserId(Integer userId, String search);
 
     List<FullInfoOrderDTO> getIntervalOrdersBuUserId(int start, int length, String sort, String search, int userId);
@@ -85,6 +74,18 @@ public interface OrderDao extends Dao<Order> {
     FullInfoOrderDTO getOrderInfoByOrderId(Integer orderId);
 
     boolean assignToUser(int csrId, int orderId);
+
+    /**
+     * Yuliya
+     *
+     * @param order
+     * @return
+     */
+    Integer saveAndGetGeneratedId(Order order);
+
+    List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer length, String search, String sort, Integer customerId);
+
+    Integer getCountOrderRowsDTOByCustomerId(String search, String sort, Integer customerId);
 
 
 }
