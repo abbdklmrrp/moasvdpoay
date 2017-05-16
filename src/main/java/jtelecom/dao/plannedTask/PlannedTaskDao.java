@@ -36,5 +36,5 @@ public interface PlannedTaskDao extends Dao<PlannedTask> {
      */
     boolean deleteNextPlannedTask(Integer orderId);
 
-    boolean selectAllPlannedTasksForUserOrder(Integer userId);
+    List<PlannedTask> selectAllPlannedTasksForUserOrder(Integer userId);
 }

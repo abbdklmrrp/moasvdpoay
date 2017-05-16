@@ -25,10 +25,12 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
             "  WHERE ORDER_ID IN (SELECT  MAX(ID) FROM ORDERS\n" +
             "  WHERE PRODUCT_ID = :product_id AND USER_ID = :user_id\n" +
             "  AND CURRENT_STATUS_ID <> 3 /*Deactivated*/)";
-    private final static String DELETE_NEXT_PLANNED_TASK_FOR_ACTIVATION_FOR_PRODUCT_USER_SQL = "DELETE FROM PLANNED_TASKS\n" +
+    private final static String DELETE_NEXT_PLANNED_TASK_FOR_ACTIVATION_FOR_ORDER_USER_SQL = "DELETE FROM PLANNED_TASKS\n" +
             "WHERE ACTION_DATE = (SELECT MIN(ACTION_DATE) FROM PLANNED_TASKS\n" +
             "WHERE ORDER_ID = :order_id AND STATUS_ID = 1/*Active*/) AND ORDER_ID = :order_id AND STATUS_ID = 1 /*Active*/";
-
+    private final static String SELECT_PLANNED_TASKS_OF_USER = "SELECT p.id, p.STATUS_ID, p.ORDER_ID, p.ACTION_DATE FROM PLANNED_TASKS p\n" +
+            "INNER JOIN ORDERS ON p.ORDER_ID = ORDERS.ID\n" +
+            "WHERE ORDERS.USER_ID = :user_id";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
@@ -91,11 +93,15 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
     public boolean deleteNextPlannedTask(Integer orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("order_id", orderId);
-        return jdbcTemplate.update(DELETE_NEXT_PLANNED_TASK_FOR_ACTIVATION_FOR_PRODUCT_USER_SQL, params) > 0;
+        return jdbcTemplate.update(DELETE_NEXT_PLANNED_TASK_FOR_ACTIVATION_FOR_ORDER_USER_SQL, params) > 0;
     }
 
     @Override
-    public boolean selectAllPlannedTasksForUserOrder(Integer userId) {
-        return false;
+    public List<PlannedTask> selectAllPlannedTasksForUserOrder(Integer userId) {
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("user_id", userId);
+        return jdbcTemplate.query(SELECT_PLANNED_TASKS_OF_USER, params, plannedTaskRowMapper);
+
     }
 }
