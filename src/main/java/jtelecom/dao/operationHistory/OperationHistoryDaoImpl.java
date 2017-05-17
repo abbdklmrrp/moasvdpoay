@@ -2,6 +2,7 @@ package jtelecom.dao.operationHistory;
 
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dto.FullInfoOrderDTO;
+import jtelecom.repositories.FullComplaintInfoRepository;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -39,10 +40,16 @@ public class OperationHistoryDaoImpl implements OperationHistoryDao {
     private final static String SELECT_COUNT_OF_OPERATIONS_BY_ORDER_ID="SELECT COUNT(ID) \n" +
             "  FROM OPERATIONS_HISTORY \n" +
             "  WHERE ORDER_ID=:orderId";
-    private final static String SELECT_INTERVAL_OF_OPERATIONS_BY_ORDER_ID="SELECT * FROM \n" +
-            " (SELECT OPERATION_DATE, STATUS_ID, ROW_NUMBER() OVER (ORDER BY OPERATION_DATE) R " +
-            "FROM OPERATIONS_HISTORY WHERE ORDER_ID=:orderId ) \n" +
-            "  WHERE R > :startIndex AND R <= :endIndex";
+//    private final static String SELECT_INTERVAL_OF_OPERATIONS_BY_ORDER_ID="SELECT * FROM \n" +
+//            " (SELECT OPERATION_DATE, STATUS_ID, ROW_NUMBER() OVER (ORDER BY OPERATION_DATE) R " +
+//            "FROM OPERATIONS_HISTORY WHERE ORDER_ID=:orderId ) \n" +
+//            "  WHERE R > :startIndex AND R <= :endIndex";
+    private final static String SELECT_INTERVAL_OF_OPERATIONS_BY_ORDER_ID= "SELECT * FROM \n" +
+        "(SELECT TO_CHAR(OPERATION_DATE,'YYYY-MM-DD') operation_date, STATUS_ID, PRODUCTS.NAME product_name, ROW_NUMBER() OVER (ORDER BY OPERATION_DATE) R\n" +
+        "FROM OPERATIONS_HISTORY JOIN ORDERS ON OPERATIONS_HISTORY.ORDER_ID = ORDERS.ID \n" +
+        "  JOIN PRODUCTS ON PRODUCTS.ID=ORDERS.PRODUCT_ID \n" +
+        "WHERE ORDER_ID=:orderId ) \n" +
+        "WHERE R > :startIndex AND R <= :endIndex";
 
 
 
@@ -83,19 +90,18 @@ public class OperationHistoryDaoImpl implements OperationHistoryDao {
     }
 
     @Override
-    public List<OperationHistoryRecord> getIntervalOfOperationsByOrderId(int startIndex, int endIndex, int orderId) {
+    public List<FullInfoOrderDTO> getIntervalOfOperationsByOrderId(int startIndex, int endIndex, int orderId) {
         MapSqlParameterSource params=new MapSqlParameterSource();
         params.addValue("startIndex",startIndex);
         params.addValue("endIndex",endIndex);
         params.addValue("orderId",orderId);
-        List<OperationHistoryRecord> history=jdbcTemplate.query(SELECT_INTERVAL_OF_OPERATIONS_BY_ORDER_ID,params,(rs,rownum)->{
-            OperationHistoryRecord record=new OperationHistoryRecord();
-            Calendar calendar=new GregorianCalendar();
-            rs.getDate("OPERATION_DATE", calendar);
-            record.setOperationDate(calendar);
+        List<FullInfoOrderDTO> history=jdbcTemplate.query(SELECT_INTERVAL_OF_OPERATIONS_BY_ORDER_ID,params,(rs,rownum)->{
+            FullInfoOrderDTO order=new FullInfoOrderDTO();
+            order.setActionDate(rs.getString("operation_date"));
             Integer status=rs.getInt("status_id");
-            record.setStatus(OperationStatus.getOperationStatusFromId(status));
-            return record;
+            order.setOperationStatus(OperationStatus.getOperationStatusFromId(status));
+            order.setProductName(rs.getString("product_name"));
+            return order;
         });
         return history;
     }
