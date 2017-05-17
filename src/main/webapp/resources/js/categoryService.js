@@ -22,31 +22,32 @@
 $(document).ready(function () {
     var currentService;
 
-    $('#categoriesID').change(function () {
-        currentService = this.value;
+    $("input:checkbox").change(function () {
+        if ($(this).is(":checked")) {
+            currentService = this.value;
 
-        // get
-        $.ajax({
-            url: "/admin/category/" + this.value + ".json", success: function (result) {
-                $('#selectto').empty();
+            // get
+            $.ajax({
+                url: "/admin/category/" + this.value + ".json", success: function (result) {
 
-                for (var i = 0; i < result.length; i++) {
-                    $('<option/>').val(result[i].id).attr('id', result[i].id).html(result[i].name).appendTo('#selectto');
+                    for (var i = 0; i < result.length; i++) {
+                        $('<option/>').val(result[i].id).attr('id', result[i].id).html(result[i].name).appendTo('#selectto');
+                    }
                 }
-            }
-        });
+            });
+        }
     });
-    $('#btn-add').click(function () {
-        $('#selectto option:selected').each(function () {
-            $('#selectedService').append("<option value='" + $(this).val() + "' selected>" + $(this).text() + "</option>");
-            $('#selectto').empty();
-        });
-    });
-    $('#btn-remove').click(function () {
-        $('#selectedService option:selected').each(function () {
-            $('#selectto').append("<option value='" + $(this).val() + "'>" + $(this).text() + "</option>");
-            $(this).remove();
-        });
-    });
+    // $('#btn-add').click(function () {
+    //     $('#selectto option:selected').each(function () {
+    //         $('#selectedService').append("<option value='" + $(this).val() + "' selected>" + $(this).text() + "</option>");
+    //         $('#selectto').empty();
+    //     });
+    // });
+    // $('#btn-remove').click(function () {
+    //     $('#selectedService option:selected').each(function () {
+    //         $('#selectto').append("<option value='" + $(this).val() + "'>" + $(this).text() + "</option>");
+    //         $(this).remove();
+    //     });
+    // });
 
 });
