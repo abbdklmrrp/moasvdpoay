@@ -32,6 +32,14 @@ public class ProductDaoImpl implements ProductDao {
 
     private final static String FIND_ALL_CATEGORIES = "SELECT * FROM PRODUCT_CATEGORIES";
     private final static String FIND_CATEGORY = "SELECT ID FROM PRODUCT_CATEGORIES WHERE NAME=:name";
+    private final static String FIND_PRODUCT_TYPE_BY_ID = "SELECT type.NAME\n" +
+            "FROM PRODUCT_TYPES type\n" +
+            "  JOIN PRODUCTS product ON (type.ID = product.TYPE_ID)\n" +
+            "WHERE product.ID = :productId";
+    private final static String FIND_CUSTOMER_TYPE_BY_ID = "SELECT type.NAME\n" +
+            "FROM CUSTOMER_TYPES type\n" +
+            "  JOIN PRODUCTS product ON (type.ID = product.CUSTOMER_TYPE_ID)\n" +
+            "WHERE product.ID = :productId";
     private final static String FIND_TYPES = "SELECT NAME FROM PRODUCT_TYPES";
     private final static String FIND_SERVICES = "SELECT * FROM PRODUCTS WHERE TYPE_ID=2 ORDER BY ID";
     private final static String FIND_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 ORDER BY ID";
@@ -125,7 +133,7 @@ public class ProductDaoImpl implements ProductDao {
             " JOIN Prices ON Prices.product_id = prod.id " +
             " WHERE Prices.place_id = :placeId " +
             " AND prod.type_id = 1/* Tariff */";
-    private final static String SELECT_INTERVAL_TARIFFS_BY_PLACE_SQL = "SELECT * FROM "+
+    private final static String SELECT_INTERVAL_TARIFFS_BY_PLACE_SQL = "SELECT * FROM " +
             " (SELECT" +
             " prod.id," +
             " prod.duration," +
@@ -145,7 +153,7 @@ public class ProductDaoImpl implements ProductDao {
             " AND Num <= :endIndex";
     private final static String SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_BY_PLACE_ID_SQL = "SELECT" +
             " COUNT(*)" +
-            " FROM Products"+
+            " FROM Products" +
             " JOIN Prices ON Prices.product_id = products.id " +
             " WHERE Prices.place_id = :placeId " +
             " AND products.type_id = 1/* Tariff */";
@@ -228,7 +236,7 @@ public class ProductDaoImpl implements ProductDao {
             " AND Num <= :endIndex";
     private final static String SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_FOR_CUSTOMERS_SQL = "SELECT" +
             " COUNT(*)" +
-            " FROM Products"+
+            " FROM Products" +
             " WHERE customer_type_id = 1 /* Business */" +
             " AND type_id = 1/* Tariff */";
     private final static String SELECT_SERVICES_FOR_CUSTOMERS_SQL = "SELECT * " +
@@ -649,7 +657,7 @@ public class ProductDaoImpl implements ProductDao {
      * {@inheritDoc}
      */
     @Override
-    public Integer getQuantityOfAllAvailableTariffsForCustomers () {
+    public Integer getQuantityOfAllAvailableTariffsForCustomers() {
         MapSqlParameterSource params = new MapSqlParameterSource();
         try {
             return jdbcTemplate.queryForObject(SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_FOR_CUSTOMERS_SQL, params, Integer.class);
@@ -702,7 +710,6 @@ public class ProductDaoImpl implements ProductDao {
             return new ArrayList<>();
         }
     }
-
 
 
     /**
@@ -1028,4 +1035,17 @@ public class ProductDaoImpl implements ProductDao {
         return jdbcTemplate.queryForObject(query, params, Integer.class);
     }
 
+    @Override
+    public String getProductTypeByProductId(Integer productId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("productId", productId);
+        return jdbcTemplate.queryForObject(FIND_PRODUCT_TYPE_BY_ID, params, String.class);
+    }
+
+    @Override
+    public String getCustomerTypeByProductId(Integer productId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("productId", productId);
+        return jdbcTemplate.queryForObject(FIND_CUSTOMER_TYPE_BY_ID, params, String.class);
+    }
 }

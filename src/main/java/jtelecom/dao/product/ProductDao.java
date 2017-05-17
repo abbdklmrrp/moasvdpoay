@@ -205,4 +205,9 @@ public interface ProductDao extends Dao<Product> {
     Integer saveProduct(Product product);
 
     List<ServicesByCategoryDto> findServicesByCategoryId(Integer categoryId);
+
+    String getProductTypeByProductId(Integer productId);
+
+    String getCustomerTypeByProductId(Integer productId);
+
 }
