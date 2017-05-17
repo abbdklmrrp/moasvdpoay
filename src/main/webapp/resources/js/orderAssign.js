@@ -12,7 +12,7 @@ function assignToMe(orderId) {
                 });
                 var $statusElement = $('#assign' + orderId);
                 $statusElement.empty();
-                var $newStatus = $('Assigned');
+                var $newStatus = $('<label>Assigned</label>');
                 $newStatus.appendTo($statusElement);
             }
             else {

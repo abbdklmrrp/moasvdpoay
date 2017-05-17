@@ -62,7 +62,7 @@
             </div>
         </div>
         <div style="text-align: center" id="actvBtn${order.orderId}">
-            <button class="btn btn-success"  onclick="activateOrder(${order.orderId})">Activated</button>
+            <button class="btn btn-success"  onclick="activateOrder(${order.orderId})">Activate</button>
         </div>
 </div>
 </div>

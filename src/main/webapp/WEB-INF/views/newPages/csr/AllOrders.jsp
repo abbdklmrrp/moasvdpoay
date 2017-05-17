@@ -189,7 +189,7 @@
                 return $('<input type="button" class="btn btn-primary" onclick="orderInfo('+wv.order_id+')" value="View">')
             },
             "action": function (pv, wv, grid) {
-                return $('<div id=assign' + wv.order_id + '><input type="button" class="btn btn-success" onclick="assignToMe('+wv.order_id+')" value="Assign"></div>')
+                return $('<div id=assign' + wv.order_id + '><input type="button" class="btn btn-success" onclick="assignToMe('+wv.order_id+')" value="Assign to me"></div>')
             }
         }
     })
