@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by Yuliya Pedash on 07.05.2017.
  */
-@SessionScope
+
 @Controller
 @RequestMapping({"residential", "business", "csr"})
 public class UsersOrdersController {

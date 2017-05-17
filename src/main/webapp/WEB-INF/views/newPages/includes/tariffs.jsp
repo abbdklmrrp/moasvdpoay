@@ -16,7 +16,7 @@
                         <th>Duration(days)</th>
                         <th>Price($)</th>
                         <th>Services</th>
-                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="myTable">

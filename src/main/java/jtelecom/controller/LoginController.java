@@ -101,7 +101,7 @@ public class LoginController {
                 model.addAttribute("error", "Error");
             }
         }
-        return "redirect:/";
+        return "newPages/Login";
     }
 
 

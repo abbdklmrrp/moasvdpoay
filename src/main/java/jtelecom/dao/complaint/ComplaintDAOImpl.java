@@ -18,8 +18,8 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     private final static String GET_ALL_BY_STATUS_ID_SQL = "SELECT * FROM COMPLAINTS WHERE STATUS_ID = :statusId";
     private final static String SET_PMG_ID_SQL = "UPDATE COMPLAINTS SET PMG_ID = :pmgId WHERE ID = :id AND PMG_ID IS NULL";
     private final static String GET_INTERVAL_WHERE_PMG_ID_IS_NULL_SORTED_BY_DATE_SQL = "SELECT * FROM\n" +
-            "  (SELECT ID, ORDER_ID, CREATING_DATE, STATUS_ID, DESCRIPTION, PMG_ID, ROW_NUMBER() OVER (ORDER BY CREATING_DATE) R FROM COMPLAINTS)\n" +
-            "WHERE R > :startIndex AND R <= :endIndex AND PMG_ID IS NULL";
+            "  (SELECT ID, ORDER_ID, CREATING_DATE, STATUS_ID, DESCRIPTION, PMG_ID, ROW_NUMBER() OVER (ORDER BY CREATING_DATE) R FROM COMPLAINTS WHERE PMG_ID IS NULL)\n" +
+            "WHERE R > :startIndex AND R <= :endIndex";
     private final static String GET_INTERVAL_BY_PMG_ID_SQL = "SELECT * FROM\n" +
             "  (SELECT ID, ORDER_ID, CREATING_DATE, STATUS_ID, DESCRIPTION, PMG_ID, ROW_NUMBER() OVER (ORDER BY CREATING_DATE) R FROM COMPLAINTS WHERE PMG_ID = :pmgId)\n" +
             "WHERE R > :startIndex AND R <= :endIndex";

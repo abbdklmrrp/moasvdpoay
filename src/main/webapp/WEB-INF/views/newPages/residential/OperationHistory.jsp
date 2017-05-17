@@ -6,11 +6,11 @@
     </jsp:include>
 </head>
 <body>
-<jsp:include page="../includes/headers/residentialHeader.jsp">
-    <jsp:param name="pageName" value="Operations history"/>
-</jsp:include>
-<jsp:include page="../includes/operationHistory.jsp"/>
-<jsp:include page="../includes/footer.jsp"/>
+    <jsp:include page="../includes/headers/residentialHeader.jsp">
+        <jsp:param name="pageName" value="OperationsHistory"/>
+    </jsp:include>
+    <jsp:include page="../includes/operationHistory.jsp"/>
+    <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
