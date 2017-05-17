@@ -1,6 +1,7 @@
 package jtelecom.controller.admin;
 
 import jtelecom.dao.price.PriceDao;
+import jtelecom.dao.product.ProductDao;
 import jtelecom.dto.PriceByRegionDto;
 import jtelecom.services.PriceService;
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ public class UpdatePriceInRegions {
     private PriceService priceService;
     @Resource
     private PriceDao priceDao;
+    @Resource
+    private ProductDao productDao;
 
     @RequestMapping(value = {"updateProductPrice={id}"}, method = RequestMethod.GET)
     public ModelAndView getPriceByRegion(@PathVariable(value = "id") Integer productId,
@@ -39,8 +42,10 @@ public class UpdatePriceInRegions {
         logger.debug("Receive product's id {} ", productId);
         List<PriceByRegionDto> placesAndPrice = priceDao.getAllRegionsAndProductPriceInRegionByProductId(productId);
         logger.debug("Get all places and product prices if it exist {} ", placesAndPrice.toString());
+        String productType = productDao.getProductTypeByProductId(productId);
 
         mav.addObject("placesAndPrice", placesAndPrice);
+        mav.addObject("productType", productType);
         mav.setViewName("newPages/admin/updateProductPrices");
         return mav;
     }
