@@ -1,6 +1,3 @@
-/**
- * Created by Aleksandr Revniuk on 11.05.17.
- */
 $.fn.pageMe = function (opts, dataURL, orderId) {
     var $this = this,
         defaults = {
@@ -83,7 +80,6 @@ $.fn.pageMe = function (opts, dataURL, orderId) {
             return;
         }
         $('#tbl-operations').removeClass("hide");
-        $('#header-operations').removeClass("hide");
 
         var numPages = Math.ceil(numItems / perPage);
 
@@ -120,20 +116,15 @@ $.fn.pageMe = function (opts, dataURL, orderId) {
         }
 
 
-        var dateFormat = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        };
         var html = "";
         for (var i = 0; i < listLen; i++) {
             var date = new Date(list[i].operation_date);
             html += "<tr>"
-            html += "<td>" + date.toLocaleString("en-US", dateFormat) + "</td>";
-            html += "<td>" + list[i].status_id + "</td>";
-            if (list[i].status_id == 'Active') {
+            html += "<td>" + list[i].operation_date + "</td>";
+            html += "<td>" + list[i].current_status_id + "</td>";
+            if (list[i].current_status_id == 'Active') {
                 if (i > 1) {
-                    if (list[i - 1].status_id == 'Suspended') {
+                    if (list[i - 1].current_status_id == 'Suspended') {
                         html += "<td>Autoactivate</td>"
                     } else html += "<td>Active<td>"
                 }
@@ -144,21 +135,23 @@ $.fn.pageMe = function (opts, dataURL, orderId) {
                     html += "<td>Autoactivate</td>"
                 }
                 if (i == 1) {
-                    if (list[i - 1].status_id == 'InProcessing') {
+                    if (list[i - 1].current_status_id == 'InProcessing') {
                         html += "<td>Creating</td>"
                     } else {
                         html += "<td>Active</td>"
                     }
                 }
             }
-            if (list[i].status_id == 'Suspended') {
+            if (list[i].current_status_id == 'Suspended') {
                 html += "<td>Suspended</td>"
-            } else if (list[i].status_id == 'InProcessing') {
+            } else if (list[i].current_status_id == 'InProcessing') {
                 html += "<td>Ordered</td>"
             }
             html += "</tr>";
         }
         $('#myTable').html(html);
+        var productName = list[0].product_name;
+        $('#nameProduct').html('<label style="text-align: center">'+productName+'</label>');
 
         //children.css('display','none').slice(startAt, endOn).show();//change table
 

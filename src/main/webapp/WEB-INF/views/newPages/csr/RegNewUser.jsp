@@ -30,7 +30,7 @@
                     </select>
                 </div>
                 <div class="form-group ">
-                    <input type="password" class="form-control" placeholder="Secret key" id="SecretKey"
+                    <input type="password" class="form-control" placeholder="Secret key" id="secretKey"
                            name="secretKey">
                     <i class="fa fa-lock"></i>
                 </div>

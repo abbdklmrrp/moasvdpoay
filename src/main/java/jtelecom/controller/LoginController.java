@@ -96,12 +96,12 @@ public class LoginController {
             WebUtils.setSessionAttribute(request, WebAttributes.AUTHENTICATION_EXCEPTION, null);
 
             if (authenticationException instanceof BadCredentialsException) {
-                model.addAttribute("error", "Unknown user");
+                model.addAttribute("error", "Invalid username or password");
             } else {
                 model.addAttribute("error", "Error");
             }
         }
-        return "redirect:/";
+        return "newPages/Login";
     }
 
 

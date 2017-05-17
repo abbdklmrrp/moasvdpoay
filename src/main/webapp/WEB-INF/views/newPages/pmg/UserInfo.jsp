@@ -5,6 +5,43 @@
     <jsp:include page="../includes/head.jsp">
         <jsp:param name="tittle" value="User Info"/>
     </jsp:include>
+    <style type="text/css">
+
+        #back{
+            background-color: rgba(0, 0, 0, 0.4);
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: none;
+            z-index: 1000;
+        }
+
+        #operations{
+            background-color: white;
+            font-family: 'Open Sans', sans-serif;
+            width: 478px;
+            padding: 17px;
+            border-radius: 5px;
+            text-align: center;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            margin-left: -256px;
+            margin-top: -200px;
+            overflow: hidden;
+            display: none;
+            z-index: 2000;
+        }
+
+        .close{
+            margin-left: 364px;
+            margin-top: 4px;
+            cursor: pointer;
+        }
+
+    </style>
 </head>
 <body>
 <jsp:include page="../includes/headers/pmgHeader.jsp">
@@ -146,7 +183,7 @@
                         </div>
                         Status
                     </th>
-                    <th class="col-xs-2" data-grid-header="history">
+                    <th class="col-xs-1" data-grid-header="history">
                         History
                     </th>
                 </tr>
@@ -190,8 +227,10 @@
         </div>
     </div>
 </div>
-<div class="container" >
-    <h3 id="header-operations" class="hide" style="text-align: center">Operations</h3>
+<div  id="back" style='display: none;'></div>
+<div class="container"  id="operations"  >
+    <img class="close" onclick="show('none')" src="http://sergey-oganesyan.ru/wp-content/uploads/2014/01/close.png">
+    <div id="nameProduct" align="left"></div><br>
     <div class="row">
         <div class="table-responsive">
             <table class="table table-bordered hide" id="tbl-operations">
@@ -214,17 +253,12 @@
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
-<%--<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>--%>
-<%--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>--%>
-<%--<![endif]-->--%>
-
-<%--<script src="${contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>--%>
-<%--<script src="${contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>--%>
 
 <script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
 <script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
 <script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/operationHistoryPagination.js"/>"></script>
+<%--<script type="text/javascript" src="<c:url value="/resources/js/showOperationHistory.js"/>"></script>--%>
 
 <script>
     $().BooGrid({
@@ -235,11 +269,16 @@
         ],
         renderers: {
             "history": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-success"  value="View" onclick="showHistory('+wv.order_id+')">');
+                return $('<input type="button" class="btn btn-primary"  value="View" onclick="showHistory('+wv.order_id+')"'+'>');
             }
         }
     });
-    function showHistory(orderId) {
+    function show(state){
+        document.getElementById('operations').style.display = state;
+        document.getElementById('back').style.display = state;
+    }
+
+    function showHistory(orderId){
         $('#myTable').empty();
         $('#myPager').empty();
         $('#myTable').pageMe({
@@ -249,6 +288,8 @@
             perPage: 5
         }, 'getHistory',orderId);
 
-    };
+        show('block')
+
+    }
 
 </script>

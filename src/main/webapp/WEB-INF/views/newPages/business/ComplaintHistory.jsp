@@ -7,7 +7,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/businessHeader.jsp">
-    <jsp:param name="pageName" value="Operations history"/>
+    <jsp:param name="pageName" value="ComplaintHistory"/>
 </jsp:include>
 <jsp:include page="../includes/complaintHistory.jsp"/>
 <jsp:include page="../includes/footer.jsp"/>

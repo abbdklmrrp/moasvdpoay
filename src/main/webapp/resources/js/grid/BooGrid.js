@@ -27,8 +27,8 @@
     var pagerItemTemplate = findPagerTemplate(root).first().remove();
     var rowTemplate = findRowTemplate(root);
 
-    // state
-    var length =10;
+    // stateF
+    var length = 10;
     var currentPage = 1;
     var lastLength;
     var lastResponse;
@@ -299,7 +299,7 @@
 
       var dataLength = lastResponse.data.length;
 
-      for (var i = 0; i < length; i++) {
+      for (var i = 0; i < dataLength; i++) {
         var row = rowTemplate.clone().appendTo(table);
 
         for (var gridHeader in gridHeaders) {

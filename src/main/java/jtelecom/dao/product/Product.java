@@ -21,6 +21,7 @@ public class Product {
     private String name;
     @JsonProperty("description")
     private String description;
+    @JsonProperty("status")
     private ProductStatus status;
     @JsonProperty("base_price")
     private BigDecimal basePrice;

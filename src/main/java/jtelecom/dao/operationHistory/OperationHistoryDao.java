@@ -17,5 +17,5 @@ public interface OperationHistoryDao {
 
     Integer getCountOperationsByOrderId(int orderId);
 
-    List<OperationHistoryRecord> getIntervalOfOperationsByOrderId(int startIndex, int endIndex,int orderId);
+    List<FullInfoOrderDTO> getIntervalOfOperationsByOrderId(int startIndex, int endIndex,int orderId);
 }

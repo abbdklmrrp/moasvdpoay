@@ -17,5 +17,6 @@
     <jsp:param name="pageName" value="customers"/>
 </jsp:include>
 
+<jsp:include page="includes/footer.jsp"/>
 </body>
 </html>

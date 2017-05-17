@@ -41,7 +41,7 @@ public class PmgOrdersController {
                               @RequestParam(name = "end") int endIndex,
                               @RequestParam(name = "orderId") int orderId) {
         Integer amount = operationHistoryDao.getCountOperationsByOrderId(orderId);
-        List<OperationHistoryRecord> history = operationHistoryDao.getIntervalOfOperationsByOrderId(startIndex, endIndex, orderId);
+        List<FullInfoOrderDTO> history = operationHistoryDao.getIntervalOfOperationsByOrderId(startIndex, endIndex, orderId);
         return ListHolder.create(history, amount);
 
 

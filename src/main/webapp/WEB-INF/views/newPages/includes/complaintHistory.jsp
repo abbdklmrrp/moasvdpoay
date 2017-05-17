@@ -8,6 +8,7 @@
         </div>
     </div>
 
+    <h1 style="text-align: center">Complaint history</h1>
     <div class="panel panel-default" id="productsIds">
         <div class="panel-heading">
             <div class="row">
