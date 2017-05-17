@@ -4,7 +4,7 @@
     <div class="col-md-4">
         <div class="col-md-1"></div>
         <div class="col-md-10">
-            <form method="POST" action="<%=request.getContextPath()%>/doLogin">
+            <form method="POST" action="${pageContext.request.contextPath}/doLogin">
                 <div class="login-form">
                     <h1 style="text-align: center">Login</h1>
                     <br>
