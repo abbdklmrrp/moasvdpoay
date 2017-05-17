@@ -269,7 +269,7 @@
 
 
     <build>
-        <finalName>NutCrooker</finalName>
+        <finalName>JTelecom</finalName>
         <plugins>
 
             <plugin>

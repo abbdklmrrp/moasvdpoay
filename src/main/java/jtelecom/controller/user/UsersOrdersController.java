@@ -29,7 +29,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping({"residential", "business", "csr"})
+@RequestMapping({"residential", "business", "employee", "csr"})
 public class UsersOrdersController {
     //todo to file
     private final static String SUCCESS_MSG = "Thank you! This order will be suspended from %s to %s.";
