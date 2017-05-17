@@ -4,7 +4,7 @@ package jtelecom.dao.complaint;
  * @author Revniuk Aleksandr
  */
 public enum ComplaintStatus {
-    Send(1, "Send"),
+    Send(1, "Sent"),
     InProcessing(2, "In processing"),
     Processed(3, "Processed");
 
