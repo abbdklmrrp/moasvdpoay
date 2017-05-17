@@ -10,9 +10,8 @@ function showServicesOfTariff(tariffId) {
         type: "POST",
         success: function (listOfServices) {
             var listServices = "";
-            for (var i = 0; i < listServices.length; i++) {
-                listServices += "- " + listServices[i].name + "<br>";
-                listServices += "  Description:" + listServices[i].description + "<br>";
+            for (var i = 0; i < listOfServices.length; i++) {
+                listServices += (i+1) + ")" + listOfServices[i].name + " : " + listOfServices[i].description + "\n";
             }
             swal("Tariff consist of services:", listServices);
         },

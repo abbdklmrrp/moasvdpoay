@@ -263,7 +263,8 @@ public class ProductDaoImpl implements ProductDao {
             " description, " +
             " status," +
             " base_price," +
-            " customer_type_id FROM Products " +
+            " customer_type_id" +
+            " FROM Products " +
             " WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariffId)";
     private final static String SELECT_LIMITED_PRODUCTS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
