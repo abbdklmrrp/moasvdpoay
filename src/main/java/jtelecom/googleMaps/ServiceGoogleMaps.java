@@ -48,7 +48,7 @@ public class ServiceGoogleMaps {
     }
 
     /**
-     * Method returns part of address from GoogleMaps according to address component name from params.
+     * Method returns part of address from Google Maps according to address component name from params.
      * If addressComponentName is null, method returns null.
      *
      * @param geoResults           array of data about address from GoogleMaps
@@ -92,27 +92,25 @@ public class ServiceGoogleMaps {
         return formattedAddress;
     }
 
-//    public String getRegionTest(String address) {
-//        String region = null;
-//        GeoApiContext context = new GeoApiContext().setApiKey(apiKey);
-//        GeocodingResult[] results;
-//        try {
-//            results = GeocodingApi.geocode(context, address).await();
-//            if (results != null && results.length != 0) {
-//                for (int i = 0; i < results.length; i++) {
-//                    System.out.println(i + ") " + results[i].formattedAddress);
-//                    System.out.println(results[i].placeId);
-//                    System.out.println("---------------------------------------");
-//                }
-//            }
-//        } catch (ApiException | InterruptedException | IOException e) {
-//            logger.error("Can`t find this address.", e);
-//        }
-//        return region;
-//    }
-//
-//    public static void main(String[] args) {
-//        ServiceGoogleMaps maps = new ServiceGoogleMaps();
-//        maps.getRegionTest("Россия Проспект маяковского 5");
-//    }
+    /**
+     * Method returns place_id from Google Maps according to region in params.
+     * If region is null, method returns null.
+     *
+     * @param region region.
+     * @return place_id of region from params.
+     */
+    public String getRegionIdFromGoogleMaps(String region) {
+        String regionId = null;
+        GeoApiContext context = new GeoApiContext().setApiKey(apiKey);
+        GeocodingResult[] results;
+        try {
+            results = GeocodingApi.geocode(context, region).await();
+            if (results != null && results.length != 0) {
+                regionId = results[0].placeId;
+            }
+        } catch (ApiException | InterruptedException | IOException e) {
+            logger.error("Can`t find this address.", e);
+        }
+        return regionId;
+    }
 }
