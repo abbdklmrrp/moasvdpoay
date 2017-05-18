@@ -122,13 +122,7 @@
                         </div>
                         Duration
                     </th>
-                    <th class="col-xs-2" data-grid-header="status" data-grid-header-sortable="true">
-                        <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                               data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                               data-grid-header-sortable-down="down"></a>
-                        </div>
+                    <th class="col-xs-2" data-grid-header="status">
                         Status
                     </th>
                     <th class="col-xs-2" data-grid-header="action">
@@ -194,14 +188,24 @@
             new ElementListener($('#progressId'))
         ],
         renderers: {
+            "status": function (pv, wv, grid) {
+                if (wv.status == 1) {
+                    return $('<input type="button" class="btn btn-danger" style="margin: 0 auto"  value="Disable" >').click(function () {
+                            location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct=' + wv.id
+                        }
+                    );
+                } else {
+                    return $('<input type="button" class="btn btn-success" style="margin: 0 auto"  value="Enable" >').click(function () {
+                            location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct=' + wv.id
+                        }
+                    );
+                }
+            },
             "action": function (pv, wv, grid) {
-                return [$('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
+                return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
                         location.href = '${pageContext.request.contextPath}/admin/getDetailsProduct=' + wv.id
                     }
-                ), $('<input type="button" class="btn btn-success"  value="Enable/Disable" style="margin: 5px 0 0 0">').click(function () {
-                        location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct=' + wv.id
-                    }
-                )];
+                );
             }
         }
     })
