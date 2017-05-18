@@ -53,7 +53,7 @@
         <div class="col-sm-7" id="user-phone"><p class="text-info">${complaint.userPhone}</p></div>
     </div>
 
-    <c:if test="${complaint.pmgId == 0}">
+    <c:if test="${complaint.pmgId != currentUserId}">
         <div class="row">
             <div class="col-sm-3"></div>
             <a href="${pageContext.request.contextPath}/pmg/assignTo?id=${complaint.id}"
@@ -64,7 +64,7 @@
     <c:if test="${not empty msg}">
         <span style="text-align: center" id="errorMessage" hidden disabled="true">${msg}</span>
     </c:if>
-    <c:if test="${empty msg && complaint.pmgId != 0}">
+    <c:if test="${empty msg && complaint.pmgId == currentUserId}">
         <div class="row">
             <div class="col-sm-3"></div>
             <c:choose>

@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row">
         <h1 style="text-align: center">Services Catalog</h1>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <%--<ul class="nav navbar-nav cat-dropdown">--%>
             <%--<li class="dropdown cat-dropdown ">--%>
             <%--<a href="#" class="dropdown-toggle" data-toggle="dropdown"> Categories </a>--%>
@@ -32,7 +32,6 @@
                         Categories</a></li>
                     <li class="divider"></li>
                     <c:forEach var="productCategory" items="${productsCategories}">
-
                         <li id="category${productCategory.id}">
                             <a href="<%=request.getContextPath()%>/${userRole}/orderService?categoryId=${productCategory.id}">${productCategory.categoryName}</a>
                         </li>
@@ -40,7 +39,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-10">
             <br>
             <c:choose>
                 <c:when test="${not empty msg}">
@@ -258,8 +257,8 @@
                 }
             },
             "product_name": function (pv, wv, grid) {
-            return $('<a href=<%=request.getContextPath()%>/${userRole}/product?productId=' + wv.productId + '>' + wv.name + '</a>')
-        }
+                return $('<a href=<%=request.getContextPath()%>/${userRole}/product?productId=' + wv.productId + '>' + wv.name + '</a>')
+            }
         }
 
     })

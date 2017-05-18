@@ -122,6 +122,15 @@
                         </div>
                         Duration
                     </th>
+                    <th class="col-xs-2" data-grid-header="status" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Status
+                    </th>
                     <th class="col-xs-2" data-grid-header="action">
                         Action
                     </th>
@@ -138,8 +147,8 @@
                     <td data-cell="customerType"></td>
                     <td data-cell="base_price"></td>
                     <td data-cell="duration"></td>
+                    <td data-cell="status"></td>
                     <td data-cell="action"></td>
-
                 </tr>
                 </tbody>
             </table>
@@ -186,10 +195,13 @@
         ],
         renderers: {
             "action": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
-                    location.href = '${contextPath}/admin/getDetailsProduct=' + wv.id
+                return [$('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
+                        location.href = '${pageContext.request.contextPath}/admin/getDetailsProduct=' + wv.id
                     }
-                );
+                ), $('<input type="button" class="btn btn-success"  value="Enable/Disable" style="margin: 5px 0 0 0">').click(function () {
+                        location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct=' + wv.id
+                    }
+                )];
             }
         }
     })

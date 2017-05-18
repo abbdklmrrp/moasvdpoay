@@ -9,10 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -37,6 +34,7 @@ public class UpdateProductController {
     private ProductService productService;
 
     @RequestMapping(value = {"updateProduct={id}"}, method = RequestMethod.POST)
+    @ResponseBody
     public ModelAndView updateTariff(Product product, @PathVariable(value = "id") Integer id,
                                      ModelAndView mav) {
 
@@ -51,11 +49,13 @@ public class UpdateProductController {
         logger.debug("Write ID to product {} ", product.getId());
 
         try {
-            productService.updateProduct(product);
-            logger.debug("Update fields of service");
+            boolean isUpdate = productService.updateProduct(product);
+            logger.debug("Update fields of service with success {} ", isUpdate);
+            mav.addObject("message", "success");
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
             mav.addObject("error ", ERROR_IN_CONNECTION);
+            mav.addObject("message", "Sorry, try again later");
             mav.setViewName("redirect:/admin/getDetailsProduct=" + id);
             return mav;
         }

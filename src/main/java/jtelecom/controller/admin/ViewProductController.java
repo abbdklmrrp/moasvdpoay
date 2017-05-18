@@ -52,8 +52,8 @@ public class ViewProductController {
     /**
      * @author Nikita Alistratenko
      */
-    @RequestMapping("disableEnableProduct")
-    public ModelAndView setProductDisabledEnabled(@RequestParam(value = "id") int id, RedirectAttributes attributes) {
+    @RequestMapping("disableEnableProduct={id}")
+    public ModelAndView setProductDisabledEnabled(@PathVariable(value = "id") int id, RedirectAttributes attributes) {
         logger.debug("Product sent to get status changed, id = ", id);
         ModelAndView mw = new ModelAndView();
         if (productDao.disableEnableProductByID(id)) {
@@ -63,7 +63,7 @@ public class ViewProductController {
             attributes.addFlashAttribute("msg", "Product status has not been changed");
             logger.error("Product status has not been changed, id = ", id);
         }
-        mw.setViewName("redirect:/admin/getAllProducts");
+        mw.setViewName("redirect:/admin/getProducts");
         return mw;
     }
 }

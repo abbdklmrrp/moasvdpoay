@@ -57,7 +57,9 @@ public class PMGController {
 
     @RequestMapping(value = "complaintInfo")
     public String compalintInfo(Model model, @RequestParam(name = "id") int id) {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         model.addAttribute("complaint", fullComplaintInfoRepository.getById(id));
+        model.addAttribute("currentUserId", user.getId());
         return "newPages/pmg/ComplaintInfo";
     }
 
@@ -75,13 +77,14 @@ public class PMGController {
     public String assignTo(Model model, @RequestParam(name = "id") int id) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         boolean success = complaintDAO.assignToUser(id, user.getId());
-        if (!success) {
+        if (success) {
+            logger.debug("Complaint with id {} successful assigned to user with id {}", id, user.getId());
+            return "forward:complaintInfo?id=" + id;
+        } else {
             logger.error("Can't assign complaint with id {} to user with id {}", id, user.getId());
             model.addAttribute("msg", "Can't be assinged to you");
+            return "forward:complaintInfo?id=" + id;
         }
-        logger.debug("Complaint with id {} successful assigned to user with id {}", id, user.getId());
-        model.addAttribute("complaint", fullComplaintInfoRepository.getById(id));
-        return "newPages/pmg/ComplaintInfo";
     }
 
     @RequestMapping(value = "changeStatus")
@@ -91,16 +94,14 @@ public class PMGController {
             logger.debug("Status of complaint with id {} successful changed to status {}", id, statusId);
             if (statusId == 3) {
                 //TODO send email
-                return "newPages/pmg/MyComplaints";
+                return "redirect:myComplaints";
             } else {
-                model.addAttribute("complaint", fullComplaintInfoRepository.getById(id));
-                return "newPages/pmg/ComplaintInfo";
+                return "forward:complaintInfo?id=" + id;
             }
         } else {
             logger.error("Can't change status for complaint with id {}", id);
             model.addAttribute("msg", "Can't change status");
-            model.addAttribute("complaint", fullComplaintInfoRepository.getById(id));
-            return "newPages/pmg/ComplaintInfo";
+            return "forward:complaintInfo?id=" + id;
         }
     }
 }

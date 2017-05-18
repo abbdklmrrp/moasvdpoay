@@ -44,13 +44,13 @@
             <div class="form-group form-group-lg hide change-pass" id="div-oldPassword">
                 <label class="col-sm-4 control-label" for="oldPassword">Old password</label><br>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" name="oldPassword" id="oldPassword"><br>
+                    <input type="password" autocomplete="false" class="form-control" name="oldPassword" id="oldPassword"><br>
                 </div>
             </div>
             <div class="form-group form-group-lg hide change-pass">
                 <label class="col-sm-4 control-label">New password</label><br>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" name="password" id="password"
+                    <input type="password" autocomplete="false" class="form-control" name="password" id="password"
                            pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$" minlength="6" maxlength="24" title="-   Must be 6-24 characters
 -   Must contain uppercase and lowercase letters, numbers"><br>
                 </div>
@@ -58,7 +58,7 @@
             <div class="form-group form-group-lg hide change-pass" id="div-confirmPassword">
                 <label class="col-sm-4 control-label" for="confirmPassword">Confirm password</label><br>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" name="confirmPassword" id="confirmPassword"><br>
+                    <input type="password" autocomplete="false" class="form-control" name="confirmPassword" id="confirmPassword"><br>
                 </div>
             </div>
             <div class="row hide" id="save-profile">

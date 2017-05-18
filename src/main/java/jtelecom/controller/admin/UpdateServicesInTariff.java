@@ -45,9 +45,11 @@ public class UpdateServicesInTariff {
         logger.debug("Received services that are included in the tariff {}", servicesByTariff.toString());
         Map<String, List<Product>> allServicesWithCategory = productDao.getAllServicesWithCategory();
         logger.debug("Get all service's categories {} ", allServicesWithCategory.toString());
+        String customerType = productDao.getCustomerTypeByProductId(tariffId);
 
         mav.addObject("allServicesWithCategory", allServicesWithCategory);
         mav.addObject("servicesByTariff", servicesByTariff);
+        mav.addObject("customerType", customerType);
         mav.setViewName("newPages/admin/updateServicesInTariff");
         return mav;
     }
