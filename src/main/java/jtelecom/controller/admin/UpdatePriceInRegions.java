@@ -3,7 +3,7 @@ package jtelecom.controller.admin;
 import jtelecom.dao.price.PriceDao;
 import jtelecom.dao.product.ProductDao;
 import jtelecom.dto.PriceByRegionDto;
-import jtelecom.services.PriceService;
+import jtelecom.services.price.PriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;

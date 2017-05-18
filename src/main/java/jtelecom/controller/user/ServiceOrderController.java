@@ -15,14 +15,13 @@ import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.OrderService;
-import jtelecom.services.ProductService;
+import jtelecom.services.product.ProductServiceImpl;
 import jtelecom.util.SharedVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.annotation.SessionScope;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -50,7 +49,7 @@ public class ServiceOrderController {
     @Resource
     private OrderDao orderDao;
     @Resource
-    private ProductService productService;
+    private ProductServiceImpl productService;
     User currentUser;
     private static Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
 

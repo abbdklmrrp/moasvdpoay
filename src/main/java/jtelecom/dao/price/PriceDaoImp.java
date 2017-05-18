@@ -118,7 +118,7 @@ public class PriceDaoImp implements PriceDao {
     public List<PriceByRegionDto> getPriceInRegionsByProduct(int productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("productId", productId);
-        return jdbcTemplate.query(FIND_PRICE_IN_REGION_BY_PRODUCT, (rs, rowNum) -> {
+        return jdbcTemplate.query(FIND_PRICE_IN_REGION_BY_PRODUCT, params, (rs, rowNum) -> {
             PriceByRegionDto priceByRegionDto = new PriceByRegionDto();
             priceByRegionDto.setProductId(rs.getInt("ID"));
             priceByRegionDto.setProductName(rs.getString("NAME"));

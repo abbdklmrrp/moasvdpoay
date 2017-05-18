@@ -4,7 +4,7 @@ import jtelecom.dao.place.Place;
 import jtelecom.dao.place.PlaceDAO;
 import jtelecom.dao.price.Price;
 import jtelecom.dao.price.PriceDao;
-import jtelecom.services.PriceService;
+import jtelecom.services.price.PriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;

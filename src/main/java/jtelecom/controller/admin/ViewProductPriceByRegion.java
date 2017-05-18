@@ -1,6 +1,7 @@
 package jtelecom.controller.admin;
 
 import jtelecom.dao.price.PriceDao;
+import jtelecom.dao.product.ProductDao;
 import jtelecom.dto.PriceByRegionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,8 @@ public class ViewProductPriceByRegion {
     private static Logger logger = LoggerFactory.getLogger(ViewProductController.class);
     @Resource
     private PriceDao priceDao;
+    @Resource
+    private ProductDao productDao;
 
     @RequestMapping(value = "viewAllProducts", method = RequestMethod.GET)
     public ModelAndView getAllProductPrice(ModelAndView mav) {
@@ -30,15 +33,16 @@ public class ViewProductPriceByRegion {
         return mav;
     }
 
-    @RequestMapping(value = "viewProductPriceForRegions", method = RequestMethod.GET)
-    public ModelAndView getProductPriceForRegions(@RequestParam("productId") Integer productId,
+    @RequestMapping(value = "viewProductPriceInRegions", method = RequestMethod.GET)
+    public ModelAndView getProductPriceForRegions(@RequestParam("id") Integer productId,
                                                   ModelAndView mav) {
         List<PriceByRegionDto> priceInRegionsByProduct = priceDao.getPriceInRegionsByProduct(productId);
         logger.debug("Receive product price by region {} ", priceInRegionsByProduct.toString());
+        String productType = productDao.getProductTypeByProductId(productId);
+
         mav.addObject("priceInRegionsByProduct", priceInRegionsByProduct);
-        mav.setViewName("newPages/admin/viewProductPrices");
+        mav.addObject("productType", productType);
+        mav.setViewName("newPages/admin/viewProductPriceInRegions");
         return mav;
     }
-
-
 }
