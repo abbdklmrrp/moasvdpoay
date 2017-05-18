@@ -88,6 +88,7 @@
                     </th>
                 </tr>
                 </thead>
+                <div data-grid="message"></div>
                 <tbody>
                 <tr data-grid="row" >
                     <td data-cell="product_name"></td>

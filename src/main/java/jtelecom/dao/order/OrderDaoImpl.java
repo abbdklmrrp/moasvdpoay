@@ -100,7 +100,8 @@ public class OrderDaoImpl implements OrderDao {
             "         WHERE ID IN (SELECT MIN(ID) \n" +
             "                      FROM OPERATIONS_HISTORY \n" +
             "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = orders.ID \n" +
-            " where USER_ID=(select customer_id from users where id=:userId) and orders.CURRENT_STATUS_ID<>3)) \n" +
+            " where USER_ID in (select id from users where customer_id= " +
+            "(select customer_id from users where id=:userId)) and orders.CURRENT_STATUS_ID<>3)) \n" +
             " where R>:start and R<=:length and product_name like :pattern ";
 
 //    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
@@ -134,7 +135,8 @@ public class OrderDaoImpl implements OrderDao {
             "         WHERE ID IN (SELECT MIN(ID) \n" +
             "                      FROM OPERATIONS_HISTORY \n" +
             "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = orders.ID \n" +
-            " where USER_ID=(select customer_id from users where id=:userId) and orders.CURRENT_STATUS_ID<>3 AND PRODUCTS.NAME LIKE :pattern";
+            " where USER_ID in (select id from users where customer_id= " +
+            "(select customer_id from users where id=:userId)) and orders.CURRENT_STATUS_ID<>3 AND PRODUCTS.NAME LIKE :pattern";
 
     private static final String SELECT_ALL_ORDERS_WITHOUT_CSR = "SELECT * FROM ( \n" +
             " SELECT product_name,product_type,customer_type,order_id, " +
@@ -352,7 +354,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<FullInfoOrderDTO> getIntervalOrdersBuUserId(int start, int length, String sort, String search, int userId) {
+    public List<FullInfoOrderDTO> getIntervalOrdersByUserId(int start, int length, String sort, String search, int userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {
             sort = "ID";

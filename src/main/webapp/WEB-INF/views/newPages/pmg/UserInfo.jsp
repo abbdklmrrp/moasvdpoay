@@ -114,8 +114,8 @@
             <div class="row" style="margin: 20px 0;">
                 <div class="col-md-2">
                     <select class="form-control" data-grid="pager-length">
-                        <option value="10">10</option>
                         <option value="5">5</option>
+                        <option value="10">10</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -188,6 +188,7 @@
                     </th>
                 </tr>
                 </thead>
+                <div data-grid="message"></div>
                 <tbody>
                 <tr data-grid="row">
                     <td data-cell="product_name"></td>
@@ -202,8 +203,8 @@
             <div class="row" style="margin: 20px 0;">
                 <div class="col-md-2">
                     <select class="form-control" data-grid="pager-length">
-                        <option value="10">10</option>
                         <option value="5">5</option>
+                        <option value="10">10</option>
                     </select>
                 </div>
                 <div class="col-md-10">

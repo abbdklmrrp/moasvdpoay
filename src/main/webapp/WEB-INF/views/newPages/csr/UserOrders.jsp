@@ -114,6 +114,7 @@
                         Status
                 </tr>
                 </thead>
+                <div data-grid="message"></div>
                 <tbody>
                 <tr data-grid="row" >
                     <td data-cell="product_name"></td>
@@ -165,19 +166,19 @@
 <script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
 <script>
+    $().BooGrid({
+        id: 'productsIds',
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/getOperationHistory.json'}),
+        listeners: [
+            new ElementListener($('#progressId'))
+        ]
+    })
     function showHistory() {
         if ($("#table").is(":hidden")) {
-            $().BooGrid({
-                id: 'productsIds',
-                ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/getOperationHistory.json'}),
-                listeners: [
-                    new ElementListener($('#progressId'))
-                ]
-            })
+
             $("#table").show("slow");
 
         } else {
-
             $("#table").hide("slow");
 
         }
