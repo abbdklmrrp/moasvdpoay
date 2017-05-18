@@ -14,6 +14,21 @@
     <h3 id="header-all-complaints" class="hide" style="text-align: center">My complaints</h3>
     <h3 id="header-no-complaints" style="text-align: center">No complaints</h3>
     <div class="row">
+        <table class="table" style="width: 220px">
+            <tr>
+                <td>Complaint sent</td>
+                <td class="danger" style="width: 50px"></td>
+            </tr>
+            <tr>
+                <td>Complaint in process</td>
+                <td class="warning"></td>
+            <tr>
+                <td>Complaint processed</td>
+                <td class="success"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="row">
         <div class="table-responsive">
             <table class="table table-bordered hide" id="tbl-all-complaints">
                 <thead>
@@ -46,7 +61,7 @@
 
     });
     function forwardTo(complaintId) {
-        return location.href = '${pageContext.request.contextPath}/pmg/complaintInfo?id='+complaintId;
+        return location.href = '${pageContext.request.contextPath}/pmg/complaintInfo?id=' + complaintId;
     }
 </script>
 </body>
