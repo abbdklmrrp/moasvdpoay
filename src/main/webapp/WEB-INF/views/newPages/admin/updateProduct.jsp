@@ -40,13 +40,13 @@
                         <c:choose>
                             <c:when test="${param.page == 'UpdatePriceInRegion'}">
                                 <li class="wet-asphalt active-tab">
-                                    <a href="${pageContext.request.contextPath}/admin/updateProductPrice=${product.id}">Price
+                                    <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${product.id}">Price
                                         in regions</a>
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li class="wet-asphalt">
-                                    <a href="${pageContext.request.contextPath}/admin/updateProductPrice=${product.id}">Price
+                                    <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${product.id}">Price
                                         in regions</a>
                                 </li>
                             </c:otherwise>
