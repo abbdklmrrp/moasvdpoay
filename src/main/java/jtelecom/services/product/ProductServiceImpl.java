@@ -1,4 +1,4 @@
-package jtelecom.services;
+package jtelecom.services.product;
 
 
 import jtelecom.dao.entity.OperationStatus;
@@ -25,9 +25,9 @@ import java.util.*;
  * Created by Rysakova Anna on 26.04.2017.
  */
 @Service
-public class ProductService {
+public class ProductServiceImpl implements ProductService {
 
-    private static Logger logger = LoggerFactory.getLogger(ProductService.class);
+    private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     @Resource
     OrderDao orderDao;
     @Resource
@@ -42,6 +42,7 @@ public class ProductService {
      * @param product
      * @return
      */
+    @Override
     public Product getCategory(ProductCategories category, Product product) {
         if (!category.getCategoryName().isEmpty()) {
             productDao.addCategory(category);
@@ -57,6 +58,7 @@ public class ProductService {
      * @param categories
      * @return
      */
+    @Override
     public boolean isEmptyFieldsOfNewCategory(ProductCategories categories) {
         return (categories.getCategoryName().isEmpty() ^ categories.getCategoryDescription().isEmpty());
     }
@@ -113,24 +115,10 @@ public class ProductService {
     /**
      * Anna Rysakova
      *
-     * @param product
-     * @return
-     */
-    private ArrayList<Integer> getIdServicesOfTariff(Product product) {
-        List<TariffServiceDto> serviceList = productDao.getServicesByTariff(product.getId());
-        ArrayList<Integer> serviceIdList = new ArrayList<>();
-        for (TariffServiceDto product1 : serviceList) {
-            serviceIdList.add(product1.getServiceId());
-        }
-        return serviceIdList;
-    }
-
-    /**
-     * Anna Rysakova
-     *
      * @param idTariff
      * @param arrayOfIdServices
      */
+    @Override
     public void fillInTariffWithServices(Integer idTariff, Integer[] arrayOfIdServices) {
         ArrayList<TariffServiceDto> products = fillInDTOForBatchUpdate(idTariff, arrayOfIdServices);
         productDao.fillInTariffWithServices(products);
@@ -161,13 +149,14 @@ public class ProductService {
      *
      * @param updateProduct
      */
+    @Override
     public boolean updateProduct(Product updateProduct) {
         int productId = updateProduct.getId();
         Product product = productDao.getById(productId);
-        if (!updateProduct.getName().isEmpty() & !updateProduct.getName().equals(product.getName())) {
+        if (!updateProduct.getName().isEmpty()) {
             product.setName(updateProduct.getName());
         }
-        if (!updateProduct.getDescription().isEmpty() & !updateProduct.getDescription().equals(product.getDescription())) {
+        if (!updateProduct.getDescription().isEmpty()) {
             product.setDescription(updateProduct.getDescription());
         }
         if (!Objects.equals(updateProduct.getDurationInDays(), product.getDurationInDays())) {

@@ -1,4 +1,4 @@
-package jtelecom.services;
+package jtelecom.services.price;
 
 import jtelecom.dao.price.Price;
 import jtelecom.dao.price.PriceDao;
@@ -19,9 +19,9 @@ import java.util.Objects;
  * Created by Anna Rysakova on 10.05.2017.
  */
 @Component
-public class PriceService {
+public class PriceServiceImpl implements PriceService {
 
-    private static Logger logger = LoggerFactory.getLogger(ProductService.class);
+    private static Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
     @Resource
     private ProductDao productDao;
     @Resource
@@ -53,6 +53,7 @@ public class PriceService {
         return listPriceByRegion;
     }
 
+    @Override
     public boolean isValid(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
         if (Objects.equals(productId, null) || Objects.equals(placeId, null) || Objects.equals(priceByRegion, null)) {
             return false;
@@ -62,6 +63,7 @@ public class PriceService {
         return !Objects.equals(product, null);
     }
 
+    @Override
     public void updateProductPriceInRegions(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
         List<Price> oldPriceInfo = priceDao.getPriceInRegionInfoByProduct(productId);
         List<Price> newPriceInfo = fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
