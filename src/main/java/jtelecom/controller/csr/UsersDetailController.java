@@ -43,6 +43,7 @@ public class UsersDetailController {
 
     @RequestMapping(value = {"getUsers"}, method = RequestMethod.GET)
     public ListHolder getUsers(@ModelAttribute GridRequestDto request) {
+        System.out.println(request.toString());
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getLength();

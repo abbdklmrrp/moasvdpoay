@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<footer id="footer" class="midnight-blue">
+<footer id="footer" class="midnight-blue footer">
     <div class="container">
-        Jtelecom team @ All Rights Reserved.
+        (c) 2017 Jtelecom team. All Rights Reserved.
     </div>
 </footer>
 <script type="text/javascript" src="<c:url value="/resources/js/bootstrap/jquery.js"/>"></script>

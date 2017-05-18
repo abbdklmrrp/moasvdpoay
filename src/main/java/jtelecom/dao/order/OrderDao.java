@@ -65,7 +65,7 @@ public interface OrderDao extends Dao<Order> {
 
     Integer getCountOrdersByUserId(Integer userId, String search);
 
-    List<FullInfoOrderDTO> getIntervalOrdersBuUserId(int start, int length, String sort, String search, int userId);
+    List<FullInfoOrderDTO> getIntervalOrdersByUserId(int start, int length, String sort, String search, int userId);
 
     Integer getCountOrdersWithoutCsr(String search);
 

@@ -22,6 +22,7 @@
     var self = this;
     var root = $('#' + options.id);
     var grid = findGrid(root);
+    var message=findMessage(root);
 
     // templates
     var pagerItemTemplate = findPagerTemplate(root).first().remove();
@@ -66,6 +67,8 @@
             sort = gridHeader + ' DESC';}
             atLeastOneAdded = true;
          }
+         gridHeaders[gridHeader]=null;
+         console.log(sort);
         }
       }
       if (!atLeastOneAdded) {
@@ -224,11 +227,14 @@
           upElement.addClass("active");
         }
         refresh();
+        upElement.removeClass("active");
       });
     }
 
     function sortDown(header, upElement, downElement) {
       downElement.click(function () {
+
+
           for (var gridHeader in gridHeaders) {
               gridHeaders[gridHeader]===null;
           }
@@ -243,6 +249,7 @@
           downElement.addClass("active");
         }
         refresh();
+        downElement.removeClass("active");
       });
     }
 
@@ -291,6 +298,7 @@
 
     function renderData(lastResponse) {
       var table;
+      message.empty();
       if (grid[0].tagName == "TABLE") {
         table = grid.find("TBODY").empty();
       } else {
@@ -298,6 +306,9 @@
       }
 
       var dataLength = lastResponse.data.length;
+      if(dataLength==0){
+          message.append('<h1 style="text-align: center">No data</h1>');
+      }
 
       for (var i = 0; i < dataLength; i++) {
         var row = rowTemplate.clone().appendTo(table);
@@ -369,6 +380,10 @@
 
     function findGrid(root) {
       return root.find('[data-grid=grid]');
+    }
+
+    function findMessage(root){
+        return root.find('[data-grid=message]');
     }
 
     //

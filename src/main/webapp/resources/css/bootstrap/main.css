@@ -1,5 +1,14 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,700,300);
 
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 40px;
+}
+
 .clearfix {
     *zoom: 1;
 }
@@ -1122,12 +1131,11 @@ ul.rss li::before {
 }
 
 #footer {
-    padding-top: 3px;
-    padding-bottom: 3px;
     color: #bdc3c7;
-    width: 100%;
+    position: absolute;
     bottom: 0;
-    position: fixed;
+    width: 100%;
+    height: 30px;
 }
 
 ul.social {
