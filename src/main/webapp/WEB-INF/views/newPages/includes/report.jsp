@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <h3 style="text-align: center; margin-bottom: 30px;">Report about orders and complaints</h3>
 <div class="container" style="width:60%; max-width: 400px;">
-    <form id="formWithRegionsAndDates" action="<%=request.getContextPath()%>download" method="get">
+    <form id="formWithRegionsAndDates" action="${pageContext.request.contextPath}download" method="get">
         <div class="login-form">
             <div class="form-group row">
                 <label class="col-sm-4 control-label" for="sel1">Choose region</label>

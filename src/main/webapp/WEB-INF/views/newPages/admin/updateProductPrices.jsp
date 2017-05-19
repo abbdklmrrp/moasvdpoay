@@ -90,9 +90,8 @@
                                     </td>
                                     <td>
                                         <div class="form-group row">
-                                            <label class="col-sm-4 control-label">Base price</label>
                                             <div class="col-sm-8">
-                                                <input type="text" class="form-control"
+                                                <input readonly="true" type="text" class="form-control"
                                                        value="${place.priceProduct}"
                                                        id="priceByRegion" name="priceByRegion">
                                                 <i class="fa fa-user"></i>

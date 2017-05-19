@@ -1,16 +1,3 @@
-$(document).ready(function () {
-    $('#btnShowReport').click(function () {
-        if (checkDate()) {
-            drawChartAndTable();
-        }
-    });
-    $('#btnDownloadReport').click(function () {
-        if (checkDate()) {
-            $('#formWithRegionsAndDates').submit();
-        }
-    });
-
-});
 
 function fillData() {
     var btnShow = document.getElementById('btnShowReport');
@@ -43,12 +30,12 @@ function showError(message) {
 
 google.charts.load('current', {'packages': ['corechart']});
 
-function drawChartAndTable() {
+function drawChartAndTable(dataUrl,name) {
     var list = [];
     var len = 0;
     var isError = Boolean(false);
     jQuery.ajax({
-        url: 'data',
+        url: dataUrl,
         type: "GET",
         dataType: "json",
         data: jQuery("#formWithRegionsAndDates").serialize(),
@@ -68,14 +55,13 @@ function drawChartAndTable() {
     var rowList = [];
     for (var i = 0; i < len; i++) {
         var row = [];
-        row.push(list[i].timePeriod, list[i].ordersCount, list[i].complaintsCount);
+        row.push(list[i].timePeriod, list[i].amount);
         rowList.push(row);
     }
 
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Day');
-    data.addColumn('number', 'Orders');
-    data.addColumn('number', 'Complaints');
+    data.addColumn('number', name);
 
     data.addRows(rowList);
     var select = document.getElementById('sel1');
@@ -99,8 +85,7 @@ function drawChartAndTable() {
         '<thead>' +
         '<tr>' +
         '<th>Date</th>' +
-        '<th>Orders</th>' +
-        '<th>Complaints</th>' +
+        '<th>'+name+'</th>' +
         '</tr>' +
         '</thead>' +
         '</table>';
@@ -110,8 +95,7 @@ function drawChartAndTable() {
         data: list,
         columns: [
             {data: 'timePeriod'},
-            {data: 'ordersCount'},
-            {data: 'complaintsCount'}
+            {data: 'amount'}
         ]
     })
 }

@@ -9,13 +9,13 @@
                 <label class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-10">
                     <input readonly style="border-bottom-width: 0;" type="text" class="form-control" name="name"
-                           id="name" value=${user.name} required maxlength="16"><br>
+                           id="name" pattern="[A-Za-z]" title="-   Must be only characters A-z" value=${user.name} required maxlength="16"><br>
                 </div>
             </div>
             <div class="form-group form-group-lg">
                 <label class="col-sm-2 control-label">Surname</label><br>
                 <div class="col-sm-10">
-                    <input readonly type="text" class="form-control" name="surname" id="surname"
+                    <input readonly type="text" class="form-control" name="surname" pattern="[A-Za-z]" title="-   Must be only characters A-z" id="surname"
                            value=${user.surname} required
                            maxlength="16"><br>
                 </div>

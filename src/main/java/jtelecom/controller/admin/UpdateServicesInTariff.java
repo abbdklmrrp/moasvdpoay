@@ -3,7 +3,7 @@ package jtelecom.controller.admin;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDao;
 import jtelecom.dto.TariffServiceDto;
-import jtelecom.services.ProductService;
+import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
