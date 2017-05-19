@@ -12,6 +12,7 @@
     <jsp:include page="../includes/head.jsp">
         <jsp:param name="tittle" value="Price in region"/>
     </jsp:include>
+    <link href="<c:url value="/resources/css/price.css" />" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
@@ -39,13 +40,13 @@
                     <c:choose>
                         <c:when test="${param.page == 'Products'}">
                             <li class="wet-asphalt active-tab">
-                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct=${placesAndPrice.get(0).productId}">Product
+                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${placesAndPrice.get(0).productId}">Product
                                     info</a>
                             </li>
                         </c:when>
                         <c:otherwise>
                             <li class="wet-asphalt">
-                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct=${placesAndPrice.get(0).productId}">Product
+                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${placesAndPrice.get(0).productId}">Product
                                     info</a>
                             </li>
                         </c:otherwise>
@@ -55,13 +56,13 @@
                         <c:choose>
                             <c:when test="${param.page == 'UpdateServicesInTariff'}">
                                 <li class="wet-asphalt active-tab">
-                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff=${placesAndPrice.get(0).productId}">Services
+                                    <a href="${pageContext.request.contextPath}/admin/viewServicesInTariff?id=${placesAndPrice.get(0).productId}">Services
                                         in tariff</a>
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li class="wet-asphalt">
-                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff=${placesAndPrice.get(0).productId}">Services
+                                    <a href="${pageContext.request.contextPath}/admin/viewServicesInTariff?id=${placesAndPrice.get(0).productId}">Services
                                         in tariff</a>
                                 </li>
                             </c:otherwise>
@@ -72,7 +73,7 @@
         </aside>
         <main class="col-lg-10 col-md-10 col-sm-10 col-xs-11">
 
-            <form action="${pageContext.request.contextPath}/admin/updateProductPrice=${placesAndPrice.get(0).productId}"
+            <form action="${pageContext.request.contextPath}/admin/updateProductPrices?id=${placesAndPrice.get(0).productId}"
                   method="post">
                 <div class="container">
                     <div class="col-md-2"></div>
@@ -89,29 +90,25 @@
                                     <td><input type="hidden" name="placeId" value="${place.placeId}">${place.placeName}
                                     </td>
                                     <td>
-                                        <div class="form-group row">
+                                            <%--<div class="form-group row">--%>
                                             <div class="col-sm-8">
-                                                <input readonly="true" type="text" class="form-control"
+                                                <input type="number" class="currency" min="0.01" max="99999.99"
                                                        value="${place.priceProduct}"
                                                        id="priceByRegion" name="priceByRegion">
                                                 <i class="fa fa-user"></i>
                                             </div>
-                                        </div>
+                                            <%--</div>--%>
                                     </td>
                                 </tr>
                             </c:forEach>
                         </table>
-                        <%--<div class="row">--%>
-                        <%--<div class="col-sm-4 col-xs-0"></div>--%>
-                        <%--<button type="submit" class="btn btn-primary col-sm-4 col-xs-12">Save</button>--%>
-                        <%--<br><br>--%>
-                        <%--<div class="col-sm-4 col-xs-0"></div>--%>
-                        <%--</div>--%>
-                        <div class="row hide" id="save-price-in-region">
-                            <button type="button" class="btn btn-danger col-sm-5 col-xs-5"
-                                    id="btn-cancel-price-in-region">
-                                Cancel
-                            </button>
+                        <div class="row " id="save-price-in-region">
+                            <form action="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${placesAndPrice.get(0).productId}">
+                                <button type="submit" class="btn btn-danger col-sm-5 col-xs-5"
+                                        id="btn-cancel-price-in-region">
+                                    Cancel
+                                </button>
+                            </form>
                             <div class="col-sm-2 col-xs-2"></div>
                             <button type="submit" class="btn btn-success col-sm-5 col-xs-5"
                                     id="btn-save-price-in-region">Save
@@ -121,14 +118,9 @@
                     <div class="col-md-2"></div>
                 </div>
             </form>
-            <div class="row" id="edit-and-changes-price-in-region">
-                <div class="col-sm-4 col-xs-0"></div>
-                <button class="btn btn-primary col-sm-5 col-xs-5" id="btn-edit-price-in-region-info">Update price
-                </button>
-                <div class="col-sm-4 col-xs-0"></div>
-            </div>
             <h2 style="text-align: center" id="errorMessage" hidden disabled="true">${msg}</h2>
         </main>
     </div>
 </div>
-<script type="text/javascript" src="<c:url value="/resources/js/priceInRegions.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
+

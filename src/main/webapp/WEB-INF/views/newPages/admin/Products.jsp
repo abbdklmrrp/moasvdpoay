@@ -189,7 +189,7 @@
         ],
         renderers: {
             "status": function (pv, wv, grid) {
-                if (wv.status == 1) {
+                if (wv.status == 'Available') {
                     return $('<input type="button" class="btn btn-danger" style="margin: 0 auto"  value="Disable" >').click(function () {
                             location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct=' + wv.id
                         }
@@ -203,7 +203,7 @@
             },
             "action": function (pv, wv, grid) {
                 return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
-                        location.href = '${pageContext.request.contextPath}/admin/getDetailsProduct=' + wv.id
+                    location.href = '${pageContext.request.contextPath}/admin/getDetailsProduct?id=' + wv.id
                     }
                 );
             }

@@ -56,13 +56,13 @@
                         <c:choose>
                             <c:when test="${param.page == 'UpdateServicesInTariff'}">
                                 <li class="wet-asphalt active-tab">
-                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff=${product.id}">Services
+                                    <a href="${pageContext.request.contextPath}/admin/viewServicesInTariff?id=${product.id}">Services
                                         in tariff</a>
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li class="wet-asphalt">
-                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff=${product.id}">Services
+                                    <a href="${pageContext.request.contextPath}/admin/viewServicesInTariff?id=${product.id}">Services
                                         in tariff</a>
                                 </li>
                             </c:otherwise>
@@ -74,7 +74,7 @@
         <main class="col-lg-10 col-md-10 col-sm-10 col-xs-11">
             <div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
                 <form method="POST" modelAttribute="product"
-                      action="${pageContext.request.contextPath}/admin/updateProduct=${product.id}">
+                      action="${pageContext.request.contextPath}/admin/updateProduct?id=${product.id}">
                     <div class="login-form">
                         <h1 style="text-align: center">Product info</h1>
                         <c:if test="${not empty error}">
