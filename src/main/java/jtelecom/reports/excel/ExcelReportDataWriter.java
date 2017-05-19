@@ -44,9 +44,9 @@ public class ExcelReportDataWriter {
             Cell cell = row.createCell(cellIndex++);
             cell.setCellValue(reportDataObject.getTimePeriod());
             cell = row.createCell(cellIndex++);
-            cell.setCellValue(reportDataObject.getComplaintsCount());
+//            cell.setCellValue(reportDataObject.getComplaintsCount());
             cell = row.createCell(cellIndex++);
-            cell.setCellValue(reportDataObject.getOrdersCount());
+//            cell.setCellValue(reportDataObject.getOrdersCount());
         }
     }
 

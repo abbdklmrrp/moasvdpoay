@@ -5,17 +5,14 @@ package jtelecom.reports;
  */
 public class ReportData {
     private String timePeriod;
-    private int complaintsCount;
-    private int ordersCount;
-
-
-    public ReportData(String timePeriod, int complaintsCount, int ordersCount) {
-        this.timePeriod = timePeriod;
-        this.complaintsCount = complaintsCount;
-        this.ordersCount = ordersCount;
-    }
+    private int amount;
 
     public ReportData() {
+    }
+
+    public ReportData(String timePeriod, int amount) {
+        this.timePeriod = timePeriod;
+        this.amount = amount;
     }
 
     public String getTimePeriod() {
@@ -26,28 +23,19 @@ public class ReportData {
         this.timePeriod = timePeriod;
     }
 
-    public int getComplaintsCount() {
-        return complaintsCount;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setComplaintsCount(int complaintsCount) {
-        this.complaintsCount = complaintsCount;
-    }
-
-    public int getOrdersCount() {
-        return ordersCount;
-    }
-
-    public void setOrdersCount(int ordersCount) {
-        this.ordersCount = ordersCount;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     @Override
     public String toString() {
         return "ReportData{" +
                 "timePeriod='" + timePeriod + '\'' +
-                ", complaintsCount=" + complaintsCount +
-                ", ordersCount=" + ordersCount +
+                ", amount=" + amount +
                 '}';
     }
 }

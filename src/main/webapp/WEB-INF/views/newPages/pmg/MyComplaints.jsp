@@ -16,7 +16,7 @@
     <div class="row">
         <table class="table" style="width: 220px">
             <tr>
-                <td>Complaint sent</td>
+                <td>Complaint assigned</td>
                 <td class="danger" style="width: 50px"></td>
             </tr>
             <tr>

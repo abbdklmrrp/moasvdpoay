@@ -75,8 +75,8 @@ public class ReportsService {
             ReportData reportData = new ReportData();
             String currDateStr = getCurrentDateByPeriodToAdd(currDate, PERIOD_TO_ADD);
             reportData.setTimePeriod(currDateStr);
-            reportData.setComplaintsCount(complaintsData.getOrDefault(currDateStr, 0));
-            reportData.setOrdersCount(ordersData.getOrDefault(currDateStr, 0));
+//            reportData.setComplaintsCount(complaintsData.getOrDefault(currDateStr, 0));
+//            reportData.setOrdersCount(ordersData.getOrDefault(currDateStr, 0));
             currDate.add(PERIOD_TO_ADD, 1);
             reportDataList.add(reportData);
         }

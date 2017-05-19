@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -51,19 +52,7 @@ public class ReportController {
 
     private static Logger logger = LoggerFactory.getLogger(ReportController.class);
 
-    @RequestMapping(value = "/statistics")
-    public String graph(Model model) {
-        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        List<Place> regions = placeDAO.getAll();
-        model.addAttribute("regions", regions);
-        return "newPages/" + user.getRole().getName().toLowerCase() + "/Statistics";
-    }
-
-    @RequestMapping(value = "/data")
-    @ResponseBody
-    public List<ReportData> getGraphData(@RequestParam(name = "region") int region,
-                                         @RequestParam(name = "beginDate") String beginDate,
-                                         @RequestParam(name = "endDate") String endDate) {
+    private boolean validateData(String beginDate, String endDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar start = new GregorianCalendar();
         Calendar end = new GregorianCalendar();
@@ -72,16 +61,55 @@ public class ReportController {
             end.setTime(simpleDateFormat.parse(endDate));
         } catch (ParseException e) {
             logger.error("Wrong date format", e);
-            return null;
+            return false;
         }
         if (start.after(end)) {
             logger.error("Start date {} goes after end date {}", beginDate, endDate);
+            return false;
+        }
+        return true;
+    }
+
+    @RequestMapping(value = "/statistics")
+    public String graph(Model model) {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        List<Place> regions = placeDAO.getAll();
+        model.addAttribute("regions", regions);
+        return "newPages/" + user.getRole().getName().toLowerCase() + "/Statistics";
+    }
+
+    @RequestMapping(value = "/getComplaintsReport")
+    @ResponseBody
+    public List<ReportData> getComplaintReport(@RequestParam(name = "region") int region,
+                                               @RequestParam(name = "beginDate") String beginDate,
+                                               @RequestParam(name = "endDate") String endDate) {
+        boolean valid = validateData(beginDate, endDate);
+        if (valid) {
+//            try {
+            return null;//TODO return complaints
+//            } catch (ReportCreatingException e) {
+//                logger.error("Can't get report data for web graph", e);
+//                return null;
+//            }
+        } else {
             return null;
         }
-        try {
-             return reportsService.getDataForReport(beginDate, endDate, region);
-        } catch (ReportCreatingException e) {
-            logger.error("Can't get report data for web graph", e);
+    }
+
+    @RequestMapping(value = "/getOrdersReport")
+    @ResponseBody
+    public List<ReportData> getOrderReport(@RequestParam(name = "region") int region,
+                                           @RequestParam(name = "beginDate") String beginDate,
+                                           @RequestParam(name = "endDate") String endDate) {
+        boolean valid = validateData(beginDate, endDate);
+        if (valid) {
+//            try {
+            return null;//TODO return orders
+//            } catch (ReportCreatingException e) {
+//                logger.error("Can't get report data for web graph", e);
+//                return null;
+//            }
+        } else {
             return null;
         }
     }
