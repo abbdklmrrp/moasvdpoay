@@ -14,5 +14,4 @@
 <script type="text/javascript" src="<c:url value="/resources/js/serviceTariff.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/sweet-alert.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/orderService.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/js/profile.js"/>"></script>
 
