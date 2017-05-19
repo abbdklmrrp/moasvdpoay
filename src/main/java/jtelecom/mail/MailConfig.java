@@ -1,11 +1,11 @@
 package jtelecom.mail;
 
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 import java.util.Properties;
 
 /**
@@ -54,26 +54,23 @@ public class MailConfig {
 //        javaMailSender.setSession(session);
         return javaMailSender;
     }
-
-    @Bean(name = "templateMessage")
-    public SimpleMailMessage simpleMailMessage() {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setText("Dear %s, \n %s.");
-        return simpleMailMessage;
-    }
-
-    @Bean(name = "email")
+    @Bean(name="email")
     public Email email() {
-        Email email = new Email();
-        email.setSimpleMailMessage(simpleMailMessage());
-        return email;
+        return new Email();
     }
 
-    @Bean(name = "mailer")
-    public Mailer mailer() {
-        Mailer mailer = new Mailer();
+
+    @Bean(name = "mailService")
+    public MailService mailer() {
+        MailService mailer = new MailService();
         mailer.setEmail(email());
         mailer.setMailSender(javaMailService());
         return mailer;
+    }
+    @Bean
+    public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
+        FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
+        bean.setTemplateLoaderPath("classpath:/templates/");
+        return bean;
     }
 }

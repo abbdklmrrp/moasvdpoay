@@ -8,12 +8,16 @@ import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.googleMaps.ServiceGoogleMaps;
+import jtelecom.mail.EmailTemplatePath;
+import jtelecom.mail.MailService;
 import jtelecom.security.Md5PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -30,6 +34,8 @@ public class UserService {
     Md5PasswordEncoder encoder;
     @Resource
     private CustomerDAO customerDAO;
+    @Resource
+    private MailService mailService;
 
     private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -77,7 +83,11 @@ public class UserService {
             if (unique) {
                 boolean success = userDAO.save(user);
                 if (success) {
-                    // todo send email with registration info
+                    String to=user.getEmail();
+                    Map<String,Object> model=new HashMap();
+                    model.put("name",user.getName());
+                    model.put("surname",user.getSurname());
+                    mailService.send(to,model, EmailTemplatePath.REGISTRATION);
                     return "User successfully saved";
                 }
                 return "User creating failed. Please try again";
@@ -127,6 +137,11 @@ public class UserService {
                     user.setCustomerId(customerId);
                     boolean success = userDAO.save(user);
                     if (success) {
+                        String to=user.getEmail();
+                        Map<String,Object> model=new HashMap();
+                        model.put("name",user.getName());
+                        model.put("surname",user.getSurname());
+                        mailService.send(to,model, EmailTemplatePath.REGISTRATION);
                         return "User successfully saved";
                     } else {
                         return "Registration failed.Please try again";
