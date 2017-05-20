@@ -2,7 +2,6 @@ package jtelecom.controller.admin;
 
 import jtelecom.dao.price.PriceDao;
 import jtelecom.dao.product.ProductDao;
-import jtelecom.dto.PriceByRegionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * Created by Anna Rysakova on 10.05.2017.
@@ -36,12 +34,7 @@ public class ViewProductPriceByRegion {
     @RequestMapping(value = "viewProductPriceInRegions", method = RequestMethod.GET)
     public ModelAndView getProductPriceForRegions(@RequestParam("id") Integer productId,
                                                   ModelAndView mav) {
-        List<PriceByRegionDto> priceInRegionsByProduct = priceDao.getPriceInRegionsByProduct(productId);
-        logger.debug("Receive product price by region {} ", priceInRegionsByProduct.toString());
-        String productType = productDao.getProductTypeByProductId(productId);
-
-        mav.addObject("priceInRegionsByProduct", priceInRegionsByProduct);
-        mav.addObject("productType", productType);
+        mav.addObject("id", productId);
         mav.setViewName("newPages/admin/viewProductPriceInRegions");
         return mav;
     }
