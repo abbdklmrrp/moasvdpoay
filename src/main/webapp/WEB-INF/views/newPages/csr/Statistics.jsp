@@ -17,5 +17,20 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/sweet-alert.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/report.js"/>"></script>
+<script>
+    $(document).ready(function () {
+        $('#btnShowReport').click(function () {
+            if (checkDate()) {
+                drawChartAndTable('getOrdersReport', 'Orders');
+            }
+        });
+        $('#btnDownloadReport').click(function () {
+            if (checkDate()) {
+                $('#formWithRegionsAndDates').submit();
+            }
+        });
+
+    });
+</script>
 </body>
 </html>
