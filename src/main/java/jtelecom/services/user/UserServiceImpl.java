@@ -1,4 +1,4 @@
-package jtelecom.services;
+package jtelecom.services.user;
 
 
 import jtelecom.dao.customer.Customer;
@@ -8,6 +8,7 @@ import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.googleMaps.ServiceGoogleMaps;
+import jtelecom.services.mail.MailService;
 import jtelecom.security.Md5PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ import java.util.Random;
  * @since 03.05.2017.
  */
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
     @Resource
     private UserDAO userDAO;
     @Resource
@@ -30,8 +31,10 @@ public class UserService {
     Md5PasswordEncoder encoder;
     @Resource
     private CustomerDAO customerDAO;
+    @Resource
+    private MailService mailService;
 
-    private static Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public boolean updateUser(User editedUser) {
         User oldUser = userDAO.getUserById(editedUser.getId());
@@ -70,14 +73,13 @@ public class UserService {
         return userDAO.update(oldUser);
     }
 
-    public String save(User user) {
+    private String save(User user) {
         String message = validateFields(user).toString();
         if (message.isEmpty()) {
             boolean unique = userDAO.isUnique(user);
             if (unique) {
                 boolean success = userDAO.save(user);
                 if (success) {
-                    // todo send email with registration info
                     return "User successfully saved";
                 }
                 return "User creating failed. Please try again";
@@ -91,7 +93,7 @@ public class UserService {
         String password = passwordGenerator();
         user.setPassword(password);
         String message = save(user);
-        //todo send email with registration info and new password
+        mailService.sendRegistrationWithoutPasswordEmail(user);
         return message;
     }
 
@@ -109,11 +111,31 @@ public class UserService {
         String password = passwordGenerator();
         user.setPassword(password);
         String message = saveResidential(user);
-        //todo send email with password
+        if(message.equals("User successfully saved")){
+            mailService.sendRegistrationWithoutPasswordEmail(user);
+        }
         return message;
     }
 
-    public String saveResidential(User user) {
+    public String saveResidentialWithoutPasswordGenerating(User user) {
+        String message=saveResidential(user);
+        if(message.equals("User successfully saved")){
+            mailService.sendRegistrationEmail(user);
+        }
+        return message;
+    }
+
+    public boolean generateNewPassword(User user){
+        String password=passwordGenerator();
+        user.setPassword(password);
+        boolean success=updateUser(user);
+        if (success) {
+            mailService.sendNewPasswordEmail(user);
+        }
+        return success;
+    }
+
+    private String saveResidential(User user) {
         user.setRole(Role.RESIDENTIAL);
         String message = validateFields(user).toString();
         if (message.isEmpty()) {

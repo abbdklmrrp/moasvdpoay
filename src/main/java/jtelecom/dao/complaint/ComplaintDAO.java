@@ -7,6 +7,7 @@ package jtelecom.dao.complaint;
 
 
 import jtelecom.dao.interfaces.Dao;
+import jtelecom.dao.user.User;
 
 import java.util.List;
 
@@ -98,5 +99,8 @@ public interface ComplaintDAO extends Dao<Complaint> {
      * @return amount of complaints
      */
     int countAssignedComplaintsToUser(int pmgId);
+
+    Integer saveComplaint(Complaint complaint);
+
 
 }

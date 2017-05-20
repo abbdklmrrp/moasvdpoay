@@ -1,5 +1,6 @@
 package jtelecom.dao.user;
 
+import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.interfaces.Dao;
 
 import java.util.List;
@@ -43,4 +44,12 @@ public interface UserDAO extends Dao<User> {
     Integer getCountEmployeesWithSearchOfCustomer(String search,int customerId);
 
     boolean isUnique(User user);
+
+    User getUserByComplaintId(int complaintId);
+
+    User getUserByOrderId(int orderId);
+
+    List<User> getUsersByCustomerType(CustomerType customerType);
+
+    List<User> getUsersByProductId(int productId);
 }

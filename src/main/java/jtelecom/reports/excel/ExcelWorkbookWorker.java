@@ -4,7 +4,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,6 +15,8 @@ public class ExcelWorkbookWorker {
     private XSSFWorkbook excelWorkbook;
     private String workbookName;
     private final static Logger logger = LoggerFactory.getLogger(ExcelWorkbookWorker.class);
+//    final String ORDERS_TEMPLATE_ADDRESS = File.separator + "excel" + File.separator + "orders_template.xlsx";
+//    final String COMPLAINT_TEMPLATE_ADDRESS = File.separator + "excel" + File.separator + "comp_template.xlsx";
 
 
     public ExcelWorkbookWorker(String workbookName) {
@@ -30,9 +31,8 @@ public class ExcelWorkbookWorker {
     /**
      * method which create workbook for report from existing template
      */
-    public void createWorkbookFromTemplate() throws WorkbookCreatingFailException {
-        final String TEMP_FILE_ADDRESS = File.separator + "excel" + File.separator + "template.xlsx";
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(TEMP_FILE_ADDRESS);
+    public void createWorkbookFromTemplate(ReportType reportType) throws WorkbookCreatingFailException {
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(reportType.getTemplateFileAddress());
         try {
             excelWorkbook = new XSSFWorkbook(inputStream);
         } catch (IOException e) {

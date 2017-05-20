@@ -1,4 +1,4 @@
-package jtelecom.mail;
+package jtelecom.services.mail;
 
 import javax.mail.MessagingException;
 

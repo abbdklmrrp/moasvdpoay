@@ -1,5 +1,6 @@
 package jtelecom.dao.user;
 
+import jtelecom.dao.entity.CustomerType;
 import jtelecom.security.Md5PasswordEncoder;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -108,7 +109,7 @@ public class UserDAOImpl implements UserDAO {
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
 
-    private static final String SELECT_COUNT_EMPLOYEES_BY_CUSTOMER="Select count(ID)\n" +
+    private static final String SELECT_COUNT_EMPLOYEES_BY_CUSTOMER = "Select count(ID)\n" +
             "  from Users " +
             "WHERE ROLE_ID=6 AND CUSTOMER_ID=:customerId AND " +
             " ( name like :pattern " +
@@ -117,18 +118,37 @@ public class UserDAOImpl implements UserDAO {
             " OR phone like :pattern " +
             " OR address like :pattern )";
 
-    private static final String SELECT_EMPLOYEES_BY_CUSTOMER="select *"+
-        "from ( select a.*, rownum rnum\n" +
-        "       from ( Select * from USERS " +
+    private static final String SELECT_EMPLOYEES_BY_CUSTOMER = "select *" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from USERS " +
             "WHERE ROLE_ID=6 AND CUSTOMER_ID=:customerId AND " +
-        "  (name like :pattern " +
-        " OR surname like :pattern " +
-        " OR email like :pattern " +
-        " OR phone like :pattern " +
-        " OR address like :pattern) " +
-        " ORDER BY %s) a\n" +
-        "       where rownum <= :length )\n" +
-        "       where rnum > :start";
+            "  (name like :pattern " +
+            " OR surname like :pattern " +
+            " OR email like :pattern " +
+            " OR phone like :pattern " +
+            " OR address like :pattern) " +
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
+
+    private static final String GET_USER_BY_COMPLAINT_ID = "SELECT * " +
+            " FROM USERS WHERE ID=( " +
+            " SELECT USER_ID FROM ORDERS JOIN COMPLAINTS ON (ORDERS.ID=COMPLAINTS.ORDER_ID) " +
+            " WHERE COMPLAINTS.ID=:complaintId)";
+
+    private static final String GET_USER_BY_ORDER_ID = "SELECT * " +
+            " FROM USERS WHERE ID=( " +
+            " SELECT USER_ID FROM ORDERS WHERE ID=:orderId)";
+
+    private static final String GET_USERS_BY_CUSTOMER_TYPE = "SELECT * " +
+            " FROM USERS WHERE CUSTOMER_ID IN ( " +
+            " SELECT ID FROM CUSTOMERS WHERE TYPE_ID=:typeId)";
+
+    private static final String GET_USER_BY_PRODUCT_ID = "SELECT * " +
+            " FROM USERS WHERE ID IN ( " +
+            " SELECT USER_ID FROM ORDERS WHERE PRODUCT_ID=:productId OR PRODUCT_ID IN ( " +
+            " SELECT TARIFF_ID FROM TARIFF_SERVICES WHERE SERVICE_ID=:productId))";
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -180,20 +200,20 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public boolean save(User user) {
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            String encodePassword = encoder.encode(user.getPassword());
-            params.addValue("name", user.getName());
-            params.addValue("surname", user.getSurname());
-            params.addValue("email", user.getEmail());
-            params.addValue("phone", user.getPhone());
-            params.addValue("password", encodePassword);
-            params.addValue("roleId", user.getRole().getId());
-            params.addValue("placeId", user.getPlaceId());
-            params.addValue("customerId", user.getCustomerId());
-            params.addValue("address", user.getAddress());
-            params.addValue("enable", 1);
-            int save = jdbcTemplate.update(SAVE_USER, params);
-            return save > 0;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        String encodePassword = encoder.encode(user.getPassword());
+        params.addValue("name", user.getName());
+        params.addValue("surname", user.getSurname());
+        params.addValue("email", user.getEmail());
+        params.addValue("phone", user.getPhone());
+        params.addValue("password", encodePassword);
+        params.addValue("roleId", user.getRole().getId());
+        params.addValue("placeId", user.getPlaceId());
+        params.addValue("customerId", user.getCustomerId());
+        params.addValue("address", user.getAddress());
+        params.addValue("enable", 1);
+        int save = jdbcTemplate.update(SAVE_USER, params);
+        return save > 0;
     }
 
     @Override
@@ -372,7 +392,7 @@ public class UserDAOImpl implements UserDAO {
         }
         String sql = String.format(SELECT_EMPLOYEES_BY_CUSTOMER, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("customerId",customerId);
+        params.addValue("customerId", customerId);
         params.addValue("start", start);
         params.addValue("length", length);
         params.addValue("pattern", "%" + search + "%");
@@ -383,7 +403,32 @@ public class UserDAOImpl implements UserDAO {
     public Integer getCountEmployeesWithSearchOfCustomer(String search, int customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("pattern", "%" + search + "%");
-        params.addValue("customerId",customerId);
+        params.addValue("customerId", customerId);
         return jdbcTemplate.queryForObject(SELECT_COUNT_EMPLOYEES_BY_CUSTOMER, params, Integer.class);
+    }
+
+    @Override
+    public User getUserByComplaintId(int complaintId) {
+        MapSqlParameterSource params = new MapSqlParameterSource("complaintId", complaintId);
+        return jdbcTemplate.queryForObject(GET_USER_BY_COMPLAINT_ID, params, new UserRowMapper());
+    }
+
+    @Override
+    public User getUserByOrderId(int orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
+        return jdbcTemplate.queryForObject(GET_USER_BY_ORDER_ID, params, new UserRowMapper());
+    }
+
+    @Override
+    public List<User> getUsersByCustomerType(CustomerType customerType) {
+        Integer typeId = customerType.getId();
+        MapSqlParameterSource params = new MapSqlParameterSource("typeId", typeId);
+        return jdbcTemplate.query(GET_USERS_BY_CUSTOMER_TYPE, params, new UserRowMapper());
+    }
+
+    @Override
+    public List<User> getUsersByProductId(int productId) {
+       MapSqlParameterSource params=new MapSqlParameterSource("productId",productId);
+       return jdbcTemplate.query(GET_USER_BY_PRODUCT_ID,params,new UserRowMapper());
     }
 }

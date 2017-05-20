@@ -19,4 +19,8 @@ public interface ProductService {
     void fillInTariffWithServices(Integer idTariff, Integer[] arrayOfIdServices);
 
     boolean updateProduct(Product updateProduct);
+
+    Integer saveProduct(Product product);
+
+    boolean disableEnableProduct(int productId);
 }

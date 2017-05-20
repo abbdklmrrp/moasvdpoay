@@ -191,7 +191,7 @@
         </div>
         <div class="col-md-1"></div>
     </div>
-    <div class="row" style="{margin-bottom:50px;}" align="center">
+    <div class="row" style="{padding-bottom:50px; padding-top:50px;}" align="center">
         <form id="formWithDates" class="form-horizontal">
             <br/>
             <label class="control-label">Date Begin:

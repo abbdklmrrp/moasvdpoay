@@ -104,7 +104,7 @@ public interface ProductDao extends Dao<Product> {
 
     void deleteServiceFromTariff(List<TariffServiceDto> tariffServiceDtos);
 
-    boolean disableEnableProductByID(int id);
+    boolean disableEnableProduct(Product product);
 
     List<Product> getProductsByUserId(int id);
 
@@ -209,5 +209,7 @@ public interface ProductDao extends Dao<Product> {
     String getProductTypeByProductId(Integer productId);
 
     String getCustomerTypeByProductId(Integer productId);
+
+    Product getProductByOrderId(int orderId);
 
 }

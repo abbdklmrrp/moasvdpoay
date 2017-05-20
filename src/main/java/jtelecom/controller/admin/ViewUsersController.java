@@ -5,7 +5,7 @@ import jtelecom.dao.user.UserDAO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.UserService;
+import jtelecom.services.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
