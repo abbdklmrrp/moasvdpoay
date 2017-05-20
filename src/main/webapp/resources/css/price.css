@@ -1,0 +1,9 @@
+.currency {
+    padding-left: 12px;
+    width: 150px;
+}
+
+.currency-symbol {
+    position: absolute;
+    padding: 2px 5px;
+}
