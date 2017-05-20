@@ -14,7 +14,6 @@
     <jsp:include page="../includes/head.jsp">
         <jsp:param name="tittle" value="Update services in tariff"/>
     </jsp:include>
-    <link href="<c:url value="/resources/css/select.css" />" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
@@ -74,65 +73,33 @@
             </div>
         </aside>
         <main class="col-lg-10 col-md-10 col-sm-10 col-xs-11">
-            <form action="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${servicesByTariff.get(0).tariffId}"
-                  method="post">
-                <div class="container">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-8">
-                        <h1 style="text-align: center">Fill in tariff with services</h1>
+            <div class="container">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <h1 style="text-align: center">Fill in tariff with services</h1>
 
-                        <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
+                    <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
+                        <tr>
+                            <th>Category</th>
+                            <th>Services</th>
+                        </tr>
+                        <c:forEach var="services" items="${servicesByTariff}">
                             <tr>
-                                <th>Category</th>
-                                <th>Services</th>
-                                <th>Services in tariff</th>
+                                <td>${services.categoryName}</td>
+                                <td>${services.serviceName}</td>
                             </tr>
-                            <c:forEach var="servcesByCategory" items="${allServicesWithCategory}">
-                                <tr>
-                                    <td>${servcesByCategory.key}</td>
-                                    <td>
-                                        <select name="selectedService" id="soflow">
-                                            <option value="">-</option>
-                                            <c:forEach var="product" items="${servcesByCategory.value}">
-                                                <c:forEach var="service" items="${servicesByTariff}">
-                                                    <c:if test="${service.serviceId eq product.id}">
-                                                        <option value="${product.id}" selected>${product.name}</option>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <option value="${product.id}">${product.name}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <c:forEach var="service" items="${servicesByTariff}">
-                                            <c:if test="${servcesByCategory.key eq service.categoryName}">
-                                                <span>${service.serviceName}</span> </c:if>
-                                        </c:forEach>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </table>
-                        <div class="row " id="save-price-in-region">
-                            <form action="${pageContext.request.contextPath}/admin/viewServicesInTariff?id=${servicesByTariff.get(0).tariffId}">
-                                <button type="submit" class="btn btn-danger col-sm-5 col-xs-5"
-                                        id="btn-cancel-price-in-region">
-                                    Cancel
-                                </button>
-                            </form>
-                            <div class="col-sm-2 col-xs-2"></div>
-                            <button type="submit" class="btn btn-success col-sm-5 col-xs-5"
-                                    id="btn-save-price-in-region">Update
-                            </button>
+                        </c:forEach>
+                    </table>
+                    <form action="${pageContext.request.contextPath}/admin/updateServicesInTariff/${servicesByTariff.get(0).tariffId}">
+                        <div class="row">
+                            <div class="col-sm-4 col-xs-0"></div>
+                            <button type="submit" class="btn btn-primary col-sm-4 col-xs-12">Update</button>
+                            <div class="col-sm-4 col-xs-0"></div>
                         </div>
-                        <%--<div class="row">--%>
-                        <%--<div class="col-sm-4 col-xs-0"></div>--%>
-                        <%--<button type="submit" class="btn btn-primary col-sm-4 col-xs-12">Update</button>--%>
-                        <%--<div class="col-sm-4 col-xs-0"></div>--%>
-                        <%--</div>--%>
-                    </div>
-                    <div class="col-md-2"></div>
+                    </form>
                 </div>
-            </form>
+                <div class="col-md-2"></div>
+            </div>
         </main>
     </div>
 </div>

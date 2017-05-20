@@ -36,7 +36,7 @@ public class UpdatePriceInRegions {
     @Resource
     private ProductDao productDao;
 
-    @RequestMapping(value = {"updateProductPrice={id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"updateProductPrice/{id}"}, method = RequestMethod.GET)
     public ModelAndView getPriceByRegion(@PathVariable(value = "id") Integer productId,
                                          ModelAndView mav) {
         logger.debug("Receive product's id {} ", productId);
@@ -50,8 +50,8 @@ public class UpdatePriceInRegions {
         return mav;
     }
 
-    @RequestMapping(value = {"updateProductPrice={id}"}, method = RequestMethod.POST)
-    public ModelAndView fillPriceByRegion(@PathVariable(value = "id") Integer productId,
+    @RequestMapping(value = {"updateProductPrices"}, method = RequestMethod.POST)
+    public ModelAndView fillPriceByRegion(@RequestParam(value = "id") Integer productId,
                                           ModelAndView mav,
                                           @RequestParam(value = "placeId") Integer[] placeId,
                                           @RequestParam(value = "priceByRegion") BigDecimal[] priceByRegion
@@ -66,7 +66,7 @@ public class UpdatePriceInRegions {
 
             mav.addObject("placesAndPrice", placesAndPrice);
             mav.addObject("error", ERROR_FILL_IN_PRICE_BY_PRODUCT);
-            mav.setViewName("newPages/admin/updateProductPrices");
+            mav.setViewName("newPages/admin/updateProductPrices/" + productId);
 
             return mav;
         }
@@ -81,10 +81,10 @@ public class UpdatePriceInRegions {
 
             mav.addObject("placesAndPrice", placesAndPrice);
             mav.addObject("error", ERROR_FILL_IN_PRICE_BY_PRODUCT);
-            mav.setViewName("newPages/admin/updateProductPrices");
+            mav.setViewName("newPages/admin/updateProductPrices/" + productId);
             return mav;
         }
-        mav.setViewName("redirect:/admin/updateProductPrice=" + productId);
+        mav.setViewName("redirect:/admin/viewProductPriceInRegions?id=" + productId);
         return mav;
 
     }

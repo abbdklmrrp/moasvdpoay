@@ -33,9 +33,9 @@ public class UpdateProductController {
     @Resource
     private ProductService productService;
 
-    @RequestMapping(value = {"updateProduct={id}"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"updateProduct"}, method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView updateTariff(Product product, @PathVariable(value = "id") Integer id,
+    public ModelAndView updateTariff(Product product, @RequestParam(value = "id") Integer id,
                                      ModelAndView mav) {
 
         logger.debug("Receive tariff's id {} ", id);
@@ -56,12 +56,12 @@ public class UpdateProductController {
             logger.error("Error with filling database {}", ex.getMessage());
             mav.addObject("error ", ERROR_IN_CONNECTION);
             mav.addObject("message", "Sorry, try again later");
-            mav.setViewName("redirect:/admin/getDetailsProduct=" + id);
+            mav.setViewName("redirect:/admin/getDetailsProduct?id=" + id);
             return mav;
         }
 
         logger.debug("Attribute 'productId' was removed from session");
-        mav.setViewName("redirect:/admin/getDetailsProduct=" + id);
+        mav.setViewName("redirect:/admin/getDetailsProduct?id=" + id);
         return mav;
     }
 
@@ -77,7 +77,7 @@ public class UpdateProductController {
                 outputFlashMap.put("error", ERROR_UNEXPECTED + exception.getMessage());
             }
         }
-        mav.setViewName("admin/index");
+        mav.setViewName("newPages/admin/Products");
         return mav;
     }
 }

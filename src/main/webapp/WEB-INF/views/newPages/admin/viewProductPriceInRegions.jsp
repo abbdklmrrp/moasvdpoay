@@ -39,13 +39,13 @@
                     <c:choose>
                         <c:when test="${param.page == 'Products'}">
                             <li class="wet-asphalt active-tab">
-                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct=${priceInRegionsByProduct.get(0).productId}">Product
+                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${priceInRegionsByProduct.get(0).productId}">Product
                                     info</a>
                             </li>
                         </c:when>
                         <c:otherwise>
                             <li class="wet-asphalt">
-                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct=${priceInRegionsByProduct.get(0).productId}">Product
+                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${priceInRegionsByProduct.get(0).productId}">Product
                                     info</a>
                             </li>
                         </c:otherwise>
@@ -55,13 +55,13 @@
                         <c:choose>
                             <c:when test="${param.page == 'UpdateServicesInTariff'}">
                                 <li class="wet-asphalt active-tab">
-                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff=${priceInRegionsByProduct.get(0).productId}">Services
+                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${priceInRegionsByProduct.get(0).productId}">Services
                                         in tariff</a>
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li class="wet-asphalt">
-                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff=${priceInRegionsByProduct.get(0).productId}">Services
+                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${priceInRegionsByProduct.get(0).productId}">Services
                                         in tariff</a>
                                 </li>
                             </c:otherwise>
@@ -115,10 +115,12 @@
                 </div>
                 <div class="col-md-2"></div>
             </div>
-            <form action="${pageContext.request.contextPath}/admin/updateProductPrice=${priceInRegionsByProduct.get(0).productId}">
+            <form method="get"
+                  action="${pageContext.request.contextPath}/admin/updateProductPrice/${priceInRegionsByProduct.get(0).productId}">
                 <div class="row" id="edit-and-changes-price-in-region">
                     <div class="col-sm-4 col-xs-0"></div>
-                    <button class="btn btn-primary col-sm-5 col-xs-5" id="btn-edit-price-in-region-info">Update price
+                    <button class="btn btn-primary col-sm-5 col-xs-5" id="btn-edit-price-in-region-info">
+                        Update price
                     </button>
                     <div class="col-sm-4 col-xs-0"></div>
                 </div>

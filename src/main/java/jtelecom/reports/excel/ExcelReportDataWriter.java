@@ -1,9 +1,9 @@
 package jtelecom.reports.excel;
 
 import jtelecom.reports.ReportData;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.usermodel.charts.*;
-import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.util.List;
@@ -18,16 +18,15 @@ import java.util.List;
 public class ExcelReportDataWriter {
     /**
      * This method defines beginning of the report
-     * and calls two methods {@link #drawChart(Sheet, int)} and
      * {@link #writeTableBody(short, Sheet, List)}
      *
      * @param excelSheet sheet on which report will be written
      * @param reportData data which will be used for creating report
      */
     public static void writeReportData(XSSFSheet excelSheet, List<ReportData> reportData) {
-        short rowIndex = 2;
+        short rowIndex = 3;
         writeTableBody(rowIndex, excelSheet, reportData);
-        drawChart(excelSheet, reportData.size());
+        //       drawChart(excelSheet, reportData.size());
     }
 
     /**
@@ -44,36 +43,34 @@ public class ExcelReportDataWriter {
             Cell cell = row.createCell(cellIndex++);
             cell.setCellValue(reportDataObject.getTimePeriod());
             cell = row.createCell(cellIndex++);
-//            cell.setCellValue(reportDataObject.getComplaintsCount());
-            cell = row.createCell(cellIndex++);
-//            cell.setCellValue(reportDataObject.getOrdersCount());
+            cell.setCellValue(reportDataObject.getAmount());
         }
     }
 
-    /**
-     * This method draws graph. The values for graph are taken
-     * from table columns that were written with {@link #writeTableBody(short, Sheet, List)}
-     *
-     * @param excelSheet     sheet to draw graph to
-     * @param reportDataSize size of report data
-     */
-    private static void drawChart(Sheet excelSheet, int reportDataSize) {
-        Drawing drawing = excelSheet.createDrawingPatriarch();
-        ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, reportDataSize + 2, 10, reportDataSize + 32);
-        Chart chart = drawing.createChart(anchor);
-        ChartLegend legend = chart.getOrCreateLegend();
-        legend.setPosition(LegendPosition.TOP_RIGHT);
-        ScatterChartData data = chart.getChartDataFactory().createScatterChartData();
-        ValueAxis bottomAxis = chart.getChartAxisFactory().createValueAxis(AxisPosition.BOTTOM);
-        ValueAxis leftAxis = chart.getChartAxisFactory().createValueAxis(AxisPosition.LEFT);
-        leftAxis.setCrosses(AxisCrosses.AUTO_ZERO);
-        ChartDataSource<String> xAxisData = DataSources.fromStringCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 0, 0));
-        ChartDataSource<Number> yAxisData1 = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 1, 1));
-        ChartDataSource<Number> yAxisData2 = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 2, 2));
-        data.addSerie(xAxisData, yAxisData2).setTitle("Reports");
-        data.addSerie(xAxisData, yAxisData1).setTitle("Complaints");
-        chart.plot(data, bottomAxis, leftAxis);
-    }
+//    /**
+//     * This method draws graph. The values for graph are taken
+//     * from table columns that were written with {@link #writeTableBody(short, Sheet, List)}
+//     *
+//     * @param excelSheet     sheet to draw graph to
+//     * @param reportDataSize size of report data
+//     */
+//    private static void drawChart(Sheet excelSheet, int reportDataSize) {
+//        Drawing drawing = excelSheet.createDrawingPatriarch();
+//        ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, reportDataSize + 2, 10, reportDataSize + 32);
+//        Chart chart = drawing.createChart(anchor);
+//        ChartLegend legend = chart.getOrCreateLegend();
+//        legend.setPosition(LegendPosition.TOP_RIGHT);
+//        ScatterChartData data = chart.getChartDataFactory().createScatterChartData();
+//        ValueAxis bottomAxis = chart.getChartAxisFactory().createValueAxis(AxisPosition.BOTTOM);
+//        ValueAxis leftAxis = chart.getChartAxisFactory().createValueAxis(AxisPosition.LEFT);
+//        leftAxis.setCrosses(AxisCrosses.AUTO_ZERO);
+//        ChartDataSource<String> xAxisData = DataSources.fromStringCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 0, 0));
+//        ChartDataSource<Number> yAxisData = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 1, 1));
+////        ChartDataSource<Number> yAxisData2 = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 2, 2));
+////        data.addSerie(xAxisData, yAxisData2).setTitle("Reports");
+//        data.addSerie(xAxisData, yAxisData).setTitle("Data");
+//        chart.plot(data, bottomAxis, leftAxis);
+//    }
 
 
     /**
