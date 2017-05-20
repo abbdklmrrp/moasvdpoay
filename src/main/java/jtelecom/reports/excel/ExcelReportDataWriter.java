@@ -44,9 +44,7 @@ public class ExcelReportDataWriter {
             Cell cell = row.createCell(cellIndex++);
             cell.setCellValue(reportDataObject.getTimePeriod());
             cell = row.createCell(cellIndex++);
-//            cell.setCellValue(reportDataObject.getComplaintsCount());
-            cell = row.createCell(cellIndex++);
-//            cell.setCellValue(reportDataObject.getOrdersCount());
+            cell.setCellValue(reportDataObject.getAmount());
         }
     }
 
@@ -68,10 +66,10 @@ public class ExcelReportDataWriter {
         ValueAxis leftAxis = chart.getChartAxisFactory().createValueAxis(AxisPosition.LEFT);
         leftAxis.setCrosses(AxisCrosses.AUTO_ZERO);
         ChartDataSource<String> xAxisData = DataSources.fromStringCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 0, 0));
-        ChartDataSource<Number> yAxisData1 = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 1, 1));
-        ChartDataSource<Number> yAxisData2 = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 2, 2));
-        data.addSerie(xAxisData, yAxisData2).setTitle("Reports");
-        data.addSerie(xAxisData, yAxisData1).setTitle("Complaints");
+        ChartDataSource<Number> yAxisData = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 1, 1));
+//        ChartDataSource<Number> yAxisData2 = DataSources.fromNumericCellRange(excelSheet, new CellRangeAddress(2, reportDataSize + 1, 2, 2));
+//        data.addSerie(xAxisData, yAxisData2).setTitle("Reports");
+        data.addSerie(xAxisData, yAxisData).setTitle("Data");
         chart.plot(data, bottomAxis, leftAxis);
     }
 
