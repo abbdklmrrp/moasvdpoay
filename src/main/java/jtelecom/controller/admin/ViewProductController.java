@@ -26,8 +26,8 @@ public class ViewProductController {
     @Resource
     private ProductDao productDao;
 
-    @RequestMapping(value = "getDetailsProduct={id}", method = RequestMethod.GET)
-    public ModelAndView getDetailsProduct(@PathVariable(value = "id") int id,
+    @RequestMapping(value = "getDetailsProduct", method = RequestMethod.GET)
+    public ModelAndView getDetailsProduct(@RequestParam(value = "id") int id,
                                           ModelAndView mav) {
 // FIXME: 14.05.2017 validate product
         try {
@@ -52,7 +52,7 @@ public class ViewProductController {
     /**
      * @author Nikita Alistratenko
      */
-    @RequestMapping("disableEnableProduct={id}")
+    @RequestMapping("disableEnableProduct/{id}")
     public ModelAndView setProductDisabledEnabled(@PathVariable(value = "id") int id, RedirectAttributes attributes) {
         logger.debug("Product sent to get status changed, id = ", id);
         ModelAndView mw = new ModelAndView();

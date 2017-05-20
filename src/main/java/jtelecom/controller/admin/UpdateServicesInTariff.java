@@ -36,7 +36,7 @@ public class UpdateServicesInTariff {
     @Resource
     private ProductService productService;
 
-    @RequestMapping(value = {"updateServicesInTariff={id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"updateServicesInTariff/{id}"}, method = RequestMethod.GET)
     public ModelAndView getServicesInTariffForUpdate(@PathVariable(value = "id") Integer tariffId,
                                                      ModelAndView mav) {
 
@@ -54,9 +54,9 @@ public class UpdateServicesInTariff {
         return mav;
     }
 
-    @RequestMapping(value = {"updateServicesInTariff={id}"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"updateServicesInTariff"}, method = RequestMethod.POST)
     public ModelAndView updateServicesInTariff(Product product,
-                                               @PathVariable(value = "id") Integer id,
+                                               @RequestParam(value = "id") Integer id,
                                                @RequestParam(value = "selectedService") Integer[] servicesIdArray,
                                                ModelAndView mav) {
 
@@ -71,7 +71,7 @@ public class UpdateServicesInTariff {
         if (servicesIdArray == null) {
             logger.error("Incoming data error with services ");
             mav.addObject("error", ERROR_FILL_IN_TARIFF_SERVICES);
-            mav.setViewName("newPages/admin/updateServicesInTariff");
+            mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
             return mav;
         }
 
@@ -85,12 +85,12 @@ public class UpdateServicesInTariff {
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
             mav.addObject("error ", ERROR_IN_CONNECTION);
-            mav.setViewName("newPages/admin/updateServicesInTariff");
+            mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
             return mav;
         }
 
         logger.debug("Attribute 'productId' was removed from session");
-        mav.setViewName("redirect:/admin/updateServicesInTariff=" + id);
+        mav.setViewName("redirect:/admin/viewServicesInTariff?id=" + id);
         return mav;
     }
 
