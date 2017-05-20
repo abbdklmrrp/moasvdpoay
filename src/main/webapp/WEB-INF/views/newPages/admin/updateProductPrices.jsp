@@ -91,12 +91,12 @@
                                     </td>
                                     <td>
                                             <%--<div class="form-group row">--%>
-                                            <div class="col-sm-8">
-                                                <input type="number" class="currency" min="0.01" max="99999.99"
-                                                       value="${place.priceProduct}"
-                                                       id="priceByRegion" name="priceByRegion">
-                                                <i class="fa fa-user"></i>
-                                            </div>
+                                        <div class="col-sm-8">
+                                            <input type="number" class="currency" min="0.01" max="99999.99"
+                                                   value="${place.priceProduct}"
+                                                   id="priceByRegion" name="priceByRegion">
+                                            <i class="fa fa-user"></i>
+                                        </div>
                                             <%--</div>--%>
                                     </td>
                                 </tr>
@@ -123,4 +123,11 @@
     </div>
 </div>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
+<script>
+    document.getElementById('basePrice').onkeypress = function (e) {
+        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') { // позволяет ввести или одну точку, или одну запятую
+            return !(/[.,А-Яа-яA-Za-z-"+"]/.test(String.fromCharCode(e.charCode)));
+        }
+    }
+</script>
 

@@ -6,6 +6,7 @@
     <jsp:include page="../includes/head.jsp">
         <jsp:param name="tittle" value="Create service"/>
     </jsp:include>
+    <link href="<c:url value="/resources/css/price.css" />" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
@@ -67,8 +68,8 @@
             <div class="form-group row">
                 <label class="col-sm-4 control-label">Base price</label>
                 <div class="col-sm-8">
-                    <input type="number" class="form-control" placeholder="0 "
-                           id="basePrice" name="basePrice" onchange="handlePrice(this)" required>
+                    <input type="number" class="currency" min="0.01" max="99999.99" value="100.00"
+                           id="basePrice" name="basePrice" required>
                     <i class="fa fa-user"></i>
                 </div>
             </div>
@@ -134,11 +135,13 @@
     }
 </script>
 <script>
-    function handlePrice(input) {
-        if (input.value < 0) input.value = 0;
-        if (input.value > 999) input.value = 999;
+    document.getElementById('basePrice').onkeypress = function (e) {
+        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') { // позволяет ввести или одну точку, или одну запятую
+            return !(/[.,А-Яа-яA-Za-z-"+"]/.test(String.fromCharCode(e.charCode)));
+        }
     }
 </script>
 <script src="<c:url value="/resources/js/newCategoryService.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
 </body>
 </html>

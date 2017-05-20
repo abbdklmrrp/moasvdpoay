@@ -13,6 +13,7 @@
     <jsp:include page="../includes/head.jsp">
         <jsp:param name="tittle" value="ProductInfo"/>
     </jsp:include>
+    <link href="<c:url value="/resources/css/price.css" />" rel="stylesheet">
     <title>Product info</title>
 </head>
 <body>
@@ -99,8 +100,9 @@
                         <div class="form-group row">
                             <label class="col-sm-4 control-label">Base price</label>
                             <div class="col-sm-8">
-                                <input readonly type="number" class="form-control" value="${product.basePrice}"
-                                       id="basePrice" name="basePrice" onchange="handlePrice(this)" required>
+                                <input readonly type="number" class="currency" min="0.01" max="99999.99"
+                                       value="${product.basePrice}.00"
+                                       id="basePrice" name="basePrice" required>
                                 <i class="fa fa-user"></i>
                             </div>
                         </div>
@@ -181,16 +183,18 @@
 <jsp:include page="../includes/footer.jsp"/>
 <script>
     function handleChange(input) {
-        if (input.value < 0) input.value = 0;
+        if (input.value < 0) input.value = 1;
         if (input.value > 365) input.value = 365;
     }
 </script>
 <script>
-    function handlePrice(input) {
-        if (input.value < 0) input.value = 0;
-        if (input.value > 999) input.value = 999;
+    document.getElementById('basePrice').onkeypress = function (e) {
+        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') { // позволяет ввести или одну точку, или одну запятую
+            return !(/[.,А-Яа-яA-Za-z-"+"]/.test(String.fromCharCode(e.charCode)));
+        }
     }
 </script>
 <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
 </body>
 </html>

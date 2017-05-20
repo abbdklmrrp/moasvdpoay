@@ -24,12 +24,12 @@
             </div>
         </div>
     </div>
-
+    <h1 style="text-align: center">${placeName}</h1>
     <div class="panel panel-default" id="productsIds">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-10" data-grid="title">
-                    All products
+                    Product price by region ${placeName}
                 </div>
                 <div class="col-md-2" style="text-align:right;">
                     <a href="javascript:" data-grid="pager-refresh">
@@ -77,25 +77,53 @@
             <table class="table table-striped table-bordered table-hover" data-grid="grid">
                 <thead>
                 <tr>
-                    <th class="col-xs-2" data-grid-header="name" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="productName" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Region
+                        Name
                     </th>
-                    <th class="col-xs-2" data-grid-header="action">
-                        Action
+                    <th class="col-xs-2" data-grid-header="priceProduct" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Price
                     </th>
+                    <th class="col-xs-2" data-grid-header="productType" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Type
+                    </th>
+                    <th class="col-xs-2" data-grid-header="productStatus" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Status
+                    </th>
+
+
                 </tr>
                 </thead>
                 <div data-grid="message"></div>
                 <tbody>
                 <tr data-grid="row">
-                    <td data-cell="name"></td>
-                    <td data-cell="action"></td>
+                    <td data-cell="productName"></td>
+                    <td data-cell="priceProduct"></td>
+                    <td data-cell="productType"></td>
+                    <td data-cell="productStatus"></td>
                 </tr>
                 </tbody>
             </table>
@@ -136,18 +164,10 @@
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/admin/allPlace.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/admin/getDetailsPriceByPlace/${id}.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ],
-        renderers: {
-            "action": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
-                        location.href = '${pageContext.request.contextPath}/admin/viewPriceByPlace?id=' + wv.id
-                    }
-                );
-            }
-        }
     })
 </script>
 </body>
