@@ -1,5 +1,7 @@
 package jtelecom.dao.place;
 
+import jtelecom.dto.PriceByRegionDto;
+
 import java.util.List;
 
 /**
@@ -13,8 +15,16 @@ public interface PlaceDAO {
      */
     List<Place> getAll();
 
-    List<Place> getPlacesForFillInTariff();
+    List<Place> getAllPlaces();
 
     Integer getPlaceIdByName(String placeName);
+
+    List<Place> getLimitedQuantityPlace(int start, int length, String sort, String search);
+
+    List<PriceByRegionDto> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search);
+
+    Integer getCountPlacesWithSearch(String search);
+
+    String getPlaceNameById(int id);
 
 }

@@ -952,8 +952,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("start", start);
         params.addValue("length", rownum);
         params.addValue("pattern", "%" + search + "%");
-        List<Product> products = jdbcTemplate.query(sql, params, new ProductRowMapper());
-        return products;
+        return jdbcTemplate.query(sql, params, new ProductRowMapper());
     }
 
     @Override
