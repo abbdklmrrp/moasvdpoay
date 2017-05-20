@@ -7,7 +7,7 @@ import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.CustomerService;
+import jtelecom.services.customer.CustomerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

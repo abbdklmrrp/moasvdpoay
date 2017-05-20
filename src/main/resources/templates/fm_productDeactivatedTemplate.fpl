@@ -1,2 +1,2 @@
 Dear ${name} ${surname}
-${productType} "${productName}" is deactivated.
+${productType} "${productName}" was deactivated.

@@ -1,8 +1,9 @@
-package jtelecom.mail;
+package jtelecom.services.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import freemarker.template.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.util.Properties;
  * @author Moiseienko Petro
  * @since 13.04.2017.
  */
-
+@Component
 public class Email {
     @Autowired
    private Configuration freemarkerConfiguration;

@@ -1,4 +1,4 @@
-package jtelecom.services;
+package jtelecom.services.customer;
 
 
 import jtelecom.dao.customer.Customer;
@@ -13,7 +13,7 @@ import javax.annotation.Resource;
  * @since 12.05.2017.
  */
 @Service
-public class CustomerService {
+public class CustomerServiceImpl implements CustomerService {
     @Resource
     private CustomerDAO customerDAO;
 

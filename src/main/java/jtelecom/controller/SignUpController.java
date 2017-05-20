@@ -1,12 +1,11 @@
 package jtelecom.controller;
 
 
-
 import jtelecom.dao.customer.Customer;
 import jtelecom.dao.customer.CustomerDAO;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
-import jtelecom.services.UserService;
+import jtelecom.services.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -86,7 +85,7 @@ public class SignUpController {
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public String signUp(User user, RedirectAttributes attributes) {
-        String message = userService.saveResidential(user);
+        String message = userService.saveResidentialWithoutPasswordGenerating(user);
         if ("User successfully saved".equals(message)) {
             return "newPages/Login";
         } else {

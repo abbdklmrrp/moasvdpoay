@@ -2,6 +2,7 @@ package jtelecom.controller.admin;
 
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDao;
+import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -25,6 +26,8 @@ public class ViewProductController {
     private static Logger logger = LoggerFactory.getLogger(ViewProductController.class);
     @Resource
     private ProductDao productDao;
+    @Resource
+    private ProductService productService;
 
     @RequestMapping(value = "getDetailsProduct={id}", method = RequestMethod.GET)
     public ModelAndView getDetailsProduct(@PathVariable(value = "id") int id,
@@ -56,7 +59,7 @@ public class ViewProductController {
     public ModelAndView setProductDisabledEnabled(@PathVariable(value = "id") int id, RedirectAttributes attributes) {
         logger.debug("Product sent to get status changed, id = ", id);
         ModelAndView mw = new ModelAndView();
-        if (productDao.disableEnableProductByID(id)) {
+        if (productService.disableEnableProduct(id)) {
             attributes.addFlashAttribute("msg", "Product status has been changed");
             logger.debug("Product status has been changed, id = ", id);
         } else {

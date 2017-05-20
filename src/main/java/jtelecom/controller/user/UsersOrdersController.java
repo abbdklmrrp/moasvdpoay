@@ -1,6 +1,8 @@
 package jtelecom.controller.user;
 
 import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.product.Product;
+import jtelecom.dao.product.ProductDao;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
@@ -10,6 +12,7 @@ import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.OrderService;
+import jtelecom.services.mail.MailService;
 import jtelecom.util.DatesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +40,7 @@ public class UsersOrdersController {
     private final static String FAIL_SUSPEND_ERROR_MSG = "Sorry! An error occurred while suspending this order. Please, try again.";
     private final static String CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG = "Unable to suspend the order within these dates, because there are other planned tasks that can interrupt suspense process.";
     User user;
+    public int count=0;
     @Resource
     private OrderDao orderDao;
     @Resource

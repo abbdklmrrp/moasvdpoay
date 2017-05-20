@@ -1,4 +1,4 @@
-package jtelecom.mail;
+package jtelecom.services.mail;
 
 
 import org.springframework.beans.factory.annotation.Value;
@@ -54,19 +54,7 @@ public class MailConfig {
 //        javaMailSender.setSession(session);
         return javaMailSender;
     }
-    @Bean(name="email")
-    public Email email() {
-        return new Email();
-    }
 
-
-    @Bean(name = "mailService")
-    public MailService mailer() {
-        MailService mailer = new MailService();
-        mailer.setEmail(email());
-        mailer.setMailSender(javaMailService());
-        return mailer;
-    }
     @Bean
     public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
         FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();

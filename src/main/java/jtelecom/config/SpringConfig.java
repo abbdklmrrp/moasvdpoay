@@ -1,6 +1,6 @@
 package jtelecom.config;
 
-import jtelecom.mail.MailConfig;
+import jtelecom.services.mail.MailConfig;
 import jtelecom.persistence.PersistenceConfig;
 import jtelecom.security.SecurityConfig;
 import org.springframework.context.MessageSource;

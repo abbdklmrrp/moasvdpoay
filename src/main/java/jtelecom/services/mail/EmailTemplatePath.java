@@ -1,4 +1,4 @@
-package jtelecom.mail;
+package jtelecom.services.mail;
 
 /**
  * @author Moiseienko Petro
@@ -14,6 +14,7 @@ public enum EmailTemplatePath {
     PRODUCT_SUSPENDED("product.suspended.subject", "fm_productSuspendedTemplate.fpl"),
     PRODUCT_DEACTIVATED("product.deactivated.subject", "fm_productDeactivatedTemplate.fpl"),
     PRODUCT_DELETED("product.deleted.subject", "fm_productDeletedTemplate.fpl"),
+    PRODUCT_PROCESSING("product.processing.subject","fm_productProcessingTemplate.fpl"),
     NEW_PRODUCT("new.product.subject", "fm_newProductTemplate.fpl"),
     NEW_PASSWORD("new.password.subject", "fm_newPasswordTemplate.fpl");
 

@@ -343,6 +343,10 @@ public class ProductDaoImpl implements ProductDao {
             "  NAME\n" +
             "FROM PRODUCTS\n" +
             "WHERE CATEGORY_ID = :categoryId";
+
+    private static final String GET_PRODUCT_BY_ORDER_ID = "SELECT * " +
+            " FROM PRODUCTS WHERE ID=( " +
+            " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
     private static Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
     @Autowired
     @Qualifier("dataSource")
@@ -880,17 +884,16 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
-     * @param productID
+     * @param product
      * @return status of updating
      * @author Nikita Alistratenko
      */
     @Override
-    public boolean disableEnableProductByID(int productID) {
-        logger.debug("Product sent to get status changed, id = {} ", productID);
+    public boolean disableEnableProduct(Product product) {
+        logger.debug("Product sent to get status changed, id = {} ", product.getId());
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", productID);
-        Product p = getById(productID);
-        if (p.getStatus().getId() == 1) {
+        params.addValue("id", product.getId());
+        if (product.getStatus().getId() == 1) {
             params.addValue("status", 0);
         } else {
             params.addValue("status", 1);
@@ -1047,5 +1050,11 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("productId", productId);
         return jdbcTemplate.queryForObject(FIND_CUSTOMER_TYPE_BY_ID, params, String.class);
+    }
+
+    @Override
+    public Product getProductByOrderId(int orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
+        return jdbcTemplate.queryForObject(GET_PRODUCT_BY_ORDER_ID, params, new ProductRowMapper());
     }
 }
