@@ -39,12 +39,11 @@ public class ExcelReportCreator {
      *
      * @param data report data
      */
-    public void makeReport(List<ReportData> data) throws WorkbookCreatingFailException {
-        xlsDocWorker.createWorkbookFromTemplate();
+    public void makeOrdersReport(List<ReportData> data, ReportType reportType) throws WorkbookCreatingFailException {
+        xlsDocWorker.createWorkbookFromTemplate(reportType);
         excelWorkbook = xlsDocWorker.getExcelWorkbook();
         String sheetName = "report";
-        XSSFSheet excelSheet;
-        excelSheet = excelWorkbook.getSheet(sheetName);
+        XSSFSheet excelSheet = excelWorkbook.getSheet(sheetName);
         ExcelReportDataWriter.writeReportData(excelSheet, data);
     }
 

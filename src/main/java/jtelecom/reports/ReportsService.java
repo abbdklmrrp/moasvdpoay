@@ -24,6 +24,7 @@ public class ReportsService {
     private int periodToAdd;
     @Resource
     ReportDataDao reportDataDao;
+    //To uncomment in case if SimpleDateFormat will be used in more than one method and needed to be saved as global var
 //    // SimpleDateFormat is not thread-safe, so we will give one to each thread
 //    private static final ThreadLocal<SimpleDateFormat> dateFormatter = new ThreadLocal<SimpleDateFormat>(){
 //        @Override
