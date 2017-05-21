@@ -32,19 +32,19 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     private final static String SELECT_BUSINESS_CUSTOMERS = "SELECT * FROM CUSTOMERS\n" +
             "WHERE TYPE_ID=1";
-    private final static String SELECT_CUSTOMERS_BY_NAME = "SELECT ID FROM CUSTOMERS WHERE NAME=:name";
+    private final static String SELECT_CUSTOMERS_BY_NAME = "SELECT ID FROM CUSTOMERS WHERE upper(NAME)=upper(:name)";
 
     private final static String SELECT_LIMITED_CUSTOMERS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from CUSTOMERS " +
-            " Where name like :pattern " +
+            " Where upper(name) like upper(:pattern) " +
             " OR invoice like :pattern) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
 
     private static final String SELECT_COUNT = "SELECT count(ID)\n" +
             "  FROM CUSTOMERS" +
-            " WHERE name LIKE :pattern " +
+            " WHERE upper(name) LIKE upper(:pattern) " +
             " OR invoice LIKE :pattern ";
 
     private final static String SELECT_CUSTOMER_BY_ID = "SELECT * FROM CUSTOMERS where id= :id ";

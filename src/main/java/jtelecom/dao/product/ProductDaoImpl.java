@@ -277,8 +277,8 @@ public class ProductDaoImpl implements ProductDao {
     private final static String SELECT_LIMITED_PRODUCTS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from PRODUCTS " +
-            " Where name like :pattern " +
-            " OR description like :pattern " +
+            " Where upper(name) like upper(:pattern) " +
+            " OR upper(description) like upper(:pattern) " +
             " OR duration like :pattern " +
             " OR base_price like :pattern " +
             " ORDER BY %s) a\n" +
@@ -287,8 +287,8 @@ public class ProductDaoImpl implements ProductDao {
     private final static String SELECT_LIMITED_ACTIVE_PRODUCTS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from PRODUCTS " +
-            " Where STATUS = 1 and (name like :pattern " +
-            " OR description like :pattern " +
+            " Where STATUS = 1 and (upper(name) like upper(:pattern) " +
+            " OR upper(description) like upper((:pattern) " +
             " OR duration like :pattern " +
             " OR base_price like :pattern) " +
             " ORDER BY %s) a\n" +
@@ -296,14 +296,14 @@ public class ProductDaoImpl implements ProductDao {
             "       where rnum > :start";
     private static final String SELECT_COUNT = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
-            " WHERE name LIKE :pattern " +
-            " OR description LIKE :pattern " +
+            " WHERE upper(name) LIKE upper(:pattern) " +
+            " OR upper(description) LIKE upper(:pattern) " +
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern ";
     private static final String SELECT_ACTIVE_COUNT = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
-            " WHERE STATUS = 1 and (name LIKE :pattern " +
-            " OR description LIKE :pattern " +
+            " WHERE STATUS = 1 and (upper(name) LIKE upper(:pattern) " +
+            " OR upper(description) LIKE upper(:pattern) " +
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern) ";
     private final static String FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE = "SELECT\n" +
