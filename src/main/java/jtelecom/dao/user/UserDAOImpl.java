@@ -55,7 +55,6 @@ public class UserDAOImpl implements UserDAO {
             " OR upper(email) like upper(:pattern) " +
             " OR upper(phone) like upper(:pattern) " +
             " OR upper(address) like upper(:pattern) )" +
-            " " +
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
