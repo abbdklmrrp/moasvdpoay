@@ -264,7 +264,7 @@
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${contextPath}/pmg/getOrders.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/pmg/getOrders.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ],
