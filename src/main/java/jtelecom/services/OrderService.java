@@ -72,6 +72,7 @@ public class OrderService {
             boolean success = orderDao.suspendOrder(orderId);
             if (success) {
                 mailService.sendProductSuspendedEmail(user, product, beginDate, endDate);
+                logger.info("Order with id {} was suspended", orderId);
             }
             return success;
         }
@@ -109,9 +110,17 @@ public class OrderService {
         if (success) {
             User user = userDAO.getUserById(userId);
             Product product = productDao.getById(productId);
+            logger.info("Current user {}, product {} ", user, product);
             mailService.sendProductDeactivated(user, product);
+
         }
         return success;
+    }
+
+    public boolean deactivateOrderCompletely(Integer orderId) {
+        plannedTaskDao.deleteAllPlannedTasksForOrder(orderId);
+        boolean wasDeactivated = orderDao.deactivateOrder(orderId);
+        return wasDeactivated;
     }
 
     /**

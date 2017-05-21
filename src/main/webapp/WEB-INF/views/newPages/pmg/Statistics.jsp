@@ -11,7 +11,9 @@
 <jsp:include page="../includes/headers/pmgHeader.jsp">
     <jsp:param name="pageName" value="Statistics"/>
 </jsp:include>
-<jsp:include page="../includes/report.jsp"/>
+<jsp:include page="../includes/report.jsp">
+    <jsp:param name="downloadUrl" value="/pmg/downloadComplaintsReport"/>
+</jsp:include>
 <jsp:include page="../includes/footer.jsp"/>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>

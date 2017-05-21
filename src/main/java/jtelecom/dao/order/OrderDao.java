@@ -37,6 +37,7 @@ public interface OrderDao extends Dao<Order> {
      */
     boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId);
 
+
     /**
      * This method sets 'Suspended' status for particular order.
      *
@@ -52,6 +53,14 @@ public interface OrderDao extends Dao<Order> {
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
     boolean activateOrder(Integer orderId);
+
+    /**
+     * This method sets 'Deactivated' status for particular order.
+     *
+     * @param orderId id of order
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     */
+    boolean deactivateOrder(Integer orderId);
 
 
     /**

@@ -90,7 +90,7 @@ public class ReportController {
             try {
                 return reportsService.getComplaintsReportData(beginDate, endDate, region);//TODO return complaints
             } catch (ReportCreatingException e) {
-                logger.error("Can't get report data for web graph", e);
+                logger.error("Can't get complaints data for web graph", e);
                 return null;
             }
         } else {
@@ -108,7 +108,7 @@ public class ReportController {
             try {
                 return reportsService.getOrdersReportData(beginDate, endDate, region);//TODO return orders
             } catch (ReportCreatingException e) {
-                logger.error("Can't get report data for web graph", e);
+                logger.error("Can't get orders data for web graph", e);
                 return null;
             }
         } else {

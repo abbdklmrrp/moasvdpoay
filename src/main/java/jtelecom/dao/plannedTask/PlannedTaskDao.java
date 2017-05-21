@@ -1,6 +1,7 @@
 package jtelecom.dao.plannedTask;
 
 import jtelecom.dao.interfaces.Dao;
+import jtelecom.dto.PlannedTaskDTO;
 
 import java.util.Calendar;
 import java.util.List;
@@ -36,5 +37,13 @@ public interface PlannedTaskDao extends Dao<PlannedTask> {
      */
     boolean deleteNextPlannedTask(Integer orderId);
 
-    List<PlannedTask> selectAllPlannedTasksForUserOrder(Integer userId);
+    boolean deletePlannedTaskById(Integer plannedTaskId);
+
+    boolean deletePlannedTaskForActivationOfThisSuspense(PlannedTask suspensePlannedTask);
+
+    List<PlannedTaskDTO> getLimitedPlannedTasksForUsersOrders(Integer userId, Integer start, Integer length);
+
+    Integer getCountPlannedTasksForUserOrders(Integer userId);
+
+    boolean deleteAllPlannedTasksForOrder(Integer orderId);
 }

@@ -13,6 +13,7 @@
     </jsp:include>
     <jsp:include page="../includes/orders.jsp"/>
 
-    <script type="text/javascript" src="<c:url value="${pageContext.request.contextPath}/resources/js/suspendOrder.js"/>"></script>
+    <script type="text/javascript"
+            src="<c:url value="${pageContext.request.contextPath}/resources/js/orders.js"/>"></script>
 </body>
 </html>

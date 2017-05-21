@@ -5,7 +5,7 @@ import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.product.ProductType;
 import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.dto.OrdersRowDTO;
-import jtelecom.util.querybuilders.LimitedProductsQueryBuilder;
+import jtelecom.util.querybuilders.LimitedQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -51,6 +51,9 @@ public class OrderDaoImpl implements OrderDao {
             "WHERE ID = :id ";
     private final static String ACTIVATE_ORDER_SQL = "UPDATE ORDERS " +
             "SET CURRENT_STATUS_ID = 1 /*activated operation status id*/ " +
+            "WHERE ID = :id ";
+    private final static String DEACTIVATE_ORDER_SQL = "UPDATE ORDERS " +
+            "SET CURRENT_STATUS_ID = 3 /*deactivated operation status id*/ " +
             "WHERE ID = :id ";
     private final static String INSERT_ORDER = "INSERT INTO ORDERS (PRODUCT_ID, USER_ID, CURRENT_STATUS_ID) " +
             "VALUES (:product_id, :user_id, :cur_status_id)";
@@ -106,21 +109,23 @@ public class OrderDaoImpl implements OrderDao {
 
 //    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
 //            " where R>:start and R<=:length and name like :pattern ";
-    private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT\n" +
-            "  o.id           order_id,\n" +
-            "  p.name,\n" +
-            "  p.id           product_id,\n" +
-            "  p.type_id      product_type,\n" +
-            "  op_status.name operation_status,\n" +
-            "  pt.action_date end_date,\n" +
-            "  rownum\n " +
-            "FROM ORDERS o\n" +
-            "  JOIN PRODUCTS p ON o.PRODUCT_ID = p.ID\n" +
-            "  JOIN USERS u ON u.id = o.USER_ID\n" +
-            "  JOIN OPERATION_STATUS op_status ON o.CURRENT_STATUS_ID = op_status.id\n" +
-            "  LEFT JOIN  PLANNED_TASKS pt ON o.ID = pt.ORDER_ID " +
-            "WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n " +
-            "       AND pt.STATUS_ID = 3 /*Deactivation*/ AND rownum <= :length AND rownum > :start";
+private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FROM (SELECT\n" +
+        "  o.id           order_id,\n" +
+        "  p.name,\n" +
+        "  p.id           product_id,\n" +
+        "  p.type_id      product_type,\n" +
+        "  op_status.name operation_status,\n" +
+        "  pt.action_date end_date,\n" +
+        "  ROW_NUMBER()\n" +
+        "        OVER(ORDER BY p.name ) rnum\n" +
+        "FROM ORDERS o\n" +
+        "  JOIN PRODUCTS p ON o.PRODUCT_ID = p.ID\n" +
+        "  JOIN USERS u ON u.id = o.USER_ID\n" +
+        "  JOIN OPERATION_STATUS op_status ON o.CURRENT_STATUS_ID = op_status.id\n" +
+        "  LEFT JOIN  PLANNED_TASKS pt ON o.ID = pt.ORDER_ID\n" +
+        "WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n" +
+        "       AND pt.STATUS_ID = 3 /*Deactivation*/)\n" +
+        "WHERE rnum < :length AND rnum >= :start";
     private final String SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT COUNT(*) " +
             "FROM ORDERS o\n" +
             "  JOIN USERS u ON u.id = o.USER_ID\n" +
@@ -149,7 +154,7 @@ public class OrderDaoImpl implements OrderDao {
             "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
             "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             " WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id IS NULL)) \n" +
-            "  WHERE R>:start AND R<=:length AND (operation_date LIKE :pattern " +
+            "  WHERE R>:start AND R<=:length AND (upper(operation_date) LIKE upper(:pattern) " +
             " OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern))";
 
     private static final String SELECT_COUNT_ORDERS_WITHOUT_CSR = "SELECT COUNT(rownum) FROM " +
@@ -186,7 +191,7 @@ public class OrderDaoImpl implements OrderDao {
             "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             "  WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id=:csrId)) \n" +
             "  WHERE R>:start AND R<=:length AND (upper(operation_date) LIKE upper(:pattern) \n" +
-            "  OR upper(product_name) LIKE (:pattern) OR upper(place) LIKE (:pattern))";
+            "  OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern))";
     private final static String SELECT_COUNT_INPROCESSING_ORDERS_BY_CSR_ID = "SELECT COUNT(rownum) FROM " +
             " (SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID, products.CUSTOMER_TYPE_ID customer_type, \n" +
             " orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, PLACES. NAME place \n" +
@@ -213,7 +218,7 @@ public class OrderDaoImpl implements OrderDao {
             "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             "  WHERE  orders.csr_id=:csrId)) \n" +
             "  WHERE R>:start AND R<=:length AND (upper(operation_date) LIKE upper(:pattern) \n" +
-            "  OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE (:pattern))";
+            "  OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern))";
     private static final String SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID = "SELECT COUNT(rownum) FROM " +
             " (SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID, products.CUSTOMER_TYPE_ID customer_type, \n" +
             " orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, PLACES. NAME place \n" +
@@ -222,9 +227,8 @@ public class OrderDaoImpl implements OrderDao {
             " JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
             " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             " WHERE orders.csr_id=:csrId) \n" +
-            "  WHERE upper(product_name) LIKE upper(:pattern) " +
-            " OR upper(operation_date) LIKE upper(:pattern) " +
-            " OR upper(place) LIKE upper(:pattern)";
+            "  WHERE upper(product_name) LIKE upper(:pattern) OR " +
+            "  upper(operation_date) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern)";
 
     @Override
     public Order getById(int id) {
@@ -239,7 +243,6 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public boolean save(Order order) {
         MapSqlParameterSource paramsForOrder = new MapSqlParameterSource();
-        MapSqlParameterSource paramsForStatus = new MapSqlParameterSource();
         paramsForOrder.addValue("product_id", order.getProductId());
         paramsForOrder.addValue("user_id", order.getUserId());
         paramsForOrder.addValue("cur_status_id", order.getCurrentStatus().getId());
@@ -314,9 +317,9 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer length, String search, String sort, Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        String query = LimitedProductsQueryBuilder.getQuery(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
-        params.addValue("start", start);
-        params.addValue("length", length);
+        String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
+        params.addValue("start", start + 1);
+        params.addValue("length", length + 1);
         params.addValue("cust_id", customerId);
         return jdbcTemplate.query(query, params, new OrdersRowDTORowMapper());
     }
@@ -324,7 +327,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public Integer getCountOrderRowsDTOByCustomerId(String search, String sort, Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        String query = LimitedProductsQueryBuilder.getQuery(SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
+        String query = LimitedQueryBuilder.getQuery(SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
         params.addValue("cust_id", customerId);
         return jdbcTemplate.queryForObject(query, params, Integer.class);
     }
@@ -508,5 +511,11 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.queryForObject(SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID, params, Integer.class);
     }
 
+    @Override
+    public boolean deactivateOrder(Integer orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", orderId);
+        return jdbcTemplate.update(DEACTIVATE_ORDER_SQL, params) > 0;
+    }
 }
 
