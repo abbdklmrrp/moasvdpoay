@@ -55,8 +55,8 @@ public class ViewProductController {
     /**
      * @author Nikita Alistratenko
      */
-    @RequestMapping("disableEnableProduct/{id}")
-    public ModelAndView setProductDisabledEnabled(@PathVariable(value = "id") int id, RedirectAttributes attributes) {
+    @RequestMapping("disableEnableProduct")
+    public ModelAndView setProductDisabledEnabled(@RequestParam(value = "id") int id, RedirectAttributes attributes) {
         logger.debug("Product sent to get status changed, id = ", id);
         ModelAndView mw = new ModelAndView();
         if (productService.disableEnableProduct(id)) {
