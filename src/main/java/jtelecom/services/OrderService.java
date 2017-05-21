@@ -105,27 +105,22 @@ public class OrderService {
      */
     @Transactional
     public boolean deactivateOrderForProductOfUserCompletely(Integer productId, Integer userId) {
-        boolean plannedTasksDeleted = plannedTaskDao.deleteAllPlannedTasksForProductOfUser(productId, userId);
-        if (!plannedTasksDeleted) {
-            logger.error("Not able to delete planned tasks for order for product {} of user {} ", productId, userId);
-            return false;
-        }
+        plannedTaskDao.deleteAllPlannedTasksForProductOfUser(productId, userId);
         boolean success = orderDao.deactivateOrderOfUserForProduct(productId, userId);
         if (success) {
             User user = userDAO.getUserById(userId);
             Product product = productDao.getById(productId);
+            logger.info("Current user {}, product {} ", user, product);
             mailService.sendProductDeactivated(user, product);
+
         }
         return success;
     }
 
-    public boolean deactivaateOrderCompletely(Integer orderId) {
-        boolean plannedTasksDeleted = plannedTaskDao.deleteAllPlannedTasksForOrder(orderId);
-        if (!plannedTasksDeleted) {
-            logger.error("Not able to delete planned tasks for order for order {} ", orderId);
-            return false;
-        }
-        return orderDao.deactivateOrder(orderId);
+    public boolean deactivateOrderCompletely(Integer orderId) {
+        plannedTaskDao.deleteAllPlannedTasksForOrder(orderId);
+        boolean wasDeactivated = orderDao.deactivateOrder(orderId);
+        return wasDeactivated;
     }
 
     /**

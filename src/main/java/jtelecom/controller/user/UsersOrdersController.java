@@ -1,8 +1,6 @@
 package jtelecom.controller.user;
 
 import jtelecom.dao.order.OrderDao;
-import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
@@ -12,7 +10,6 @@ import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.OrderService;
-import jtelecom.services.mail.MailService;
 import jtelecom.util.DatesHelper;
 import jtelecom.util.SharedVariables;
 import org.slf4j.Logger;
@@ -131,7 +128,7 @@ public ListHolder showServices(@ModelAttribute GridRequestDto request) {
     @RequestMapping(value = {"deactivateOrder"}, method = RequestMethod.POST)
     @ResponseBody
     public String deactivateOrder(@RequestParam Integer orderId) {
-        Boolean wasDeactivated = orderService.deactivaateOrderCompletely(orderId);
+        Boolean wasDeactivated = orderService.deactivateOrderCompletely(orderId);
         if (wasDeactivated) {
             logger.info("Successful deactivation of order with id {} ", orderId);
             return SharedVariables.SUCCESS;
