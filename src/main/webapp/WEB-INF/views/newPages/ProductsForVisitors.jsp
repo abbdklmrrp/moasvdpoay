@@ -1,19 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page session="false" %>
 <html>
 <head>
-    <jsp:include page="../includes/head.jsp">
-        <jsp:param name="tittle" value="Products"/>
+    <jsp:include page="includes/head.jsp">
+        <jsp:param name="tittle" value="Products "/>
     </jsp:include>
-    <script type="text/javascript">
-        google.load("jquery", "1.4.4");
-    </script>
 </head>
 <body>
-<jsp:include page="../includes/headers/adminHeader.jsp">
-    <jsp:param name="pageName" value="Products"/>
+<jsp:include page="includes/headers/aboutHeader.jsp">
+    <jsp:param name="pageName" value="products"/>
 </jsp:include>
 <div class="container">
     <div class="grid-progress-bar-placeholder">
@@ -122,9 +116,6 @@
                         </div>
                         Duration
                     </th>
-                    <th class="col-xs-2" data-grid-header="status">
-                        Status
-                    </th>
                     <th class="col-xs-2" data-grid-header="action">
                         Action
                     </th>
@@ -141,7 +132,6 @@
                     <td data-cell="customerType"></td>
                     <td data-cell="base_price"></td>
                     <td data-cell="duration"></td>
-                    <td data-cell="status"></td>
                     <td data-cell="action"></td>
                 </tr>
                 </tbody>
@@ -176,34 +166,21 @@
         </div>
     </div>
 </div>
-<jsp:include page="../includes/footer.jsp"/>
+<jsp:include page="includes/footer.jsp"/>
 <script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/admin/all.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/getProductsForVisitors.json'}),
         listeners: [
             new ElementListener($('#progressId'))
         ],
         renderers: {
-            "status": function (pv, wv, grid) {
-                if (wv.status == 'Available') {
-                    return $('<input type="button" class="btn btn-danger" style="margin: 0 auto"  value="Disable" >').click(function () {
-                            location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct?id=' + wv.id
-                        }
-                    );
-                } else {
-                    return $('<input type="button" class="btn btn-success" style="margin: 0 auto"  value="Enable" >').click(function () {
-                            location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct?id=' + wv.id
-                        }
-                    );
-                }
-            },
             "action": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
-                    location.href = '${pageContext.request.contextPath}/admin/getDetailsProduct?id=' + wv.id
+                return $('<input type="button" class="btn btn-success"  value="View description" >').click(function () {
+                        swal(wv.description);
                     }
                 );
             }

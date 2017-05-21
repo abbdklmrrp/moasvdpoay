@@ -69,9 +69,9 @@ public interface ProductDao extends Dao<Product> {
      * Method returns list of tariffs from interval with first and end number from params.
      * If there are no tariffs in this place, method returns empty list.
      *
-     * @param placeId id of place.
+     * @param placeId    id of place.
      * @param startIndex number of the first tariff.
-     * @param endIndex number of the end tariff.
+     * @param endIndex   number of the end tariff.
      * @return list with Tariffs from interval.
      */
     List<Product> getIntervalOfTariffsByPlace(Integer placeId, Integer startIndex, Integer endIndex);
@@ -129,8 +129,9 @@ public interface ProductDao extends Dao<Product> {
     /**
      * Method returns list of tariffs for customers from interval with borders from params.
      * If there are no tariffs in this place, method returns empty list.
+     *
      * @param startIndex number of first tariff.
-     * @param endIndex number of end tariff.
+     * @param endIndex   number of end tariff.
      * @return list of tariff from interval.
      */
     List<Product> getIntervalOfTariffsForCustomers(Integer startIndex, Integer endIndex);
@@ -201,6 +202,10 @@ public interface ProductDao extends Dao<Product> {
     Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId);
 
     Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId);
+
+    Integer getCountActiveProductsWithSearch(String search);
+
+    List<Product> getLimitedQuantityActiveProduct(int start, int length, String sort, String search);
 
     Integer saveProduct(Product product);
 
