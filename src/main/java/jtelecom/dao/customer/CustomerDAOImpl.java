@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,19 +32,19 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     private final static String SELECT_BUSINESS_CUSTOMERS = "SELECT * FROM CUSTOMERS\n" +
             "WHERE TYPE_ID=1";
-    private final static String SELECT_CUSTOMERS_BY_NAME = "SELECT ID FROM CUSTOMERS WHERE NAME=:name";
+    private final static String SELECT_CUSTOMERS_BY_NAME = "SELECT ID FROM CUSTOMERS WHERE upper(NAME)=upper(:name)";
 
     private final static String SELECT_LIMITED_CUSTOMERS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from CUSTOMERS " +
-            " Where name like :pattern " +
+            " Where upper(name) like upper(:pattern) " +
             " OR invoice like :pattern) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
 
     private static final String SELECT_COUNT = "SELECT count(ID)\n" +
             "  FROM CUSTOMERS" +
-            " WHERE name LIKE :pattern " +
+            " WHERE upper(name) LIKE upper(:pattern) " +
             " OR invoice LIKE :pattern ";
 
     private final static String SELECT_CUSTOMER_BY_ID = "SELECT * FROM CUSTOMERS where id= :id ";
@@ -102,6 +104,19 @@ public class CustomerDAOImpl implements CustomerDAO {
         params.addValue("secretKey", password);
         params.addValue("typeId", type);
         return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params) > 0;
+    }
+
+    @Override
+    public Integer saveCustomer(Customer customer){
+        String password = encoder.encode(customer.getSecretKey());
+        Integer type = customer.getCustomerType().getId();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", customer.getName());
+        params.addValue("secretKey", password);
+        params.addValue("typeId", type);
+        KeyHolder key = new GeneratedKeyHolder();
+        Integer customerId=jdbcTemplate.update(SAVE_CUSTOMER_SQL,params,key,new String[]{"ID"});
+        return key.getKey().intValue();
     }
 
     @Override

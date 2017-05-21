@@ -2,6 +2,7 @@ package jtelecom.controller.admin;
 
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDao;
+import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,8 @@ public class DeleteTariffController {
 
     @Resource
     private ProductDao productDao;
+    @Resource
+    private ProductService productService;
 
     private Logger logger = LoggerFactory.getLogger(DeleteTariffController.class);
 
@@ -36,7 +39,7 @@ public class DeleteTariffController {
     @RequestMapping(value = "deleteTariff", method = RequestMethod.POST)
     public ModelAndView deleteTariff(@RequestParam(value = "tariff", required = false) Integer tariffID) {
         if (tariffID != null) {
-            productDao.disableEnableProductByID(tariffID);
+            productService.disableEnableProduct(tariffID);
         }
         return new ModelAndView("redirect:/admin/deleteTariff");
     }

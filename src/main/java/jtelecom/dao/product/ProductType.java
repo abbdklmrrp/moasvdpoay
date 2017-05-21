@@ -11,22 +11,14 @@ import java.util.Objects;
 public enum ProductType {
     Tariff(1, "Tariff"),
     Service(2, "Service");
-    private Integer id;
-    private String name;
     private static Logger logger = LoggerFactory.getLogger(ProcessingStrategy.class);
     private static String WRONG_ID_ERROR_MSG = "Wrong id: ";
+    private Integer id;
+    private String name;
 
     ProductType(Integer id, String name) {
         this.id = id;
         this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     /**
@@ -44,5 +36,13 @@ public enum ProductType {
         }
         logger.error(WRONG_ID_ERROR_MSG + id);
         throw new IllegalArgumentException(WRONG_ID_ERROR_MSG + id);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

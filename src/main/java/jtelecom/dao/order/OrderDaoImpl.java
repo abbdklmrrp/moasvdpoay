@@ -105,7 +105,7 @@ public class OrderDaoImpl implements OrderDao {
             "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = orders.ID \n" +
             " where USER_ID in (select id from users where customer_id= " +
             "(select customer_id from users where id=:userId)) and orders.CURRENT_STATUS_ID<>3)) \n" +
-            " where R>:start and R<=:length and product_name like :pattern ";
+            " where R>:start and R<=:length and upper(product_name) like upper(:pattern) ";
 
 //    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
 //            " where R>:start and R<=:length and name like :pattern ";
@@ -141,7 +141,7 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
             "                      FROM OPERATIONS_HISTORY \n" +
             "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = orders.ID \n" +
             " where USER_ID in (select id from users where customer_id= " +
-            "(select customer_id from users where id=:userId)) and orders.CURRENT_STATUS_ID<>3 AND PRODUCTS.NAME LIKE :pattern";
+            "(select customer_id from users where id=:userId)) and orders.CURRENT_STATUS_ID<>3 AND upper(PRODUCTS.NAME) LIKE upper(:pattern)";
 
     private static final String SELECT_ALL_ORDERS_WITHOUT_CSR = "SELECT * FROM ( \n" +
             " SELECT product_name,product_type,customer_type,order_id, " +
@@ -155,7 +155,7 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
             "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             " WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id IS NULL)) \n" +
             "  WHERE R>:start AND R<=:length AND (operation_date LIKE :pattern " +
-            " OR product_name LIKE :pattern OR place LIKE :pattern)";
+            " OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern))";
 
     private static final String SELECT_COUNT_ORDERS_WITHOUT_CSR = "SELECT COUNT(rownum) FROM " +
             " (SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID, products.CUSTOMER_TYPE_ID customer_type, \n" +
@@ -165,7 +165,8 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
             " JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
             " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             " WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id IS NULL) \n" +
-            "  WHERE product_name LIKE :pattern OR operation_date LIKE :pattern OR place LIKE :pattern";
+            "  WHERE upper(product_name) LIKE upper(:pattern) OR upper(operation_date) LIKE upper(:pattern) OR " +
+            " upper(place) LIKE upper(:pattern)";
     private static String SELECT_ORDER_INFO_BY_ORDER_ID = "SELECT  \n" +
             " PRODUCTS.name product_name,PRODUCTS.TYPE_ID product_type, products.CUSTOMER_TYPE_ID customer_type, \n" +
             " products.DESCRIPTION description,orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, \n" +
@@ -189,8 +190,8 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
             "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
             "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             "  WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id=:csrId)) \n" +
-            "  WHERE R>:start AND R<=:length AND (operation_date LIKE :pattern \n" +
-            "  OR product_name LIKE :pattern OR place LIKE :pattern)";
+            "  WHERE R>:start AND R<=:length AND (upper(operation_date) LIKE upper(:pattern) \n" +
+            "  OR upper(product_name) LIKE (:pattern) OR upper(place) LIKE (:pattern))";
     private final static String SELECT_COUNT_INPROCESSING_ORDERS_BY_CSR_ID = "SELECT COUNT(rownum) FROM " +
             " (SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID, products.CUSTOMER_TYPE_ID customer_type, \n" +
             " orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, PLACES. NAME place \n" +
@@ -199,7 +200,8 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
             " JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
             " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             " WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id=:csrId) \n" +
-            "  WHERE product_name LIKE :pattern OR operation_date LIKE :pattern OR place LIKE :pattern";
+            "  WHERE upper(product_name) LIKE upper(:pattern) OR upper(operation_date) LIKE upper(:pattern) " +
+            " OR upper(place) LIKE upper(:pattern)";
     private final static String ACTIVATE_INPROCESSING_ORDER = "UPDATE ORDERS SET " +
             "CURRENT_STATUS_ID=1" +
             "WHERE ID=:orderId AND CURRENT_STATUS_ID=4";
@@ -215,8 +217,8 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
             "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
             "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             "  WHERE  orders.csr_id=:csrId)) \n" +
-            "  WHERE R>:start AND R<=:length AND (operation_date LIKE :pattern \n" +
-            "  OR product_name LIKE :pattern OR place LIKE :pattern)";
+            "  WHERE R>:start AND R<=:length AND (upper(operation_date) LIKE upper(:pattern) \n" +
+            "  OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE (:pattern))";
     private static final String SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID = "SELECT COUNT(rownum) FROM " +
             " (SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID, products.CUSTOMER_TYPE_ID customer_type, \n" +
             " orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, PLACES. NAME place \n" +
@@ -225,7 +227,9 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
             " JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
             " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
             " WHERE orders.csr_id=:csrId) \n" +
-            "  WHERE product_name LIKE :pattern OR operation_date LIKE :pattern OR place LIKE :pattern";
+            "  WHERE upper(product_name) LIKE upper(:pattern) " +
+            " OR upper(operation_date) LIKE upper(:pattern) " +
+            " OR upper(place) LIKE upper(:pattern)";
 
     @Override
     public Order getById(int id) {

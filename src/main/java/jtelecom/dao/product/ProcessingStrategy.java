@@ -21,14 +21,6 @@ public enum ProcessingStrategy {
         this.name = name;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     /**
      * This method gets <code>ProcessingStrategy</code> object by id
      *
@@ -44,5 +36,13 @@ public enum ProcessingStrategy {
         }
         logger.error(WRONG_ID_ERROR_MSG + id);
         throw new IllegalArgumentException(WRONG_ID_ERROR_MSG + id);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

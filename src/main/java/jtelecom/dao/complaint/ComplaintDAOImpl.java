@@ -1,7 +1,11 @@
 package jtelecom.dao.complaint;
 
+import jtelecom.dao.user.User;
+import jtelecom.dao.user.UserRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +57,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     @Resource
     private ComplaintRowMapper complaintRowMapper;
 
+
     /**
      * This method returns complaint by id.
      *
@@ -86,6 +91,18 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         params.addValue("description", object.getDescription());
         return jdbcTemplate.update(INSERT_COMPLAINT_SQL, params) > 0;
 
+    }
+
+    @Override
+    public Integer saveComplaint(Complaint complaint) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("orderId", complaint.getOrderId());
+        params.addValue("creatingDate", complaint.getCreationDate());
+        params.addValue("statusId", complaint.getStatus().getId());
+        params.addValue("description", complaint.getDescription());
+        KeyHolder key = new GeneratedKeyHolder();
+        Integer productID = jdbcTemplate.update(INSERT_COMPLAINT_SQL, params, key, new String[]{"ID"});
+        return key.getKey().intValue();
     }
 
     @Override
@@ -169,4 +186,5 @@ public class ComplaintDAOImpl implements ComplaintDAO {
     public int countUnassignedComplaintsToUser() {
         return jdbcTemplate.queryForObject(COUNT_COMPLAINTS_WHERE_PMG_ID_IS_NULL_SQL, new MapSqlParameterSource(), Integer.class);//TODO ask again
     }
+
 }

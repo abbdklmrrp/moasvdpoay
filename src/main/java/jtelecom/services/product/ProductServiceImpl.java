@@ -10,8 +10,10 @@ import jtelecom.dao.product.ProductCategories;
 import jtelecom.dao.product.ProductDao;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
+import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.ProductCatalogRowDTO;
 import jtelecom.dto.TariffServiceDto;
+import jtelecom.services.mail.MailService;
 import jtelecom.util.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,10 @@ public class ProductServiceImpl implements ProductService {
     private ProductDao productDao;
     @Resource
     private PriceDao priceDao;
+    @Resource
+    private UserDAO userDAO;
+    @Resource
+    private MailService mailService;
 
     /**
      * Rysakova Anna
@@ -307,5 +313,31 @@ public class ProductServiceImpl implements ProductService {
                 productDao.getCountForLimitedServicesForResidential(search, categoryId, user.getPlaceId()) :
                 productDao.getCountForLimitedServicesForBusiness(search, categoryId);
 
+    }
+
+    @Override
+    public Integer saveProduct(Product product) {
+        Integer isSave=productDao.saveProduct(product);
+        if(isSave!=null){
+          List<User> users=userDAO.getUsersByCustomerType(product.getCustomerType());
+          mailService.sendNewProductDispatch(users,product);
+        }
+        return isSave;
+    }
+
+    @Override
+    public boolean disableEnableProduct(int productId) {
+        Product product=productDao.getById(productId);
+        boolean success=productDao.disableEnableProduct(product);
+        if(success){
+            if(product.getStatus().getId()==0){
+                List<User> users=userDAO.getUsersByCustomerType(product.getCustomerType());
+                mailService.sendNewProductDispatch(users,product);
+            }
+            if(product.getStatus().getId()==1){
+                List<User> users=userDAO.getUsersByProductId(productId);
+                mailService.sendProductDeletedDispatch(users,product);}
+        }
+        return success;
     }
 }

@@ -4,12 +4,11 @@ import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.UserService;
+import jtelecom.services.user.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,7 +28,7 @@ public class RegistrationEmployeeController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
-    private UserService userService;
+    private UserServiceImpl userService;
     @Resource
     private UserDAO userDAO;
 
@@ -47,7 +46,7 @@ public class RegistrationEmployeeController {
         logger.info("User {} creates an employee", businessUser.getId());
         employee.setRole(Role.EMPLOYEE);
         employee.setCustomerId(businessUser.getCustomerId());
-        String result = userService.save(employee);
+        String result = userService.saveWithGeneratingPassword(employee);
         if (result.equals("User successfully saved")) {
             result = "Employee successfully created";
         }

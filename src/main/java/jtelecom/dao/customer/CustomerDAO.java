@@ -27,4 +27,6 @@ public interface CustomerDAO extends Dao<Customer> {
     Integer getCountCustomersWithSearch(String search);
 
     boolean isUnique(Customer customer);
+
+    Integer saveCustomer(Customer customer);
 }

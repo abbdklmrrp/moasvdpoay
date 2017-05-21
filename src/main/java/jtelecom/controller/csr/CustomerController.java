@@ -8,7 +8,7 @@ import jtelecom.dao.user.UserDAO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.CustomerService;
+import jtelecom.services.customer.CustomerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +32,7 @@ public class CustomerController {
     @Resource
     private UserDAO userDAO;
     @Resource
-    private CustomerService customerService;
+    private CustomerServiceImpl customerService;
 
     private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
 

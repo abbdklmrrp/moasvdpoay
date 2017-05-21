@@ -61,7 +61,7 @@ public class AddProductController {
             mav.setViewName("newPages/admin/addTariff");
             return mav;
         }
-        Integer isSave = productDao.saveProduct(product);
+        Integer isSave = productService.saveProduct(product);
         session.setAttribute("productId", isSave);
         logger.debug("Save product was success {} ", isSave);
         mav.setViewName("redirect:/admin/fillTariff");
@@ -96,7 +96,7 @@ public class AddProductController {
             mav.setViewName("newPages/admin/addService");
             return mav;
         }
-        Integer isSave = productDao.saveProduct(product);
+        Integer isSave = productService.saveProduct(product);
         logger.debug("Save product was success with id {} ", isSave);
         if (product.getCustomerType() == CustomerType.Residential) {
             session.setAttribute("productId", isSave);

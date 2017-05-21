@@ -6,6 +6,10 @@ import jtelecom.dao.order.OrderDao;
 import jtelecom.dao.plannedTask.PlannedTask;
 import jtelecom.dao.plannedTask.PlannedTaskDao;
 import jtelecom.dao.product.Product;
+import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.user.User;
+import jtelecom.dao.user.UserDAO;
+import jtelecom.services.mail.MailService;
 import jtelecom.util.DatesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +29,12 @@ public class OrderService {
     private PlannedTaskDao plannedTaskDao;
     @Resource
     private OrderDao orderDao;
+    @Resource
+    private UserDAO userDAO;
+    @Resource
+    private MailService mailService;
+    @Resource
+    private ProductDao productDao;
     private static Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     /**
@@ -49,6 +59,8 @@ public class OrderService {
         suspendPlanTask.setActionDate(beginDate);
         suspendPlanTask.setOrderId(orderId);
         suspendPlanTask.setStatus(OperationStatus.Suspended);
+        User user = userDAO.getUserByOrderId(orderId);
+        Product product = productDao.getProductByOrderId(orderId);
         boolean isActivatedPlanTaskSaved = plannedTaskDao.save(activatePlanTask);
         if (!isActivatedPlanTaskSaved) {
             logger.error("Unable to save activated planned task to database {}", activatePlanTask);
@@ -57,11 +69,18 @@ public class OrderService {
         Calendar currentDate = Calendar.getInstance();
         if (beginDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
                 beginDate.get(Calendar.DAY_OF_YEAR) == currentDate.get(Calendar.DAY_OF_YEAR)) {
-            logger.info("Order with id {} was suspended", orderId);
-            return orderDao.suspendOrder(orderId);
-
+            boolean success = orderDao.suspendOrder(orderId);
+            if (success) {
+                mailService.sendProductSuspendedEmail(user, product, beginDate, endDate);
+                logger.info("Order with id {} was suspended", orderId);
+            }
+            return success;
         }
-        return plannedTaskDao.save(suspendPlanTask);
+        boolean success = plannedTaskDao.save(suspendPlanTask);
+        if (success) {
+            mailService.sendProductSuspendedEmail(user, product, beginDate, endDate);
+        }
+        return success;
     }
 
     /**
@@ -86,13 +105,18 @@ public class OrderService {
      */
     @Transactional
     public boolean deactivateOrderForProductOfUserCompletely(Integer productId, Integer userId) {
-
         boolean plannedTasksDeleted = plannedTaskDao.deleteAllPlannedTasksForProductOfUser(productId, userId);
         if (!plannedTasksDeleted) {
             logger.error("Not able to delete planned tasks for order for product {} of user {} ", productId, userId);
             return false;
         }
-        return orderDao.deactivateOrderOfUserForProduct(productId, userId);
+        boolean success = orderDao.deactivateOrderOfUserForProduct(productId, userId);
+        if (success) {
+            User user = userDAO.getUserById(userId);
+            Product product = productDao.getById(productId);
+            mailService.sendProductDeactivated(user, product);
+        }
+        return success;
     }
 
     public boolean deactivaateOrderCompletely(Integer orderId) {
@@ -118,7 +142,13 @@ public class OrderService {
     @Transactional
     public boolean activateOrderAfterSuspense(Integer orderId) {
         plannedTaskDao.deleteNextPlannedTask(orderId);
-        return orderDao.activateOrder(orderId);
+        boolean success = orderDao.activateOrder(orderId);
+        if (success) {
+            User user = userDAO.getUserByOrderId(orderId);
+            Product product = productDao.getProductByOrderId(orderId);
+            mailService.sendProductActivatedEmail(user, product);
+        }
+        return success;
     }
 
     /**
@@ -132,7 +162,35 @@ public class OrderService {
         Calendar deactivateOrderDate = DatesHelper.getCurrentDate();
         deactivateOrderDate.add(Calendar.DATE, product.getDurationInDays());
         Integer orderId = orderDao.saveAndGetGeneratedId(order);
+        if (orderId != null) {
+            User user = userDAO.getUserById(order.getUserId());
+            if (order.getCurrentStatus() == OperationStatus.InProcessing) {
+                mailService.sendProductProcessingEmail(user, product);
+            } else if (order.getCurrentStatus() == OperationStatus.Active) {
+                mailService.sendProductActivatedEmail(user, product);
+            }
+        }
         PlannedTask deactPlannedTask = new PlannedTask(OperationStatus.Deactivated, orderId, deactivateOrderDate);
         return plannedTaskDao.save(deactPlannedTask);
+    }
+
+    public boolean activateTariff(Integer userId, Integer tariffId) {
+        boolean success = productDao.activateTariff(userId, tariffId);
+        if (success) {
+            User user = userDAO.getUserById(userId);
+            Product product = productDao.getById(tariffId);
+            mailService.sendProductActivatedEmail(user, product);
+        }
+        return success;
+    }
+
+    public boolean deactivateTariff(Integer userId, Integer tariffId) {
+        boolean success = productDao.deactivateTariff(userId, tariffId);
+        if (success) {
+            User user = userDAO.getUserById(userId);
+            Product product = productDao.getById(tariffId);
+            mailService.sendProductDeactivated(user, product);
+        }
+        return success;
     }
 }

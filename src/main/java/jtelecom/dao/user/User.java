@@ -18,7 +18,7 @@ public class User {
     private String authority;
     @JsonProperty("role_id")
     private Role role;
-    private Integer enable;
+    private UserStatus status;
 
 
     public User(String name, String password, String authorities) {
@@ -30,12 +30,12 @@ public class User {
     public User() {
     }
 
-    public Integer getEnable() {
-        return enable;
+    public UserStatus getStatus() {
+        return status;
     }
 
-    public void setEnable(Integer enable) {
-        this.enable = enable;
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 
     public Integer getId() {
@@ -140,7 +140,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", authority='" + authority + '\'' +
                 ", role=" + role +
-                ", enable=" + enable +
+                ", enable=" + status +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package jtelecom.dao.user;
 
+import jtelecom.dao.entity.CustomerType;
 import jtelecom.security.Md5PasswordEncoder;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,7 +20,7 @@ public class UserDAOImpl implements UserDAO {
     private final static String SAVE_USER = "INSERT INTO USERS(NAME,SURNAME,EMAIL,PHONE,PASSWORD,ADDRESS,ROLE_ID,PLACE_ID,CUSTOMER_ID,ENABLE) " +
             "VALUES(:name,:surname,:email,:phone,:password, :address, :roleId, :placeId, :customerId, :enable)";
     private final static String FIND_PLACE_ID = "SELECT ID FROM PLACES WHERE NAME=:place";
-    private final static String FIND_BY_EMAIL = "SELECT EMAIL FROM USERS WHERE EMAIL=:email";
+    private final static String FIND_BY_EMAIL = "SELECT EMAIL FROM USERS WHERE upper(EMAIL)=upper(:email)";
     private final static String FIND_ALL_CLIENTS = "SELECT " +
             "EMAIL, NAME,ID,SURNAME,PHONE,ADDRESS " +
             "FROM USERS " +
@@ -49,12 +50,11 @@ public class UserDAOImpl implements UserDAO {
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from USERS " +
             " Where ENABLE=1 AND CUSTOMER_ID IS NOT NULL AND " +
-            " (name like :pattern " +
-            " OR surname like :pattern " +
-            " OR email like :pattern " +
-            " OR phone like :pattern " +
-            " OR address like :pattern )" +
-            " " +
+            " (upper(name) like upper(:pattern) " +
+            " OR upper(surname) like upper(:pattern) " +
+            " OR upper(email) like upper(:pattern) " +
+            " OR upper(phone) like upper(:pattern) " +
+            " OR upper(address) like upper(:pattern) )" +
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
@@ -62,73 +62,98 @@ public class UserDAOImpl implements UserDAO {
     private static final String SELECT_COUNT = "Select count(ID)\n" +
             "  from Users " +
             "WHERE ENABLE=1 AND CUSTOMER_ID IS NOT NULL AND " +
-            " ( name like :pattern " +
-            " OR surname like :pattern " +
-            " OR email like :pattern " +
-            " OR phone like :pattern " +
-            " OR address like :pattern )";
+            " ( upper(name) like upper(:pattern) " +
+            " OR upper(surname) like upper(:pattern) " +
+            " OR upper(email) like upper(:pattern) " +
+            " OR upper(phone) like upper(:pattern) " +
+            " OR upper(address) like upper(:pattern) )";
 
     private static final String SELECT_ALL_COUNT = "Select count(ID)\n" +
             "  from Users " +
-            "WHERE name like :pattern " +
-            " OR surname like :pattern " +
-            " OR email like :pattern " +
-            " OR phone like :pattern " +
-            " OR address like :pattern ";
+            "WHERE upper(name) like upper(:pattern) " +
+            " OR upper(surname) like upper(:pattern) " +
+            " OR upper(email) like upper(:pattern) " +
+            " OR upper(phone) like upper(:pattern) " +
+            " OR upper(address) like upper(:pattern) ";
 
     private static final String SELECT_ALL_COUNT_OF_CUSTOMER = "Select count(ID)\n" +
             "  from Users " +
-            "WHERE CUSTOMER_ID= :custID AND (name like :pattern " +
-            " OR surname like :pattern " +
-            " OR email like :pattern " +
-            " OR phone like :pattern " +
-            " OR address like :pattern) ";
+            "WHERE CUSTOMER_ID= :custID AND ( " +
+            " upper(name) like upper(:pattern) " +
+            " OR upper(surname) like upper(:pattern) " +
+            " OR upper(email) like upper(:pattern) " +
+            " OR upper(phone) like upper(:pattern) " +
+            " OR upper(address) like upper(:pattern)) ";
 
 
     private static final String SELECT_LIMITED_ALL_USERS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from USERS " +
-            " Where name like :pattern " +
-            " OR surname like :pattern " +
-            " OR email like :pattern " +
-            " OR phone like :pattern " +
-            " OR address like :pattern " +
+            " Where upper(name) like upper(:pattern) " +
+            " OR upper(surname) like upper(:pattern) " +
+            " OR upper(email) like upper(:pattern) " +
+            " OR upper(phone) like upper(:pattern) " +
+            " OR upper(address) like upper(:pattern) " +
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
     private static final String SELECT_LIMITED_ALL_USERS_OF_CUSTOMER = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from USERS " +
-            " Where customer_id= :custID and (name like :pattern " +
-            " OR surname like :pattern " +
-            " OR email like :pattern " +
-            " OR phone like :pattern " +
-            " OR address like :pattern) " +
+            " Where customer_id= :custID and ( " +
+            " upper(name) like upper(:pattern) " +
+            " OR upper(surname) like upper(:pattern) " +
+            " OR upper(email) like upper(:pattern) " +
+            " OR upper(phone) like upper(:pattern) " +
+            " OR upper(address) like upper(:pattern)) " +
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
 
-    private static final String SELECT_COUNT_EMPLOYEES_BY_CUSTOMER="Select count(ID)\n" +
+    private static final String SELECT_COUNT_EMPLOYEES_BY_CUSTOMER = "Select count(ID)\n" +
             "  from Users " +
             "WHERE ROLE_ID=6 AND CUSTOMER_ID=:customerId AND " +
-            " ( name like :pattern " +
-            " OR surname like :pattern " +
-            " OR email like :pattern " +
-            " OR phone like :pattern " +
-            " OR address like :pattern )";
+            " ( upper(name) like upper(:pattern) " +
+            " OR upper(surname) like upper(:pattern) " +
+            " OR upper(email) like upper(:pattern) " +
+            " OR upper(phone) like upper(:pattern) " +
+            " OR upper(address) like upper(:pattern) )";
 
-    private static final String SELECT_EMPLOYEES_BY_CUSTOMER="select *"+
-        "from ( select a.*, rownum rnum\n" +
-        "       from ( Select * from USERS " +
+    private static final String SELECT_EMPLOYEES_BY_CUSTOMER = "select *" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from USERS " +
             "WHERE ROLE_ID=6 AND CUSTOMER_ID=:customerId AND " +
-        "  (name like :pattern " +
-        " OR surname like :pattern " +
-        " OR email like :pattern " +
-        " OR phone like :pattern " +
-        " OR address like :pattern) " +
-        " ORDER BY %s) a\n" +
-        "       where rownum <= :length )\n" +
-        "       where rnum > :start";
+            "  (upper(name) like upper(:pattern) " +
+            " OR upper(surname) like upper(:pattern) " +
+            " OR upper(email) like upper(:pattern) " +
+            " OR upper(phone) like upper(:pattern) " +
+            " OR upper(address) like upper(:pattern)) " +
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
+
+    private static final String GET_USER_BY_COMPLAINT_ID = "SELECT * " +
+            " FROM USERS WHERE ID=( " +
+            " SELECT USER_ID FROM ORDERS JOIN COMPLAINTS ON (ORDERS.ID=COMPLAINTS.ORDER_ID) " +
+            " WHERE COMPLAINTS.ID=:complaintId)";
+
+    private static final String GET_USER_BY_ORDER_ID = "SELECT * " +
+            " FROM USERS WHERE ID=( " +
+            " SELECT USER_ID FROM ORDERS WHERE ID=:orderId)";
+
+    private static final String GET_USERS_BY_CUSTOMER_TYPE = "SELECT * " +
+            " FROM USERS WHERE CUSTOMER_ID IN ( " +
+            " SELECT ID FROM CUSTOMERS WHERE TYPE_ID=:typeId)";
+
+    private static final String GET_USER_BY_PRODUCT_ID = "SELECT * " +
+            " FROM USERS WHERE ID IN ( " +
+            " SELECT USER_ID FROM ORDERS WHERE PRODUCT_ID=:productId OR PRODUCT_ID IN ( " +
+            " SELECT TARIFF_ID FROM TARIFF_SERVICES WHERE SERVICE_ID=:productId))";
+
+    private static final String UPDATE_ENABLE_OR_DISABLE = "UPDATE USERS " +
+            " SET ENABLE=:status " +
+            " WHERE ID=:userId";
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -162,7 +187,7 @@ public class UserDAOImpl implements UserDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", user.getName());
         params.addValue("surname", user.getSurname());
-        params.addValue("enable", user.getEnable());
+        params.addValue("enable", user.getStatus().getId());
         params.addValue("phone", user.getPhone());
         params.addValue("password", user.getPassword());
         params.addValue("address", user.getAddress());
@@ -180,20 +205,20 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public boolean save(User user) {
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            String encodePassword = encoder.encode(user.getPassword());
-            params.addValue("name", user.getName());
-            params.addValue("surname", user.getSurname());
-            params.addValue("email", user.getEmail());
-            params.addValue("phone", user.getPhone());
-            params.addValue("password", encodePassword);
-            params.addValue("roleId", user.getRole().getId());
-            params.addValue("placeId", user.getPlaceId());
-            params.addValue("customerId", user.getCustomerId());
-            params.addValue("address", user.getAddress());
-            params.addValue("enable", 1);
-            int save = jdbcTemplate.update(SAVE_USER, params);
-            return save > 0;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        String encodePassword = encoder.encode(user.getPassword());
+        params.addValue("name", user.getName());
+        params.addValue("surname", user.getSurname());
+        params.addValue("email", user.getEmail());
+        params.addValue("phone", user.getPhone());
+        params.addValue("password", encodePassword);
+        params.addValue("roleId", user.getRole().getId());
+        params.addValue("placeId", user.getPlaceId());
+        params.addValue("customerId", user.getCustomerId());
+        params.addValue("address", user.getAddress());
+        params.addValue("enable", 1);
+        int save = jdbcTemplate.update(SAVE_USER, params);
+        return save > 0;
     }
 
     @Override
@@ -372,7 +397,7 @@ public class UserDAOImpl implements UserDAO {
         }
         String sql = String.format(SELECT_EMPLOYEES_BY_CUSTOMER, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("customerId",customerId);
+        params.addValue("customerId", customerId);
         params.addValue("start", start);
         params.addValue("length", length);
         params.addValue("pattern", "%" + search + "%");
@@ -383,7 +408,42 @@ public class UserDAOImpl implements UserDAO {
     public Integer getCountEmployeesWithSearchOfCustomer(String search, int customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("pattern", "%" + search + "%");
-        params.addValue("customerId",customerId);
+        params.addValue("customerId", customerId);
         return jdbcTemplate.queryForObject(SELECT_COUNT_EMPLOYEES_BY_CUSTOMER, params, Integer.class);
+    }
+
+    @Override
+    public User getUserByComplaintId(int complaintId) {
+        MapSqlParameterSource params = new MapSqlParameterSource("complaintId", complaintId);
+        return jdbcTemplate.queryForObject(GET_USER_BY_COMPLAINT_ID, params, new UserRowMapper());
+    }
+
+    @Override
+    public User getUserByOrderId(int orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
+        return jdbcTemplate.queryForObject(GET_USER_BY_ORDER_ID, params, new UserRowMapper());
+    }
+
+    @Override
+    public List<User> getUsersByCustomerType(CustomerType customerType) {
+        Integer typeId = customerType.getId();
+        MapSqlParameterSource params = new MapSqlParameterSource("typeId", typeId);
+        return jdbcTemplate.query(GET_USERS_BY_CUSTOMER_TYPE, params, new UserRowMapper());
+    }
+
+    @Override
+    public List<User> getUsersByProductId(int productId) {
+        MapSqlParameterSource params = new MapSqlParameterSource("productId", productId);
+        return jdbcTemplate.query(GET_USER_BY_PRODUCT_ID, params, new UserRowMapper());
+    }
+
+    @Override
+    public boolean enableDisableUser(User user) {
+        Integer status = user.getStatus().getId();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", user.getId());
+        params.addValue("status", status);
+        return jdbcTemplate.update(UPDATE_ENABLE_OR_DISABLE, params) > 0;
+
     }
 }

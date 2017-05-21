@@ -7,6 +7,8 @@ import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.TariffsDataPartitionDTO;
 import jtelecom.security.SecurityAuthenticationHelper;
+import jtelecom.services.OrderService;
+import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,8 @@ public class TariffsController {
     private ProductDao productDao;
     @Resource
     private UserDAO userDAO;
+    @Resource
+    private OrderService orderService;
 
     private static Logger logger = LoggerFactory.getLogger(TariffsController.class);
 
@@ -78,7 +82,7 @@ public class TariffsController {
             currentUser = userDAO.getUserById(userId);
         }
         logger.debug("Current user: {}", currentUser.toString());
-        Boolean statusOperation = productDao.activateTariff(currentUser.getId(), tariffId);
+        Boolean statusOperation = orderService.activateTariff(currentUser.getId(), tariffId);
         logger.debug("Status activation of tariff: {}", statusOperation);
         return statusOperation ? "success" : "fail";
     }
@@ -94,7 +98,7 @@ public class TariffsController {
             currentUser = userDAO.getUserById(userId);
         }
         logger.debug("Current user: {}", currentUser.toString());
-        Boolean statusOperation = productDao.deactivateTariff(currentUser.getId(), tariffId);
+        Boolean statusOperation = orderService.deactivateTariff(currentUser.getId(), tariffId);
         logger.debug("Status deactivation of tariff: {}", statusOperation);
         return statusOperation ? "success" : "fail";
     }

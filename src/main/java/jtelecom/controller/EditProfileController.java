@@ -1,14 +1,13 @@
 package jtelecom.controller;
 
 
-
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.googleMaps.ServiceGoogleMaps;
 import jtelecom.security.Md5PasswordEncoder;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.UserService;
+import jtelecom.services.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

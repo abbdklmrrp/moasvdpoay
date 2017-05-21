@@ -191,12 +191,12 @@
             "status": function (pv, wv, grid) {
                 if (wv.status == 'Available') {
                     return $('<input type="button" class="btn btn-danger" style="margin: 0 auto"  value="Disable" >').click(function () {
-                            location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct=' + wv.id
+                            location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct?id=' + wv.id
                         }
                     );
                 } else {
                     return $('<input type="button" class="btn btn-success" style="margin: 0 auto"  value="Enable" >').click(function () {
-                            location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct=' + wv.id
+                            location.href = '${pageContext.request.contextPath}/admin/disableEnableProduct?id=' + wv.id
                         }
                     );
                 }

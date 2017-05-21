@@ -6,6 +6,7 @@ import jtelecom.dao.product.Product;
 import java.math.BigDecimal;
 
 /**
+ * @Author Nikita Alistratenko
  */
 public class ProductExtendedDTO {
     private Integer id;

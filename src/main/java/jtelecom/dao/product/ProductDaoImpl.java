@@ -277,19 +277,35 @@ public class ProductDaoImpl implements ProductDao {
     private final static String SELECT_LIMITED_PRODUCTS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from PRODUCTS " +
-            " Where name like :pattern " +
-            " OR description like :pattern " +
+            " Where upper(name) like upper(:pattern) " +
+            " OR upper(description) like upper(:pattern) " +
             " OR duration like :pattern " +
             " OR base_price like :pattern " +
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
+    private final static String SELECT_LIMITED_ACTIVE_PRODUCTS = "select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from PRODUCTS " +
+            " Where STATUS = 1 and (upper(name) like upper(:pattern) " +
+            " OR upper(description) like upper((:pattern) " +
+            " OR duration like :pattern " +
+            " OR base_price like :pattern) " +
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
     private static final String SELECT_COUNT = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
-            " WHERE name LIKE :pattern " +
-            " OR description LIKE :pattern " +
+            " WHERE upper(name) LIKE upper(:pattern) " +
+            " OR upper(description) LIKE upper(:pattern) " +
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern ";
+    private static final String SELECT_ACTIVE_COUNT = "SELECT count(ID)\n" +
+            "  FROM PRODUCTS" +
+            " WHERE STATUS = 1 and (upper(name) LIKE upper(:pattern) " +
+            " OR upper(description) LIKE upper(:pattern) " +
+            " OR duration LIKE :pattern " +
+            " OR base_price LIKE :pattern) ";
     private final static String FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE = "SELECT\n" +
             "  product.ID,\n" +
             "  product.NAME\n" +
@@ -348,6 +364,10 @@ public class ProductDaoImpl implements ProductDao {
             "  NAME\n" +
             "FROM PRODUCTS\n" +
             "WHERE CATEGORY_ID = :categoryId";
+
+    private static final String GET_PRODUCT_BY_ORDER_ID = "SELECT * " +
+            " FROM PRODUCTS WHERE ID=( " +
+            " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
     private static Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
     @Autowired
     @Qualifier("dataSource")
@@ -885,17 +905,16 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     /**
-     * @param productID
+     * @param product
      * @return status of updating
      * @author Nikita Alistratenko
      */
     @Override
-    public boolean disableEnableProductByID(int productID) {
-        logger.debug("Product sent to get status changed, id = {} ", productID);
+    public boolean disableEnableProduct(Product product) {
+        logger.debug("Product sent to get status changed, id = {} ", product.getId());
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", productID);
-        Product p = getById(productID);
-        if (p.getStatus().getId() == 1) {
+        params.addValue("id", product.getId());
+        if (product.getStatus().getId() == 1) {
             params.addValue("status", 0);
         } else {
             params.addValue("status", 1);
@@ -957,8 +976,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("start", start);
         params.addValue("length", rownum);
         params.addValue("pattern", "%" + search + "%");
-        List<Product> products = jdbcTemplate.query(sql, params, new ProductRowMapper());
-        return products;
+        return jdbcTemplate.query(sql, params, new ProductRowMapper());
     }
 
     @Override
@@ -1041,6 +1059,27 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public Integer getCountActiveProductsWithSearch(String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_ACTIVE_COUNT, params, Integer.class);
+    }
+
+    @Override
+    public List<Product> getLimitedQuantityActiveProduct(int start, int length, String sort, String search) {
+        int rownum = start + length;
+        if (sort.isEmpty()) {
+            sort = "ID";
+        }
+        String sql = String.format(SELECT_LIMITED_ACTIVE_PRODUCTS, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("length", rownum);
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.query(sql, params, new ProductRowMapper());
+    }
+
+    @Override
     public String getProductTypeByProductId(Integer productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("productId", productId);
@@ -1052,5 +1091,11 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("productId", productId);
         return jdbcTemplate.queryForObject(FIND_CUSTOMER_TYPE_BY_ID, params, String.class);
+    }
+
+    @Override
+    public Product getProductByOrderId(int orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
+        return jdbcTemplate.queryForObject(GET_PRODUCT_BY_ORDER_ID, params, new ProductRowMapper());
     }
 }

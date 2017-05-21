@@ -40,7 +40,7 @@ public class FillPriceByRegion {
     @RequestMapping(value = {"fillTariffsPrices"}, method = RequestMethod.GET)
     public ModelAndView getRegionForFill(ModelAndView mav) {
 
-        List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
+        List<Place> placesForFillInTariff = placeDAO.getAllPlaces();
         logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
 
         mav.addObject("placesForFillInTariff", placesForFillInTariff);
@@ -58,7 +58,7 @@ public class FillPriceByRegion {
         if (!isValid) {
             logger.error("Incoming data of place ID and is not correct {} {}",
                     Arrays.toString(placeId), Arrays.toString(priceByRegion));
-            List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
+            List<Place> placesForFillInTariff = placeDAO.getAllPlaces();
             logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
 
             mav.addObject("placesForFillInTariff", placesForFillInTariff);
@@ -73,7 +73,7 @@ public class FillPriceByRegion {
             logger.debug("Fill in tariff with services to database with success {} ", isFillPrice);
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {} ", ex.getMessage());
-            List<Place> placesForFillInTariff = placeDAO.getPlacesForFillInTariff();
+            List<Place> placesForFillInTariff = placeDAO.getAllPlaces();
             logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
 
             mav.addObject("placesForFillInTariff", placesForFillInTariff);

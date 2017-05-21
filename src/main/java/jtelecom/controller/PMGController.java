@@ -6,6 +6,7 @@ import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.ComplaintDataPartitionDTO;
 import jtelecom.repositories.FullComplaintInfoRepository;
 import jtelecom.security.SecurityAuthenticationHelper;
+import jtelecom.services.complaint.ComplaintService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,9 @@ public class PMGController {
 
     @Resource
     private FullComplaintInfoRepository fullComplaintInfoRepository;
+
+    @Resource
+    private ComplaintService complaintService;
 
     private static Logger logger = LoggerFactory.getLogger(PMGController.class);
 
@@ -89,11 +93,10 @@ public class PMGController {
 
     @RequestMapping(value = "changeStatus")
     public String changeStatus(Model model, @RequestParam(name = "id") int id, @RequestParam(name = "statusId") int statusId) {
-        boolean success = complaintDAO.changeStatus(id, statusId);
+        boolean success = complaintService.changeStatus(id, statusId);
         if (success) {
             logger.debug("Status of complaint with id {} successful changed to status {}", id, statusId);
             if (statusId == 3) {
-                //TODO send email
                 return "redirect:myComplaints";
             } else {
                 return "forward:complaintInfo?id=" + id;

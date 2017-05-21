@@ -10,6 +10,7 @@ import jtelecom.dao.product.ProductDao;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.security.SecurityAuthenticationHelper;
+import jtelecom.services.complaint.ComplaintService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,8 @@ public class UserComplaintController {
     private ProductDao productDao;
     @Resource
     private ComplaintDAO complaintDAO;
+    @Resource
+    private ComplaintService complaintService;
     @Resource
     private OrderDao orderDAO;
     private static Logger logger = LoggerFactory.getLogger(UserComplaintController.class);
@@ -82,7 +85,7 @@ public class UserComplaintController {
         complaint.setCreationDate(calendar);
         complaint.setDescription(description);
         complaint.setStatus(ComplaintStatus.Send);
-        boolean success = complaintDAO.save(complaint);
+        boolean success = complaintService.save(complaint,userId);
         if (success) {
             logger.debug("Complaint saved: orderId " + orderId + " user id: " + userId);
 

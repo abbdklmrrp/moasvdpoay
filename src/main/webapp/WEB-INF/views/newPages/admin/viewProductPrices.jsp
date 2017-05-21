@@ -77,16 +77,7 @@
             <table class="table table-striped table-bordered table-hover" data-grid="grid">
                 <thead>
                 <tr>
-                    <th class="col-xs-2" data-grid-header="productName" data-grid-header-sortable="true">
-                        <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                               data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                               data-grid-header-sortable-down="down"></a>
-                        </div>
-                        Name
-                    </th>
-                    <th class="col-xs-2" data-grid-header="placeName" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="name" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
@@ -95,23 +86,16 @@
                         </div>
                         Region
                     </th>
-                    <th class="col-xs-2" data-grid-header="priceProduct" data-grid-header-sortable="true">
-                        <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                               data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                               data-grid-header-sortable-down="down"></a>
-                        </div>
-                        Price
+                    <th class="col-xs-2" data-grid-header="action">
+                        Action
                     </th>
                 </tr>
                 </thead>
                 <div data-grid="message"></div>
                 <tbody>
                 <tr data-grid="row">
-                    <td data-cell="productName"></td>
-                    <td data-cell="placeName"></td>
-                    <td data-cell="priceProduct"></td>
+                    <td data-cell="name"></td>
+                    <td data-cell="action"></td>
                 </tr>
                 </tbody>
             </table>
@@ -152,10 +136,18 @@
 <script>
     $().BooGrid({
         id: 'productsIds',
-        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/admin/productsPriceInRegions.json'}),
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/admin/allPlace.json'}),
         listeners: [
             new ElementListener($('#progressId'))
-        ]
+        ],
+        renderers: {
+            "action": function (pv, wv, grid) {
+                return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
+                        location.href = '${pageContext.request.contextPath}/admin/viewPriceByPlace?id=' + wv.id
+                    }
+                );
+            }
+        }
     })
 </script>
 </body>
