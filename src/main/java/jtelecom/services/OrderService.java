@@ -57,7 +57,9 @@ public class OrderService {
         Calendar currentDate = Calendar.getInstance();
         if (beginDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
                 beginDate.get(Calendar.DAY_OF_YEAR) == currentDate.get(Calendar.DAY_OF_YEAR)) {
+            logger.info("Order with id {} was suspended", orderId);
             return orderDao.suspendOrder(orderId);
+
         }
         return plannedTaskDao.save(suspendPlanTask);
     }
@@ -84,8 +86,22 @@ public class OrderService {
      */
     @Transactional
     public boolean deactivateOrderForProductOfUserCompletely(Integer productId, Integer userId) {
-        plannedTaskDao.deleteAllPlannedTasksForProductOfUser(productId, userId);
+
+        boolean plannedTasksDeleted = plannedTaskDao.deleteAllPlannedTasksForProductOfUser(productId, userId);
+        if (!plannedTasksDeleted) {
+            logger.error("Not able to delete planned tasks for order for product {} of user {} ", productId, userId);
+            return false;
+        }
         return orderDao.deactivateOrderOfUserForProduct(productId, userId);
+    }
+
+    public boolean deactivaateOrderCompletely(Integer orderId) {
+        boolean plannedTasksDeleted = plannedTaskDao.deleteAllPlannedTasksForOrder(orderId);
+        if (!plannedTasksDeleted) {
+            logger.error("Not able to delete planned tasks for order for order {} ", orderId);
+            return false;
+        }
+        return orderDao.deactivateOrder(orderId);
     }
 
     /**

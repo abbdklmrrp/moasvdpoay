@@ -53,21 +53,22 @@ public class ServiceOrderController {
     User currentUser;
     private static Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
 
-    private final static String NO_PRODUCTS_FOR_YOU_MSG = "Sorry! There are no products yet here.";
+    //   private final static String NO_PRODUCTS_FOR_YOU_MSG = "Sorry! There are no products yet here.";
     private final static String ORDER_IN_PROCESS_MSG = "Your order on %s is in process. It will be activated after processing.";
     private final static String SERVICE_WAS_ACTIVATED_MSG = "Service %s has been activated. Thank you!";
     private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing this order. Please, try again!";
-
+    private final static String ALL_CATEGORIES = "ALl Cateogories";
     @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
-    public String getUsers(Model model, @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String categoryName, HttpSession session) throws IOException {
+    public String getUsers(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
         if (currentUser.getRole() == Role.CSR) {
             this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
         }
         this.categoryId = categoryId;
-        model.addAttribute("categoryName", categoryName == null ?
-                "All categories" : categoryName);
+        String categoryName = categoryId == null ? ALL_CATEGORIES :
+                productDao.getProductCategoryById(categoryId).getCategoryName();
+        model.addAttribute("categoryName", categoryName);
         List<ProductCategories> productCategories = productDao.findProductCategories();
         model.addAttribute("productsCategories", productCategories);
         model.addAttribute("userRole", userRoleLowerCase);

@@ -11,12 +11,12 @@ import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.OrderService;
 import jtelecom.util.DatesHelper;
+import jtelecom.util.SharedVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.annotation.SessionScope;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -31,7 +31,6 @@ import java.util.List;
 @Controller
 @RequestMapping({"residential", "business", "employee", "csr"})
 public class UsersOrdersController {
-    //todo to file
     private final static String SUCCESS_MSG = "Thank you! This order will be suspended from %s to %s.";
     private final static String DATE_ERROR_MSG = "Unable to suspend this order. Please, check the dates you've entered.";
     private final static String FAIL_SUSPEND_ERROR_MSG = "Sorry! An error occurred while suspending this order. Please, try again.";
@@ -88,7 +87,7 @@ public ListHolder showServices(@ModelAttribute GridRequestDto request) {
     return ListHolder.create(products, size);
 }
 
-    @RequestMapping(value = {"suspend", "suspend"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"suspend"}, method = RequestMethod.POST)
     @ResponseBody
     public String suspendOrder(@RequestBody SuspendFormDTO suspendFormDTO) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -113,7 +112,7 @@ public ListHolder showServices(@ModelAttribute GridRequestDto request) {
 
     }
 
-    @RequestMapping(value = {"activateAfterSuspend", "activateAfterSuspend"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"activateAfterSuspend"}, method = RequestMethod.POST)
     @ResponseBody
     public Boolean activateAfterSuspend(@RequestParam Integer orderId) {
         Boolean wasOrderActivated = orderService.activateOrderAfterSuspense(orderId);
@@ -123,5 +122,19 @@ public ListHolder showServices(@ModelAttribute GridRequestDto request) {
             logger.info("Unsuccessful order activation, order id: {} ", orderId);
         }
         return wasOrderActivated;
+    }
+
+    @RequestMapping(value = {"deactivateOrder"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String deactivateOrder(@RequestParam Integer orderId) {
+        Boolean wasDeactivated = orderService.deactivaateOrderCompletely(orderId);
+        if (wasDeactivated) {
+            logger.info("Successful deactivation of order with id {} ", orderId);
+            return SharedVariables.SUCCESS;
+        } else {
+            logger.info("Unsuccessful deactivation of order with id {} ", orderId);
+
+        }
+        return SharedVariables.FAIL;
     }
 }

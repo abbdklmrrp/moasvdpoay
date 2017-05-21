@@ -2,8 +2,13 @@
  * Created by Yuliya Pedash on 08.05.2017.
  */
 $(document).ready(function () {
-
     $("#formWithDates").hide();
+    $("#planned-tasks-info").hide();
+
+    $("#toggle-planned-info").click(function () {
+        $("#planned-tasks-info").toggle();
+    });
+
     $("#formWithDates").submit(function (e) {
         e.preventDefault();
         var formData = {}
@@ -106,4 +111,80 @@ function activateOrderAfterSuspend(orderId) {
         }
     });
 
+}
+function cancelPlannedTask(plannedTaskId) {
+    swal({
+            title: "Are you sure you want to cancel this Suspense?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "DD6B55",
+            confirmButtonText: "Yes, cancel it",
+            closeOnConfirm: false
+        },
+        function () {
+            $.ajax({
+                url: 'cancelSuspense',
+                data: {plannedTaskId: plannedTaskId},
+                type: "POST",
+                dataType: 'text',
+                success: function (resultMsg) {
+                    if (resultMsg === '"success"') {
+                        swal({
+                            title: "This Suspense  was cancelled.",
+                            type: "success"
+                        });
+                        var $statusElement = $('#task' + plannedTaskId);
+                        $statusElement.empty();
+                    }
+                    else {
+                        swal("Sorry, an error occurred while cancelling this planned task!", "Please, try again later", "error");
+                    }
+                },
+
+                error: function () {
+                    swal("Sorry, an error on server has occurred", "please, try again later.", "error");
+                }
+            })
+
+        }
+    )
+    ;
+}
+function deactivateOrder(orderId) {
+    swal({
+            title: "Are you sure you want to deactivate this order?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "DD6B55",
+            confirmButtonText: "Yes, deactivate it",
+            closeOnConfirm: false
+        },
+        function () {
+            $.ajax({
+                url: 'deactivateOrder',
+                data: {orderId: orderId},
+                type: "POST",
+                dataType: 'text',
+                success: function (resultMsg) {
+                    if (resultMsg === '"success"') {
+                        swal({
+                            title: "This order was deactivated.",
+                            type: "success"
+                        });
+                        var $statusElement = $('#order' + orderId);
+                        $statusElement.empty();
+                    }
+                    else {
+                        swal("Sorry, an error occurred while deactivating this product for you!", "Please, try again", "error");
+                    }
+                },
+
+                error: function () {
+                    swal("Sorry, an error on server has occurred", "please, try again.", "error");
+                }
+            })
+
+        }
+    )
+    ;
 }
