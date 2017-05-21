@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <h3 style="text-align: center; margin-bottom: 30px;">Report about orders and complaints</h3>
 <div class="container" style="width:60%; max-width: 400px;">
-    <form id="formWithRegionsAndDates" action="${pageContext.request.contextPath}download" method="get">
+    <form id="formWithRegionsAndDates" action="${pageContext.request.contextPath}${param.downloadUrl}" method="get">
         <div class="login-form">
             <div class="form-group row">
                 <label class="col-sm-4 control-label" for="sel1">Choose region</label>
@@ -36,6 +36,10 @@
     <span id="err" style="color: red"></span>
 </div>
 <div class="container" style="margin-bottom: 30px; margin-top: 30px;">
-    <div id="line_top_x" style="height: 400px;"></div>
-    <div id="table_div"></div>
+    <div id="line_top_x" style="height: 400px;"></div><br/>
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6" id="table_div" style="width: 400px"></div>
+        <div class="col-sm-3"></div>
+    </div>
 </div>
