@@ -51,7 +51,7 @@ public class PlaceEndpoint {
         int length = request.getLength();
         String search = request.getSearch();
         List<PriceByRegionDto> data = placeDAO.getLimitedQuantityPriceByPlace(placeId, start, length, sort, search);
-        int size = placeDAO.getCountPlacesWithSearch(search);
+        int size = placeDAO.getCountPriceByPlace(search, placeId);
         return ListHolder.create(data, size);
     }
 

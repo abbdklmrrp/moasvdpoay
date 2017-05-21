@@ -78,7 +78,7 @@
                 <div class="container">
                     <div class="col-md-2"></div>
                     <div class="col-md-8">
-                        <h1 style="text-align: center">Fill in tariff with price by region</h1>
+                        <h1 style="text-align: center">Update price in regions</h1>
                         <br>
                         <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                             <tr>
@@ -92,9 +92,9 @@
                                     <td>
                                             <%--<div class="form-group row">--%>
                                         <div class="col-sm-8">
-                                            <input type="number" class="currency" min="0.01" max="99999.99"
-                                                   value="${place.priceProduct}"
-                                                   id="priceByRegion" name="priceByRegion">
+                                            <input type="number" class="currency" min="0.00" max="99999.99"
+                                                   value="${place.priceProduct eq null? 0 : place.priceProduct}.00"
+                                                   id="basePrice" name="priceByRegion">
                                             <i class="fa fa-user"></i>
                                         </div>
                                             <%--</div>--%>

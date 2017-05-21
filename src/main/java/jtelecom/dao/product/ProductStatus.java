@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 public enum ProductStatus {
     Available(1, "Available"),
-    NotAvailable(0, "Not Available");
+    Disable(0, "Disable");
     private static Logger logger = LoggerFactory.getLogger(ProductStatus.class);
     private static String WRONG_ID_ERROR_MSG = "Wrong id: ";
     private Integer id;

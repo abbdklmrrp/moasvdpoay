@@ -1,13 +1,14 @@
 package jtelecom.controller.admin;
 
 import jtelecom.dao.product.Product;
+import jtelecom.dao.product.ProductCategories;
 import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductType;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +43,10 @@ public class ViewProductController {
 
         Product foundProduct = productDao.getById(id);
         logger.debug("Receive request param product id named 'id', value={} ", id);
-
+        if (foundProduct.getProductType() == ProductType.Service) {
+            ProductCategories category = productDao.getProductCategoryById(foundProduct.getCategoryId());
+            mav.addObject("category", category);
+        }
         logger.debug("Product found in database, id={} ", id);
         logger.debug("Save to session ID of product {} ", id);
         mav.addObject("product", foundProduct);

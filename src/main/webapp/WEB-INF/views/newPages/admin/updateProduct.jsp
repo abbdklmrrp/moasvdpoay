@@ -97,6 +97,26 @@
                                 <i class="fa fa-user"></i>
                             </div>
                         </div>
+                        <c:if test="${product.productType eq 'Service'}">
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Category name</label>
+                                <div class="col-sm-8">
+                                    <input readonly type="text" class="form-control" placeholder="Description "
+                                           id="categoryName" name="categoryName" value="${category.categoryName}"
+                                           required>
+                                    <i class="fa fa-user"></i>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Category description</label>
+                                <div class="col-sm-8">
+                                    <input readonly type="text" class="form-control" placeholder="Description "
+                                           id="categoryDescription" name="description"
+                                           value="${category.categoryDescription}" required>
+                                    <i class="fa fa-user"></i>
+                                </div>
+                            </div>
+                        </c:if>
                         <div class="form-group row">
                             <label class="col-sm-4 control-label">Base price</label>
                             <div class="col-sm-8">
@@ -153,7 +173,7 @@
                                            value="Available" ${product.status=='Available'? 'checked="checked"' : ''}>
                                     <label class="col-sm-5 control-label">Available</label>
                                     <input disabled type="radio" id="notAvailableStatus" name="status" class="col-sm-1"
-                                           value="NotAvailable" ${product.status=='NotAvailable'? 'checked="checked"' : ''}>
+                                           value="NotAvailable" ${product.status=='Disable'? 'checked="checked"' : ''}>
                                     <label class="col-sm-5 control-label">Not Available</label>
                                 </div>
                             </div>

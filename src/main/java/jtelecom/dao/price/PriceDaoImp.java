@@ -30,10 +30,10 @@ public class PriceDaoImp implements PriceDao {
             "            FROM PRODUCTS product\n" +
             "              JOIN PRICES price ON (product.ID = price.PRODUCT_ID)\n" +
             "              JOIN PLACES place ON (price.PLACE_ID = place.ID)\n" +
-            "            WHERE product.NAME LIKE :pattern\n" +
+            "            WHERE product.ID=:productId AND price.PRICE>0 AND (product.NAME LIKE :pattern\n" +
             "                  OR description LIKE :pattern\n" +
             "                  OR place.NAME LIKE :pattern\n" +
-            "                  OR PRICE LIKE :pattern\n" +
+            "                  OR PRICE LIKE :pattern)\n" +
             "            ORDER BY %s ) a\n" +
             "      WHERE rownum <= :length)\n" +
             "WHERE rnum > :start";
@@ -54,7 +54,7 @@ public class PriceDaoImp implements PriceDao {
             "FROM places\n" +
             "  LEFT JOIN (SELECT *\n" +
             "             FROM prices\n" +
-            "             WHERE PRODUCT_ID = :productId) price ON (places.id = price.PLACE_ID)\n" +
+            "             WHERE PRODUCT_ID = :productId AND PRICES.PRICE>0) price ON (places.id = price.PLACE_ID)\n" +
             "WHERE PLACES.PARENT_ID IS NOT NULL\n" +
             "ORDER BY PLACES.NAME";
     private final static String FIND_ALL_PRICE_INFO_BY_PRODUCT = "SELECT * FROM PRICES\n" +
@@ -63,6 +63,14 @@ public class PriceDaoImp implements PriceDao {
             "WHERE PRODUCT_ID=:productId AND PLACE_ID=:placeId";
     private static String SELECT_PRICE_BY_PRODUCT_AND_PLACE_SQL = "SELECT PRICES.PLACE_ID, PRICES.PRODUCT_ID, PRICES.PRICE" +
             "  FROM PRICES WHERE PRODUCT_ID = :product_id AND PLACE_ID = :place_id";
+    private final static String SELECT_COUNT_PRODUCT_BY_PLACE = "SELECT count(product.ID)\n" +
+            "FROM\n" +
+            "  PRODUCTS product\n" +
+            "  JOIN PRICES price ON (product.ID = price.PRODUCT_ID)\n" +
+            "  JOIN PLACES place ON (price.PLACE_ID = place.ID)\n" +
+            "WHERE product.ID = :productId AND price.PRICE>0 AND\n" +
+            "      (place.NAME LIKE :pattern\n" +
+            "       OR PRICE LIKE :pattern)";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -171,7 +179,7 @@ public class PriceDaoImp implements PriceDao {
     }
 
     @Override
-    public List<PriceByRegionDto> getLimitedQuantityProductPricesInRegions(int start, int length, String sort, String search) {
+    public List<PriceByRegionDto> getLimitedQuantityProductPricesInRegions(int productId, int start, int length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
             sort = "ID";
@@ -181,7 +189,8 @@ public class PriceDaoImp implements PriceDao {
         params.addValue("start", start);
         params.addValue("length", rownum);
         params.addValue("pattern", "%" + search + "%");
-        List<PriceByRegionDto> products = jdbcTemplate.query(sql, params, (rs, rowNum) -> {
+        params.addValue("productId", productId);
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
             PriceByRegionDto priceByRegionDto = new PriceByRegionDto();
             priceByRegionDto.setProductId(rs.getInt("ID"));
             priceByRegionDto.setProductName(rs.getString("NAME"));
@@ -190,6 +199,13 @@ public class PriceDaoImp implements PriceDao {
             priceByRegionDto.setPriceProduct(rs.getBigDecimal("PRICE"));
             return priceByRegionDto;
         });
-        return products;
+    }
+
+    @Override
+    public Integer getCountPriceByPlace(String search, Integer productId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("productId", productId);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_PRODUCT_BY_PLACE, params, Integer.class);
     }
 }
