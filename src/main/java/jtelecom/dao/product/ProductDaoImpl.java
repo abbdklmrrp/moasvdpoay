@@ -2,7 +2,7 @@ package jtelecom.dao.product;
 
 import jtelecom.dto.ServicesByCategoryDto;
 import jtelecom.dto.TariffServiceDto;
-import jtelecom.util.querybuilders.LimitedProductsQueryBuilder;
+import jtelecom.util.querybuilders.LimitedQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -322,27 +322,32 @@ public class ProductDaoImpl implements ProductDao {
             "FROM PRODUCTS product\n" +
             "  JOIN PRICES price ON (product.ID = price.PRODUCT_ID)\n" +
             "  JOIN PLACES place ON (price.PLACE_ID = place.ID)";
-    private final static String SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL = "SELECT " +
-            "  products.*, " +
-            "  rownum " +
-            "FROM products " +
-            "WHERE rownum <= :length AND rownum > :start AND TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/ AND customer_type_id = 1 /*Business*/";
-    private final static String SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL = "SELECT\n" +
-            "  id,\n" +
-            "  type_id,\n" +
-            "  category_id,\n" +
-            "  name,\n" +
-            "  duration,\n" +
-            "  need_processing,\n" +
-            "  description,\n" +
-            "  status,\n" +
-            "  CUSTOMER_TYPE_ID,\n" +
-            "  price AS base_price,\n" +
-            "  rownum\n" +
-            "FROM products\n" +
-            "  INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID\n" +
-            "WHERE rownum <= :length AND rownum > :start AND TYPE_ID = 2 /*Service*/ AND status =1 /*Active*/\n" +
-            "  AND place_id = :place_id";
+    private final static String SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL = "SELECT *\n" +
+            "FROM (SELECT\n" +
+            "        products.*,\n" +
+            "        ROW_NUMBER() OVER(ORDER BY PRODUCTS.NAME) rnum\n" +
+            "      FROM products\n" +
+            "      WHERE TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/ AND customer_type_id = 1 /*Business*/)\n" +
+            "WHERE rnum <= :length AND rnum > :start";
+    private final static String SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL = "SELECT *\n" +
+            "FROM (SELECT\n" +
+            "        o.id                order_id,\n" +
+            "        p.name,\n" +
+            "        p.id                product_id,\n" +
+            "        p.type_id           product_type,\n" +
+            "        op_status.name      operation_status,\n" +
+            "        pt.action_date      end_date,\n" +
+            "        ROW_NUMBER()\n" +
+            "        OVER(\n" +
+            "          ORDER BY p.name ) rnum\n" +
+            "      FROM ORDERS o\n" +
+            "        JOIN PRODUCTS p ON o.PRODUCT_ID = p.ID\n" +
+            "        JOIN USERS u ON u.id = o.USER_ID\n" +
+            "        JOIN OPERATION_STATUS op_status ON o.CURRENT_STATUS_ID = op_status.id\n" +
+            "        LEFT JOIN PLANNED_TASKS pt ON o.ID = pt.ORDER_ID\n" +
+            "      WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n" +
+            "            AND pt.STATUS_ID = 3 /*Deactivation*/)\n" +
+            "WHERE rnum <= :length AND rnum > :start";
     private final static String SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL = "\n" +
             "SELECT" +
             "  COUNT(*) " +
@@ -1020,26 +1025,26 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId) {
-        String query = LimitedProductsQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, search, categoryId);
+        String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, search, categoryId);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start);
-        params.addValue("length", length);
+        params.addValue("start", start + 1);
+        params.addValue("length", length + 1);
         return jdbcTemplate.query(query, params, productRowMapper);
     }
 
     @Override
     public List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId) {
-        String query = LimitedProductsQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, search, categoryId);
+        String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, search, categoryId);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start);
-        params.addValue("length", length);
+        params.addValue("start", start + 1);
+        params.addValue("length", length + 1);
         params.addValue("place_id", placeId);
         return jdbcTemplate.query(query, params, productRowMapper);
     }
 
     @Override
     public Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId) {
-        String query = LimitedProductsQueryBuilder.getQuery(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, "", search, categoryId);
+        String query = LimitedQueryBuilder.getQuery(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, "", search, categoryId);
         MapSqlParameterSource params = new MapSqlParameterSource();
         return jdbcTemplate.queryForObject(query, params, Integer.class);
 
@@ -1047,7 +1052,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId) {
-        String query = LimitedProductsQueryBuilder.getQuery(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, "", search, categoryId);
+        String query = LimitedQueryBuilder.getQuery(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, "", search, categoryId);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("place_id", placeId);
         return jdbcTemplate.queryForObject(query, params, Integer.class);

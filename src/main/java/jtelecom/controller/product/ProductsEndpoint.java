@@ -8,10 +8,7 @@ import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -21,7 +18,7 @@ import java.util.List;
  * Created by Rysakova Anna on 26.04.2017.
  */
 @RestController
-@RequestMapping({"admin"})
+@RequestMapping({"admin", "csr", "pmg"})
 public class ProductsEndpoint {
     private static Logger logger = LoggerFactory.getLogger(ProductsEndpoint.class);
     @Resource
@@ -45,14 +42,15 @@ public class ProductsEndpoint {
         return ListHolder.create(data, size);
     }
 
-    @RequestMapping(value = {"productsPriceInRegions"}, method = RequestMethod.GET)
-    public ListHolder productsPriceInRegions(@ModelAttribute GridRequestDto request) {
+    @RequestMapping(value = {"productsPriceInRegions/{id}"}, method = RequestMethod.GET)
+    public ListHolder productsPriceInRegions(@ModelAttribute GridRequestDto request,
+                                             @PathVariable(value = "id") Integer id) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getLength();
         String search = request.getSearch();
-        List<PriceByRegionDto> data = priceDao.getLimitedQuantityProductPricesInRegions(start, length, sort, search);
-        int size = productDao.getCountProductsWithSearch(search);
+        List<PriceByRegionDto> data = priceDao.getLimitedQuantityProductPricesInRegions(id, start, length, sort, search);
+        int size = priceDao.getCountPriceByPlace(search, id);
         return ListHolder.create(data, size);
     }
 }

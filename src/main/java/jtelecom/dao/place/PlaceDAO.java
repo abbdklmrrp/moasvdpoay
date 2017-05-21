@@ -27,4 +27,6 @@ public interface PlaceDAO {
 
     String getPlaceNameById(int id);
 
+    Integer getCountPriceByPlace(String search, Integer placeId);
+
 }

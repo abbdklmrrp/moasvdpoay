@@ -31,6 +31,7 @@ public interface PriceDao extends Dao<Price> {
 
     boolean deleteProductPriceInRegion(List<Price> priceInRegion);
 
-    List<PriceByRegionDto> getLimitedQuantityProductPricesInRegions(int start, int length, String sort, String search);
+    List<PriceByRegionDto> getLimitedQuantityProductPricesInRegions(int prouctId, int start, int length, String sort, String search);
 
+    Integer getCountPriceByPlace(String search, Integer productId);
 }

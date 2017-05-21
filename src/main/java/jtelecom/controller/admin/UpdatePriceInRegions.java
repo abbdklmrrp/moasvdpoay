@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,8 +35,8 @@ public class UpdatePriceInRegions {
     @Resource
     private ProductDao productDao;
 
-    @RequestMapping(value = {"updateProductPrice/{id}"}, method = RequestMethod.GET)
-    public ModelAndView getPriceByRegion(@PathVariable(value = "id") Integer productId,
+    @RequestMapping(value = {"updateProductPrice"}, method = RequestMethod.GET)
+    public ModelAndView getPriceByRegion(@RequestParam(value = "id") Integer productId,
                                          ModelAndView mav) {
         logger.debug("Receive product's id {} ", productId);
         List<PriceByRegionDto> placesAndPrice = priceDao.getAllRegionsAndProductPriceInRegionByProductId(productId);

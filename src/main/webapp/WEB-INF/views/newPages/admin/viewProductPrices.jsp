@@ -86,7 +86,7 @@
                         </div>
                         Region
                     </th>
-                    <th class="col-xs-2" data-grid-header="action">
+                    <th class="col-xs-1" data-grid-header="action">
                         Action
                     </th>
                 </tr>

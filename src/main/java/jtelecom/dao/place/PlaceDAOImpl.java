@@ -57,6 +57,16 @@ public class PlaceDAOImpl implements PlaceDAO {
             "            ORDER BY %s) a\n" +
             "      WHERE rownum <= :length)\n" +
             "WHERE rnum > :start";
+    private static final String SELECT_COUNT_PRICE_BY_PLACE = "SELECT count(product.ID)\n" +
+            "FROM\n" +
+            "  PRODUCTS product\n" +
+            "  JOIN PRODUCT_TYPES type ON (product.TYPE_ID = type.ID)\n" +
+            "  JOIN PRICES price ON (price.PRODUCT_ID = product.ID)\n" +
+            "  JOIN PLACES place ON (price.PLACE_ID = place.ID)\n" +
+            "WHERE place.ID = :placeId AND\n" +
+            "      (product.NAME LIKE :pattern\n" +
+            "       OR STATUS LIKE :pattern\n" +
+            "       OR PRICE LIKE :pattern OR type.NAME LIKE :pattern)";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -137,5 +147,13 @@ public class PlaceDAOImpl implements PlaceDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("placeId", id);
         return jdbcTemplate.queryForObject(FIND_PLACE_NAME_BY_ID, params, String.class);
+    }
+
+    @Override
+    public Integer getCountPriceByPlace(String search, Integer placeId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("placeId", placeId);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_PRICE_BY_PLACE, params, Integer.class);
     }
 }
