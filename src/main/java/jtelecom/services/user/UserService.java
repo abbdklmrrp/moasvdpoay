@@ -17,6 +17,6 @@ public interface UserService {
 
     String saveResidentialWithoutPasswordGenerating(User user);
 
-    boolean generateNewPassword(User user);
+    boolean generateNewPassword(int userId);
 
 }

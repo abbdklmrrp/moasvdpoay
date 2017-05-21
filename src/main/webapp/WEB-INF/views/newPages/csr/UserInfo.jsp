@@ -66,10 +66,11 @@
                 </div>
                 <br>
                 <div class="row">
-                    <button type="submit" class="btn btn-primary col-sm-12 col-xs-12">Save</button>
+                    <button type="submit" class="btn btn-primary col-sm-6 col-xs-6">Save</button>
                 </div>
             </div>
         </form>
+        <button class="btn btn-success col-sm-6 col-xs-6" onclick="sendPassword(${user.id})">Send password</button>
     </div>
     </div>
     <div class="col-md-2"></div>
@@ -122,5 +123,21 @@
     setTimeout(function () {
         document.getElementById("message").style.display = "none";
     }, 4000);
+
+    function sendPassword(userId) {
+        $.ajax({
+            url: 'sendPassword',
+            data: {userId: userId},
+            type: "POST",
+            dataType: 'text',
+            success: function (resultMsg) {
+               swal(resultMsg);
+            },
+            error: function () {
+                swal("Sorry, an error on server has occurred", "please, try again.", "error");
+                console.log("error");
+            }
+        })
+    }
 </script>
 </html>

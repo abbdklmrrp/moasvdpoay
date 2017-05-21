@@ -126,10 +126,11 @@ public class UserServiceImpl implements UserService {
         return message;
     }
 
-    public boolean generateNewPassword(User user){
+    public boolean generateNewPassword(int userId){
+        User user=userDAO.getUserById(userId);
         String password=passwordGenerator();
         user.setPassword(password);
-        boolean success=updateUser(user);
+        boolean success=userDAO.updatePassword(user);
         if (success) {
             mailService.sendNewPasswordEmail(user);
         }

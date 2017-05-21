@@ -54,4 +54,6 @@ public interface UserDAO extends Dao<User> {
     List<User> getUsersByProductId(int productId);
 
     boolean enableDisableUser(User user);
+
+    boolean updatePassword(User user);
 }
