@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -102,6 +104,19 @@ public class CustomerDAOImpl implements CustomerDAO {
         params.addValue("secretKey", password);
         params.addValue("typeId", type);
         return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params) > 0;
+    }
+
+    @Override
+    public Integer saveCustomer(Customer customer){
+        String password = encoder.encode(customer.getSecretKey());
+        Integer type = customer.getCustomerType().getId();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", customer.getName());
+        params.addValue("secretKey", password);
+        params.addValue("typeId", type);
+        KeyHolder key = new GeneratedKeyHolder();
+        Integer customerId=jdbcTemplate.update(SAVE_CUSTOMER_SQL,params,key,new String[]{"ID"});
+        return key.getKey().intValue();
     }
 
     @Override

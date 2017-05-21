@@ -13,6 +13,7 @@ import jtelecom.security.Md5PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Random;
@@ -135,6 +136,7 @@ public class UserServiceImpl implements UserService {
         return success;
     }
 
+    @Transactional
     private String saveResidential(User user) {
         user.setRole(Role.RESIDENTIAL);
         String message = validateFields(user).toString();
@@ -143,9 +145,8 @@ public class UserServiceImpl implements UserService {
             if (unique) {
                 Customer customer = new Customer(user.getEmail(), user.getPassword());
                 customer.setCustomerType(CustomerType.Residential);
-                boolean isSaveCustomer = customerDAO.save(customer);
-                if (isSaveCustomer) {
-                    Integer customerId = customerDAO.getCustomerId(user.getEmail(), user.getPassword());
+                Integer customerId = customerDAO.saveCustomer(customer);
+                if (customerId!=null) {
                     user.setCustomerId(customerId);
                     boolean success = userDAO.save(user);
                     if (success) {
