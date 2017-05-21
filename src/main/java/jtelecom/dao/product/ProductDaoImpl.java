@@ -284,12 +284,28 @@ public class ProductDaoImpl implements ProductDao {
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
+    private final static String SELECT_LIMITED_ACTIVE_PRODUCTS = "select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from PRODUCTS " +
+            " Where STATUS = 1 and (name like :pattern " +
+            " OR description like :pattern " +
+            " OR duration like :pattern " +
+            " OR base_price like :pattern) " +
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
     private static final String SELECT_COUNT = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
             " WHERE name LIKE :pattern " +
             " OR description LIKE :pattern " +
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern ";
+    private static final String SELECT_ACTIVE_COUNT = "SELECT count(ID)\n" +
+            "  FROM PRODUCTS" +
+            " WHERE STATUS = 1 and (name LIKE :pattern " +
+            " OR description LIKE :pattern " +
+            " OR duration LIKE :pattern " +
+            " OR base_price LIKE :pattern) ";
     private final static String FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE = "SELECT\n" +
             "  product.ID,\n" +
             "  product.NAME\n" +
@@ -1035,6 +1051,27 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("place_id", placeId);
         return jdbcTemplate.queryForObject(query, params, Integer.class);
+    }
+
+    @Override
+    public Integer getCountActiveProductsWithSearch(String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_ACTIVE_COUNT, params, Integer.class);
+    }
+
+    @Override
+    public List<Product> getLimitedQuantityActiveProduct(int start, int length, String sort, String search) {
+        int rownum = start + length;
+        if (sort.isEmpty()) {
+            sort = "ID";
+        }
+        String sql = String.format(SELECT_LIMITED_ACTIVE_PRODUCTS, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("length", rownum);
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.query(sql, params, new ProductRowMapper());
     }
 
     @Override

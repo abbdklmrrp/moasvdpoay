@@ -39,6 +39,14 @@
                     </c:otherwise>
                 </c:choose>
                 <c:choose>
+                    <c:when test="${param.pageName == 'products'}">
+                        <li class="active"><a href="<%=request.getContextPath()%>/products">Products</a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li><a href="<%=request.getContextPath()%>/products">Products</a></li>
+                    </c:otherwise>
+                </c:choose>
+                <c:choose>
                     <c:when test="${param.pageName == 'login'}">
                         <li class="active"><a href="<%=request.getContextPath()%>/"login>Login</a></li>
                     </c:when>
