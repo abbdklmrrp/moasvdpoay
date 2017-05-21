@@ -154,6 +154,10 @@ public class UserDAOImpl implements UserDAO {
             " SET ENABLE=:status " +
             " WHERE ID=:userId";
 
+    private static final String UPDATE_PASSWORD="UPDATE USERS " +
+            " SET PASSWORD=:password " +
+            " WHERE ID=:userId";
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -444,6 +448,14 @@ public class UserDAOImpl implements UserDAO {
         params.addValue("userId", user.getId());
         params.addValue("status", status);
         return jdbcTemplate.update(UPDATE_ENABLE_OR_DISABLE, params) > 0;
+    }
 
+    @Override
+    public boolean updatePassword(User user) {
+        String password=encoder.encode(user.getPassword());
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("password",password);
+        params.addValue("userId",user.getId());
+        return jdbcTemplate.update(UPDATE_PASSWORD,params)>0;
     }
 }

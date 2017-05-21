@@ -3,6 +3,7 @@ package jtelecom.controller.csr;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.security.SecurityAuthenticationHelper;
+import jtelecom.services.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,8 @@ public class UserInfoController {
     private UserDAO userDAO;
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
+    @Resource
+    private UserService userService;
     private static Logger logger = LoggerFactory.getLogger(UserInfoController.class);
 
     @RequestMapping(value = "getDetails", method = RequestMethod.GET)
@@ -39,6 +42,19 @@ public class UserInfoController {
         model.addObject("user", user);
         logger.debug("Get to user page, id " + id);
         return model;
+    }
+
+    @RequestMapping(value="sendPassword",method = RequestMethod.POST)
+    public String sendPassword(@RequestParam(value="userId") int userId){
+     boolean success=userService.generateNewPassword(userId);
+     String message="";
+     if(success){
+         message="New password successfully sent";
+     }
+     else{
+         message="Sorry, an error occurred while sending new password!";
+     }
+     return message;
     }
 
 
