@@ -149,6 +149,10 @@ public class UserDAOImpl implements UserDAO {
             " SELECT USER_ID FROM ORDERS WHERE PRODUCT_ID=:productId OR PRODUCT_ID IN ( " +
             " SELECT TARIFF_ID FROM TARIFF_SERVICES WHERE SERVICE_ID=:productId))";
 
+    private static final String UPDATE_ENABLE_OR_DISABLE="UPDATE USERS " +
+            " SET ENABLE=:status " +
+            " WHERE ID=:userId";
+
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -182,7 +186,7 @@ public class UserDAOImpl implements UserDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", user.getName());
         params.addValue("surname", user.getSurname());
-        params.addValue("enable", user.getEnable());
+        params.addValue("enable", user.getStatus().getId());
         params.addValue("phone", user.getPhone());
         params.addValue("password", user.getPassword());
         params.addValue("address", user.getAddress());
@@ -430,5 +434,15 @@ public class UserDAOImpl implements UserDAO {
     public List<User> getUsersByProductId(int productId) {
        MapSqlParameterSource params=new MapSqlParameterSource("productId",productId);
        return jdbcTemplate.query(GET_USER_BY_PRODUCT_ID,params,new UserRowMapper());
+    }
+
+    @Override
+    public boolean enableDisableUser(User user) {
+        Integer status=user.getStatus().getId();
+        MapSqlParameterSource params=new MapSqlParameterSource();
+        params.addValue("userId",user.getId());
+        params.addValue("status",status);
+        return jdbcTemplate.update(UPDATE_ENABLE_OR_DISABLE,params)>0;
+
     }
 }

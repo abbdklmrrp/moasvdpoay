@@ -38,10 +38,11 @@
         renderers: {
             "action": function (pv, wv, grid) {
                 if (wv.role_id !== 'Admin') {
-                    if (wv.enable === 1)
+                    if (wv.status === 'ENABLE')
                         return $('<div id=' + wv.id + '><input type="button" class="btn btn-danger"  value="Ban" onclick="deactivateUser(' + wv.id + ')"></div>');
-                    else
+                    else if (wv.status === 'DISABLE') {
                         return $('<div id=' + wv.id + '><input type="button" class="btn btn-success"  value="Activate" onclick="activateUser(' + wv.id + ')"></div>');
+                    }
                 }
             }
         }

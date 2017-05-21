@@ -52,4 +52,6 @@ public interface UserDAO extends Dao<User> {
     List<User> getUsersByCustomerType(CustomerType customerType);
 
     List<User> getUsersByProductId(int productId);
+
+    boolean enableDisableUser(User user);
 }

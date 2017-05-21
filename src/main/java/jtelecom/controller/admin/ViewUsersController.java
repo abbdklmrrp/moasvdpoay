@@ -2,6 +2,7 @@ package jtelecom.controller.admin;
 
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
+import jtelecom.dao.user.UserStatus;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
@@ -72,8 +73,8 @@ public class ViewUsersController {
     public String activateUser(@RequestParam Integer userId) {
         User user = userDAO.getUserById(userId);
         String message;
-        user.setEnable(1);
-        boolean success = userService.updateUser(user);
+        user.setStatus(UserStatus.ENABLE);
+        boolean success = userDAO.enableDisableUser(user);
         if (!success) {
             logger.error("Error in activating user:" + userId);
             message = "Sorry, please try again";
@@ -89,8 +90,8 @@ public class ViewUsersController {
     public String deactivateUser(@RequestParam Integer userId) {
         User user = userDAO.getUserById(userId);
         String message;
-        user.setEnable(0);
-        boolean success = userService.updateUser(user);
+        user.setStatus(UserStatus.DISABLE);
+        boolean success = userDAO.enableDisableUser(user);
         if (!success) {
             logger.error("Error in deactivating user:" + userId);
             message = "Sorry, please try again";

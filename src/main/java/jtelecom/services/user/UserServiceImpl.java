@@ -60,8 +60,8 @@ public class UserServiceImpl implements UserService {
         if (!(editedUser.getPassword() == null) && !editedUser.getPassword().isEmpty()) {
             oldUser.setPassword(encoder.encode(editedUser.getPassword()));
         }
-        if (!(editedUser.getEnable() == null)) {
-            oldUser.setEnable(editedUser.getEnable());
+        if (!(editedUser.getStatus() == null)) {
+            oldUser.setStatus(editedUser.getStatus());
         }
 //        if (!user.getAddress().isEmpty() && !user.getAddress().equals(defaultUser.getAddress())) {
 //            defaultUser.setAddress(user.getAddress());
