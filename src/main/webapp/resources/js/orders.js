@@ -9,6 +9,7 @@ $(document).ready(function () {
         $("#planned-tasks-info").toggle();
     });
 
+
     $("#formWithDates").submit(function (e) {
         e.preventDefault();
         var formData = {}

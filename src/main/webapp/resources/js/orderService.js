@@ -3,6 +3,7 @@
  */
 $(document).ready(function () {
     $(".dropdown-toggle").dropdown();
+
 });
 function activateService(serviceId) {
     $.ajax({

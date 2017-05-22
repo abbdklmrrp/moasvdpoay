@@ -6,11 +6,6 @@
         <div class="col-md-10">
             <h1 style="text-align: center">Orders</h1>
             <br>
-            <%--<c:choose>--%>
-            <%--<c:when test="${empty ordersRows}">--%>
-            <%--<h3 style="text-align: center">There are no orders now!</h3>--%>
-            <%--</c:when>--%>
-            <%--<c:otherwise>--%>
             <div class="grid-progress-bar-placeholder">
                 <div class="progress grid-progress-bar" style="display: none;" id="progressId">
                     <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
@@ -150,44 +145,6 @@
                     </div>
                 </div>
             </div>
-            <%--<table border="1" class="table table-striped table-hover">--%>
-            <%--<tr>--%>
-            <%--<td>Name</td>--%>
-            <%--<td>Type</td>--%>
-            <%--<td>Date end</td>--%>
-            <%--<td>Status</td>--%>
-            <%--<td>Action</td>--%>
-            <%--</tr>--%>
-            <%--<c:forEach var="orderRow" items="${ordersRows}">--%>
-            <%--<tr>--%>
-            <%--<td>--%>
-            <%--<a href="<%=request.getContextPath()%>/${userRole}/orders/product?productId=${orderRow.productId}"--%>
-            <%--id="showDescriptionOfProduct">${orderRow.name}</a></td>--%>
-            <%--<td>${orderRow.productType.name}</td>--%>
-            <%--<td><fmt:formatDate value="${orderRow.endDate.time}" type='date'--%>
-            <%--pattern="dd-MM-yyyy"/></td>--%>
-            <%--<td>${orderRow.operationStatus.name}</td>--%>
-
-            <%--<td id="action${orderRow.orderId}">--%>
-            <%--<c:choose>--%>
-            <%--<c:when test="${orderRow.operationStatus.name == 'Active'}">--%>
-            <%--<input type="button" class="btn btn-warning"--%>
-            <%--onclick="toggleFormFunc(${orderRow.orderId})" value="Suspend"></td>--%>
-            <%--</c:when>--%>
-            <%--<c:when test="${orderRow.operationStatus.name == 'Suspended'}">--%>
-            <%--<input type="button" class="btn btn-success"--%>
-            <%--onclick="activateOrderAfterSuspend(${orderRow.orderId})" value="Activate">--%>
-            <%--</c:when>--%>
-            <%--<c:otherwise>--%>
-            <%-----%>
-            <%--</c:otherwise>--%>
-            <%--</c:choose>--%>
-            <%--</td>--%>
-            <%--</tr>--%>
-            <%--</c:forEach>--%>
-            <%--</table>--%>
-            <%--</c:otherwise>--%>
-            <%--</c:choose>--%>
         </div>
         <div class="col-md-1"></div>
     </div>
@@ -348,16 +305,16 @@
         renderers: {
             "action": function (pv, wv, grid) {
                 if (wv.operation_status == "Suspended") {
-                    return $('<div id=order' + wv.order_id + '><input type="button" class="btn btn-success"  style="margin:5px 0 0 5px" value="Activate&#160;" onclick="activateOrderAfterSuspend(' + wv.order_id + ')">' +
-                        '<input type="button" class="btn btn-warning" style="margin:5px 0 0 5px"  value="Suspend" onclick="toggleFormFunc(' + wv.order_id + ')">' +
-                        '<input type="button" class="btn btn-danger" style="margin:5px 0 0 5px" value="Deactivate" onclick="deactivateOrder(' + wv.order_id + ')"></div>');
+                    return $('<div id=order' + wv.order_id + '><input type="button" class="btn btn-success btn-block"  style="margin:5px 5px 5px 5px" value="Activate" onclick="activateOrderAfterSuspend(' + wv.order_id + ')">' +
+                        '<input type="button" class="btn btn-warning btn-block" style="margin:5px 5px 5px 5px"  value="Suspend" onclick="toggleFormFunc(' + wv.order_id + ')">' +
+                        '<input type="button" class="btn btn-danger btn-block" style="margin:5px 5px 5px 5px" value="Deactivate" onclick="deactivateOrder(' + wv.order_id + ')"></div>');
                 }
                 if (wv.operation_status == "In Processing") {
                     return $('-');
                 }
                 else {
-                    return $('<div id=order' + wv.order_id + '><input type="button" class="btn btn-warning" style="margin:5px 0 0 5px" value="Suspend" onclick="toggleFormFunc(' + wv.order_id + ')">' +
-                        '<input type="button" class="btn btn-danger" style="margin:5px 0 0 5px" value="Deactivate" onclick="deactivateOrder(' + wv.order_id + ')"></div>');
+                    return $('<div id=order' + wv.order_id + '><input type="button" class="btn btn-warning btn-block" style="margin:5px 5px 5px 5px" value="Suspend" onclick="toggleFormFunc(' + wv.order_id + ')">' +
+                        '<input type="button" class="btn btn-danger btn-block" style="margin:5px 5px 5px 5px" value="Deactivate" onclick="deactivateOrder(' + wv.order_id + ')"></div>');
                 }
             },
             "name": function (pv, wv, grid) {
@@ -383,4 +340,5 @@
             }
         }
     })
+
 </script>
