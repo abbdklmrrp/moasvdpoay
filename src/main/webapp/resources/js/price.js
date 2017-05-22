@@ -8,10 +8,12 @@
             $(this).wrap(wrapper);
             $(this).before("<span class='currency-symbol'>$</span>");
             $(this).change(function () {
-                var min = parseFloat($(this).attr("min"));
-                var max = parseFloat($(this).attr("max"));
+                var min = 0.00;
+                var max = 9999999.99;
                 var value = this.valueAsNumber;
                 if (value < min)
+                    value = min;
+                if (isNaN(value))
                     value = min;
                 else if (value > max)
                     value = max;
