@@ -65,12 +65,11 @@
                     </div>
                 </div>
                 <br>
-                <div class="row">
-                    <button type="submit" class="btn btn-primary col-sm-6 col-xs-6">Save</button>
-                </div>
+                    <button type="submit" class="btn btn-primary col-sm-5 col-xs-5">Save</button>
             </div>
         </form>
-        <button class="btn btn-success col-sm-6 col-xs-6" onclick="sendPassword(${user.id})">Send password</button>
+        <div class="col-sm-2 col-xs-2"></div>
+        <button class="btn btn-success col-sm-5 col-xs-5" onclick="sendPassword(${user.id})">Send password</button>
     </div>
     </div>
     <div class="col-md-2"></div>

@@ -42,18 +42,18 @@
                     </c:choose>
                     <c:choose>
                         <c:when test="${param.page == 'Orders'}">
-                            <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/userOrders">Orders</a></li>
+                            <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/userHistory">Operations</a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/userOrders">Orders</a></li>
+                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/userHistory">Operations</a></li>
                         </c:otherwise>
                     </c:choose>
                     <c:choose>
                         <c:when test="${param.page == 'UserWriteComplaint'}">
-                            <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/getCsrComplaint">Write complain</a></li>
+                            <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/getCsrComplaint">Write complaint</a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/getCsrComplaint">Write complain</a></li>
+                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/getCsrComplaint">Write complaint</a></li>
                         </c:otherwise>
                     </c:choose>
                 </ul>
