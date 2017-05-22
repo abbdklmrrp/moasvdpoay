@@ -1,8 +1,6 @@
 package jtelecom.controller.csr;
 
 import jtelecom.dao.order.OrderDao;
-import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
@@ -48,7 +46,7 @@ public class CsrMyOrdersController {
         String sort = requestDto.getSort();
         String search = requestDto.getSearch();
         Integer count = orderDao.getCountOfInprocessingOrdersByCsrId(csrId, search);
-        List<FullInfoOrderDTO> orders = orderDao.getIntervalInprocessingOrdersByCsrId(start, length, sort, search, csrId);
+        List<FullInfoOrderDTO> orders = orderDao.getIntervalProcessingOrdersByCsrId(start, length, sort, search, csrId);
         return ListHolder.create(orders, count);
     }
 
