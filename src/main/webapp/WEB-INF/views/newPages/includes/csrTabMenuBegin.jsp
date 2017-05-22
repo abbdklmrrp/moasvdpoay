@@ -58,7 +58,7 @@
                     </c:choose>
                 </ul>
             </div>
-        </aside>
+        <%--</aside>--%>
         <main class="col-lg-10 col-md-10 col-sm-10 col-xs-11">
         </main>
     </div>
