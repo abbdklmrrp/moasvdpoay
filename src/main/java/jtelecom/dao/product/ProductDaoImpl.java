@@ -331,22 +331,21 @@ public class ProductDaoImpl implements ProductDao {
             "WHERE rnum <= :length AND rnum > :start";
     private final static String SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL = "SELECT *\n" +
             "FROM (SELECT\n" +
-            "        o.id                order_id,\n" +
-            "        p.name,\n" +
-            "        p.id                product_id,\n" +
-            "        p.type_id           product_type,\n" +
-            "        op_status.name      operation_status,\n" +
-            "        pt.action_date      end_date,\n" +
-            "        ROW_NUMBER()\n" +
-            "        OVER(\n" +
-            "          ORDER BY p.name ) rnum\n" +
-            "      FROM ORDERS o\n" +
-            "        JOIN PRODUCTS p ON o.PRODUCT_ID = p.ID\n" +
-            "        JOIN USERS u ON u.id = o.USER_ID\n" +
-            "        JOIN OPERATION_STATUS op_status ON o.CURRENT_STATUS_ID = op_status.id\n" +
-            "        LEFT JOIN PLANNED_TASKS pt ON o.ID = pt.ORDER_ID\n" +
-            "      WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n" +
-            "            AND pt.STATUS_ID = 3 /*Deactivation*/)\n" +
+            "        id,\n" +
+            "        type_id,\n" +
+            "        category_id,\n" +
+            "        name,\n" +
+            "        duration,\n" +
+            "        need_processing,\n" +
+            "        description,\n" +
+            "        status,\n" +
+            "        CUSTOMER_TYPE_ID,\n" +
+            "        price AS base_price,\n" +
+            "        ROW_NUMBER() OVER (ORDER BY name) rnum\n" +
+            "      FROM products\n" +
+            "        INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID\n" +
+            "      WHERE TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/\n" +
+            "            AND place_id = :place_id)\n" +
             "WHERE rnum <= :length AND rnum > :start";
     private final static String SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL = "\n" +
             "SELECT" +

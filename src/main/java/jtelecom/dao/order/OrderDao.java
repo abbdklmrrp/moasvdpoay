@@ -93,8 +93,25 @@ public interface OrderDao extends Dao<Order> {
      */
     Integer saveAndGetGeneratedId(Order order);
 
-    List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer length, String search, String sort, Integer customerId);
+    /**
+     * This method returns list of limited OrdersRowsDTO object.
+     *
+     * @param start      index of begin of list
+     * @param end        index of end of list
+     * @param search     search pattern
+     * @param sort       column to sort on
+     * @param customerId id of customer
+     * @return list of OrdersRowDTO
+     */
+    List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer end, String search, String sort, Integer customerId);
 
+    /**
+     * Gets number of orders for user
+     * @param search search patter
+     * @param sort column to sort on
+     * @param customerId
+     * @return
+     */
     Integer getCountOrderRowsDTOByCustomerId(String search, String sort, Integer customerId);
 
 

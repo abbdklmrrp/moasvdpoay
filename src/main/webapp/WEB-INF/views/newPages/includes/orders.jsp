@@ -277,6 +277,7 @@
                                 Action Date
                             </th>
                             <th class="col-xs-2" data-grid-header="action">
+                                Action
                             </th>
                         </tr>
                         </thead>
@@ -375,6 +376,9 @@
             "action": function (pv, wv, grid) {
                 if (wv.status == "Suspended") {
                     return $('<div id=task' + wv.id + '><input type="button" class="btn btn-danger" value="Cancel Suspense" onclick="cancelPlannedTask(' + wv.id + ')"></div>');
+                }
+                else {
+                    return $('-');
                 }
             }
         }
