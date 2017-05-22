@@ -190,4 +190,25 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+    @Override
+    public void sendPasswordChangedEmail(User user) {
+        Map<String, Object> model = new MapBuilder(user)
+                .setUserName()
+                .setUserSurname()
+                .build();
+        send(user.getEmail(), model, EmailTemplatePath.PASSWORD_CHANGED);
+    }
+
+    @Override
+    public void sendProductWillSuspendEmail(User user, Product product, Calendar beginDate, Calendar endDate) {
+        Map<String, Object> model = new MapBuilder(user, product)
+                .setUserName()
+                .setUserSurname()
+                .setProductType()
+                .setProductName()
+                .setBeginDate(beginDate)
+                .setEndDate(endDate)
+                .build();
+        send(user.getEmail(), model, EmailTemplatePath.PRODUCT_WILL_SUSPEND);
+    }
 }

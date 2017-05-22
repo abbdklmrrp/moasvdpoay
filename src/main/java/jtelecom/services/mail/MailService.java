@@ -37,4 +37,8 @@ public interface MailService {
     void sendProductSuspendedEmail(User user, Product product, Calendar beginDate, Calendar endDate);
 
     void sendProductDeletedDispatch(List<User> users, Product product);
+
+    void sendPasswordChangedEmail(User user);
+
+    void sendProductWillSuspendEmail(User user, Product product, Calendar beginDate, Calendar endDate);
 }

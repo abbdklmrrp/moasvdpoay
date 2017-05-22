@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Resource
     private ServiceGoogleMaps serviceGoogleMaps;
     @Resource
-    Md5PasswordEncoder encoder;
+    private Md5PasswordEncoder encoder;
     @Resource
     private CustomerDAO customerDAO;
     @Resource
@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
     public boolean updateUser(User editedUser) {
         User oldUser = userDAO.getUserById(editedUser.getId());
         logger.warn("before changes" + oldUser.toString());
+        boolean isPasswordChanged = false;
         //if address was changed
         if (!oldUser.getAddress().equals(editedUser.getAddress())) {
             String formatAddress = serviceGoogleMaps.getFormattedAddress(editedUser.getAddress());
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService {
         }
         if (!(editedUser.getPassword() == null) && !editedUser.getPassword().isEmpty()) {
             oldUser.setPassword(encoder.encode(editedUser.getPassword()));
+            isPasswordChanged = true;
         }
         if (!(editedUser.getStatus() == null)) {
             oldUser.setStatus(editedUser.getStatus());
@@ -70,8 +72,14 @@ public class UserServiceImpl implements UserService {
 //                defaultUser.setPlaceId(user.getPlaceId());
 //            }
 //        }
-        logger.warn("after changes" + oldUser.toString());
-        return userDAO.update(oldUser);
+        boolean success = userDAO.update(oldUser);
+        if (success) {
+            if (isPasswordChanged) {
+                mailService.sendPasswordChangedEmail(oldUser);
+            }
+            logger.warn("after changes" + oldUser.toString());
+        }
+        return success;
     }
 
     private String save(User user) {
@@ -112,25 +120,25 @@ public class UserServiceImpl implements UserService {
         String password = passwordGenerator();
         user.setPassword(password);
         String message = saveResidential(user);
-        if(message.equals("User successfully saved")){
+        if (message.equals("User successfully saved")) {
             mailService.sendRegistrationWithoutPasswordEmail(user);
         }
         return message;
     }
 
     public String saveResidentialWithoutPasswordGenerating(User user) {
-        String message=saveResidential(user);
-        if(message.equals("User successfully saved")){
+        String message = saveResidential(user);
+        if (message.equals("User successfully saved")) {
             mailService.sendRegistrationEmail(user);
         }
         return message;
     }
 
-    public boolean generateNewPassword(int userId){
-        User user=userDAO.getUserById(userId);
-        String password=passwordGenerator();
+    public boolean generateNewPassword(int userId) {
+        User user = userDAO.getUserById(userId);
+        String password = passwordGenerator();
         user.setPassword(password);
-        boolean success=userDAO.updatePassword(user);
+        boolean success = userDAO.updatePassword(user);
         if (success) {
             mailService.sendNewPasswordEmail(user);
         }
@@ -147,7 +155,7 @@ public class UserServiceImpl implements UserService {
                 Customer customer = new Customer(user.getEmail(), user.getPassword());
                 customer.setCustomerType(CustomerType.Residential);
                 Integer customerId = customerDAO.saveCustomer(customer);
-                if (customerId!=null) {
+                if (customerId != null) {
                     user.setCustomerId(customerId);
                     boolean success = userDAO.save(user);
                     if (success) {

@@ -78,7 +78,7 @@ public class OrderService {
         }
         boolean success = plannedTaskDao.save(suspendPlanTask);
         if (success) {
-            mailService.sendProductSuspendedEmail(user, product, beginDate, endDate);
+            mailService.sendProductWillSuspendEmail(user, product, beginDate, endDate);
         }
         return success;
     }
