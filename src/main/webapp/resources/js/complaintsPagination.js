@@ -123,10 +123,6 @@ $.fn.pageMe = function (opts, dataURL) {
             month: 'long',
             day: 'numeric'
         };
-        var timeFormat = {
-            hour: 'numeric',
-            minute: 'numeric'
-        };
         var html = "";
         for (var i = 0; i < listLen; i++) {
             var date = new Date(list[i].creationDate);
@@ -141,7 +137,6 @@ $.fn.pageMe = function (opts, dataURL) {
                 html += "<tr onclick=forwardTo(" + list[i].id + ")>";
             }
             html += "<td>" + date.toLocaleString("en-US", dateFormat) + "</td>";
-            html += "<td>" + date.toLocaleString("en-US", timeFormat) + "</td>";
             html += "<td>" + list[i].description + "</td>";
             html += "</tr>";
         }
