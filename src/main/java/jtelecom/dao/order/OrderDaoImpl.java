@@ -231,10 +231,15 @@ public class OrderDaoImpl implements OrderDao {
             " WHERE orders.csr_id=:csrId) \n" +
             "  WHERE upper(product_name) LIKE upper(:pattern) OR " +
             "  upper(operation_date) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern)";
+    private final static String SELECT_BY_ID = "SELECT * FROM ORDERS WHERE id =  :id";
 
     @Override
     public Order getById(int id) {
-        return null;
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        return jdbcTemplate.queryForObject(SELECT_BY_ID, params, orderRowMapper);
+
     }
 
     @Override
