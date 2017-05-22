@@ -2,7 +2,6 @@ package jtelecom.dao.product;
 
 import jtelecom.dto.ServicesByCategoryDto;
 import jtelecom.dto.TariffServiceDto;
-import jtelecom.util.querybuilders.LimitedQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -325,9 +324,10 @@ public class ProductDaoImpl implements ProductDao {
     private final static String SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL = "SELECT *\n" +
             "FROM (SELECT\n" +
             "        products.*,\n" +
-            "        ROW_NUMBER() OVER(ORDER BY PRODUCTS.NAME) rnum\n" +
+            "        ROW_NUMBER() OVER(ORDER BY %s) rnum\n" +
             "      FROM products\n" +
-            "      WHERE TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/ AND customer_type_id = 1 /*Business*/)\n" +
+            "      WHERE TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/ AND customer_type_id = 1 /*Business*/ " +
+            " AND LOWER(name) LIKE LOWER(:pattern) || '%%' %s)\n" +
             "WHERE rnum <= :length AND rnum > :start";
     private final static String SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL = "SELECT *\n" +
             "FROM (SELECT\n" +
@@ -340,23 +340,26 @@ public class ProductDaoImpl implements ProductDao {
             "        description,\n" +
             "        status,\n" +
             "        CUSTOMER_TYPE_ID,\n" +
-            "        price AS base_price,\n" +
-            "        ROW_NUMBER() OVER (ORDER BY name) rnum\n" +
+            "        price AS base_price, \n" +
+            "        ROW_NUMBER() OVER (ORDER BY %s) rnum\n" +
             "      FROM products\n" +
             "        INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID\n" +
             "      WHERE TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/\n" +
-            "            AND place_id = :place_id)\n" +
+            "            AND place_id = :place_id AND LOWER(name) LIKE LOWER(:pattern" +
+            ") || '%%') %s\n" +
             "WHERE rnum <= :length AND rnum > :start";
     private final static String SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL = "\n" +
             "SELECT" +
             "  COUNT(*) " +
             "FROM products WHERE " +
-            "   TYPE_ID = 2 /*Service*/ AND STATUS = 1 /*Active*/ AND customer_type_id = 1";
+            "   TYPE_ID = 2 /*Service*/ AND STATUS = 1 /*Active*/ AND customer_type_id = 1 " +
+            "AND LOWER(name) LIKE LOWER(:pattern) || '%%' %s";
     private final static String SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL = "SELECT COUNT(*)\n" +
             "FROM products\n" +
             "  INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID\n" +
             "WHERE TYPE_ID = 2\n AND STATUS = 1 /*Active*/ " +
-            " AND place_id = :place_id";
+            " AND place_id = :place_id " +
+            " AND LOWER(name) LIKE LOWER(:pattern) || '%%' %s";
 
     private static final String FIND_SERVICES_BY_CATEGORY_ID = "SELECT\n" +
             "  ID,\n" +
@@ -367,6 +370,7 @@ public class ProductDaoImpl implements ProductDao {
     private static final String GET_PRODUCT_BY_ORDER_ID = "SELECT * " +
             " FROM PRODUCTS WHERE ID=( " +
             " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
+    final static String AND_CATEGORY_ID_SQL = "  AND category_id = :category_id ";
     private static Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
     @Autowired
     @Qualifier("dataSource")
@@ -1024,17 +1028,39 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId) {
-        String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, search, categoryId);
+        //  String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, search, categoryId);
+        String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start + 1);
+        if (sort.isEmpty()) {
+            sort = "name";
+        }
+        if (categoryId != null) {
+            query = String.format(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, AND_CATEGORY_ID_SQL);
+            params.addValue("category_id", categoryId);
+        } else {
+            query = String.format(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, "");
+        }
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("start", start);
         params.addValue("length", length + 1);
         return jdbcTemplate.query(query, params, productRowMapper);
     }
 
     @Override
     public List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId) {
-        String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, search, categoryId);
+        // String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, search, categoryId);
+        String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
+        if (sort.isEmpty()) {
+            sort = "name";
+        }
+        if (categoryId != null) {
+            query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, AND_CATEGORY_ID_SQL);
+            params.addValue("category_id", categoryId);
+        } else {
+            query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, "");
+        }
+        params.addValue("pattern", "%" + search + "%");
         params.addValue("start", start + 1);
         params.addValue("length", length + 1);
         params.addValue("place_id", placeId);
@@ -1043,17 +1069,31 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId) {
-        String query = LimitedQueryBuilder.getQuery(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, "", search, categoryId);
+        String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
+        if (categoryId != null) {
+            query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, AND_CATEGORY_ID_SQL);
+            params.addValue("category_id", categoryId);
+        } else {
+            query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, "");
+        }
+        params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.queryForObject(query, params, Integer.class);
 
     }
 
     @Override
     public Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId) {
-        String query = LimitedQueryBuilder.getQuery(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, "", search, categoryId);
+        String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
+        if (categoryId != null) {
+            query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, AND_CATEGORY_ID_SQL);
+            params.addValue("category_id", categoryId);
+        } else {
+            query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, "");
+        }
         params.addValue("place_id", placeId);
+        params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.queryForObject(query, params, Integer.class);
     }
 

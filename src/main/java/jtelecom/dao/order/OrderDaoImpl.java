@@ -5,7 +5,6 @@ import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.product.ProductType;
 import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.dto.OrdersRowDTO;
-import jtelecom.util.querybuilders.LimitedQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -107,32 +106,35 @@ public class OrderDaoImpl implements OrderDao {
             "(select customer_id from users where id=:userId)) and orders.CURRENT_STATUS_ID<>3)) \n" +
             " where R>:start and R<=:length and upper(product_name) like upper(:pattern) ";
 
-//    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
+    //    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
 //            " where R>:start and R<=:length and name like :pattern ";
-private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FROM (SELECT\n" +
-        "  o.id           order_id,\n" +
-        "  p.name,\n" +
-        "  p.id           product_id,\n" +
-        "  p.type_id      product_type,\n" +
-        "  op_status.name operation_status,\n" +
-        "  pt.action_date end_date,\n" +
-        "  ROW_NUMBER()\n" +
-        "        OVER(ORDER BY p.name ) rnum\n" +
-        "FROM ORDERS o\n" +
-        "  JOIN PRODUCTS p ON o.PRODUCT_ID = p.ID\n" +
-        "  JOIN USERS u ON u.id = o.USER_ID\n" +
-        "  JOIN OPERATION_STATUS op_status ON o.CURRENT_STATUS_ID = op_status.id\n" +
-        "  LEFT JOIN  PLANNED_TASKS pt ON o.ID = pt.ORDER_ID\n" +
-        "WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n" +
-        "       AND pt.STATUS_ID = 3 /*Deactivation*/)\n" +
-        "WHERE rnum < :length AND rnum >= :start";
+    private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FROM (SELECT\n" +
+            "  o.id           order_id,\n" +
+            "  p.name,\n" +
+            "  p.id           product_id,\n" +
+            "  p.type_id      product_type,\n" +
+            "  op_status.name operation_status,\n" +
+            "  pt.action_date end_date,\n" +
+            "  ROW_NUMBER()\n" +
+            "        OVER(ORDER BY %s) rnum\n" +
+            "FROM ORDERS o\n" +
+            "  JOIN PRODUCTS p ON o.PRODUCT_ID = p.ID\n" +
+            "  JOIN USERS u ON u.id = o.USER_ID\n" +
+            "  JOIN OPERATION_STATUS op_status ON o.CURRENT_STATUS_ID = op_status.id\n" +
+            "  LEFT JOIN  PLANNED_TASKS pt ON o.ID = pt.ORDER_ID\n" +
+            "WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n" +
+            "       AND pt.STATUS_ID = 3 /*Deactivation*/  AND LOWER(name) LIKE LOWER(:pattern) || '%%')\n" +
+            "WHERE rnum < :length AND rnum >= :start";
     private final String SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT COUNT(*) " +
             "FROM ORDERS o\n" +
             "  JOIN USERS u ON u.id = o.USER_ID\n" +
             "  LEFT JOIN  PLANNED_TASKS pt ON o.ID = pt.ORDER_ID\n" +
             "WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n" +
-            "       AND pt.STATUS_ID = 3 /*Deactivation*/";
-    private static final String SELECT_COUNT_ORDERS_BY_USER_ID="Select COUNT(ROWNUM) COUNT \n" +
+            "       AND pt.STATUS_ID = 3 /*Deactivation*/  AND LOWER(name) LIKE LOWER(:pattern" +
+            "" +
+            "" +
+            ") || '%%'";
+    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
             " from orders join products on (orders.PRODUCT_ID=products.id) join (SELECT \n" +
             "       OPERATION_DATE, \n" +
             "            ORDER_ID \n" +
@@ -249,6 +251,9 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
         return jdbcTemplate.update(INSERT_ORDER, paramsForOrder) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Integer saveAndGetGeneratedId(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource paramsForOrder = new MapSqlParameterSource();
@@ -258,6 +263,10 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
         jdbcTemplate.update(INSERT_ORDER, paramsForOrder, keyHolder, new String[]{"ID"});
         return new Integer(keyHolder.getKey().intValue());
     }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean delete(Order order) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -316,20 +325,29 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
      */
     @Override
     public List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer length, String search, String sort, Integer customerId) {
+        if (sort.isEmpty()) {
+            sort = "p.name";
+        }
+        String query = String.format(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
+        //   String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
         params.addValue("start", start + 1);
         params.addValue("length", length + 1);
         params.addValue("cust_id", customerId);
+        params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.query(query, params, new OrdersRowDTORowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Integer getCountOrderRowsDTOByCustomerId(String search, String sort, Integer customerId) {
+    public Integer getCountOrdersByCustomerId(String search, String sort, Integer customerId) {
+
         MapSqlParameterSource params = new MapSqlParameterSource();
-        String query = LimitedQueryBuilder.getQuery(SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
         params.addValue("cust_id", customerId);
-        return jdbcTemplate.queryForObject(query, params, Integer.class);
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL, params, Integer.class);
     }
 
     /**
@@ -511,6 +529,9 @@ private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FR
         return jdbcTemplate.queryForObject(SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean deactivateOrder(Integer orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();

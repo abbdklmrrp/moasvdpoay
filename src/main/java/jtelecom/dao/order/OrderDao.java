@@ -86,19 +86,22 @@ public interface OrderDao extends Dao<Order> {
 
     Integer getCountOfInprocessingOrdersByCsrId(int csrId, String search);
     /**
-     * Yuliya
-     *
-     * @param order
-     * @return
+     * This method saves Order object to database and returns
+     * generated primary key.
+     * @see Order
+     * @param order Order object
+     * @return generated primary key
      */
     Integer saveAndGetGeneratedId(Order order);
 
     /**
-     * This method returns list of limited OrdersRowsDTO object.
-     *
+     * This method returns list of limited OrdersRowsDTO object. If search
+     * is not empty returned objects are filtered by name determined in search pattern.
+     * If sort is not empty it sorts returned objects are sorted by column
+     * deteermined in sort, othrwise, they are sorted by name.
      * @param start      index of begin of list
      * @param end        index of end of list
-     * @param search     search pattern
+     * @param search     search pattern(name of order's product)
      * @param sort       column to sort on
      * @param customerId id of customer
      * @return list of OrdersRowDTO
@@ -106,13 +109,13 @@ public interface OrderDao extends Dao<Order> {
     List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer end, String search, String sort, Integer customerId);
 
     /**
-     * Gets number of orders for user
+     * Gets number of orders of customer.
      * @param search search patter
      * @param sort column to sort on
-     * @param customerId
-     * @return
+     * @param customerId id of customer
+     * @return number of orders
      */
-    Integer getCountOrderRowsDTOByCustomerId(String search, String sort, Integer customerId);
+    Integer getCountOrdersByCustomerId(String search, String sort, Integer customerId);
 
 
     List<FullInfoOrderDTO> getIntervalInprocessingOrdersByCsrId(int start, int length, String sort, String search, int csrId);
