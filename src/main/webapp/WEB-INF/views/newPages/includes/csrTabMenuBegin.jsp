@@ -23,25 +23,25 @@
                     <c:choose>
                         <c:when test="${param.page == 'UserServices'}">
                             <li class="wet-asphalt active-tab"><a
-                                    href="${pageContext.request.contextPath}/csr/orderService">User Services</a></li>
+                                    href="${pageContext.request.contextPath}/csr/orderService">User services</a></li>
                         </c:when>
                         <c:otherwise>
                             <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/orderService">User
-                                Services</a></li>
+                                services</a></li>
                         </c:otherwise>
                     </c:choose>
                     <c:choose>
                         <c:when test="${param.page == 'UserOrders'}">
                             <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/orders">Current
-                                Orders</a></li>
+                                orders</a></li>
                         </c:when>
                         <c:otherwise>
                             <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/orders">Current
-                                Orders</a></li>
+                                orders</a></li>
                         </c:otherwise>
                     </c:choose>
                     <c:choose>
-                        <c:when test="${param.page == 'Orders'}">
+                        <c:when test="${param.page == 'Operations'}">
                             <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/userHistory">Operations</a></li>
                         </c:when>
                         <c:otherwise>

@@ -22,9 +22,12 @@
 <jsp:include page="../includes/headers/csrHeader.jsp">
     <jsp:param name="pageName" value="Operation history"/>
 </jsp:include>
-<jsp:include page="../includes/csrTabMenuBegin.jsp">
-    <jsp:param name="page" value="Operations"/>
-</jsp:include>
+<div class="col-md-2">
+    <jsp:include page="../includes/csrTabMenuBegin.jsp">
+        <jsp:param name="page" value="Operations"/>
+    </jsp:include>
+</div>
+<div class="col-md-10">
 <div class="container" id="table">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
@@ -149,6 +152,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <jsp:include page="../includes/csrTabMenuEnd.jsp"/>
 <jsp:include page="../includes/footer.jsp"/>

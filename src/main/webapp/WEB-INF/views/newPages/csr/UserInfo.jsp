@@ -17,12 +17,12 @@
     <jsp:include page="../includes/headers/csrHeader.jsp">
         <jsp:param name="pageName" value="Users"/>
     </jsp:include>
-    <div class="col-md-2"></div>
     <div class="col-md-2">
         <jsp:include page="../includes/csrTabMenuBegin.jsp">
             <jsp:param name="page" value="UserInfo"/>
         </jsp:include>
     </div>
+    <div class="col-md-2"></div>
     <div class="col-md-4">
         <form id="details-form" modelAttribute="user" action="${pageContext.request.contextPath}/csr/editUser" method="post">
             <div class="login-form">
