@@ -1,12 +1,15 @@
 package jtelecom.controller.csr;
 
 import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.product.Product;
+import jtelecom.dao.product.ProductDao;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
+import jtelecom.services.OrderService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,6 +30,8 @@ public class CsrMyOrdersController {
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
     private UserDAO userDAO;
+    @Resource
+    private OrderService orderService;
 
     @RequestMapping(value = "getMyOrdersPage", method = RequestMethod.GET)
     public ModelAndView getMyOrdersPage() {
@@ -57,8 +62,7 @@ public class CsrMyOrdersController {
 
     @RequestMapping(value = "activateOrder", method = RequestMethod.POST)
     public String activateOrder(@RequestParam(value = "orderId") int orderId) {
-        System.out.println("hey");
-        boolean success = orderDao.activateOrder(orderId);
+        boolean success = orderService.activateOrderFromCsr(orderId);
         return success ? "success" : "fail";
     }
 

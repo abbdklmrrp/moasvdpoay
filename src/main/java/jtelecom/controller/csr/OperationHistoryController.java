@@ -1,7 +1,6 @@
 package jtelecom.controller.csr;
 
 import jtelecom.dao.operationHistory.OperationHistoryDao;
-import jtelecom.dao.operationHistory.OperationHistoryRecord;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
@@ -36,9 +35,9 @@ public class OperationHistoryController {
     private UserDAO userDAO;
     private static Logger logger = LoggerFactory.getLogger(OperationHistoryController.class);
 
-    @RequestMapping(value = "userOrders", method = RequestMethod.GET)
+    @RequestMapping(value = "userHistory", method = RequestMethod.GET)
     public ModelAndView viewOrders() throws IOException {
-        return new ModelAndView("newPages/csr/UserOrders");
+        return new ModelAndView("newPages/csr/UserHistory");
     }
 
     @RequestMapping(value = "getOperationHistory", method = RequestMethod.GET)
@@ -63,11 +62,9 @@ public class OperationHistoryController {
         String search=request.getSearch();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
-        System.out.println(request.toString());
         logger.debug("Get operation history in interval:" + start + " : " + length);
         List<FullInfoOrderDTO> data = operationHistoryDao.getOperationHistoryByUserId(userId, start, length, sort,search);
         int size = operationHistoryDao.getCountOperationForUser(userId,search);
-        System.out.println(size+" "+data.size());
         return ListHolder.create(data, size);
     }
 

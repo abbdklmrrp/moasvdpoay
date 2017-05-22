@@ -17,6 +17,11 @@
 <jsp:include page="../includes/headers/csrHeader.jsp">
     <jsp:param name="pageName" value="UserServices"/>
 </jsp:include>
+<div class="col-md-2">
+    <jsp:include page="../includes/csrTabMenuBegin.jsp">
+        <jsp:param name="page" value="UserServices"/>
+    </jsp:include>
+</div>
 <jsp:include page="../includes/services.jsp"/>
 <jsp:include page="../includes/footer.jsp"/>
 </body>

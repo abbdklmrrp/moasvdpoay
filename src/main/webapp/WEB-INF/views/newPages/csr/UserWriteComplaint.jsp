@@ -19,11 +19,16 @@
 <jsp:include page="../includes/headers/csrHeader.jsp">
     <jsp:param name="pageName" value="Users"/>
 </jsp:include>
-<jsp:include page="../includes/csrTabMenuBegin.jsp">
-    <jsp:param name="page" value="UserWriteComplaint"/>
-</jsp:include>
+<div class="col-md-2">
+    <jsp:include page="../includes/csrTabMenuBegin.jsp">
+        <jsp:param name="page" value="UserWriteComplaint"/>
+    </jsp:include>
+</div>
+<div class="col-md-8">
 <jsp:include page="../includes/writeToSupport.jsp"/>
-<jsp:include page="../includes/csrTabMenuEnd.jsp"/>
+</div>
+<div class="col-md-2"></div>
+<%--<jsp:include page="../includes/csrTabMenuEnd.jsp"/>--%>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>

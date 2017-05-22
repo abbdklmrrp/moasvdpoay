@@ -196,4 +196,14 @@ public class OrderService {
         }
         return success;
     }
+
+    public boolean activateOrderFromCsr(int orderId){
+        boolean success=orderDao.activateOrder(orderId);
+        if(success){
+            User user=userDAO.getUserByOrderId(orderId);
+            Product product=productDao.getProductByOrderId(orderId);
+            mailService.sendProductActivatedEmail(user,product);
+        }
+        return success;
+    }
 }
