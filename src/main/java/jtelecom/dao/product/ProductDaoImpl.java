@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -205,6 +206,14 @@ public class ProductDaoImpl implements ProductDao {
             "AND (current_status_id = 1/* Active */ " +
             "     OR current_status_id = 2/* Suspended */ " +
             "     OR current_status_id = 4/* In processing */)";
+    private final static String DELETE_PLANNED_TASKS_FOR_TARIFF_SQL ="DELETE FROM planned_tasks" +
+            " WHERE order_id = (SELECT" +
+            "                    id FROM Orders WHERE" +
+            "                    user_id = :userId" +
+            "                    AND product_id = :tariffId" +
+            "                    AND (current_status_id = 1/* Active */ " +
+            "                         OR current_status_id = 2/* Suspended */ " +
+            "                         OR current_status_id = 4/* In processing */)))";
     private final static String SELECT_TARIFFS_FOR_CUSTOMERS_SQL = "SELECT " +
             "id, " +
             "category_id, " +
@@ -697,11 +706,25 @@ public class ProductDaoImpl implements ProductDao {
      * {@inheritDoc}
      */
     @Override
-    public Boolean deactivateTariff(Integer userId, Integer tariffId) {
+    @Transactional
+    public boolean deactivateTariff(Integer userId, Integer tariffId) {
+        deletePlannedTasks(userId, tariffId);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
         params.addValue("tariffId", tariffId);
         return (jdbcTemplate.update(DEACTIVATE_TARIFF_OF_USER_SQL, params) != 0);
+    }
+
+    /**
+     * Bulgakov Anton
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean deletePlannedTasks (Integer userId, Integer tariffId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", userId);
+        params.addValue("tariffId", tariffId);
+        return (jdbcTemplate.update(DELETE_PLANNED_TASKS_FOR_TARIFF_SQL, params) != 0);
     }
 
     /**
