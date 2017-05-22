@@ -279,6 +279,8 @@ public class ProductDaoImpl implements ProductDao {
             "       from ( Select * from PRODUCTS " +
             " Where upper(name) like upper(:pattern) " +
             " OR upper(description) like upper(:pattern) " +
+            " OR type_id like :pattern " +
+            " OR customer_type_id like :pattern " +
             " OR duration like :pattern " +
             " OR base_price like :pattern " +
             " ORDER BY %s) a\n" +

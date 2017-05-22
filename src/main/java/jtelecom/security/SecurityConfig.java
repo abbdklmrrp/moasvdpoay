@@ -48,7 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry =
                 http.authorizeRequests();
         registry.antMatchers("/*").permitAll();
-        registry.antMatchers("/*/**").permitAll();
 
         Properties secured = readSecurityUrls();
         for (Map.Entry<Object, Object> e : secured.entrySet()) {
@@ -65,8 +64,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login.htm")
                 .failureUrl("/failure.htm")
                 .defaultSuccessUrl("/index.htm")
-                .loginProcessingUrl("/doLogin")//login form
-                .permitAll();
+                .loginProcessingUrl("/doLogin")//login for
+                .permitAll()
+                .and()
+                .exceptionHandling().accessDeniedPage("/accessDenied");
     }
 
     private Properties readSecurityUrls() {
