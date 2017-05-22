@@ -251,10 +251,10 @@
                     return $(wv.status)
                 }
                 if (!wv.status) {
-                    return $('<div id="service' + wv.id + '"><input type="button" class="btn btn-success"  value="Activate" onclick="activateService(' + wv.productId + ')"></div>');
+                    return $('<div id="service' + wv.id + '"><input type="button" class="btn btn-success btn-block"  value="Activate" onclick="activateService(' + wv.productId + ')"></div>');
                 }
                 else {
-                    return $('<div id="service' + wv.id + '"><input type="button" class="btn btn-danger"  value="Deactivate" onclick="deactivateService(' + wv.productId + ')"></div>');
+                    return $('<div id="service' + wv.id + '"><input type="button" class="btn btn-danger btn-block"  value="Deactivate" onclick="deactivateService(' + wv.productId + ')"></div>');
                 }
             },
             "name": function (pv, wv, grid) {

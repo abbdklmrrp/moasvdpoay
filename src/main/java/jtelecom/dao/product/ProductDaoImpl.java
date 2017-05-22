@@ -355,7 +355,7 @@ public class ProductDaoImpl implements ProductDao {
             "        INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID\n" +
             "      WHERE TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/\n" +
             "            AND place_id = :place_id AND LOWER(name) LIKE LOWER(:pattern" +
-            ") || '%%') %s\n" +
+            ") || '%%'  %s) \n" +
             "WHERE rnum <= :length AND rnum > :start";
     private final static String SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL = "\n" +
             "SELECT" +
@@ -1051,7 +1051,6 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId) {
-        //  String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, search, categoryId);
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {

@@ -294,10 +294,11 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     public Product getProductForUser(User currentUser, Integer productId) {
-        if (currentUser.getRole() == Role.BUSINESS) {
-            return productDao.getById(productId);
+        if (currentUser.getRole() == Role.RESIDENTIAL) {
+            return productDao.findProductWithPriceSetByPlace(productId, currentUser.getPlaceId());
         }
-        return productDao.findProductWithPriceSetByPlace(productId, currentUser.getPlaceId());
+        return productDao.getById(productId);
+
     }
 
     /**
