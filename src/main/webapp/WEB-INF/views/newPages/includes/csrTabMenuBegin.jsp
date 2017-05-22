@@ -6,10 +6,10 @@
                 <ul class="nav navbar-nav navbar-dikey">
                     <c:choose>
                         <c:when test="${param.page == 'UserInfo'}">
-                            <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/getDetails">User profile</a></li>
+                            <li class="wet-asphalt active-tab"><a href="${pageContext.request.contextPath}/csr/getUserProfile">User profile</a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/getDetails">User profile</a></li>
+                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/getUserProfile">User profile</a></li>
                         </c:otherwise>
                     </c:choose>
                     <c:choose>

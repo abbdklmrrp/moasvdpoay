@@ -1,5 +1,6 @@
 package jtelecom.controller.csr;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.security.SecurityAuthenticationHelper;
@@ -55,6 +56,18 @@ public class UserInfoController {
          message="Sorry, an error occurred while sending new password!";
      }
      return message;
+    }
+
+    @RequestMapping(value="getUserProfile", method = RequestMethod.GET)
+    public ModelAndView getProfile(HttpSession session){
+        Integer userId=(Integer)session.getAttribute("userId");
+        User user = userDAO.getUserById(userId);
+        ModelAndView model = new ModelAndView();
+        model.setViewName("newPages/csr/UserInfo");
+        model.addObject("user", user);
+        logger.debug("Get to user page, id " + userId);
+        return model;
+
     }
 
 
