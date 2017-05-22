@@ -6,37 +6,37 @@
             <h1 style="text-align: center">Personal information</h1>
             <br>
             <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">Name</label>
-                <div class="col-sm-10">
+                <label class="col-sm-2 col-xs-3 control-label">Name</label>
+                <div class="col-sm-10 col-xs-9">
                     <input readonly style="border-bottom-width: 0;" type="text" class="form-control" name="name"
                            id="name" pattern="^[a-zA-Z]+$" title="-   Must be only characters A-z" value=${user.name} maxlength="16" required><br>
                 </div>
             </div>
             <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">Surname</label><br>
-                <div class="col-sm-10">
+                <label class="col-sm-2 col-xs-3 control-label">Surname</label><br>
+                <div class="col-sm-10 col-xs-9">
                     <input readonly type="text" class="form-control" name="surname" pattern="^[a-zA-Z-]+$" title="-   Must be only characters A-z" id="surname"
                            value=${user.surname} required
                            maxlength="16"><br>
                 </div>
             </div>
             <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">Email</label><br>
-                <div class="col-sm-10">
+                <label class="col-sm-2 col-xs-3 control-label">Email</label><br>
+                <div class="col-sm-10 col-xs-9">
                     <input readonly type="email" class="form-control" name="email" id="email"
                            value=${user.email} required><br>
                 </div>
             </div>
             <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">Phone</label><br>
-                <div class="col-sm-10">
+                <label class="col-sm-2 col-xs-3 control-label">Phone</label><br>
+                <div class="col-sm-10 col-xs-9">
                     <input readonly type="text" class="form-control" name="phone" id="phone" value=${user.phone} required
                            maxlength="12"><br>
                 </div>
             </div>
             <div class="form-group form-group-lg">
-                <label class="col-sm-2 control-label">Address</label><br>
-                <div class="col-sm-10">
+                <label class="col-sm-2 col-xs-3 control-label">Address</label><br>
+                <div class="col-sm-10 col-xs-9">
                     <input readonly type="text" class="form-control" name="address" id="address" value="${user.address}"
                            required><br>
                 </div>
