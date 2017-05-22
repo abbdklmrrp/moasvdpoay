@@ -1,6 +1,7 @@
 package jtelecom.services.product;
 
 
+import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
 import jtelecom.dao.order.OrderDao;
@@ -20,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -76,7 +76,17 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     public boolean isEmptyFieldOfProduct(Product product) {
-        return (product.getName().isEmpty() || product.getDescription().isEmpty() || (product.getBasePrice().compareTo(BigDecimal.ZERO) <= 0));
+        return (product.getName().isEmpty() || product.getDescription().isEmpty());
+    }
+
+    @Override
+    /**
+     *
+     */
+    public void validateBasePriceByCustomerType(Product product) {
+        if (product.getCustomerType() == CustomerType.Residential) {
+            product.setBasePrice(null);
+        }
     }
 
     /**

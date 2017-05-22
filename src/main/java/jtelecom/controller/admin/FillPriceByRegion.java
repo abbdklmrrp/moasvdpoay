@@ -9,13 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -38,22 +38,24 @@ public class FillPriceByRegion {
     private PriceDao priceDao;
 
     @RequestMapping(value = {"fillTariffsPrices"}, method = RequestMethod.GET)
-    public ModelAndView getRegionForFill(ModelAndView mav) {
+    public ModelAndView getRegionForFill(@RequestParam(value = "id") Integer id,
+                                         ModelAndView mav) {
 
         List<Place> placesForFillInTariff = placeDAO.getAllPlaces();
         logger.debug("Get products that do not have a price by region {} ", placesForFillInTariff.toString());
 
+        mav.addObject("id", id);
         mav.addObject("placesForFillInTariff", placesForFillInTariff);
         mav.setViewName("newPages/admin/fillTariffsPrices");
         return mav;
     }
 
-    @RequestMapping(value = {"fillTariffsPrices"}, method = RequestMethod.POST)
-    public ModelAndView fillPriceByRegion(ModelAndView mav, HttpSession session,
+    @RequestMapping(value = {"fillTariffsPrices/{id}"}, method = RequestMethod.POST)
+    public ModelAndView fillPriceByRegion(@PathVariable(value = "id") Integer productId,
+                                          ModelAndView mav,
                                           @RequestParam(value = "placeId") Integer[] placeId,
                                           @RequestParam(value = "priceByRegion") BigDecimal[] priceByRegion
     ) {
-        Integer productId = (Integer) session.getAttribute("productId");
         boolean isValid = priceService.isValid(productId, placeId, priceByRegion);
         if (!isValid) {
             logger.error("Incoming data of place ID and is not correct {} {}",
@@ -81,7 +83,6 @@ public class FillPriceByRegion {
             mav.setViewName("newPages/admin/fillTariffsPrices");
             return mav;
         }
-        session.removeAttribute("productId");
         mav.setViewName("redirect:/admin/getProducts");
         return mav;
 
