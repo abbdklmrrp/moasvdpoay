@@ -331,7 +331,7 @@ public class OrderDaoImpl implements OrderDao {
         String query = String.format(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
         //   String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
-        params.addValue("start", start + 1);
+        params.addValue("start", start);
         params.addValue("length", length + 1);
         params.addValue("cust_id", customerId);
         params.addValue("pattern", "%" + search + "%");

@@ -8,19 +8,17 @@ import java.math.BigDecimal;
  * Created by Yuliya Pedash on 29.04.2017.
  */
 public class ProductCatalogRowDTO {
-    @JsonProperty("productId")
-    private Integer productId;
-    @JsonProperty("name")
+    private Integer id;
     private String name;
-    @JsonProperty("category")
+    @JsonProperty("category_id")
     private String category;
-    @JsonProperty("price")
+    @JsonProperty("base_price")
     private BigDecimal price;
     @JsonProperty("status")
     private String status;
 
-    public ProductCatalogRowDTO(Integer productId, String name, String category, BigDecimal price, String status) {
-        this.productId = productId;
+    public ProductCatalogRowDTO(Integer id, String name, String category, BigDecimal price, String status) {
+        this.id = id;
         this.name = name;
         this.category = category;
         this.price = price;
@@ -28,11 +26,11 @@ public class ProductCatalogRowDTO {
     }
 
     public Integer getProductId() {
-        return productId;
+        return id;
     }
 
     public void setProductId(Integer productId) {
-        this.productId = productId;
+        this.id = productId;
     }
 
     public String getName() {
@@ -70,7 +68,7 @@ public class ProductCatalogRowDTO {
     @Override
     public String toString() {
         return "ProductCatalogRowDTO{" +
-                "productId=" + productId +
+                "productId=" + id +
                 ", name='" + name + '\'' +
                 ", category='" + category + '\'' +
                 ", price=" + price +

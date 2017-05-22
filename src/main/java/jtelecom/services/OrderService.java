@@ -110,16 +110,24 @@ public class OrderService {
         if (success) {
             User user = userDAO.getUserById(userId);
             Product product = productDao.getById(productId);
-            logger.info("Current user {}, product {} ", user, product);
+            logger.info("User we deactivate product for {}, product {} ", user, product);
             mailService.sendProductDeactivated(user, product);
 
         }
         return success;
     }
 
+    @Transactional
     public boolean deactivateOrderCompletely(Integer orderId) {
+        Order order = orderDao.getById(orderId);
         plannedTaskDao.deleteAllPlannedTasksForOrder(orderId);
         boolean wasDeactivated = orderDao.deactivateOrder(orderId);
+        if (wasDeactivated) {
+            User user = userDAO.getUserById(order.getUserId());
+            Product product = productDao.getById(order.getProductId());
+            logger.info("User we deactivate product for {}, product {} ", user, product);
+            mailService.sendProductDeactivated(user, product);
+        }
         return wasDeactivated;
     }
 

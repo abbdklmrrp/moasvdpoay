@@ -1061,7 +1061,7 @@ public class ProductDaoImpl implements ProductDao {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, "");
         }
         params.addValue("pattern", "%" + search + "%");
-        params.addValue("start", start + 1);
+        params.addValue("start", start);
         params.addValue("length", length + 1);
         params.addValue("place_id", placeId);
         return jdbcTemplate.query(query, params, productRowMapper);
