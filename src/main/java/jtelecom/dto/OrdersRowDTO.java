@@ -11,9 +11,9 @@ public class OrdersRowDTO {
     private Integer orderId;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("end_date")
+    @JsonProperty("action_date")
     private String endDate;
-    @JsonProperty("product_type")
+    @JsonProperty("type_id")
     private ProductType productType;
     @JsonProperty("product_id")
     private Integer productId;

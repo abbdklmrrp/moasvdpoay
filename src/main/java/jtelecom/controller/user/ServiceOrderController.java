@@ -35,7 +35,6 @@ import java.util.List;
 @Controller
 @RequestMapping({"residential", "business", "csr", "employee"})
 public class ServiceOrderController {
-    private static final Long RECORDS_PER_PAGE = 10l;
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
@@ -57,7 +56,7 @@ public class ServiceOrderController {
     private final static String ORDER_IN_PROCESS_MSG = "Your order on %s is in process. It will be activated after processing.";
     private final static String SERVICE_WAS_ACTIVATED_MSG = "Service %s has been activated. Thank you!";
     private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing this order. Please, try again!";
-    private final static String ALL_CATEGORIES = "ALl Cateogories";
+    private final static String ALL_CATEGORIES = "All Categories";
     @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
     public String getUsers(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());

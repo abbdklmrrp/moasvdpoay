@@ -83,7 +83,7 @@ public ListHolder showServices(@ModelAttribute GridRequestDto request) {
     int length = request.getEndBorder();
     String search = request.getSearch();
     List<OrdersRowDTO> products = orderDao.getLimitedOrderRowsDTOByCustomerId(start, length, search, sort, user.getCustomerId());
-    int size = orderDao.getCountOrderRowsDTOByCustomerId(search, sort, user.getCustomerId());
+    int size = orderDao.getCountOrdersByCustomerId(search, sort, user.getCustomerId());
     logger.debug("Get orders in interval:" + start + " : " + length);
     return ListHolder.create(products, size);
 }

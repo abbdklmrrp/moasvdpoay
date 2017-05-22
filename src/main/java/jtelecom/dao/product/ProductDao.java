@@ -224,6 +224,12 @@ public interface ProductDao extends Dao<Product> {
 
     String getCustomerTypeByProductId(Integer productId);
 
+    /**
+     * Get Product object by id of order
+     *
+     * @param orderId id of order
+     * @return Product object
+     */
     Product getProductByOrderId(int orderId);
 
 }

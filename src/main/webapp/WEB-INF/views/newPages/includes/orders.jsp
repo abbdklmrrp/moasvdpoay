@@ -72,7 +72,7 @@
                     <table class="table table-striped table-bordered table-hover" data-grid="grid">
                         <thead>
                         <tr>
-                            <th class="col-xs-2" data-grid-header="product_name"
+                            <th class="col-xs-2" data-grid-header="name"
                                 data-grid-header-sortable="true">
                                 <div class="pull-right order-by">
                                     <a class="glyphicon glyphicon-chevron-up" href="javascript:"
@@ -82,10 +82,17 @@
                                 </div>
                                 Name
                             </th>
-                            <th class="col-xs-2" data-grid-header="end_date">
+                            <th class="col-xs-2" data-grid-header="action_date"
+                                data-grid-header-sortable="true">
+                                <div class="pull-right order-by">
+                                    <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                                       data-grid-header-sortable-up="up"></a>
+                                    <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                                       data-grid-header-sortable-down="down"></a>
+                                </div>
                                 End Date
                             </th>
-                            <th class="col-xs-2" data-grid-header="product_type"
+                            <th class="col-xs-2" data-grid-header="type_id"
                                 data-grid-header-sortable="true">
                                 <div class="pull-right order-by">
                                     <a class="glyphicon glyphicon-chevron-up" href="javascript:"
@@ -95,14 +102,7 @@
                                 </div>
                                 Type
                             </th>
-                            <th class="col-xs-2" data-grid-header="operation_status"
-                                data-grid-header-sortable="true">
-                                <div class="pull-right order-by">
-                                    <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                                       data-grid-header-sortable-up="up"></a>
-                                    <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                                       data-grid-header-sortable-down="down"></a>
-                                </div>
+                            <th class="col-xs-2" data-grid-header="operation_status">
                                 Operation Status
                             </th>
                             <th class="col-xs-2" data-grid-header="action">
@@ -113,9 +113,9 @@
                         <div data-grid="message"></div>
                         <tbody>
                         <tr data-grid="row">
-                            <td data-cell="product_name"></td>
-                            <td data-cell="end_date"></td>
-                            <td data-cell="product_type"></td>
+                            <td data-cell="name"></td>
+                            <td data-cell="action_date"></td>
+                            <td data-cell="type_id"></td>
                             <td data-cell="operation_status"></td>
                             <td data-cell="action"></td>
                         </tr>
@@ -277,6 +277,7 @@
                                 Action Date
                             </th>
                             <th class="col-xs-2" data-grid-header="action">
+                                Action
                             </th>
                         </tr>
                         </thead>
@@ -359,7 +360,7 @@
                         '<input type="button" class="btn btn-danger" style="margin:5px 0 0 5px" value="Deactivate" onclick="deactivateOrder(' + wv.order_id + ')"></div>');
                 }
             },
-            "product_name": function (pv, wv, grid) {
+            "name": function (pv, wv, grid) {
                 return $('<a href=<%=request.getContextPath()%>/${userRole}/product?productId=' + wv.product_id + '>' + wv.name + '</a>')
             }
         }
@@ -375,6 +376,9 @@
             "action": function (pv, wv, grid) {
                 if (wv.status == "Suspended") {
                     return $('<div id=task' + wv.id + '><input type="button" class="btn btn-danger" value="Cancel Suspense" onclick="cancelPlannedTask(' + wv.id + ')"></div>');
+                }
+                else {
+                    return $('-');
                 }
             }
         }
