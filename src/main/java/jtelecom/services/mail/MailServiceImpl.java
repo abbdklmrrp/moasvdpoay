@@ -16,7 +16,6 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.mail.SendFailedException;
 
 /**
  * @author Moiseienko Petro
@@ -33,16 +32,29 @@ public class MailServiceImpl implements MailService {
     public MailServiceImpl() {
     }
 
+    private class MailThread extends Thread {
+        private SimpleMailMessage message;
+
+        private MailThread(SimpleMailMessage message) {
+            this.message = message;
+        }
+
+        public void run() {
+            try {
+                mailSender.send(message);
+            } catch (MailException e) {
+                logger.error("Wrong email address {}", e.getMessage());
+            }
+        }
+
+    }
 
     private void send(String to, Map<String, Object> model, EmailTemplatePath path) {
         SimpleMailMessage message = email.createEmail(to, model, path);
-        try {
-            mailSender.send(message);
-        } catch (MailException e) {
-            logger.error("Wrong email address {}", e);
-        }
+        new MailServiceImpl.MailThread(message).start();
     }
 
+    @Override
     public void sendRegistrationEmail(User user) {
         Map<String, Object> model = new MapBuilder(user)
                 .setUserName()
@@ -51,6 +63,7 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.REGISTRATION);
     }
 
+    @Override
     public void sendRegistrationWithoutPasswordEmail(User user) {
         Map<String, Object> model = new MapBuilder(user)
                 .setUserName()
@@ -60,6 +73,7 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.REGISTRATION_WITHOUT_PASSWORD);
     }
 
+    @Override
     public void sendComplaintSentEmail(User user, int complaintId) {
         Map<String, Object> model = new MapBuilder(user)
                 .setUserName()
@@ -69,6 +83,7 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.COMPLAINT_SENT);
     }
 
+    @Override
     public void sendComplaintProcessingEmail(User user, int complaintId) {
         Map<String, Object> model = new MapBuilder(user)
                 .setUserName()
@@ -78,6 +93,7 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.COMPLAINT_PROCESSING);
     }
 
+    @Override
     public void sendComplaintProcessedEmail(User user, int complaintId) {
         Map<String, Object> model = new MapBuilder(user)
                 .setUserName()
@@ -87,6 +103,7 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.COMPLAINT_PROCESSED);
     }
 
+    @Override
     public void sendNewPasswordEmail(User user) {
         Map<String, Object> model = new MapBuilder(user)
                 .setUserName()
@@ -96,6 +113,7 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.NEW_PASSWORD);
     }
 
+    @Override
     public void sendNewProductDispatch(List<User> users, Product product) {
         for (User user : users) {
             Map<String, Object> model = new MapBuilder(user, product)
@@ -130,6 +148,7 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_ACTIVATED);
     }
 
+    @Override
     public void sendProductDeactivated(User user, Product product) {
         Map<String, Object> model = new MapBuilder(user, product)
                 .setUserName()
@@ -140,6 +159,7 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_DEACTIVATED);
     }
 
+    @Override
     public void sendProductSuspendedEmail(User user, Product product, Calendar beginDate, Calendar endDate) {
         Map<String, Object> model = new MapBuilder(user, product)
                 .setUserName()
@@ -152,6 +172,7 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_SUSPENDED);
     }
 
+    @Override
     public void sendProductDeletedDispatch(List<User> users, Product product) {
         for (User user : users) {
             Map<String, Object> model = new MapBuilder(user, product)
@@ -160,10 +181,29 @@ public class MailServiceImpl implements MailService {
                     .setProductName()
                     .setProductType()
                     .build();
-            if (user.getEmail().contains("@")) {
-                send(user.getEmail(), model, EmailTemplatePath.PRODUCT_DELETED);
-            }
+            send(user.getEmail(), model, EmailTemplatePath.PRODUCT_DELETED);
         }
     }
 
+    @Override
+    public void sendPasswordChangedEmail(User user) {
+        Map<String, Object> model = new MapBuilder(user)
+                .setUserName()
+                .setUserSurname()
+                .build();
+        send(user.getEmail(), model, EmailTemplatePath.PASSWORD_CHANGED);
+    }
+
+    @Override
+    public void sendProductWillSuspendEmail(User user, Product product, Calendar beginDate, Calendar endDate) {
+        Map<String, Object> model = new MapBuilder(user, product)
+                .setUserName()
+                .setUserSurname()
+                .setProductType()
+                .setProductName()
+                .setBeginDate(beginDate)
+                .setEndDate(endDate)
+                .build();
+        send(user.getEmail(), model, EmailTemplatePath.PRODUCT_WILL_SUSPEND);
+    }
 }

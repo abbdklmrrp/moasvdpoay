@@ -1,7 +1,4 @@
-/**
- * Created by Aleksandr Revniuk on 11.05.17.
- */
-$.fn.pageMe = function (opts, dataURL) {
+$.fn.pageMe = function (opts, dataURL, productId) {
     var $this = this,
         defaults = {
             perPage: 7,
@@ -48,9 +45,11 @@ $.fn.pageMe = function (opts, dataURL) {
     }
 
     function next() {
-        goToPage = parseInt(pager.data("curr")) + 1;
+        var goToPage = parseInt(pager.data("curr")) + 1;
         goTo(goToPage);
     }
+
+    var numberOfPage;
 
     function goTo(page) {
         var startAt = page * perPage,
@@ -64,14 +63,15 @@ $.fn.pageMe = function (opts, dataURL) {
             url: dataURL,
             type: "GET",
             dataType: "json",
-            data: {start: startAt, end: endOn},
+            data: {start: startAt, end: endOn, productId: productId},
             async: false,
             success: function (response) {
-                numItems = response.amount;
-                list = response.partOfComplaints;
+                numItems = response.total;
+                list = response.data;
                 listLen = list.length;
+                numberOfPage = page;
             },
-            error: function () {
+            error: function (response) {
                 numItems = -1;
                 alert("Can't get data from the server")
             }
@@ -79,16 +79,14 @@ $.fn.pageMe = function (opts, dataURL) {
         if (numItems <= 0) {
             return;
         }
-        $('#tbl-all-complaints').removeClass("hide");
-        $('#header-all-complaints').removeClass("hide");
-        $('#header-no-complaints').addClass("hide");
+        $('#tbl-operations').removeClass("hide");
 
         var numPages = Math.ceil(numItems / perPage);
 
         console.log("count of elem " + numItems);
         console.log("start " + ((beforeUpdate * perPage) - perPage));
         console.log("end " + beforeUpdate * perPage);
-        if ((numItems > beforeUpdate * perPage || numItems < (beforeUpdate * perPage) - perPage)&& !firstTime) {
+        if ((numItems > beforeUpdate * perPage || numItems < (beforeUpdate * perPage) - perPage) && !firstTime) {
             location.reload();
 
         }
@@ -118,29 +116,16 @@ $.fn.pageMe = function (opts, dataURL) {
         }
 
 
-        var dateFormat = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        };
         var html = "";
         for (var i = 0; i < listLen; i++) {
-            var date = new Date(list[i].creationDate);
-            if (list[i].status == "Send") {
-                html += "<tr class=danger onclick=forwardTo(" + list[i].id + ")>";
-            } else if (list[i].status == "InProcessing") {
-                html += "<tr class=warning onclick=forwardTo(" + list[i].id + ")>";
-            } else if (list[i].status == "Processed") {
-                html += "<tr class=success onclick=forwardTo(" + list[i].id + ")>";
-            }
-            else {
-                html += "<tr onclick=forwardTo(" + list[i].id + ")>";
-            }
-            html += "<td>" + date.toLocaleString("en-US", dateFormat) + "</td>";
-            html += "<td>" + list[i].description + "</td>";
+            html += "<tr>"
+            html+="<td>"+list[i].placeName+"</td>";
+            html+="<td>"+list[i].priceProduct+"</td>";
             html += "</tr>";
         }
         $('#myTable').html(html);
+        var productName = list[0].productName;
+        $('#nameProduct').html('<label style="text-align: center">'+productName+'</label>');
 
         //children.css('display','none').slice(startAt, endOn).show();//change table
 
@@ -164,3 +149,4 @@ $.fn.pageMe = function (opts, dataURL) {
         pager.children().eq(page + 1).addClass("active");
     }
 };
+

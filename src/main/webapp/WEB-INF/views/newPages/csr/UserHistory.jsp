@@ -20,13 +20,15 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp">
-    <jsp:param name="pageName" value="Users"/>
+    <jsp:param name="pageName" value="Operation history"/>
 </jsp:include>
-<jsp:include page="../includes/csrTabMenuBegin.jsp">
-    <jsp:param name="page" value="Orders"/>
-</jsp:include>
-<button  class="btn btn-primary" onclick="showHistory()">Show history</button>
-<div class="container" id="table" style=display:none;">
+<div class="col-md-2">
+    <jsp:include page="../includes/csrTabMenuBegin.jsp">
+        <jsp:param name="page" value="Operations"/>
+    </jsp:include>
+</div>
+<div class="col-md-10">
+<div class="container" id="table">
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
@@ -151,17 +153,11 @@
         </div>
     </div>
 </div>
+</div>
 <jsp:include page="../includes/csrTabMenuEnd.jsp"/>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
-
-<script src="${pageContext.request.contextPath}/resources/js/bootstrap/bootstrap.min.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/bootstrap/ie10-viewport-bug-workaround.js"></script>
-
 <script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
@@ -173,15 +169,4 @@
             new ElementListener($('#progressId'))
         ]
     })
-    function showHistory() {
-        if ($("#table").is(":hidden")) {
-
-            $("#table").show("slow");
-
-        } else {
-            $("#table").hide("slow");
-
-        }
-
-    }
 </script>

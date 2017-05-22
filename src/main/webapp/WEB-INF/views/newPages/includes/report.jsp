@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<h3 style="text-align: center; margin-bottom: 30px;">Report about orders and complaints</h3>
 <div class="container" style="width:60%; max-width: 400px;">
     <form id="formWithRegionsAndDates" action="${pageContext.request.contextPath}${param.downloadUrl}" method="get">
         <div class="login-form">
@@ -36,10 +35,13 @@
     <span id="err" style="color: red"></span>
 </div>
 <div class="container" style="margin-bottom: 30px; margin-top: 30px;">
-    <div id="line_top_x" style="height: 400px;"></div><br/>
     <div class="row">
-        <div class="col-sm-3"></div>
-        <div class="col-sm-6" id="table_div" style="width: 400px"></div>
-        <div class="col-sm-3"></div>
+        <div class="col-sm-12" id="line_top_x" style="height: 400px;"></div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-sm-3 col-lg-3"></div>
+        <div class="col-sm-6 col-lg-6" id="table_div"></div>
+        <div class="col-sm-3 col-lg-3"></div>
     </div>
 </div>

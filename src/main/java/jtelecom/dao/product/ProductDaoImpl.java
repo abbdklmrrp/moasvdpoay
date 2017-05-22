@@ -2,7 +2,6 @@ package jtelecom.dao.product;
 
 import jtelecom.dto.ServicesByCategoryDto;
 import jtelecom.dto.TariffServiceDto;
-import jtelecom.util.querybuilders.LimitedQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -205,6 +205,14 @@ public class ProductDaoImpl implements ProductDao {
             "AND (current_status_id = 1/* Active */ " +
             "     OR current_status_id = 2/* Suspended */ " +
             "     OR current_status_id = 4/* In processing */)";
+    private final static String DELETE_PLANNED_TASKS_FOR_TARIFF_SQL ="DELETE FROM planned_tasks" +
+            " WHERE order_id = (SELECT" +
+            "                    id FROM Orders WHERE" +
+            "                    user_id = :userId" +
+            "                    AND product_id = :tariffId" +
+            "                    AND (current_status_id = 1/* Active */ " +
+            "                         OR current_status_id = 2/* Suspended */ " +
+            "                         OR current_status_id = 4/* In processing */)))";
     private final static String SELECT_TARIFFS_FOR_CUSTOMERS_SQL = "SELECT " +
             "id, " +
             "category_id, " +
@@ -327,39 +335,42 @@ public class ProductDaoImpl implements ProductDao {
     private final static String SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL = "SELECT *\n" +
             "FROM (SELECT\n" +
             "        products.*,\n" +
-            "        ROW_NUMBER() OVER(ORDER BY PRODUCTS.NAME) rnum\n" +
+            "        ROW_NUMBER() OVER(ORDER BY %s) rnum\n" +
             "      FROM products\n" +
-            "      WHERE TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/ AND customer_type_id = 1 /*Business*/)\n" +
+            "      WHERE TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/ AND customer_type_id = 1 /*Business*/ " +
+            " AND LOWER(name) LIKE LOWER(:pattern) || '%%' %s)\n" +
             "WHERE rnum <= :length AND rnum > :start";
     private final static String SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL = "SELECT *\n" +
             "FROM (SELECT\n" +
-            "        o.id                order_id,\n" +
-            "        p.name,\n" +
-            "        p.id                product_id,\n" +
-            "        p.type_id           product_type,\n" +
-            "        op_status.name      operation_status,\n" +
-            "        pt.action_date      end_date,\n" +
-            "        ROW_NUMBER()\n" +
-            "        OVER(\n" +
-            "          ORDER BY p.name ) rnum\n" +
-            "      FROM ORDERS o\n" +
-            "        JOIN PRODUCTS p ON o.PRODUCT_ID = p.ID\n" +
-            "        JOIN USERS u ON u.id = o.USER_ID\n" +
-            "        JOIN OPERATION_STATUS op_status ON o.CURRENT_STATUS_ID = op_status.id\n" +
-            "        LEFT JOIN PLANNED_TASKS pt ON o.ID = pt.ORDER_ID\n" +
-            "      WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n" +
-            "            AND pt.STATUS_ID = 3 /*Deactivation*/)\n" +
+            "        id,\n" +
+            "        type_id,\n" +
+            "        category_id,\n" +
+            "        name,\n" +
+            "        duration,\n" +
+            "        need_processing,\n" +
+            "        description,\n" +
+            "        status,\n" +
+            "        CUSTOMER_TYPE_ID,\n" +
+            "        price AS base_price, \n" +
+            "        ROW_NUMBER() OVER (ORDER BY %s) rnum\n" +
+            "      FROM products\n" +
+            "        INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID\n" +
+            "      WHERE TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/\n" +
+            "            AND place_id = :place_id AND LOWER(name) LIKE LOWER(:pattern" +
+            ") || '%%') %s\n" +
             "WHERE rnum <= :length AND rnum > :start";
     private final static String SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL = "\n" +
             "SELECT" +
             "  COUNT(*) " +
             "FROM products WHERE " +
-            "   TYPE_ID = 2 /*Service*/ AND STATUS = 1 /*Active*/ AND customer_type_id = 1";
+            "   TYPE_ID = 2 /*Service*/ AND STATUS = 1 /*Active*/ AND customer_type_id = 1 " +
+            "AND LOWER(name) LIKE LOWER(:pattern) || '%%' %s";
     private final static String SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL = "SELECT COUNT(*)\n" +
             "FROM products\n" +
             "  INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID\n" +
             "WHERE TYPE_ID = 2\n AND STATUS = 1 /*Active*/ " +
-            " AND place_id = :place_id";
+            " AND place_id = :place_id " +
+            " AND LOWER(name) LIKE LOWER(:pattern) || '%%' %s";
 
     private static final String FIND_SERVICES_BY_CATEGORY_ID = "SELECT\n" +
             "  ID,\n" +
@@ -370,6 +381,7 @@ public class ProductDaoImpl implements ProductDao {
     private static final String GET_PRODUCT_BY_ORDER_ID = "SELECT * " +
             " FROM PRODUCTS WHERE ID=( " +
             " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
+    final static String AND_CATEGORY_ID_SQL = "  AND category_id = :category_id ";
     private static Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
     @Autowired
     @Qualifier("dataSource")
@@ -699,11 +711,25 @@ public class ProductDaoImpl implements ProductDao {
      * {@inheritDoc}
      */
     @Override
-    public Boolean deactivateTariff(Integer userId, Integer tariffId) {
+    @Transactional
+    public boolean deactivateTariff(Integer userId, Integer tariffId) {
+        deletePlannedTasks(userId, tariffId);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
         params.addValue("tariffId", tariffId);
         return (jdbcTemplate.update(DEACTIVATE_TARIFF_OF_USER_SQL, params) != 0);
+    }
+
+    /**
+     * Bulgakov Anton
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean deletePlannedTasks (Integer userId, Integer tariffId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", userId);
+        params.addValue("tariffId", tariffId);
+        return (jdbcTemplate.update(DELETE_PLANNED_TASKS_FOR_TARIFF_SQL, params) != 0);
     }
 
     /**
@@ -1027,18 +1053,40 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId) {
-        String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, search, categoryId);
+        //  String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, search, categoryId);
+        String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start + 1);
+        if (sort.isEmpty()) {
+            sort = "name";
+        }
+        if (categoryId != null) {
+            query = String.format(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, AND_CATEGORY_ID_SQL);
+            params.addValue("category_id", categoryId);
+        } else {
+            query = String.format(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, "");
+        }
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("start", start);
         params.addValue("length", length + 1);
         return jdbcTemplate.query(query, params, productRowMapper);
     }
 
     @Override
     public List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId) {
-        String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, search, categoryId);
+        // String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, search, categoryId);
+        String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start + 1);
+        if (sort.isEmpty()) {
+            sort = "name";
+        }
+        if (categoryId != null) {
+            query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, AND_CATEGORY_ID_SQL);
+            params.addValue("category_id", categoryId);
+        } else {
+            query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, "");
+        }
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("start", start);
         params.addValue("length", length + 1);
         params.addValue("place_id", placeId);
         return jdbcTemplate.query(query, params, productRowMapper);
@@ -1046,17 +1094,31 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId) {
-        String query = LimitedQueryBuilder.getQuery(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, "", search, categoryId);
+        String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
+        if (categoryId != null) {
+            query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, AND_CATEGORY_ID_SQL);
+            params.addValue("category_id", categoryId);
+        } else {
+            query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, "");
+        }
+        params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.queryForObject(query, params, Integer.class);
 
     }
 
     @Override
     public Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId) {
-        String query = LimitedQueryBuilder.getQuery(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, "", search, categoryId);
+        String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
+        if (categoryId != null) {
+            query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, AND_CATEGORY_ID_SQL);
+            params.addValue("category_id", categoryId);
+        } else {
+            query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, "");
+        }
         params.addValue("place_id", placeId);
+        params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.queryForObject(query, params, Integer.class);
     }
 

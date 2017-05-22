@@ -53,5 +53,14 @@ public class ProductsEndpoint {
         int size = priceDao.getCountPriceByPlace(search, id);
         return ListHolder.create(data, size);
     }
+
+    @RequestMapping(value={"getPrices"},method = RequestMethod.GET)
+    public ListHolder getPrices(@RequestParam(name = "start") int startIndex,
+                                @RequestParam(name = "end") int endIndex,
+                                @RequestParam(name = "productId") int productId){
+        List<PriceByRegionDto> data=priceDao.getLimitedQuantityProductPricesInRegions(productId,startIndex,endIndex,"","");
+        int size = priceDao.getCountPriceByPlace("", productId);
+        return ListHolder.create(data, size);
+    }
 }
 

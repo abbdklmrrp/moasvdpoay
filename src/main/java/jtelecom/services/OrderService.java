@@ -78,7 +78,7 @@ public class OrderService {
         }
         boolean success = plannedTaskDao.save(suspendPlanTask);
         if (success) {
-            mailService.sendProductSuspendedEmail(user, product, beginDate, endDate);
+            mailService.sendProductWillSuspendEmail(user, product, beginDate, endDate);
         }
         return success;
     }
@@ -110,16 +110,24 @@ public class OrderService {
         if (success) {
             User user = userDAO.getUserById(userId);
             Product product = productDao.getById(productId);
-            logger.info("Current user {}, product {} ", user, product);
+            logger.info("User we deactivate product for {}, product {} ", user, product);
             mailService.sendProductDeactivated(user, product);
 
         }
         return success;
     }
 
+    @Transactional
     public boolean deactivateOrderCompletely(Integer orderId) {
+        Order order = orderDao.getById(orderId);
         plannedTaskDao.deleteAllPlannedTasksForOrder(orderId);
         boolean wasDeactivated = orderDao.deactivateOrder(orderId);
+        if (wasDeactivated) {
+            User user = userDAO.getUserById(order.getUserId());
+            Product product = productDao.getById(order.getProductId());
+            logger.info("User we deactivate product for {}, product {} ", user, product);
+            mailService.sendProductDeactivated(user, product);
+        }
         return wasDeactivated;
     }
 
@@ -185,6 +193,16 @@ public class OrderService {
             User user = userDAO.getUserById(userId);
             Product product = productDao.getById(tariffId);
             mailService.sendProductDeactivated(user, product);
+        }
+        return success;
+    }
+
+    public boolean activateOrderFromCsr(int orderId){
+        boolean success=orderDao.activateOrder(orderId);
+        if(success){
+            User user=userDAO.getUserByOrderId(orderId);
+            Product product=productDao.getProductByOrderId(orderId);
+            mailService.sendProductActivatedEmail(user,product);
         }
         return success;
     }

@@ -7,6 +7,7 @@ import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
+import jtelecom.services.OrderService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,6 +28,8 @@ public class CsrMyOrdersController {
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
     private UserDAO userDAO;
+    @Resource
+    private OrderService orderService;
 
     @RequestMapping(value = "getMyOrdersPage", method = RequestMethod.GET)
     public ModelAndView getMyOrdersPage() {
@@ -43,7 +46,7 @@ public class CsrMyOrdersController {
         String sort = requestDto.getSort();
         String search = requestDto.getSearch();
         Integer count = orderDao.getCountOfInprocessingOrdersByCsrId(csrId, search);
-        List<FullInfoOrderDTO> orders = orderDao.getIntervalInprocessingOrdersByCsrId(start, length, sort, search, csrId);
+        List<FullInfoOrderDTO> orders = orderDao.getIntervalProcessingOrdersByCsrId(start, length, sort, search, csrId);
         return ListHolder.create(orders, count);
     }
 
@@ -57,8 +60,7 @@ public class CsrMyOrdersController {
 
     @RequestMapping(value = "activateOrder", method = RequestMethod.POST)
     public String activateOrder(@RequestParam(value = "orderId") int orderId) {
-        System.out.println("hey");
-        boolean success = orderDao.activateOrder(orderId);
+        boolean success = orderService.activateOrderFromCsr(orderId);
         return success ? "success" : "fail";
     }
 

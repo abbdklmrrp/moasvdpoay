@@ -107,7 +107,7 @@
                             <table class="table table-striped table-bordered table-hover" data-grid="grid">
                                 <thead>
                                 <tr>
-                                    <th class="col-xs-2" data-grid-header="product_name"
+                                    <th class="col-xs-2" data-grid-header="name"
                                         data-grid-header-sortable="true">
                                         <div class="pull-right order-by">
                                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
@@ -117,7 +117,7 @@
                                         </div>
                                         Name
                                     </th>
-                                    <th class="col-xs-2" data-grid-header="price"
+                                    <th class="col-xs-2" data-grid-header="base_price"
                                         data-grid-header-sortable="true">
                                         <div class="pull-right order-by">
                                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
@@ -125,9 +125,10 @@
                                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                                data-grid-header-sortable-down="down"></a>
                                         </div>
-                                        Price ₴
+                                        Price $
                                     </th>
-                                    <th class="col-xs-2" data-grid-header="category" data-grid-header-sortable="true">
+                                    <th class="col-xs-2" data-grid-header="category_id"
+                                        data-grid-header-sortable="true">
                                         <div class="pull-right order-by">
                                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                                data-grid-header-sortable-up="up"></a>
@@ -144,9 +145,9 @@
                                 <div data-grid="message"></div>
                                 <tbody>
                                 <tr data-grid="row">
-                                    <td data-cell="product_name"></td>
-                                    <td data-cell="price"></td>
-                                    <td data-cell="category"></td>
+                                    <td data-cell="name"></td>
+                                    <td data-cell="base_price"></td>
+                                    <td data-cell="category_id"></td>
                                     <td data-cell="action"></td>
                                 </tr>
                                 </tbody>
@@ -250,14 +251,14 @@
                     return $(wv.status)
                 }
                 if (!wv.status) {
-                    return $('<div id=service' + wv.productId + '><input type="button" class="btn btn-success"  value="Activate" onclick="activateService(' + wv.productId + ')"></div>');
+                    return $('<div id="service' + wv.id + '"><input type="button" class="btn btn-success"  value="Activate" onclick="activateService(' + wv.productId + ')"></div>');
                 }
                 else {
-                    return $('<div id=service' + wv.productId + '><input type="button" class="btn btn-danger"  value="Deactivate" onclick="deactivateService(' + wv.productId + ')"></div>');
+                    return $('<div id="service' + wv.id + '"><input type="button" class="btn btn-danger"  value="Deactivate" onclick="deactivateService(' + wv.productId + ')"></div>');
                 }
             },
-            "product_name": function (pv, wv, grid) {
-                return $('<a href=<%=request.getContextPath()%>/${userRole}/product?productId=' + wv.productId + '>' + wv.name + '</a>')
+            "name": function (pv, wv, grid) {
+                return $('<a href=<%=request.getContextPath()%>/${userRole}/product?productId=' + wv.id + '>' + wv.name + '</a>')
             }
         }
 

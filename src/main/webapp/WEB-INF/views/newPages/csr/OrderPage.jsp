@@ -19,7 +19,7 @@
             <label class="col-sm-2 control-label">Product name</label>
             <div class="col-sm-10">
                 <input readonly style="border-bottom-width: 0;" type="text" class="form-control" name="productName"
-                       id="productName" value=${order.productName}><br>
+                       id="productName" value="${order.productName}"><br>
             </div>
         </div>
         <div class="form-group form-group-lg">
@@ -43,8 +43,9 @@
             </div>
         </div>
         <h1 style="text-align: center">Customer info</h1>
+        <br>
         <div class="form-group form-group-lg">
-            <label class="col-sm-2 control-label">Name</label><br>
+            <label class="col-sm-2 control-label">Name</label>
             <div class="col-sm-10">
                 <input readonly type="text" class="form-control" name="userName" id="userName" value="${order.userName}"><br>
             </div>

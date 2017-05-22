@@ -10,6 +10,11 @@
     <jsp:include page="../includes/headers/csrHeader.jsp">
         <jsp:param name="pageName" value="UserTariffs"/>
     </jsp:include>
+    <div class="col-md-2">
+        <jsp:include page="../includes/csrTabMenuBegin.jsp">
+            <jsp:param name="page" value="UserTariffs"/>
+        </jsp:include>
+    </div>
     <jsp:include page="../includes/tariffs.jsp"/>
     <jsp:include page="../includes/footer.jsp"/>
     <script type="text/javascript" src="<c:url value="/resources/js/tariffsPagination.js"/>"></script>

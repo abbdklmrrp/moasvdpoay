@@ -17,60 +17,59 @@
     <jsp:include page="../includes/headers/csrHeader.jsp">
         <jsp:param name="pageName" value="Users"/>
     </jsp:include>
-    <div class="col-md-2"></div>
     <div class="col-md-2">
         <jsp:include page="../includes/csrTabMenuBegin.jsp">
             <jsp:param name="page" value="UserInfo"/>
         </jsp:include>
     </div>
+    <div class="col-md-2"></div>
     <div class="col-md-4">
         <form id="details-form" modelAttribute="user" action="${pageContext.request.contextPath}/csr/editUser" method="post">
             <div class="login-form">
                 <h1 style="text-align: center">Personal information</h1>
                 <br>
                 <div class="form-group form-group-lg">
-                    <label class="col-sm-2 control-label">Name</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-3 col-xs-3 control-label">Name</label>
+                    <div class="col-sm-9 col-xs-9">
                         <input style="border-bottom-width: 0;" type="text" class="form-control disabled" name="name"
                                id="name" value=${user.name} required maxlength="16"><br>
                     </div>
                 </div>
                 <div class="form-group form-group-lg">
-                    <label class="col-sm-2 control-label">Surname</label><br>
-                    <div class="col-sm-10">
+                    <label class="col-sm-3 col-xs-3 control-label">Surname</label><br>
+                    <div class="col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="surname" id="surname"
                                value=${user.surname} required
                                maxlength="16"><br>
                     </div>
                 </div>
                 <div class="form-group form-group-lg">
-                    <label class="col-sm-2 control-label">Email</label><br>
-                    <div class="col-sm-10">
+                    <label class="col-sm-3 col-xs-3 control-label">Email</label><br>
+                    <div class="col-sm-9 col-xs-9">
                         <input type="email" class="form-control" name="email" id="email"
                                value=${user.email} required><br>
                     </div>
                 </div>
                 <div class="form-group form-group-lg">
-                    <label class="col-sm-2 control-label">Phone</label><br>
-                    <div class="col-sm-10">
+                    <label class="col-sm-3 col-xs-3 control-label">Phone</label><br>
+                    <div class="col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="phone" id="phone" value=${user.phone} required
                                maxlength="12"><br>
                     </div>
                 </div>
                 <div class="form-group form-group-lg">
-                    <label class="col-sm-2 control-label">Address</label><br>
-                    <div class="col-sm-10">
+                    <label class="col-sm-3 col-xs-3 control-label">Address</label><br>
+                    <div class="col-sm-9 col-xs-9">
                         <input type="text" class="form-control" name="address" id="address" value="${user.address}"
                                required><br>
                     </div>
                 </div>
                 <br>
-                <div class="row">
-                    <button type="submit" class="btn btn-primary col-sm-6 col-xs-6">Save</button>
-                </div>
+                    <button type="submit" class="btn btn-primary col-sm-5 col-xs-5">Save</button>
             </div>
         </form>
-        <button class="btn btn-success col-sm-6 col-xs-6" onclick="sendPassword(${user.id})">Send password</button>
+        <div class="col-sm-2 col-xs-2"></div>
+        <button class="btn btn-success col-sm-5 col-xs-5" onclick="sendPassword(${user.id})">Send password</button>
     </div>
     </div>
     <div class="col-md-2"></div>
