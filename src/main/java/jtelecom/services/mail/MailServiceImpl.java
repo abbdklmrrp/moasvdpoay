@@ -16,7 +16,6 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.mail.SendFailedException;
 
 /**
  * @author Moiseienko Petro
@@ -34,29 +33,25 @@ public class MailServiceImpl implements MailService {
     }
 
     private class MailThread extends Thread {
-        private String to;
-        private Map<String, Object> model;
-        private EmailTemplatePath path;
+        private SimpleMailMessage message;
 
-        private MailThread(String to, Map<String, Object> model, EmailTemplatePath path) {
-            this.to = to;
-            this.model = model;
-            this.path = path;
+        private MailThread(SimpleMailMessage message) {
+            this.message = message;
         }
 
         public void run() {
-            SimpleMailMessage message = email.createEmail(to, model, path);
             try {
                 mailSender.send(message);
             } catch (MailException e) {
-                logger.error("Wrong email address {}", to);
+                logger.error("Wrong email address {}", e.getMessage());
             }
         }
 
     }
 
     private void send(String to, Map<String, Object> model, EmailTemplatePath path) {
-        new MailServiceImpl.MailThread(to, model, path).start();
+        SimpleMailMessage message = email.createEmail(to, model, path);
+        new MailServiceImpl.MailThread(message).start();
     }
 
     @Override
