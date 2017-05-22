@@ -117,7 +117,7 @@ public interface ProductDao extends Dao<Product> {
      * @param tariffId tariff id.
      * @return status of deactivation.
      */
-    Boolean deactivateTariff(Integer userId, Integer tariffId);
+    boolean deactivateTariff(Integer userId, Integer tariffId);
 
     /**
      * Method returns all tariffs are available for customers. If there are no tariffs in this place, method returns empty list.
@@ -178,6 +178,15 @@ public interface ProductDao extends Dao<Product> {
      * @return list of services.
      */
     List<Product> getServicesOfTariff(Integer tariffId);
+
+    /**
+     * Method deletes all planned tasks according to userId and tariffId from params.
+     *
+     * @param userid id of user.
+     * @param tariffId id of tariff.
+     * @return status of operation.
+     */
+    boolean deletePlannedTasks (Integer userid, Integer tariffId);
 
     Integer getCountProductsWithSearch(String search);
 

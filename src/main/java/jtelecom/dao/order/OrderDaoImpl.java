@@ -411,7 +411,6 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_WITHOUT_CSR, params, Integer.class);
     }
 
-    //TODO rowmapper
     @Override
     public List<FullInfoOrderDTO> getIntervalOrdersWithoutCsr(int start, int length, String sort, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -422,17 +421,7 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("length", length);
         params.addValue("pattern", "%" + search + "%");
         String sql = String.format(SELECT_ALL_ORDERS_WITHOUT_CSR, sort);
-        List<FullInfoOrderDTO> orders = jdbcTemplate.query(sql, params, (rs, rownum) -> {
-            FullInfoOrderDTO order = new FullInfoOrderDTO();
-            order.setProductName(rs.getString("product_name"));
-            order.setProductType(ProductType.getProductTypeFromId(rs.getInt("product_type")));
-            order.setCustomerType(CustomerType.getCustomerTypeFromId(rs.getInt("customer_type")));
-            order.setOrderId(rs.getInt("order_id"));
-            order.setActionDate(rs.getString("operation_date"));
-            order.setPlace(rs.getString("place"));
-            return order;
-        });
-        return orders;
+        return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
 
     @Override
@@ -470,29 +459,18 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.queryForObject(SELECT_COUNT_INPROCESSING_ORDERS_BY_CSR_ID, params, Integer.class);
     }
 
-    //TODO rowmapper
     @Override
-    public List<FullInfoOrderDTO> getIntervalInprocessingOrdersByCsrId(int start, int length, String sort, String search, int csrId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
+    public List<FullInfoOrderDTO> getIntervalProcessingOrdersByCsrId(int start, int length, String sort, String search, int csrId) {
         if (sort.isEmpty()) {
             sort = "order_id";
         }
+        MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("start", start);
         params.addValue("length", length);
         params.addValue("pattern", "%" + search + "%");
         params.addValue("csrId", csrId);
         String sql = String.format(SELECT_INPROCESSING_ORDERS_BY_CSR_ID, sort);
-        List<FullInfoOrderDTO> orders = jdbcTemplate.query(sql, params, (rs, rownum) -> {
-            FullInfoOrderDTO order = new FullInfoOrderDTO();
-            order.setProductName(rs.getString("product_name"));
-            order.setProductType(ProductType.getProductTypeFromId(rs.getInt("product_type")));
-            order.setCustomerType(CustomerType.getCustomerTypeFromId(rs.getInt("customer_type")));
-            order.setOrderId(rs.getInt("order_id"));
-            order.setActionDate(rs.getString("operation_date"));
-            order.setPlace(rs.getString("place"));
-            return order;
-        });
-        return orders;
+        return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
 
     @Override
@@ -501,7 +479,6 @@ public class OrderDaoImpl implements OrderDao {
         return jdbcTemplate.update(ACTIVATE_INPROCESSING_ORDER, params) > 0;
     }
 
-    //TODO rowmapper
     @Override
     public List<FullInfoOrderDTO> getIntervalProccesedOrdersByCsrId(int start, int length, String sort, String search, int csrId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -513,17 +490,7 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("pattern", "%" + search + "%");
         params.addValue("csrId", csrId);
         String sql = String.format(SELECT_PROCESSED_ORDERS_BY_CSR_ID, sort);
-        List<FullInfoOrderDTO> orders = jdbcTemplate.query(sql, params, (rs, rownum) -> {
-            FullInfoOrderDTO order = new FullInfoOrderDTO();
-            order.setProductName(rs.getString("product_name"));
-            order.setProductType(ProductType.getProductTypeFromId(rs.getInt("product_type")));
-            order.setCustomerType(CustomerType.getCustomerTypeFromId(rs.getInt("customer_type")));
-            order.setOrderId(rs.getInt("order_id"));
-            order.setActionDate(rs.getString("operation_date"));
-            order.setPlace(rs.getString("place"));
-            return order;
-        });
-        return orders;
+        return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
 
     @Override
