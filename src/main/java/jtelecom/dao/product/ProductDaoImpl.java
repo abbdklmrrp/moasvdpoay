@@ -175,9 +175,10 @@ public class ProductDaoImpl implements ProductDao {
             "  JOIN ORDERS ON ORDERS.PRODUCT_ID = p1.ID\n" +
             "                 AND ORDERS.USER_ID = :id\n" +
             "                 AND p1.TYPE_ID = 1\n" +
+            " AND ORDERS.CURRENT_STATUS_ID <> 3 /*Deactivated*/" +
             "  JOIN TARIFF_SERVICES\n" +
             "    ON p1.ID = TARIFF_SERVICES.TARIFF_ID\n" +
-            "  JOIN PRODUCTS p2 ON p2.ID = TARIFF_SERVICES.SERVICE_ID";
+            "  JOIN PRODUCTS p2 ON p2.ID = TARIFF_SERVICES.SERVICE_ID ";
     private final static String DELETE_SERVICE_FROM_TARIFF = "DELETE FROM TARIFF_SERVICES " +
             "WHERE TARIFF_ID=:idTariff AND SERVICE_ID=:idService ";
     private final static String DISABLE_ENABLE_PRODUCT = "UPDATE Products SET status=:status WHERE id=:id";
@@ -359,7 +360,7 @@ public class ProductDaoImpl implements ProductDao {
             "        INNER JOIN PRICES ON PRICES.PRODUCT_ID = PRODUCTS.ID\n" +
             "      WHERE TYPE_ID = 2 /*Service*/ AND status = 1 /*Active*/\n" +
             "            AND place_id = :place_id AND LOWER(name) LIKE LOWER(:pattern" +
-            ") || '%%') %s\n" +
+            ") || '%%'  %s) \n" +
             "WHERE rnum <= :length AND rnum > :start";
     private final static String SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL = "\n" +
             "SELECT" +
@@ -1063,7 +1064,6 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId) {
-        //  String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, search, categoryId);
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {

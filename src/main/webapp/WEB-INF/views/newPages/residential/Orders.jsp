@@ -12,8 +12,6 @@
         <jsp:param name="pageName" value="Orders"/>
     </jsp:include>
     <jsp:include page="../includes/orders.jsp"/>
-
-    <script type="text/javascript"
-            src="<c:url value="${pageContext.request.contextPath}/resources/js/orders.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="${pageContext.request.contextPath}/resources/js/orders.js"/>"></script>
 </body>
 </html>

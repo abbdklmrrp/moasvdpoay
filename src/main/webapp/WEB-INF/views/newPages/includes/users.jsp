@@ -1,5 +1,5 @@
 <div class="container">
-    <h1 style="text-align: center">Employees</h1>
+    <h1 style="text-align: center">${param.pageName}</h1>
     <div class="col-md-1"></div>
     <div class="col-md-10">
     <div class="grid-progress-bar-placeholder">
@@ -15,7 +15,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-10" data-grid="title">
-                    Users
+                    ${param.pageName}
                 </div>
                 <div class="col-md-2" style="text-align:right;">
                     <a href="javascript:" data-grid="pager-refresh">

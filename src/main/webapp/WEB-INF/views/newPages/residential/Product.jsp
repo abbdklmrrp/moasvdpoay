@@ -6,6 +6,9 @@
     </jsp:include>
 </head>
 <body>
-
+<jsp:include page="../includes/headers/residentialHeader.jsp">
+    <jsp:param name="pageName" value="Products"/>
+</jsp:include>
+<jsp:include page="../includes/product.jsp"/>
 </body>
 </html>

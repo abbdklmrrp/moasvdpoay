@@ -13,11 +13,13 @@
     </script>
 </head>
 <body>
-<jsp:include page="../includes/headers/csrHeader.jsp">
-    <jsp:param name="pageName" value="Users"/>
-</jsp:include>
-<jsp:include page="../includes/users.jsp"/>
-<jsp:include page="../includes/footer.jsp"/>
+    <jsp:include page="../includes/headers/csrHeader.jsp">
+        <jsp:param name="pageName" value="Users"/>
+    </jsp:include>
+    <jsp:include page="../includes/users.jsp">
+        <jsp:param name="pageName" value="Users"/>
+    </jsp:include>
+    <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -39,8 +41,8 @@
         ],
         renderers: {
             "action": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-success"  value="Details">').click( function(){
-                        location.href='${pageContext.request.contextPath}/csr/getDetails?id=' + wv.id
+                return $('<input type="button" class="btn btn-success"  value="Details">').click(function () {
+                        location.href = '${pageContext.request.contextPath}/csr/getDetails?id=' + wv.id
                     }
                 );
             }

@@ -14,6 +14,7 @@
     <form action="${pageContext.request.contextPath}/csr/signUpUser"  modelAttribute="user" method="post">
         <div class="login-form">
             <h1 style="text-align: center">Registration new user</h1>
+            <br>
             <div class="form-group ">
                 <select id="userType" name="userType" class="form-control" aria-required="true"
                         onChange="Selected(this)">
@@ -59,7 +60,11 @@
                 <i class="fa fa-user"></i>
             </div>
             <div class="row">
-                <button type="submit" class="btn btn-primary col-sm-12 col-xs-12">Sign up</button>
+                <div class="col-xs-4"></div>
+                <div class="col-xs-4">
+                    <button type="submit" class="btn btn-primary col-sm-12 col-xs-12">Sign up</button>
+                </div>
+                <div class="col-xs-4"></div>
             </div>
         </div>
     </form>

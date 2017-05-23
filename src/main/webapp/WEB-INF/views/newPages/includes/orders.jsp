@@ -148,24 +148,40 @@
         </div>
         <div class="col-md-1"></div>
     </div>
-    <div class="row" style="{padding-bottom:50px; padding-top:50px;}" align="center">
-        <form id="formWithDates" class="form-horizontal">
-            <br/>
-            <label class="control-label">Date Begin:
-                <input id="beginDate" name="beginDate" type="date"/>
-            </label>
-            <br/>
-            <label class="control-label">Date End:
-                <input id="endDate" name="endDate" type="date"/>
-            </label>
-            <input type="hidden" id="orderId" name="orderId">
-            <input type="submit" class="btn btn-warning suspendButton"
-                   value="Suspend">
-            <%--<input type="button" class="btn btn-warning suspendButton"--%>
-            <%--onclick="suspendOrder()" value="Suspend">--%>
-            <br/>
-        </form>
+    <%--<div class="row" style="{padding-bottom:50px; padding-top:50px;}" align="center">--%>
+    <div id="suspendModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Suspend order</h4>
+                </div>
+                <div class="modal-body" align="center">
+                    <form id="formWithDates" class="form-horizontal">
+                        <br/>
+                        <label class="control-label">Date Begin:
+                            <input id="beginDate" name="beginDate" type="date"/>
+                        </label>
+                        <br/>
+                        <label class="control-label">Date End:
+                            <input id="endDate" name="endDate" type="date"/>
+                        </label>
+                        <br/>
+                        <input type="hidden" id="orderId" name="orderId">
+                        <%--<input type="submit" class="btn btn-warning"--%>
+                        <%--value="Suspend">--%>
+
+                        <br/>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" id="suspend-form-submit">Suspend</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
+    <%--</div>--%>
     <div class="row" align="center">
         <button class="btn btn-middle btn-info" id="toggle-planned-info">Planned tasks for my orders</button>
     </div>
@@ -310,7 +326,7 @@
                         '<input type="button" class="btn btn-danger btn-block" style="margin:5px 5px 5px 5px" value="Deactivate" onclick="deactivateOrder(' + wv.order_id + ')"></div>');
                 }
                 if (wv.operation_status == "In Processing") {
-                    return $('-');
+                    return $('<div id=order' + wv.order_id + '><input type="button" class="btn btn-danger btn-block" style="margin:5px 5px 5px 5px" value="Deactivate" onclick="deactivateOrder(' + wv.order_id + ')"></div>');
                 }
                 else {
                     return $('<div id=order' + wv.order_id + '><input type="button" class="btn btn-warning btn-block" style="margin:5px 5px 5px 5px" value="Suspend" onclick="toggleFormFunc(' + wv.order_id + ')">' +
@@ -332,7 +348,7 @@
         renderers: {
             "action": function (pv, wv, grid) {
                 if (wv.status == "Suspended") {
-                    return $('<div id=task' + wv.id + '><input type="button" class="btn btn-danger" value="Cancel Suspense" onclick="cancelPlannedTask(' + wv.id + ')"></div>');
+                    return $('<div id=task' + wv.id + '><input type="button" class="btn btn-danger btn-block" value="Cancel Suspense" onclick="cancelPlannedTask(' + wv.id + ')"></div>');
                 }
                 else {
                     return $('-');

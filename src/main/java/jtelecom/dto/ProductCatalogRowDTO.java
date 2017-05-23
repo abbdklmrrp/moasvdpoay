@@ -8,6 +8,7 @@ import java.math.BigDecimal;
  * Created by Yuliya Pedash on 29.04.2017.
  */
 public class ProductCatalogRowDTO {
+    @JsonProperty("id")
     private Integer id;
     private String name;
     @JsonProperty("category_id")
@@ -25,11 +26,11 @@ public class ProductCatalogRowDTO {
         this.status = status;
     }
 
-    public Integer getProductId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setProductId(Integer productId) {
+    public void setId(Integer productId) {
         this.id = productId;
     }
 

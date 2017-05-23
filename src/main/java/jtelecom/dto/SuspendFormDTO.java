@@ -37,4 +37,13 @@ public class SuspendFormDTO {
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
+
+    @Override
+    public String toString() {
+        return "SuspendFormDTO{" +
+                "beginDate=" + beginDate +
+                ", endDate=" + endDate +
+                ", orderId=" + orderId +
+                '}';
+    }
 }
