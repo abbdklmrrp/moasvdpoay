@@ -139,12 +139,12 @@ public class OrderService {
      *
      * @param orderId id of order
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
-     * @see PlannedTaskDao#deleteNextPlannedTask(Integer)
+     * @see PlannedTaskDao#deleteNextPlannedTaskForActivationForThisOrder(Integer)
      * @see OrderDao#activateOrder(Integer)
      */
     @Transactional
     public boolean activateOrderAfterSuspense(Integer orderId) {
-        plannedTaskDao.deleteNextPlannedTask(orderId);
+        plannedTaskDao.deleteNextPlannedTaskForActivationForThisOrder(orderId);
         boolean success = orderDao.activateOrder(orderId);
         if (success) {
             User user = userDAO.getUserByOrderId(orderId);

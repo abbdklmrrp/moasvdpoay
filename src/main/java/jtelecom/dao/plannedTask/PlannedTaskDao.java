@@ -30,18 +30,31 @@ public interface PlannedTaskDao extends Dao<PlannedTask> {
     List<PlannedTask> getAllPlannedTaskForDates(Calendar beginDate, Calendar endDate, Integer orderId);
 
     /**
-     * This method
-     *
-     * @param orderId
-     * @return
+     * This method returns next planned task with status 'Active' from database for this order.
+     * @param orderId id of order
+     * @return <code>true</code> if any rows were deleted, <code>false</code> otherwise
      */
-    boolean deleteNextPlannedTask(Integer orderId);
+    boolean deleteNextPlannedTaskForActivationForThisOrder(Integer orderId);
 
     boolean deletePlannedTaskById(Integer plannedTaskId);
 
+    /**
+     * This method deletes next planned task for activation this order after suspense planned task.
+     *
+     * @param suspensePlannedTask planed tasks for suspense of this order
+     * @return <code>true</code> if opperation was successful, <code>false</code> otherwise
+     */
     boolean deletePlannedTaskForActivationOfThisSuspense(PlannedTask suspensePlannedTask);
 
-    List<PlannedTaskDTO> getLimitedPlannedTasksForUsersOrders(Integer userId, Integer start, Integer length);
+    /**
+     * This method gets limited panned tasks for orders of user
+     *
+     * @param userId id of user
+     * @param start  start index
+     * @param end    end Index
+     * @return
+     */
+    List<PlannedTaskDTO> getLimitedPlannedTasksForUsersOrders(Integer userId, Integer start, Integer end);
 
     Integer getCountPlannedTasksForUserOrders(Integer userId);
 

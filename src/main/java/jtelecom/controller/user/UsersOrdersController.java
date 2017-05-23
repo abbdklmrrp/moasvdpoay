@@ -84,6 +84,7 @@ public class UsersOrdersController implements Serializable {
     @RequestMapping(value = {"suspend"}, method = RequestMethod.POST)
     @ResponseBody
     public String suspendOrder(@RequestBody SuspendFormDTO suspendFormDTO) {
+        logger.debug("Request foor suspense of order, SuspendFormDTO object {}", suspendFormDTO);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Calendar beginDate = suspendFormDTO.getBeginDate();
         Calendar endDate = suspendFormDTO.getEndDate();

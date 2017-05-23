@@ -16,7 +16,7 @@ function activateService(serviceId) {
             swal(resultMsg);
             var $statusElement = $('#service' + serviceId);
             $statusElement.empty();
-            var $newStatus = "<input type=\"button\" onclick=\"deactivateService(" + serviceId + ")\" value=\"Deactivate\" class=\"btn btn-danger\">";
+            var $newStatus = '<div id=service' + wv.id + '><input type="button" class="btn btn-success btn-block"  value="Activate" onclick="activateService(' + wv.productId + ')"></div>';
             $statusElement.html($newStatus);
         },
         error: function () {
@@ -25,26 +25,7 @@ function activateService(serviceId) {
         }
     })
 }
-// function setNewProductStatus(serviceId) {
-//     jQuery.ajax({
-//         url: 'getNewOrderStatus',
-//         data: {serviceId: serviceId},
-//         type: "GET",
-//         dataType: 'json',
-//         success: function (newStatus) {
-//             var $statusElement = $('#' + serviceId);
-//             $statusElement.empty();
-//                 var $newStatus = "<input type=\"button\" onclick=\"deactivateService(" + serviceId + ")\" value=\"Deactivate\" class=\"btn btn-danger\">";
-//                 $statusElement.html($newStatus);
-//         },
-//         error: function () {
-//             console.log("Error while change page's view dynamically.");
-//         }
-//
-//
-//     })
-//
-// }
+
 
 function deactivateService(serviceId) {
     swal({
@@ -69,7 +50,7 @@ function deactivateService(serviceId) {
                         });
                         var $statusElement = $('#service' + serviceId);
                         $statusElement.empty();
-                        var $newStatus = "<input type=\"button\" onclick=\"activateService(" + serviceId + ")\" value=\"Activate\" class=\"btn btn-success\">";
+                        var $newStatus = '<div id="service' + serviceId + '><input type="button" class="btn btn-success btn-block"  value="Activate" onclick="activateService(' + wv.productId + ')"></div>';
                         $statusElement.html($newStatus);
                     }
                     else {

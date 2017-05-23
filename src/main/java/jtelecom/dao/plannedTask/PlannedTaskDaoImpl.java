@@ -105,7 +105,7 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean deleteNextPlannedTask(Integer orderId) {
+    public boolean deleteNextPlannedTaskForActivationForThisOrder(Integer orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("order_id", orderId);
         return jdbcTemplate.update(DELETE_NEXT_PLANNED_TASK_FOR_ACTIVATION_OF_ORDER_USER_SQL, params) > 0;
