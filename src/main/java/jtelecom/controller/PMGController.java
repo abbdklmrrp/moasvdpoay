@@ -43,7 +43,7 @@ public class PMGController {
 
     @RequestMapping(value = "allComplaints")
     public String getAllComplaints() {
-        return "newPages/pmg/allComplaints";
+        return "newPages/pmg/AllComplaints";
     }
 
     @RequestMapping(value = "myComplaints")
