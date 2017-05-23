@@ -16,7 +16,6 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.mail.SendFailedException;
 
 /**
  * @author Moiseienko Petro
@@ -34,29 +33,40 @@ public class MailServiceImpl implements MailService {
     }
 
     private class MailThread extends Thread {
-        private String to;
-        private Map<String, Object> model;
-        private EmailTemplatePath path;
+        private SimpleMailMessage message;
 
-        private MailThread(String to, Map<String, Object> model, EmailTemplatePath path) {
-            this.to = to;
-            this.model = model;
-            this.path = path;
+        private MailThread(SimpleMailMessage message) {
+            this.message = message;
         }
 
         public void run() {
-            SimpleMailMessage message = email.createEmail(to, model, path);
             try {
                 mailSender.send(message);
             } catch (MailException e) {
-                logger.error("Wrong email address {}", to);
+                logger.error("Wrong email address {}", e.getMessage());
             }
         }
 
     }
 
     private void send(String to, Map<String, Object> model, EmailTemplatePath path) {
-        new MailServiceImpl.MailThread(to, model, path).start();
+        SimpleMailMessage message = email.createEmail(to, model, path);
+        try {
+            validate(message);
+        } catch (EmailException e) {
+            logger.error(e.getMessage());
+            return;
+        }
+        new MailServiceImpl.MailThread(message).start();
+    }
+
+    @Override
+    public void sendCustomEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        new MailServiceImpl.MailThread(message).start();
     }
 
     @Override
@@ -210,5 +220,15 @@ public class MailServiceImpl implements MailService {
                 .setEndDate(endDate)
                 .build();
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_WILL_SUSPEND);
+    }
+
+    private void validate(SimpleMailMessage email) {
+        if (email.getText() == null || email.getText().isEmpty()) {
+            throw new EmailException(EmailException.MISSING_CONTENT);
+        } else if (email.getSubject() == null || email.getSubject().isEmpty()) {
+            throw new EmailException(EmailException.MISSING_SUBJECT);
+        } else if (email.getTo() == null) {
+            throw new EmailException(EmailException.MISSING_RECIPIENT);
+        }
     }
 }

@@ -117,19 +117,22 @@
                                 </div>
                             </div>
                         </c:if>
-                        <div class="form-group row">
+
+                        <div class="form-group row" id="price">
                             <label class="col-sm-4 control-label">Base price</label>
                             <div class="col-sm-8">
-                                <input readonly type="number" class="currency" min="0.01" max="99999.99"
-                                       value="${product.basePrice}.00"
-                                       id="basePrice" name="basePrice" required>
+                                <input readonly type="number" class="currency" value=${product.basePrice}
+                                        pattern="[0-9]+([,\.][0-9]+)?" step="0.01"
+                                       name="basePrice" id="basePrice">
                                 <i class="fa fa-user"></i>
                             </div>
                         </div>
+
                         <div class="form-group row">
                             <label class="col-sm-4 control-label">Customer type</label>
                             <div class="col-sm-8">
-                                <select disabled name="customerType" class="form-control" id="customerTypeId">
+                                <select disabled name="customerType" class="form-control" id="customerTypeId"
+                                        onclick="selectedCustomer(this)">
                                     <option value="Business" ${product.customerType=='Business'? 'selected="selected"' : ''}>
                                         Business
                                     </option>
@@ -209,12 +212,16 @@
 </script>
 <script>
     document.getElementById('basePrice').onkeypress = function (e) {
-        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') { // позволяет ввести или одну точку, или одну запятую
-            return !(/[.,А-Яа-яA-Za-z-"+"]/.test(String.fromCharCode(e.charCode)));
+        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') {
+            return !(/[.,А-Яа-яA-Za-z-+]/.test(String.fromCharCode(e.charCode)));
         }
     }
 </script>
 <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
+<c:if test="${product.customerType=='Residential'}">
+    <script src="<c:url value="/resources/js/selectedCustomer.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/js/productRes.js"/>"></script>
+</c:if>
 </body>
 </html>

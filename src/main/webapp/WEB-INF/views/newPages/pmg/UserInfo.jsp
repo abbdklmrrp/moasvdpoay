@@ -45,7 +45,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/pmgHeader.jsp">
-    <jsp:param name="pageName" value="User Info"/>
+    <jsp:param name="pageName" value="Users"/>
 </jsp:include>
 <div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
     <div class="login-form">

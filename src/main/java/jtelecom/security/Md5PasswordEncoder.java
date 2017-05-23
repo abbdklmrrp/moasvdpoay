@@ -10,12 +10,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class Md5PasswordEncoder implements PasswordEncoder {
-    String salt = "-salt-";
-
-    public static void main(String[] args) {
-        System.out.println(new Md5PasswordEncoder().encode("User11"));
-
-    }
+    private final static String salt = "-salt-";
 
     @Override
     public String encode(CharSequence rawPassword) {

@@ -15,7 +15,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp">
-    <jsp:param name="pageName" value="UserServices"/>
+    <jsp:param name="pageName" value="Users"/>
 </jsp:include>
 <div class="col-md-2">
     <jsp:include page="../includes/csrTabMenuBegin.jsp">

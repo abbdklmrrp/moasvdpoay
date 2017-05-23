@@ -1,6 +1,7 @@
 package jtelecom.services.product;
 
 
+import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
 import jtelecom.dao.order.OrderDao;
@@ -17,16 +18,16 @@ import jtelecom.services.mail.MailService;
 import jtelecom.util.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
  * Created by Rysakova Anna on 26.04.2017.
  */
-@Service
+@Component
 public class ProductServiceImpl implements ProductService {
 
     private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
@@ -40,6 +41,11 @@ public class ProductServiceImpl implements ProductService {
     private UserDAO userDAO;
     @Resource
     private MailService mailService;
+
+    @Override
+    public Product foundProduct(Integer productId) {
+        return productDao.getById(productId);
+    }
 
     /**
      * Rysakova Anna
@@ -76,7 +82,17 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     public boolean isEmptyFieldOfProduct(Product product) {
-        return (product.getName().isEmpty() || product.getDescription().isEmpty() || (product.getBasePrice().compareTo(BigDecimal.ZERO) <= 0));
+        return (product.getName().isEmpty() || product.getDescription().isEmpty());
+    }
+
+    @Override
+    /**
+     *
+     */
+    public void validateBasePriceByCustomerType(Product product) {
+        if (product.getCustomerType() == CustomerType.Residential) {
+            product.setBasePrice(null);
+        }
     }
 
     /**
@@ -105,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
      * @param servicesId
      * @param product
      */
-    public void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product) {
+    public void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product) throws DataIntegrityViolationException {
         List<TariffServiceDto> oldServiceList = productDao.getServicesByTariff(product.getId());
         List<TariffServiceDto> newServiceList = fillInDTOForBatchUpdate(product.getId(), servicesId);
 
@@ -137,13 +153,13 @@ public class ProductServiceImpl implements ProductService {
      * @param arrayOfIdServices
      * @return
      */
-    private ArrayList<TariffServiceDto> fillInDTOForBatchUpdate(Integer idTariff, Integer[] arrayOfIdServices) {
+    private ArrayList<TariffServiceDto> fillInDTOForBatchUpdate(Integer idTariff, Integer[] arrayOfIdServices) throws NumberFormatException {
         ArrayList<TariffServiceDto> products = new ArrayList<>();
-        for (int i = 0; i < arrayOfIdServices.length; i++) {
-            if (arrayOfIdServices[i] != null) {
+        for (Integer arrayOfIdService : arrayOfIdServices) {
+            if (arrayOfIdService != null) {
                 TariffServiceDto tariffServiceDto = new TariffServiceDto();
                 tariffServiceDto.setTariffId(idTariff);
-                tariffServiceDto.setServiceId(arrayOfIdServices[i]);
+                tariffServiceDto.setServiceId(arrayOfIdService);
                 products.add(tariffServiceDto);
             }
         }
@@ -294,10 +310,11 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     public Product getProductForUser(User currentUser, Integer productId) {
-        if (currentUser.getRole() == Role.BUSINESS) {
-            return productDao.getById(productId);
+        if (currentUser.getRole() == Role.RESIDENTIAL) {
+            return productDao.findProductWithPriceSetByPlace(productId, currentUser.getPlaceId());
         }
-        return productDao.findProductWithPriceSetByPlace(productId, currentUser.getPlaceId());
+        return productDao.getById(productId);
+
     }
 
     /**

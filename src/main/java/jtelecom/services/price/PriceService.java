@@ -1,6 +1,7 @@
 package jtelecom.services.price;
 
 import jtelecom.dao.price.Price;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,5 +15,6 @@ public interface PriceService {
 
     boolean isValid(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion);
 
+    @Transactional
     void updateProductPriceInRegions(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion);
 }

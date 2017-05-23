@@ -139,12 +139,12 @@ public class OrderService {
      *
      * @param orderId id of order
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
-     * @see PlannedTaskDao#deleteNextPlannedTask(Integer)
+     * @see PlannedTaskDao#deleteNextPlannedTaskForActivationForThisOrder(Integer)
      * @see OrderDao#activateOrder(Integer)
      */
     @Transactional
     public boolean activateOrderAfterSuspense(Integer orderId) {
-        plannedTaskDao.deleteNextPlannedTask(orderId);
+        plannedTaskDao.deleteNextPlannedTaskForActivationForThisOrder(orderId);
         boolean success = orderDao.activateOrder(orderId);
         if (success) {
             User user = userDAO.getUserByOrderId(orderId);
@@ -205,5 +205,13 @@ public class OrderService {
             mailService.sendProductActivatedEmail(user,product);
         }
         return success;
+    }
+
+    public void sendEmail(int orderId,String text,String csrEmail){
+        User user=userDAO.getUserByOrderId(orderId);
+        User csr=userDAO.findByEmail(csrEmail);
+        String to=user.getEmail();
+        String content=text+"\n  For more information call "+csr.getPhone()+" or write to "+csrEmail;
+        mailService.sendCustomEmail(to,"Information about your order",content);
     }
 }

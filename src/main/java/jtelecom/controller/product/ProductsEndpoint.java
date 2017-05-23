@@ -35,7 +35,7 @@ public class ProductsEndpoint {
     public ListHolder servicesByTariff(@ModelAttribute GridRequestDto request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
-        int length = request.getLength();
+        int length = request.getEndBorder();
         String search = request.getSearch();
         List<Product> data = productDao.getLimitedQuantityProduct(start, length, sort, search);
         int size = productDao.getCountProductsWithSearch(search);
@@ -47,10 +47,21 @@ public class ProductsEndpoint {
                                              @PathVariable(value = "id") Integer id) {
         String sort = request.getSort();
         int start = request.getStartBorder();
-        int length = request.getLength();
+        int length = request.getEndBorder();
         String search = request.getSearch();
         List<PriceByRegionDto> data = priceDao.getLimitedQuantityProductPricesInRegions(id, start, length, sort, search);
         int size = priceDao.getCountPriceByPlace(search, id);
+        return ListHolder.create(data, size);
+    }
+
+    @RequestMapping(value={"getPrices"},method = RequestMethod.GET)
+    public ListHolder getPrices(@RequestParam(name = "start") int startIndex,
+                                @RequestParam(name = "end") int endIndex,
+                                @RequestParam(name = "productId") int productId){
+        List<PriceByRegionDto> data=priceDao.getLimitedQuantityProductPricesInRegions(productId,startIndex,endIndex,"","");
+        for(PriceByRegionDto price:data){
+        }
+        int size = priceDao.getCountPriceByPlace("", productId);
         return ListHolder.create(data, size);
     }
 }

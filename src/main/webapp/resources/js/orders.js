@@ -2,13 +2,14 @@
  * Created by Yuliya Pedash on 08.05.2017.
  */
 $(document).ready(function () {
-    $("#formWithDates").hide();
     $("#planned-tasks-info").hide();
-
     $("#toggle-planned-info").click(function () {
         $("#planned-tasks-info").toggle();
     });
 
+    $("#suspend-form-submit").click(function () {
+        $("#formWithDates").submit();
+    });
 
     $("#formWithDates").submit(function (e) {
         e.preventDefault();
@@ -18,9 +19,9 @@ $(document).ready(function () {
             formData[input.attr("name")] = input.val();
             delete formData["undefined"];
         });
-        console.log(formData);
 
         if (areDatesCorrect()) {
+            $("#suspendModal").modal('hide')
             jQuery.ajax({
                 headers: {
                     'Accept': 'application/json',
@@ -39,11 +40,12 @@ $(document).ready(function () {
                 }
             });
         }
+
     });
 
 });
 function toggleFormFunc(orderId) {
-    $("#formWithDates").toggle();
+    $("#suspendModal").modal({backdrop: true});
     $("#orderId").val(orderId);
 }
 function areDatesCorrect() {

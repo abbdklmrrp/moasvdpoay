@@ -82,18 +82,22 @@
                         <br>
                         <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                             <tr>
+                                <th>№</th>
                                 <th>Region</th>
                                 <th>Product price</th>
                             </tr>
-                            <c:forEach var="place" items="${placesAndPrice}">
+                            <c:forEach var="place" items="${placesAndPrice}" varStatus="placesCount">
                                 <tr>
+                                    <td>${placesCount.count}</td>
                                     <td><input type="hidden" name="placeId" value="${place.placeId}">${place.placeName}
                                     </td>
+
                                     <td>
                                             <%--<div class="form-group row">--%>
                                         <div class="col-sm-8">
-                                            <input type="number" class="currency" min="0.00" max="99999.99"
+                                            <input type="number" class="currency"
                                                    value="${place.priceProduct eq null? 0 : place.priceProduct}.00"
+                                                   pattern="[0-9]+([,\.][0-9]+)?" step="0.01"
                                                    id="basePrice" name="priceByRegion">
                                             <i class="fa fa-user"></i>
                                         </div>

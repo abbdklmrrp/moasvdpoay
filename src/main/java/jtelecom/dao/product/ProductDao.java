@@ -11,7 +11,6 @@ import java.util.Map;
  * Created by Rysakova Anna , Alistratenko Nikita on 23.04.2017.
  */
 public interface ProductDao extends Dao<Product> {
-
     List<Product> getByTypeId(int id);
 
     List<Product> getByCategoryId(int id);
@@ -100,7 +99,7 @@ public interface ProductDao extends Dao<Product> {
 
     List<TariffServiceDto> getServicesByTariff(Integer tariffId);
 
-//    List<Product> getServicesNotInTariff(Product product);
+    Map<String, List<Product>> getServicesNotInTariff(Integer tariffId);
 
     void deleteServiceFromTariff(List<TariffServiceDto> tariffServiceDtos);
 

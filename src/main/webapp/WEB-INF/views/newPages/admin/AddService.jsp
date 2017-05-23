@@ -65,26 +65,28 @@
                     <i class="fa fa-user"></i>
                 </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row" id="price">
                 <label class="col-sm-4 control-label">Base price</label>
                 <div class="col-sm-8">
-                    <input type="number" class="currency" min="0.01" max="99999.99" value="100.00"
-                           id="basePrice" name="basePrice" required>
+                    <input type="number" class="currency" value="100.00"
+                           pattern="[0-9]+([,\.][0-9]+)?" step="0.01"
+                           name="basePrice" id="basePrice" required>
                     <i class="fa fa-user"></i>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-4 control-label">Customer type</label>
                 <div class="col-sm-8">
-                    <select name="customerType" class="form-control" id="customerTypeId">
-                        <option value="Residential">Residential</option>
+                    <select name="customerType" class="form-control" id="customerTypeId"
+                            onclick="selectedCustomer(this)">
+                        <option value="Residential" selected>Residential</option>
                         <option value="Business">Business</option>
                     </select></div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-4 control-label">Duration in days</label>
                 <div class="col-sm-8">
-                    <input type="number" name="durationInDays" class="form-control" placeholder="365"
+                    <input type="number" name="durationInDays" class="form-control" value="365"
                            onchange="handleChange(this)">
                     <i class="fa fa-user"></i>
                 </div>
@@ -103,12 +105,12 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-sm-4 control-label">Select status service</label>
+                <label class="col-sm-4 control-label">Status</label>
                 <div class="col-sm-8">
                     <div class="row">
-                        <input type="radio" name="status" class="col-sm-1" value="Available">
+                        <input type="radio" name="status" class="col-sm-1" value="Available" checked>
                         <label class="col-sm-5 control-label">Available</label>
-                        <input type="radio" name="status" class="col-sm-1" value="NotAvailable" checked>
+                        <input type="radio" name="status" class="col-sm-1" value="Disable">
                         <label class="col-sm-5 control-label">Not Available</label>
                     </div>
                 </div>
@@ -130,18 +132,19 @@
 </script>
 <script>
     function handleChange(input) {
-        if (input.value < 0) input.value = 0;
+        if (input.value < 0) input.value = 1;
         if (input.value > 365) input.value = 365;
     }
 </script>
 <script>
     document.getElementById('basePrice').onkeypress = function (e) {
         if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') { // позволяет ввести или одну точку, или одну запятую
-            return !(/[.,А-Яа-яA-Za-z-"+"]/.test(String.fromCharCode(e.charCode)));
+            return !(/[.,А-Яа-яA-Za-z-+]/.test(String.fromCharCode(e.charCode)));
         }
     }
 </script>
 <script src="<c:url value="/resources/js/newCategoryService.js"/>"></script>
+<script src="<c:url value="/resources/js/selectedCustomer.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
 </body>
 </html>

@@ -20,7 +20,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -42,22 +41,23 @@ public class FillTariffController {
     private ProductService productService;
 
     @RequestMapping(value = {"fillTariff"}, method = RequestMethod.GET)
-    public ModelAndView fillTariffWithService(ModelAndView mav) {
+    public ModelAndView fillTariffWithService(@RequestParam(value = "tariffId") Integer tariffId,
+                                              ModelAndView mav) {
 
         Map<String, List<Product>> allServicesWithCategory = productDao.getAllServicesWithCategory();
         logger.debug("Get all service's categories {} ", allServicesWithCategory.toString());
 
         mav.addObject("allServicesWithCategory", allServicesWithCategory);
+        mav.addObject("tariffId", tariffId);
         mav.setViewName("newPages/admin/fillTariff");
         return mav;
     }
 
     @RequestMapping(value = {"fillTariff"}, method = RequestMethod.POST)
-    public ModelAndView identifyTariff(HttpSession session,
+    public ModelAndView identifyTariff(@RequestParam(value = "tariffId") Integer tariffId,
                                        @RequestParam(value = "selectedService") Integer[] servicesIdArray,
                                        ModelAndView mav) {
 
-        Integer tariffId = (Integer) session.getAttribute("productId");
         logger.debug("Get all tariff ID {} ", tariffId);
         try {
             Product tariff = productDao.getById(tariffId);
@@ -74,17 +74,6 @@ public class FillTariffController {
             return mav;
         }
 
-//        Integer[] servicesIdArray = ProductUtil.convertStringToIntegerArray(services);
-
-//        boolean checkUniqueCategoryServices = productService.isCategoriesUnique(servicesIdArray);
-//        logger.debug("Check that the new category does not exist in the database {} ", checkUniqueCategoryServices);
-//        if (!checkUniqueCategoryServices) {
-//            logger.error("Category already exist in database");
-//            mav.addObject("error", ERROR_UNIQUE_CATEGORY);
-//            mav.setViewName("admin/fillTariff");
-//            return mav;
-//        }
-
         try {
             productService.fillInTariffWithServices(tariffId, servicesIdArray);
             logger.debug("Fill in tariff with services to database");
@@ -96,10 +85,10 @@ public class FillTariffController {
         }
         Product product = productDao.getById(tariffId);
         if (product.getCustomerType() == CustomerType.Business) {
-            mav.setViewName("redirect:/admin/getProfile");
+            mav.setViewName("redirect:/admin/getProducts");
         }
         if (product.getCustomerType() == CustomerType.Residential) {
-            mav.setViewName("redirect:/admin/fillTariffsPrices");
+            mav.setViewName("redirect:/admin/fillTariffsPrices?id=" + tariffId);
         }
         return mav;
     }

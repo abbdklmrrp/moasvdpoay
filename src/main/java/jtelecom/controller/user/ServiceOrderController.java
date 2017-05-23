@@ -19,6 +19,7 @@ import jtelecom.services.product.ProductServiceImpl;
 import jtelecom.util.SharedVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -33,8 +35,9 @@ import java.util.List;
  */
 
 @Controller
+@Scope(value = "session")
 @RequestMapping({"residential", "business", "csr", "employee"})
-public class ServiceOrderController {
+public class ServiceOrderController implements Serializable {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
@@ -58,7 +61,7 @@ public class ServiceOrderController {
     private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing this order. Please, try again!";
     private final static String ALL_CATEGORIES = "All Categories";
     @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
-    public String getUsers(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
+    public String orderService(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
         if (currentUser.getRole() == Role.CSR) {

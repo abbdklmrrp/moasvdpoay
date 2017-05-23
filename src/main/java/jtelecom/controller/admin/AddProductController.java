@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -51,10 +50,11 @@ public class AddProductController {
     }
 
     @RequestMapping(value = {"addTariff"}, method = RequestMethod.POST)
-    public ModelAndView createService(Product product, ModelAndView mav, HttpSession session) {
+    public ModelAndView createTariff(Product product, ModelAndView mav) {
         product.setProductType(ProductType.Tariff);
         boolean isEmptyFieldsOfTariff = productService.isEmptyFieldOfProduct(product);
         logger.debug("Check that the incoming tariff fields are not empty {} ", isEmptyFieldsOfTariff);
+        productService.validateBasePriceByCustomerType(product);
         if (isEmptyFieldsOfTariff) {
             logger.error("Incoming request has empty fields");
             mav.addObject("error", ERROR_WRONG_FIELDS);
@@ -62,7 +62,7 @@ public class AddProductController {
             return mav;
         }
         Integer isSave = productService.saveProduct(product);
-        session.setAttribute("productId", isSave);
+        mav.addObject("tariffId", isSave);
         logger.debug("Save product was success {} ", isSave);
         mav.setViewName("redirect:/admin/fillTariff");
         return mav;
@@ -71,12 +71,13 @@ public class AddProductController {
     @RequestMapping(value = {"addService"}, method = RequestMethod.POST)
     public ModelAndView createService(ModelAndView mav,
                                       ProductCategories productCategory,
-                                      Product product, HttpSession session) {
+                                      Product product) {
         product.setProductType(ProductType.Service);
         boolean isEmptyFieldsOfService = productService.isEmptyFieldOfProduct(product);
         logger.debug("Check that the incoming tariff fields are not empty {} ", isEmptyFieldsOfService);
         boolean isEmptyFieldsOfNewCategory = productService.isEmptyFieldsOfNewCategory(productCategory);
         logger.debug("Check that the incoming new category fields are not empty {} ", isEmptyFieldsOfNewCategory);
+        productService.validateBasePriceByCustomerType(product);
 
         if (isEmptyFieldsOfService || isEmptyFieldsOfNewCategory) {
             mav.addObject("error", ERROR_WRONG_FIELDS);
@@ -99,11 +100,10 @@ public class AddProductController {
         Integer isSave = productService.saveProduct(product);
         logger.debug("Save product was success with id {} ", isSave);
         if (product.getCustomerType() == CustomerType.Residential) {
-            session.setAttribute("productId", isSave);
-            mav.setViewName("redirect:/admin/fillTariffsPrices");
+            mav.setViewName("redirect:/admin/fillTariffsPrices?id=" + isSave);
         }
         if (product.getCustomerType() == CustomerType.Business) {
-            mav.setViewName("redirect:/admin/getProfile");
+            mav.setViewName("redirect:/admin/getProducts");
         }
         return mav;
     }

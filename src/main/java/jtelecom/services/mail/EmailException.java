@@ -10,7 +10,7 @@ import javax.mail.MessagingException;
 @SuppressWarnings("serial")
 public final class EmailException extends RuntimeException {
 
-    protected static final String MISSING_RECIPIENT = "email is not valid: missing recipients";
+    protected static final String MISSING_RECIPIENT = "Email is not valid: missing recipient";
     protected static final String MISSING_SUBJECT = "Email is not valid: missing subject";
     protected static final String MISSING_CONTENT = "Email is not valid: missing content body";
 
