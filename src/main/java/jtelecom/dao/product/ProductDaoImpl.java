@@ -995,14 +995,13 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search) {
-        int rownum = start + length;
         if (sort.isEmpty()) {
             sort = "ID";
         }
         String sql = String.format(SELECT_LIMITED_PRODUCTS, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("start", start);
-        params.addValue("length", rownum);
+        params.addValue("length", length);
         params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.query(sql, params, new ProductRowMapper());
     }

@@ -180,14 +180,13 @@ public class PriceDaoImp implements PriceDao {
 
     @Override
     public List<PriceByRegionDto> getLimitedQuantityProductPricesInRegions(int productId, int start, int length, String sort, String search) {
-        int rownum = start + length;
         if (sort.isEmpty()) {
             sort = "PLACE";
         }
         String sql = String.format(FIND_PRICE_IN_REGIONS_FOR_ALL_PRODUCTS, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("start", start);
-        params.addValue("length", rownum);
+        params.addValue("length", length);
         params.addValue("pattern", "%" + search + "%");
         params.addValue("productId", productId);
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
