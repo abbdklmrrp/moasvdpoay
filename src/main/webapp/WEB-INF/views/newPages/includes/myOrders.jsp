@@ -1,6 +1,7 @@
 <div class="container">
-    <div class="col-md-12">
-        <h1 style="text-align: center">${param.pageName}</h1>
+    <div class="row">
+        <div class="col-xs-12">
+        <h1 style="text-align: center">My orders</h1>
         <div class="grid-progress-bar-placeholder">
             <div class="progress grid-progress-bar" style="display: none;" id="progressId">
                 <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
@@ -14,7 +15,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-10" data-grid="title">
-                        ${param.pageName}
+                        Orders
                     </div>
                     <div class="col-md-2" style="text-align:right;">
                         <a href="javascript:" data-grid="pager-refresh">
@@ -62,7 +63,7 @@
                 <table class="table table-striped table-bordered table-hover" data-grid="grid">
                     <thead>
                     <tr>
-                        <th class="col-xs-2" data-grid-header="name" data-grid-header-sortable="true">
+                        <th class="col-xs-2" data-grid-header="product_name" data-grid-header-sortable="true">
                             <div class="pull-right order-by">
                                 <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                    data-grid-header-sortable-up="up"></a>
@@ -71,50 +72,41 @@
                             </div>
                             Name
                         </th>
-                        <th class="col-xs-2" data-grid-header="surname" data-grid-header-sortable="true">
+                        <th class="col-xs-2" data-grid-header="product_type" data-grid-header-sortable="true">
                             <div class="pull-right order-by">
                                 <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                    data-grid-header-sortable-up="up"></a>
                                 <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                    data-grid-header-sortable-down="down"></a>
                             </div>
-                            Surname
+                            Type
                         </th>
-                        <th class="col-xs-2" data-grid-header="email" data-grid-header-sortable="true">
+                        <th class="col-xs-2" data-grid-header="customer_type" data-grid-header-sortable="true">
                             <div class="pull-right order-by">
                                 <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                    data-grid-header-sortable-up="up"></a>
                                 <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                    data-grid-header-sortable-down="down"></a>
                             </div>
-                            Email
+                            Customer type
                         </th>
-                        <th class="col-xs-1" data-grid-header="phone" data-grid-header-sortable="true">
+                        <th class="col-xs-2" data-grid-header="operation_date" data-grid-header-sortable="true">
                             <div class="pull-right order-by">
                                 <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                    data-grid-header-sortable-up="up"></a>
                                 <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                    data-grid-header-sortable-down="down"></a>
                             </div>
-                            Phone
+                            Ordering date
                         </th>
-                        <th class="col-xs-3" data-grid-header="address" data-grid-header-sortable="true">
+                        <th class="col-xs-2" data-grid-header="place" data-grid-header-sortable="true">
                             <div class="pull-right order-by">
                                 <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                    data-grid-header-sortable-up="up"></a>
                                 <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                    data-grid-header-sortable-down="down"></a>
                             </div>
-                            Address
-                        </th>
-                        <th class="col-xs-1" data-grid-header="role_id" data-grid-header-sortable="true">
-                            <div class="pull-right order-by">
-                                <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                                   data-grid-header-sortable-up="up"></a>
-                                <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                                   data-grid-header-sortable-down="down"></a>
-                            </div>
-                            Role
+                            Region
                         </th>
                         <th class="col-xs-1" data-grid-header="action">
                             Action
@@ -124,12 +116,11 @@
                     <div data-grid="message"></div>
                     <tbody>
                     <tr data-grid="row">
-                        <td data-cell="name"></td>
-                        <td data-cell="surname"></td>
-                        <td data-cell="email"></td>
-                        <td data-cell="phone"></td>
-                        <td data-cell="address"></td>
-                        <td data-cell="role_id"></td>
+                        <td data-cell="product_name"></td>
+                        <td data-cell="product_type"></td>
+                        <td data-cell="customer_type"></td>
+                        <td data-cell="operation_date"></td>
+                        <td data-cell="place"></td>
                         <td data-cell="action"></td>
 
                     </tr>
@@ -166,3 +157,25 @@
         </div>
     </div>
 </div>
+</div>
+<jsp:include page="../includes/footer.jsp"/>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
+<script>
+    $().BooGrid({
+        id: 'productsIds',
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/getMyOrders.json'}),
+        listeners: [
+            new ElementListener($('#progressId'))
+        ],
+        renderers: {
+            "action": function (pv, wv, grid) {
+                return $('<input type="button" class="btn btn-primary" value="Process">').click(function () {
+                        location.href = '${pageContext.request.contextPath}/csr/getOrderPage?id=' + wv.order_id
+                    }
+                );
+            }
+        }
+    })
+</script>
