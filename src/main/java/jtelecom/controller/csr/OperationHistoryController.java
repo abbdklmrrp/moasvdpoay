@@ -25,7 +25,7 @@ import java.util.List;
  * @since 11.05.2017.
  */
 @RestController
-@RequestMapping({"csr","residential","business"})
+@RequestMapping({"csr", "residential", "business"})
 public class OperationHistoryController {
     @Resource
     private OperationHistoryDao operationHistoryDao;
@@ -40,31 +40,56 @@ public class OperationHistoryController {
         return new ModelAndView("newPages/csr/UserHistory");
     }
 
+    /**
+     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto}. <br>
+     * After method gets list with all operations from database.<br>
+     * This user's id method gets from session.
+     *
+     * @param request contains indexes for first element and last elements and patterns for search and sort
+     * @return class which contains number of all elements with such parameters and some interval of the data
+     */
     @RequestMapping(value = "getOperationHistory", method = RequestMethod.GET)
     public ListHolder getOperationHistory(@ModelAttribute GridRequestDto request, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("userId");
-        return getList(userId,request);
-    }
-    @RequestMapping(value="operationsHistory",method=RequestMethod.GET)
-    public ModelAndView operationsHistory(){
-        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        return new ModelAndView("newPages/"+user.getRole().getName().toLowerCase()+"/OperationHistory");
+        return getList(userId, request);
     }
 
-    @RequestMapping(value="getOrderHistory",method=RequestMethod.GET)
-    public ListHolder getOrderHistory(@ModelAttribute GridRequestDto request){
-        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        return getList(user.getId(),request);
+    @RequestMapping(value = "operationsHistory", method = RequestMethod.GET)
+    public ModelAndView operationsHistory() {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        return new ModelAndView("newPages/" + user.getRole().getName().toLowerCase() + "/OperationHistory");
     }
 
-    private ListHolder getList(Integer userId,GridRequestDto request){
+    /**
+     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto}. <br>
+     * After method gets list with all operations from database.<br>
+     * This user's id method gets from the security current user.
+     *
+     * @param request contains indexes for first element and last elements and patterns for search and sort
+     * @return class which contains number of all elements with such parameters and some interval of the data
+     */
+    @RequestMapping(value = "getOrderHistory", method = RequestMethod.GET)
+    public ListHolder getOrderHistory(@ModelAttribute GridRequestDto request) {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        return getList(user.getId(), request);
+    }
+
+    /**
+     * Base method for {@link jtelecom.controller.csr.OperationHistoryController#getOrderHistory(GridRequestDto)} <br>
+     * and {@link jtelecom.controller.csr.OperationHistoryController#getOperationHistory(GridRequestDto, HttpSession)}
+     *
+     * @param userId  id of the user
+     * @param request contains indexes for first element and last elements and patterns for search and sort
+     * @return class which contains number of all elements with such parameters and some interval of the data
+     */
+    private ListHolder getList(Integer userId, GridRequestDto request) {
         String sort = request.getSort();
-        String search=request.getSearch();
+        String search = request.getSearch();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         logger.debug("Get operation history in interval:" + start + " : " + length);
-        List<FullInfoOrderDTO> data = operationHistoryDao.getOperationHistoryByUserId(userId, start, length, sort,search);
-        int size = operationHistoryDao.getCountOperationForUser(userId,search);
+        List<FullInfoOrderDTO> data = operationHistoryDao.getOperationHistoryByUserId(userId, start, length, sort, search);
+        int size = operationHistoryDao.getCountOperationForUser(userId, search);
         return ListHolder.create(data, size);
     }
 
