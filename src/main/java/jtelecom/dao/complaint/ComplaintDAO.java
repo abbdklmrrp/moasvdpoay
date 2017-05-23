@@ -19,12 +19,12 @@ public interface ComplaintDAO extends Dao<Complaint> {
     /**
      * This method returns list of complaints assigned to concrete user.
      *
-     * @param pmgId user id
+     * @param pmgId      user id
      * @param startIndex index of first row
-     * @param endIndex index of last row
+     * @param endIndex   index of last row
      * @return list of complaints
      */
-    List<Complaint> getIntervalOfAssignedComplaints(int pmgId,int startIndex, int endIndex);
+    List<Complaint> getIntervalOfAssignedComplaints(int pmgId, int startIndex, int endIndex);
 
     /**
      * This method returns all complaints by concrete order.
@@ -38,7 +38,7 @@ public interface ComplaintDAO extends Dao<Complaint> {
      * This method returns list of unassigned complaints.
      *
      * @param startIndex index of first row
-     * @param endIndex index of last row
+     * @param endIndex   index of last row
      * @return list of complaints
      */
     List<Complaint> getIntervalOfUnassignedComplaints(int startIndex, int endIndex);

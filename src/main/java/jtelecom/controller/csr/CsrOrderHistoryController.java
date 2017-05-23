@@ -35,6 +35,15 @@ public class CsrOrderHistoryController {
         return new ModelAndView("newPages/csr/OrderHistory");
     }
 
+
+    /**
+     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto} <br>.
+     * After method gets list with csr's all activated orders  from database.<br>
+     * Method determines csr from the security current user.
+     *
+     * @param requestDto -contains indexes for first element and last elements and patterns for search and sort
+     * @return class which contains number of all elements with such parameters and some interval of the data
+     */
     @RequestMapping(value = "getHistoryOrders", method = RequestMethod.GET)
     public ListHolder getAllOrders(@ModelAttribute GridRequestDto requestDto) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());

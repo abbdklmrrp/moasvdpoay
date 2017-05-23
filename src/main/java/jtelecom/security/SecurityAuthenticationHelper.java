@@ -10,6 +10,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SecurityAuthenticationHelper {
+    /**
+     * This method takes the current user in the context of the application.
+     * If the user is not logged on <code> anonymousUser </code>
+     * method return <code>null</code>
+     *
+     * @return current user
+     */
     public User getCurrentUser() {
         Authentication authentication = getAuthentication();
 

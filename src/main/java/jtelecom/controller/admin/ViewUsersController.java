@@ -6,7 +6,6 @@ import jtelecom.dao.user.UserStatus;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +26,6 @@ public class ViewUsersController {
     @Resource
     private UserDAO userDAO;
     @Resource
-    private UserService userService;
-    @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
 
     @RequestMapping(value = "getUsersPage", method = RequestMethod.GET)
@@ -41,6 +38,13 @@ public class ViewUsersController {
         return new ModelAndView("newPages/business/Employees");
     }
 
+    /**
+     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto} <br>.
+     * After method gets list with all users from database
+     *
+     * @param request -contains indexes for first element and last elements and patterns for search and sort
+     * @return class which contains number of all elements with such parameters and some interval of the data
+     */
     @RequestMapping(value = {"getUsers"}, method = RequestMethod.GET)
     public ListHolder getUsers(@ModelAttribute GridRequestDto request) {
         String sort = request.getSort();
@@ -53,6 +57,14 @@ public class ViewUsersController {
         return ListHolder.create(data, size);
     }
 
+    /**
+     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto} <br>.
+     * After method gets list with all employees of business client from database.<br>
+     * This client's id method gets from the security current user.
+     *
+     * @param requestDto -contains indexes for first element and last elements and patterns for search and sort
+     * @return class which contains number of all elements with such parameters and some interval of the data
+     */
     @RequestMapping(value = {"getEmployees"}, method = RequestMethod.GET)
     public ListHolder getEmployees(@ModelAttribute GridRequestDto requestDto) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
@@ -67,37 +79,46 @@ public class ViewUsersController {
         return ListHolder.create(data, size);
     }
 
-
+    /**
+     * This method activates user using his id
+     *
+     * @param userId- id of the user
+     * @return message which determines the success of the activating
+     */
     @RequestMapping(value = {"/activateUser"}, method = RequestMethod.POST)
-    @ResponseBody
     public String activateUser(@RequestParam Integer userId) {
         User user = userDAO.getUserById(userId);
         String message;
         user.setStatus(UserStatus.ENABLE);
         boolean success = userDAO.enableDisableUser(user);
-        if (!success) {
-            logger.error("Error in activating user:" + userId);
-            message = "Sorry, please try again";
-        } else {
+        if (success) {
             message = "success";
             logger.debug("User activated: " + userId);
+        } else {
+            logger.error("Error in activating user:" + userId);
+            message = "Sorry, please try again";
         }
         return message;
     }
 
+    /**
+     * This method deactivates user using his id
+     *
+     * @param userId- id of the user
+     * @return message which determines the success of the deactivating
+     */
     @RequestMapping(value = {"/deactivateUser"}, method = RequestMethod.POST)
-    @ResponseBody
     public String deactivateUser(@RequestParam Integer userId) {
         User user = userDAO.getUserById(userId);
         String message;
         user.setStatus(UserStatus.DISABLE);
         boolean success = userDAO.enableDisableUser(user);
-        if (!success) {
-            logger.error("Error in deactivating user:" + userId);
-            message = "Sorry, please try again";
-        } else {
+        if (success) {
             message = "success";
             logger.debug("User deactivated: " + userId);
+        } else {
+            logger.error("Error in deactivating user:" + userId);
+            message = "Sorry, please try again";
         }
         return message;
     }
