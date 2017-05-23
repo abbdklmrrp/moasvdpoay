@@ -95,10 +95,11 @@ public class FullComplaintInfoRepository {
     public Integer getCountComplaintsByUserId(int userId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
-        params.addValue("pattern", "%"+search+"%");
+        params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT_OF_COMPLAINT_BY_USER_ID, params, Integer.class);
     }
-    public List<FullComplaintInfoDTO> getIntervalComplaintsByUserId(int start, int length, String sort, String search,int userId){
+
+    public List<FullComplaintInfoDTO> getIntervalComplaintsByUserId(int start, int length, String sort, String search, int userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {
             sort = "creatingDate";
@@ -108,8 +109,8 @@ public class FullComplaintInfoRepository {
         params.addValue("pattern", "%" + search + "%");
         params.addValue("userId", userId);
         String sql = String.format(SELECT_FULL_INFO_COMPLAINT_BY_USER_ID, sort);
-        return jdbcTemplate.query(sql,params,(rs,rownum)->{
-            FullComplaintInfoDTO complaint=new FullComplaintInfoDTO();
+        return jdbcTemplate.query(sql, params, (rs, rownum) -> {
+            FullComplaintInfoDTO complaint = new FullComplaintInfoDTO();
             Calendar date = new GregorianCalendar();
             rs.getDate("creatingDate", date);
             complaint.setCreatingDate(date);

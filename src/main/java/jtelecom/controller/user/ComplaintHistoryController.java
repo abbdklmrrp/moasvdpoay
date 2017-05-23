@@ -3,11 +3,12 @@ package jtelecom.controller.user;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullComplaintInfoDTO;
-import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.repositories.FullComplaintInfoRepository;
 import jtelecom.security.SecurityAuthenticationHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,7 +23,7 @@ import java.util.List;
  * @since 16.05.2017.
  */
 @RestController
-@RequestMapping({"business","residential"})
+@RequestMapping({"business", "residential"})
 public class ComplaintHistoryController {
     @Resource
     private UserDAO userDAO;
@@ -30,24 +31,33 @@ public class ComplaintHistoryController {
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
     private FullComplaintInfoRepository fullComplaintInfoRepository;
+    private static Logger logger = LoggerFactory.getLogger(ComplaintHistoryController.class);
 
-    @RequestMapping(value="complaintHistory",method=RequestMethod.GET)
-    public ModelAndView complaintHistory(){
-        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        return new ModelAndView("newPages/"+user.getRole().getName().toLowerCase()+"/ComplaintHistory");
+    @RequestMapping(value = "complaintHistory", method = RequestMethod.GET)
+    public ModelAndView complaintHistory() {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        return new ModelAndView("newPages/" + user.getRole().getName().toLowerCase() + "/ComplaintHistory");
     }
-    @RequestMapping(value="getComplaintHistory",method=RequestMethod.GET)
-    public ListHolder getComplaintHistory(@ModelAttribute GridRequestDto request){
-        User user=userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        Integer userId=user.getId();
+
+    /**
+     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto} <br>.
+     * After method gets list with all client's complaints from database.<br>
+     * This client's id method gets from the security current user.
+     *
+     * @param request contains indexes for first element and last elements and patterns for search and sort
+     * @return class which contains number of all elements with such parameters and some interval of the data
+     */
+    @RequestMapping(value = "getComplaintHistory", method = RequestMethod.GET)
+    public ListHolder getComplaintHistory(@ModelAttribute GridRequestDto request) {
+        User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        Integer userId = user.getId();
         String sort = request.getSort();
-        String search=request.getSearch();
+        String search = request.getSearch();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
-        System.out.println(request.toString());
-        List<FullComplaintInfoDTO> data = fullComplaintInfoRepository.getIntervalComplaintsByUserId(start,length,sort,search,userId);
-        int size = fullComplaintInfoRepository.getCountComplaintsByUserId(userId,search);
-        System.out.println(size+" "+data.size());
+        List<FullComplaintInfoDTO> data = fullComplaintInfoRepository.getIntervalComplaintsByUserId(start, length, sort, search, userId);
+        int size = fullComplaintInfoRepository.getCountComplaintsByUserId(userId, search);
+        logger.debug("Get users in interval: {} {}", start, length);
         return ListHolder.create(data, size);
     }
 

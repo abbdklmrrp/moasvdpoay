@@ -32,6 +32,9 @@ public class MailServiceImpl implements MailService {
     public MailServiceImpl() {
     }
 
+    /**
+     * Thread for faster sending emails
+     */
     private class MailThread extends Thread {
         private SimpleMailMessage message;
 
@@ -49,6 +52,13 @@ public class MailServiceImpl implements MailService {
 
     }
 
+    /**
+     * Method sends system notifications
+     *
+     * @param to    recipient's email address
+     * @param model map with parameters
+     * @param path  name of subject template and path to content template file
+     */
     private void send(String to, Map<String, Object> model, EmailTemplatePath path) {
         SimpleMailMessage message = email.createEmail(to, model, path);
         try {
@@ -60,12 +70,25 @@ public class MailServiceImpl implements MailService {
         new MailServiceImpl.MailThread(message).start();
     }
 
+    /**
+     * Method sends custom emails
+     *
+     * @param to      recipient's email address
+     * @param subject subject of the email
+     * @param text    content of the email
+     */
     @Override
     public void sendCustomEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
+        try {
+            validate(message);
+        } catch (EmailException e) {
+            logger.error(e.getMessage());
+            return;
+        }
         new MailServiceImpl.MailThread(message).start();
     }
 
@@ -222,6 +245,13 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_WILL_SUSPEND);
     }
 
+    /**
+     * This method validates message<br>
+     * If one of the key field isn't fill - it throws exception
+     * Also if email address isn't contain "@" - it throws exception
+     *
+     * @param email email for validating
+     */
     private void validate(SimpleMailMessage email) {
         if (email.getText() == null || email.getText().isEmpty()) {
             throw new EmailException(EmailException.MISSING_CONTENT);
@@ -229,6 +259,8 @@ public class MailServiceImpl implements MailService {
             throw new EmailException(EmailException.MISSING_SUBJECT);
         } else if (email.getTo() == null) {
             throw new EmailException(EmailException.MISSING_RECIPIENT);
+        } else if (!(email.getTo()[0].contains("@"))) {
+            throw new EmailException(EmailException.WRONG_EMAIL_ADDRESS);
         }
     }
 }
