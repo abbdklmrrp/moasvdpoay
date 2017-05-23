@@ -28,6 +28,7 @@ public class FullInfoOrderDTO {
     private String userName;
     private String userSurname;
     private String phone;
+    private String address;
     @JsonProperty("customer_type")
     private CustomerType customerType;
 
@@ -41,6 +42,14 @@ public class FullInfoOrderDTO {
 
     public FullInfoOrderDTO() {
 
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Integer getOrderId() {
@@ -168,7 +177,8 @@ public class FullInfoOrderDTO {
                 "\nCustomer's info: " +
                 "\nName: " + userName +
                 "\nSurname: " + userSurname +
-                "\nPhone: " + phone;
+                "\nPhone: " + phone+
+                "\nAddress: "+address+" ";
         return message;
     }
 }

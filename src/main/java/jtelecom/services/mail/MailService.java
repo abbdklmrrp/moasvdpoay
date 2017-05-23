@@ -41,4 +41,6 @@ public interface MailService {
     void sendPasswordChangedEmail(User user);
 
     void sendProductWillSuspendEmail(User user, Product product, Calendar beginDate, Calendar endDate);
+
+    void sendCustomEmail(String to,String subject,String text);
 }

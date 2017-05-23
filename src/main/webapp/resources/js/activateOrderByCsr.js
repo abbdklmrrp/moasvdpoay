@@ -12,8 +12,6 @@ function activateOrder(orderId) {
                 });
                 var $statusElement = $('#actvBtn' + orderId);
                 $statusElement.empty();
-                var $newStatus = $(' <label>Activated!</label>');
-                $newStatus.appendTo($statusElement);
             }
             else {
                 swal("Sorry, an error occurred while activating this order!", "Please, try again", "error");

@@ -24,20 +24,41 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'Customers'}">
-                        <li class="active"><a href="${pageContext.request.contextPath}/csr/getCustomers">Customers</a></li>
+                        <li class="active"><a href="${pageContext.request.contextPath}/csr/getCustomers">Customers</a>
+                        </li>
                     </c:when>
                     <c:otherwise>
                         <li><a href="${pageContext.request.contextPath}/csr/getCustomers">Customers</a></li>
                     </c:otherwise>
                 </c:choose>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Orders<i class="icon-angle-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="${pageContext.request.contextPath}/csr/getAllOrdersPage">All orders</a></li>
-                        <li><a href="${pageContext.request.contextPath}/csr/getMyOrdersPage">My orders</a></li>
-                        <li><a href="${pageContext.request.contextPath}/csr/getHistoryOrdersPage">History</a></li>
-                    </ul>
-                </li>
+                <c:choose>
+                    <c:when test="${param.pageName == 'Orders'}">
+                        <li class="dropdown active">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Orders<i
+                                    class="icon-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="${pageContext.request.contextPath}/csr/getAllOrdersPage">All orders</a>
+                                </li>
+                                <li><a href="${pageContext.request.contextPath}/csr/getMyOrdersPage">My orders</a></li>
+                                <li><a href="${pageContext.request.contextPath}/csr/getHistoryOrdersPage">History</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Orders<i
+                                    class="icon-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="${pageContext.request.contextPath}/csr/getAllOrdersPage">All orders</a>
+                                </li>
+                                <li><a href="${pageContext.request.contextPath}/csr/getMyOrdersPage">My orders</a></li>
+                                <li><a href="${pageContext.request.contextPath}/csr/getHistoryOrdersPage">History</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'Users'}">
                         <li class="active"><a href="${pageContext.request.contextPath}/csr/getUsersPage">Users</a></li>
@@ -48,7 +69,8 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'Products'}">
-                        <li class="active"><a href="${pageContext.request.contextPath}/csr/getCsrProductsPage">Products</a></li>
+                        <li class="active"><a
+                                href="${pageContext.request.contextPath}/csr/getCsrProductsPage">Products</a></li>
                     </c:when>
                     <c:otherwise>
                         <li><a href="${pageContext.request.contextPath}/csr/getCsrProductsPage">Products</a></li>
@@ -56,14 +78,16 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'Statistics'}">
-                        <li class="active"><a href="${pageContext.request.contextPath}/csr/statistics">Statistics</a></li>
+                        <li class="active"><a href="${pageContext.request.contextPath}/csr/statistics">Statistics</a>
+                        </li>
                     </c:when>
                     <c:otherwise>
                         <li><a href="${pageContext.request.contextPath}/csr/statistics">Statistics</a></li>
                     </c:otherwise>
                 </c:choose>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Registration<i class="icon-angle-down"></i></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Registration<i
+                            class="icon-angle-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="${pageContext.request.contextPath}/csr/registrationFromCsr">New user</a></li>
                         <li><a href="${pageContext.request.contextPath}/csr/getCreateCustomer">New customer</a></li>

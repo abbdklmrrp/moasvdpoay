@@ -64,5 +64,13 @@ public class CsrMyOrdersController {
         return success ? "success" : "fail";
     }
 
+    @RequestMapping(value="sendEmail",method = RequestMethod.POST)
+    public String sendEmail(@RequestParam(value="orderId") int orderId,
+                            @RequestParam(value="text") String text){
+        String email=securityAuthenticationHelper.getCurrentUser().getUsername();
+        orderService.sendEmail(orderId,text,email);
+        return "success";
+    }
+
 
 }
