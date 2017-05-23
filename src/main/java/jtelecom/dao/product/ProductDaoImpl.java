@@ -173,9 +173,10 @@ public class ProductDaoImpl implements ProductDao {
             "  JOIN ORDERS ON ORDERS.PRODUCT_ID = p1.ID\n" +
             "                 AND ORDERS.USER_ID = :id\n" +
             "                 AND p1.TYPE_ID = 1\n" +
+            " AND ORDERS.CURRENT_STATUS_ID <> 3 /*Deactivated*/" +
             "  JOIN TARIFF_SERVICES\n" +
             "    ON p1.ID = TARIFF_SERVICES.TARIFF_ID\n" +
-            "  JOIN PRODUCTS p2 ON p2.ID = TARIFF_SERVICES.SERVICE_ID";
+            "  JOIN PRODUCTS p2 ON p2.ID = TARIFF_SERVICES.SERVICE_ID ";
     private final static String DELETE_SERVICE_FROM_TARIFF = "DELETE FROM TARIFF_SERVICES " +
             "WHERE TARIFF_ID=:idTariff AND SERVICE_ID=:idService ";
     private final static String DISABLE_ENABLE_PRODUCT = "UPDATE Products SET status=:status WHERE id=:id";

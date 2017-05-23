@@ -61,7 +61,7 @@ public class ServiceOrderController implements Serializable {
     private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing this order. Please, try again!";
     private final static String ALL_CATEGORIES = "All Categories";
     @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
-    public String getUsers(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
+    public String orderService(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
         if (currentUser.getRole() == Role.CSR) {
