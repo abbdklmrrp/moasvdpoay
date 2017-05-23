@@ -1,9 +1,10 @@
 package jtelecom.controller;
 
+import jtelecom.dao.complaint.Complaint;
 import jtelecom.dao.complaint.ComplaintDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
-import jtelecom.dto.ComplaintDataPartitionDTO;
+import jtelecom.dto.DataPartitionDTO;
 import jtelecom.repositories.FullComplaintInfoRepository;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.complaint.ComplaintService;
@@ -52,10 +53,10 @@ public class PMGController {
 
     @RequestMapping(value = "getData")
     @ResponseBody
-    public ComplaintDataPartitionDTO getData(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
-        ComplaintDataPartitionDTO dto = new ComplaintDataPartitionDTO();
+    public DataPartitionDTO getData(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
+        DataPartitionDTO<Complaint> dto = new DataPartitionDTO<>();
         dto.setAmount(complaintDAO.countUnassignedComplaintsToUser());
-        dto.setPartOfComplaints(complaintDAO.getIntervalOfUnassignedComplaints(startIndex, endIndex));
+        dto.setPartOfData(complaintDAO.getIntervalOfUnassignedComplaints(startIndex, endIndex));
         return dto;
     }
 
@@ -69,11 +70,11 @@ public class PMGController {
 
     @RequestMapping(value = "getDataByPMG")
     @ResponseBody
-    public ComplaintDataPartitionDTO getDataByPMG(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
+    public DataPartitionDTO getDataByPMG(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        ComplaintDataPartitionDTO dto = new ComplaintDataPartitionDTO();
+        DataPartitionDTO<Complaint> dto = new DataPartitionDTO<>();
         dto.setAmount(complaintDAO.countAssignedComplaintsToUser(user.getId()));
-        dto.setPartOfComplaints(complaintDAO.getIntervalOfAssignedComplaints(user.getId(), startIndex, endIndex));
+        dto.setPartOfData(complaintDAO.getIntervalOfAssignedComplaints(user.getId(), startIndex, endIndex));
         return dto;
     }
 
