@@ -111,6 +111,9 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
         return jdbcTemplate.update(DELETE_NEXT_PLANNED_TASK_FOR_ACTIVATION_OF_ORDER_USER_SQL, params) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<PlannedTaskDTO> getLimitedPlannedTasksForUsersOrders(Integer userId, Integer start, Integer end) {
 
@@ -130,6 +133,9 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountPlannedTasksForUserOrders(Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -137,6 +143,9 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
         return jdbcTemplate.queryForObject(SELECT_COUNT_PLANNED_TASKS_FOR_USERS_ORDERS_SQL, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean deletePlannedTaskById(Integer plannedTaskId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -144,6 +153,9 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
         return jdbcTemplate.update(DELETE_PLANNED_TASK_BY_ID_SQL, params) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean deletePlannedTaskForActivationOfThisSuspense(PlannedTask suspensePlannedTask) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -152,6 +164,9 @@ public class PlannedTaskDaoImpl implements PlannedTaskDao {
         return jdbcTemplate.update(DELETE_ACTIVATION_PLANNED_TASK_FOR_SUSPENSE_SQL, params) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean deleteAllPlannedTasksForOrder(Integer orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
