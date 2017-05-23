@@ -83,21 +83,29 @@
 
                         <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                             <tr>
+                                <td>№</td>
                                 <th>Category</th>
                                 <th>Services</th>
                                 <th>Services in tariff</th>
                             </tr>
-                            <c:forEach var="servcesByCategory" items="${allServicesWithCategory}">
+                            <c:forEach var="servcesByCategory" items="${allServicesWithCategory}"
+                                       varStatus="allCategory">
                                 <tr>
+                                    <td>${allCategory.count}</td>
                                     <td>${servcesByCategory.key}</td>
                                     <td>
                                         <select name="selectedService" id="soflow">
                                             <option value="">-</option>
+                                            <c:forEach var="service" items="${servicesByTariff}">
+                                                <c:if test="${servcesByCategory.key eq service.categoryName}">
+                                                    <option value="${service.serviceId}"
+                                                            selected>${service.serviceName}</option>
+                                                </c:if>
+                                            </c:forEach>
                                             <c:forEach var="product" items="${servcesByCategory.value}">
-                                                <c:forEach var="service" items="${servicesByTariff}">
-                                                    <option value="${product.id eq service.serviceId? 'selected="selected"' : ''}">${product.name}</option>
-                                                </c:forEach>
+                                                <c:if test="${product.id != ''}">
                                                 <option value="${product.id}">${product.name}</option>
+                                                </c:if>
                                             </c:forEach>
                                         </select>
                                     </td>

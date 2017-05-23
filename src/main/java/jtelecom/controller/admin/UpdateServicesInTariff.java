@@ -6,7 +6,6 @@ import jtelecom.dto.TariffServiceDto;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +29,7 @@ public class UpdateServicesInTariff {
     private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
     private static final String ERROR_IN_CONNECTION = "Error with filling database";
     private static final String ERROR_TYPE = "Wrong type of input data";
+    private static final String ERROR_EXIST = "Sorry, product doesn't exist";
     private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
     @Resource
     private ProductDao productDao;
@@ -43,7 +43,7 @@ public class UpdateServicesInTariff {
         logger.debug("Receive tariff's id {} ", tariffId);
         List<TariffServiceDto> servicesByTariff = productDao.getServicesByTariff(tariffId);
         logger.debug("Received services that are included in the tariff {}", servicesByTariff.toString());
-        Map<String, List<Product>> allServicesWithCategory = productDao.getAllServicesWithCategory();
+        Map<String, List<Product>> allServicesWithCategory = productDao.getServicesNotInTariff(tariffId);
         logger.debug("Get all service's categories {} ", allServicesWithCategory.toString());
         String customerType = productDao.getCustomerTypeByProductId(tariffId);
 
@@ -61,17 +61,17 @@ public class UpdateServicesInTariff {
                                                ModelAndView mav) {
 
         logger.debug("Receive tariff's id {} ", id);
-        try {
-            Product tariff = productDao.getById(id);
-            logger.debug("Checked that the tariff exists {} ", tariff.toString());
-        } catch (DataAccessException ex) {
+        Product foundProduct = productService.foundProduct(id);
+        if (foundProduct == null) {
             logger.error("Product with ID = {}  does not exist in the database ", id);
+            mav.addObject("error", ERROR_EXIST);
+            mav.setViewName("newPages/admin/updateServicesInTariff?id=" + id);
         }
 
         if (servicesIdArray == null) {
             logger.error("Incoming data error with services ");
             mav.addObject("error", ERROR_FILL_IN_TARIFF_SERVICES);
-            mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
+            mav.setViewName("newPages/admin/updateServicesInTariff?id=" + id);
             return mav;
         }
 
@@ -82,10 +82,11 @@ public class UpdateServicesInTariff {
         } catch (NumberFormatException e) {
             mav.addObject("error ", ERROR_TYPE);
             logger.error("Wrong parameter's type ", e.getMessage());
+            mav.setViewName("newPages/admin/updateServicesInTariff?id=" + id);
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
             mav.addObject("error ", ERROR_IN_CONNECTION);
-            mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
+            mav.setViewName("newPages/admin/updateServicesInTariff?id=" + id);
             return mav;
         }
 

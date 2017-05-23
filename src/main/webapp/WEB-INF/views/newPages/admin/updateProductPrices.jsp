@@ -82,11 +82,13 @@
                         <br>
                         <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                             <tr>
+                                <th>№</th>
                                 <th>Region</th>
                                 <th>Product price</th>
                             </tr>
-                            <c:forEach var="place" items="${placesAndPrice}">
+                            <c:forEach var="place" items="${placesAndPrice}" varStatus="placesCount">
                                 <tr>
+                                    <td>${placesCount.count}</td>
                                     <td><input type="hidden" name="placeId" value="${place.placeId}">${place.placeName}
                                     </td>
 
