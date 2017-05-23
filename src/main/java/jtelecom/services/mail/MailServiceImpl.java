@@ -61,6 +61,15 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
+    public void sendCustomEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        new MailServiceImpl.MailThread(message).start();
+    }
+
+    @Override
     public void sendRegistrationEmail(User user) {
         Map<String, Object> model = new MapBuilder(user)
                 .setUserName()

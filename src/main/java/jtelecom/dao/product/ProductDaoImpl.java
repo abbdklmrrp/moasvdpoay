@@ -66,15 +66,17 @@ public class ProductDaoImpl implements ProductDao {
             "FROM PRODUCTS prod JOIN PRODUCT_TYPES pTypes ON (prod.TYPE_ID=pTypes.ID)\n" +
             "JOIN PRODUCT_CATEGORIES pCategories ON (prod.CATEGORY_ID=pCategories.ID)\n" +
             "WHERE prod.STATUS=1 AND pTypes.name='Service' AND pCategories.name=:categoryName";
-    private final static String FIND_SERVICES_NOT_IN_TARIFF = "SELECT\n" +
-            "  p.ID,\n" +
-            "  p.CATEGORY_ID,\n" +
-            "  p.NAME,\n" +
-            "  p.STATUS\n" +
-            "FROM PRODUCTS p\n" +
-            "WHERE p.ID NOT IN (SELECT ts.SERVICE_ID\n" +
-            "                   FROM TARIFF_SERVICES ts\n" +
-            "                   WHERE ts.TARIFF_ID = :tariffId) AND p.TYPE_ID = 2";
+    private final static String FIND_SERVICES_NOT_IN_TARIFF = "SELECT \n" +
+            "p.ID, \n" +
+            "p.CATEGORY_ID, \n" +
+            "p.NAME, \n" +
+            "pCategories.NAME AS Category \n" +
+            "FROM PRODUCT_CATEGORIES pCategories LEFT JOIN ( \n" +
+            "SELECT * FROM products WHERE id NOT IN (SELECT ts.SERVICE_ID \n" +
+            "FROM TARIFF_SERVICES ts \n" +
+            "WHERE ts.TARIFF_ID = :tariffId) \n" +
+            "AND TYPE_ID=2 \n" +
+            ") p ON pCategories.id=p.CATEGORY_ID";
     private final static String FIND_ALL_SERVICES_WITH_CATEGORY = "SELECT " +
             "prod.ID, " +
             "prod.NAME, " +
@@ -213,7 +215,7 @@ public class ProductDaoImpl implements ProductDao {
             "                    AND product_id = :tariffId" +
             "                    AND (current_status_id = 1/* Active */ " +
             "                         OR current_status_id = 2/* Suspended */ " +
-            "                         OR current_status_id = 4/* In processing */)))";
+            "                         OR current_status_id = 4/* In processing */))";
     private final static String SELECT_TARIFFS_FOR_CUSTOMERS_SQL = "SELECT " +
             "id, " +
             "category_id, " +
@@ -894,26 +896,35 @@ public class ProductDaoImpl implements ProductDao {
         return productList;
     }
 
-//    /**
-//     * Rysakova Anna
-//     *
-//     * @param product
-//     * @return
-//     */
-//    @Override
-//    public List<Product> getServicesNotInTariff(Product product) {
-//        MapSqlParameterSource params = new MapSqlParameterSource();
-//        params.addValue("tariffId", product.getId());
-//        List<Product> productList = jdbcTemplate.query(FIND_SERVICES_NOT_IN_TARIFF, params, (rs, rowNum) -> {
-//            Product productTmp = new Product();
-//            productTmp.setId(rs.getInt("ID"));
-//            productTmp.setName(rs.getString("NAME"));
-//            productTmp.setStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")));
-//            productTmp.setCategoryId(rs.getInt("CATEGORY_ID"));
-//            return productTmp;
-//        });
-//        return productList;
-//    }
+    /**
+     * Rysakova Anna
+     *
+     * @param tariffId
+     * @return
+     */
+    @Override
+    public Map<String, List<Product>> getServicesNotInTariff(Integer tariffId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("tariffId", tariffId);
+        Map<String, List<Product>> serviceMap = new HashMap<>();
+        List<Product> services = jdbcTemplate.query(FIND_SERVICES_NOT_IN_TARIFF, params, (rs, rowNum) -> {
+            Product product = new Product();
+            product.setCategoryId(rs.getInt("CATEGORY_ID"));
+            product.setId(rs.getInt("ID"));
+            product.setName(rs.getString("NAME"));
+            String category = rs.getString("CATEGORY");
+            if (serviceMap.containsKey(category)) {
+                List<Product> serv = serviceMap.get(category);
+                serv.add(product);
+            } else {
+                List<Product> serv = new ArrayList<>();
+                serv.add(product);
+                serviceMap.put(category, serv);
+            }
+            return product;
+        });
+        return serviceMap;
+    }
 
     /**
      * Rysakova Anna

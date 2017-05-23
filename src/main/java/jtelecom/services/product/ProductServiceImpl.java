@@ -18,6 +18,7 @@ import jtelecom.services.mail.MailService;
 import jtelecom.util.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,6 +41,11 @@ public class ProductServiceImpl implements ProductService {
     private UserDAO userDAO;
     @Resource
     private MailService mailService;
+
+    @Override
+    public Product foundProduct(Integer productId) {
+        return productDao.getById(productId);
+    }
 
     /**
      * Rysakova Anna
@@ -115,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
      * @param servicesId
      * @param product
      */
-    public void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product) {
+    public void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product) throws DataIntegrityViolationException {
         List<TariffServiceDto> oldServiceList = productDao.getServicesByTariff(product.getId());
         List<TariffServiceDto> newServiceList = fillInDTOForBatchUpdate(product.getId(), servicesId);
 
@@ -147,13 +153,13 @@ public class ProductServiceImpl implements ProductService {
      * @param arrayOfIdServices
      * @return
      */
-    private ArrayList<TariffServiceDto> fillInDTOForBatchUpdate(Integer idTariff, Integer[] arrayOfIdServices) {
+    private ArrayList<TariffServiceDto> fillInDTOForBatchUpdate(Integer idTariff, Integer[] arrayOfIdServices) throws NumberFormatException {
         ArrayList<TariffServiceDto> products = new ArrayList<>();
-        for (int i = 0; i < arrayOfIdServices.length; i++) {
-            if (arrayOfIdServices[i] != null) {
+        for (Integer arrayOfIdService : arrayOfIdServices) {
+            if (arrayOfIdService != null) {
                 TariffServiceDto tariffServiceDto = new TariffServiceDto();
                 tariffServiceDto.setTariffId(idTariff);
-                tariffServiceDto.setServiceId(arrayOfIdServices[i]);
+                tariffServiceDto.setServiceId(arrayOfIdService);
                 products.add(tariffServiceDto);
             }
         }

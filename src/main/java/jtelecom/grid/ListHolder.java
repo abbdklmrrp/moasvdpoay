@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@XmlAccessorType(XmlAccessType.NONE)
-@JsonTypeName("listData")
+
 public class ListHolder<T> {
     @JsonProperty("data")
     List<T> data = new ArrayList<T>();

@@ -37,7 +37,9 @@ public class ViewProductPriceByRegion {
     public ModelAndView getProductPriceForRegions(@RequestParam("id") Integer productId,
                                                   ModelAndView mav) {
         String productType = productDao.getProductTypeByProductId(productId);
+        logger.debug("Product type: {} ", productType);
         mav.addObject("id", productId);
+        logger.debug("Product id: {}", productId);
         mav.addObject("productType", productType);
         mav.setViewName("newPages/admin/viewProductPriceInRegions");
         return mav;
@@ -45,7 +47,9 @@ public class ViewProductPriceByRegion {
 
     @RequestMapping(value = "viewProductPriceInfo", method = RequestMethod.POST)
     public String getProductPriceInfo(@RequestParam(value = "productId") Integer id) {
+        logger.debug("Product id: {}", id);
         List<PriceByRegionDto> price = priceDao.getPriceInRegionsByProduct(id);
+        logger.debug("Receive product price in regions {}", price);
         return price.toString();
     }
 }

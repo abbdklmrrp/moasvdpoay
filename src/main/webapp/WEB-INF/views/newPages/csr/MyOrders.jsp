@@ -8,7 +8,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp">
-    <jsp:param name="pageName" value="MyOrders"/>
+    <jsp:param name="pageName" value="Orders"/>
 </jsp:include>
 <jsp:include page="../includes/myOrders.jsp"/>
 </body>

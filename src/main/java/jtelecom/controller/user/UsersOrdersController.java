@@ -89,7 +89,8 @@ public class UsersOrdersController implements Serializable {
         Calendar beginDate = suspendFormDTO.getBeginDate();
         Calendar endDate = suspendFormDTO.getEndDate();
         Integer orderId = suspendFormDTO.getOrderId();
-        if (!DatesHelper.areDatesCorrectForOrderSuspense(beginDate, endDate)) {
+        boolean b = DatesHelper.areDatesCorrectForOrderSuspense(beginDate, endDate);
+        if (!b) {
             logger.error("Incorrect dates received from superdense form: {}, {}", beginDate, endDate);
             return DATE_ERROR_MSG;
         }
