@@ -4,7 +4,7 @@ import jtelecom.dao.product.Product;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.product.ProductServiceImpl;
+import jtelecom.services.product.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ public class ProductInfoController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
-    private ProductServiceImpl productService;
+    private ProductService productService;
     @Resource
     private UserDAO userDAO;
 

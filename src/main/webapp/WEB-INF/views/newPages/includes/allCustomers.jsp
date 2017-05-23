@@ -1,9 +1,7 @@
 <div class="container">
     <div class="row">
-        <div class="col-xs-1"></div>
-        <div class="col-xs-10">
+        <div class="col-xs-12">
             <h1 style="text-align: center">Customers</h1>
-            <br>
             <div class="grid-progress-bar-placeholder">
                 <div class="progress grid-progress-bar" style="display: none;" id="progressId">
                     <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
@@ -65,7 +63,7 @@
                     <table class="table table-striped table-bordered table-hover" data-grid="grid">
                         <thead>
                         <tr>
-                            <th class="col-xs-2" data-grid-header="name" data-grid-header-sortable="true">
+                            <th class="col-xs-6" data-grid-header="name" data-grid-header-sortable="true">
                                 <div class="pull-right order-by">
                                     <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                        data-grid-header-sortable-up="up"></a>
@@ -74,7 +72,7 @@
                                 </div>
                                 Name
                             </th>
-                            <th class="col-xs-2" data-grid-header="invoice" data-grid-header-sortable="true">
+                            <th class="col-xs-5" data-grid-header="invoice" data-grid-header-sortable="true">
                                 <div class="pull-right order-by">
                                     <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                        data-grid-header-sortable-up="up"></a>
@@ -83,7 +81,7 @@
                                 </div>
                                 Invoice
                             </th>
-                            <th class="col-xs-2" data-grid-header="action">
+                            <th class="col-xs-1" data-grid-header="action">
                                 Action
                             </th>
                             <%--<th class="col-xs-6" data-grid-header="status">--%>
@@ -131,7 +129,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-1"></div>
     </div>
 </div>
 <jsp:include page="../includes/footer.jsp"/>

@@ -36,7 +36,7 @@
                 <label class="col-sm-4 control-label">New category name</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="New category"
-                           name="categoryName" id="newCategory-inpt" pattern="[A-Za-z]">
+                           name="categoryName" id="newCategory-inpt">
                     <i class="fa fa-user"></i>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                 <div class="col-sm-8">
                     <input type="text" class="form-control"
                            placeholder="New category description "
-                           name="categoryDescription" id="newCategoryDesc-inpt" pattern="[A-Za-z]">
+                           name="categoryDescription" id="newCategoryDesc-inpt">
                     <i class="fa fa-user"></i>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                 <label class="col-sm-4 control-label">Name</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="Name " id="Name"
-                           name="name" pattern="[A-Za-z]" required>
+                           name="name" required>
                     <i class="fa fa-user"></i>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                 <label class="col-sm-4 control-label">Description</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" placeholder="Description "
-                           id="Description" name="description" pattern="[A-Za-z]" required>
+                           id="Description" name="description" required>
                     <i class="fa fa-user"></i>
                 </div>
             </div>

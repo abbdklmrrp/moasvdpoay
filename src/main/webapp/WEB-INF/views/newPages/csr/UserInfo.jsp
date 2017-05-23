@@ -75,29 +75,6 @@
     <div class="col-md-2"></div>
     <div class="col-md-2"></div>
     <div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
-
-
-<%--<form action="${contextPath}/csr/userTariffs" method="POST">--%>
-    <%--<button type="submit" class="btn btn-primary">User tariffs</button>--%>
-<%--</form>--%>
-<%--<form action="${contextPath}/csr/userServices" method="post">--%>
-<%--<button type="submit" class="log-btn">Services</button>--%>
-<%--</form>--%>
-<%--<form action="${pageContext.request.contextPath}/csr/userOrders" method="post">--%>
-    <%--<button type="submit" class="log-btn">Orders</button>--%>
-<%--</form>--%>
-<%--<form action="${pageContext.request.contextPath}/csr/getCsrComplaint" method="get">--%>
-    <%--<button type="submit" class="log-btn">Write complain</button>--%>
-<%--</form>--%>
-<%--<form action="${pageContext.request.contextPath}/csr/userOrders" method="POST">--%>
-    <%--<button type="submit" class="btn btn-primary">User orders</button>--%>
-<%--</form>--%>
-<%--<form action="${pageContext.request.contextPath}/csr/getCsrComplaint" method="get">--%>
-    <%--<button type="submit" class="log-btn">Write complain</button>--%>
-<%--</form>--%>
-<%--<form action="${conextPath}/csr/sendPassword" method="post">--%>
-<%--<button type="submit" class="log-btn">Send password</button>--%>
-<%--</form>--%>
 </div>
 <h2 style="text-align: center" id="infoMessage" hidden disabled="true">${msg}</h2>
 <jsp:include page="../includes/footer.jsp"/>
