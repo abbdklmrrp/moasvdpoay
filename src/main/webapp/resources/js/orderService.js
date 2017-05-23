@@ -16,7 +16,7 @@ function activateService(serviceId) {
             swal(resultMsg);
             var $statusElement = $('#service' + serviceId);
             $statusElement.empty();
-            var $newStatus = '<div id=service' + wv.id + '><input type="button" class="btn btn-success btn-block"  value="Activate" onclick="activateService(' + wv.productId + ')"></div>';
+            var $newStatus = '<input type="button" class="btn btn-danger btn-block"  value="Deactivate" onclick="deactivateService(' + serviceId + ')">';
             $statusElement.html($newStatus);
         },
         error: function () {
@@ -50,7 +50,7 @@ function deactivateService(serviceId) {
                         });
                         var $statusElement = $('#service' + serviceId);
                         $statusElement.empty();
-                        var $newStatus = '<div id="service' + serviceId + '><input type="button" class="btn btn-success btn-block"  value="Activate" onclick="activateService(' + wv.productId + ')"></div>';
+                        var $newStatus = '<input type="button" class="btn btn-success btn-block"  value="Activate" onclick="activateService(' + serviceId + ')">';
                         $statusElement.html($newStatus);
                     }
                     else {
