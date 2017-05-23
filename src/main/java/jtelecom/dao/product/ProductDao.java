@@ -34,7 +34,7 @@ public interface ProductDao extends Dao<Product> {
 
     void fillInTariffWithServices(List<TariffServiceDto> tariffServiceDtos);
 
-    boolean addCategory(ProductCategories categories);
+    Integer addCategory(ProductCategories categories);
 
     int findIdCategory(ProductCategories categories);
 

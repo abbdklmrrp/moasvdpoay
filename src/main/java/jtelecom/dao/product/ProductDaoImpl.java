@@ -493,12 +493,13 @@ public class ProductDaoImpl implements ProductDao {
      * @return
      */
     @Override
-    public boolean addCategory(ProductCategories categories) {
+    public Integer addCategory(ProductCategories categories) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", categories.getCategoryName());
         params.addValue("description", categories.getCategoryDescription());
-        int isUpdate = jdbcTemplate.update(ADD_CATEGORY, params);
-        return isUpdate > 0;
+        KeyHolder key = new GeneratedKeyHolder();
+        jdbcTemplate.update(ADD_CATEGORY, params, key, new String[]{"ID"});
+        return key.getKey().intValue();
     }
 
     /**

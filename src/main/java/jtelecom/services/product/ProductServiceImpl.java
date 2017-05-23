@@ -48,27 +48,31 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Rysakova Anna
+     * If <code>ProductCategories</code> was created, this method add
+     * it to database and return <code>ID</code> of new <code>ProductCategories</code>.
+     * If new <code>ProductCategories</code> was created,
+     * received key of new <code>ProductCategories</code> set to <code>Product</code> if
      *
-     * @param category
-     * @param product
-     * @return
+     * @param category <code>Product</code> category
+     * @param product incoming object of <code>Product</code>
+     * @return <code>Product</code>
      */
     @Override
     public Product getCategory(ProductCategories category, Product product) {
         if (!category.getCategoryName().isEmpty()) {
-            productDao.addCategory(category);
-            int newCategoryId = productDao.findIdCategory(category);
-            product.setCategoryId(newCategoryId);
+            Integer categoryId = productDao.addCategory(category);
+            product.setCategoryId(categoryId);
         }
         return product;
     }
 
     /**
-     * Rysakova Anna
+     * Returns {@code true} if, and only if, fields {@code categoryName} and {@code categoryDescription}
+     * of {@link ProductCategories} is {@code 0}.
      *
-     * @param categories
-     * @return
+     * @param categories incoming object of {@link ProductCategories}
+     * @return {@code true} if fields of{@link ProductCategories} is {@code 0}, otherwise
+     * {@code false}
      */
     @Override
     public boolean isEmptyFieldsOfNewCategory(ProductCategories categories) {
@@ -76,19 +80,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Rysakova Anna
+     * Returns {@code true} if, and only if, fields {@code name} and {@code description}of {@link Product} is {@code 0}.
      *
-     * @param product
-     * @return
+     * @param product incoming object of {@link Product}
+     * @return {@code true} if fields of{@link Product} is {@code 0}, otherwise
+     * {@code false}
      */
+    @Override
     public boolean isEmptyFieldOfProduct(Product product) {
         return (product.getName().isEmpty() || product.getDescription().isEmpty());
     }
 
-    @Override
     /**
+     * If {@code Product} customer type is {@code Residential},
+     * this method set {@code basePrice}  to {@code null}
      *
+     * @param product {@code Product}
      */
+    @Override
     public void validateBasePriceByCustomerType(Product product) {
         if (product.getCustomerType() == CustomerType.Residential) {
             product.setBasePrice(null);
@@ -96,49 +105,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Rysakova Anna
+     * <p>This method update services in tariff. For this, the method takes out old services from the database to {@link List}
+     * and compare with {@link List} of new services. </p>
+     * <p>First, services that are not included in the new list are deleted
+     * Then new services are inserted into the database</p>
      *
-     * @param servicesIdArray
-     * @return
-     */
-    public boolean isCategoriesUnique(Integer[] servicesIdArray) {
-        // FIXME: 11.05.2017 getServiceById hash mmap
-        List<Product> allServices = productDao.getAllServices();
-        Set<Integer> serviceCategoryId = new HashSet<>();
-        for (Integer serviceId : servicesIdArray) {
-            for (Product product : allServices) {
-                if (Objects.equals(serviceId, product.getId())) {
-                    serviceCategoryId.add(product.getCategoryId());
-                }
-            }
-        }
-        return servicesIdArray.length == serviceCategoryId.size();
-    }
-
-    /**
-     * Rysakova Anna
-     *
-     * @param servicesId
-     * @param product
+     * @param servicesId {@code Array} of ID services
+     * @param product {@code Product}
      */
     public void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product) throws DataIntegrityViolationException {
         List<TariffServiceDto> oldServiceList = productDao.getServicesByTariff(product.getId());
         List<TariffServiceDto> newServiceList = fillInDTOForBatchUpdate(product.getId(), servicesId);
 
         List<TariffServiceDto> uniqueServicesInFirstCollection = (List<TariffServiceDto>) CollectionUtil
-                .getUniqueElementsInFirstCollection(oldServiceList, newServiceList);
+                .firstCollectionMinusSecondCollection(oldServiceList, newServiceList);
         productDao.deleteServiceFromTariff(uniqueServicesInFirstCollection);
 
         uniqueServicesInFirstCollection = (List<TariffServiceDto>) CollectionUtil
-                .getUniqueElementsInFirstCollection(newServiceList, oldServiceList);
+                .firstCollectionMinusSecondCollection(newServiceList, oldServiceList);
         productDao.fillInTariffWithServices(uniqueServicesInFirstCollection);
     }
 
     /**
-     * Anna Rysakova
+     * This method insert to database received {@link ArrayList} of {@link TariffServiceDto}
+     * which contains tariff ID and array of ID services.
      *
-     * @param idTariff
-     * @param arrayOfIdServices
+     * @param idTariff tariff ID
+     * @param arrayOfIdServices array of ID services
      */
     @Override
     public void fillInTariffWithServices(Integer idTariff, Integer[] arrayOfIdServices) {
@@ -147,11 +140,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Anna Rysakova
+     * This method convert received ID tariff, array of ID services to {@link TariffServiceDto}
      *
-     * @param idTariff
-     * @param arrayOfIdServices
-     * @return
+     * @param idTariff tariff ID
+     * @param arrayOfIdServices array of ID services
+     * @return {@link ArrayList} of {@link TariffServiceDto}
+     * which contains tariff ID and array of ID services.
      */
     private ArrayList<TariffServiceDto> fillInDTOForBatchUpdate(Integer idTariff, Integer[] arrayOfIdServices) throws NumberFormatException {
         ArrayList<TariffServiceDto> products = new ArrayList<>();
@@ -167,9 +161,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Rysakova Anna
+     * This method compare new received {@link Product} with existing in database.
+     * If this {@link Product} exist, method compare these fields and rewrite {@link Product}.
+     * Received object of {@code Product} update to database.
      *
-     * @param updateProduct
+     * @param updateProduct {@link Product} for update
      */
     @Override
     public boolean updateProduct(Product updateProduct) {

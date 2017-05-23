@@ -39,7 +39,6 @@ public class PriceServiceImpl implements PriceService {
     public List<Price> fillInListWithProductPriceByRegion(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
         ArrayList<Price> listPriceByRegion = new ArrayList<>();
         logger.debug("Create list of product price by region {} ", listPriceByRegion);
-        // TODO: 14.05.2017 limit array size
         for (int i = 0; i < priceByRegion.length; i++) {
             if (placeId[i] != null & priceByRegion[i] != null) {
                 Price price = new Price();
@@ -69,11 +68,11 @@ public class PriceServiceImpl implements PriceService {
         List<Price> newPriceInfo = fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
 
         List<Price> uniqueServicesInFirstCollection = (List<Price>) CollectionUtil
-                .getUniqueElementsInFirstCollection(oldPriceInfo, newPriceInfo);
+                .firstCollectionMinusSecondCollection(oldPriceInfo, newPriceInfo);
         priceDao.deleteProductPriceInRegion(uniqueServicesInFirstCollection);
 
         uniqueServicesInFirstCollection = (List<Price>) CollectionUtil
-                .getUniqueElementsInFirstCollection(newPriceInfo, oldPriceInfo);
+                .firstCollectionMinusSecondCollection(newPriceInfo, oldPriceInfo);
         priceDao.fillPriceOfProductByRegion(uniqueServicesInFirstCollection);
     }
 }
