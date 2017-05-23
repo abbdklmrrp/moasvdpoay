@@ -29,6 +29,7 @@
 </div>
 <div class="col-md-10">
 <div class="container" id="table">
+    <h1 style="text-align: center">Operations history</h1>
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"

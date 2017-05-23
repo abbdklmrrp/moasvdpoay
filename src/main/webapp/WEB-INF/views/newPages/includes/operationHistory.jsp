@@ -1,9 +1,7 @@
 <div class="container">
     <div class="row">
-        <div class="col-xs-1"></div>
-        <div class="col-xs-10">
+        <div class="col-xs-12">
             <h1 style="text-align: center">Operations history</h1>
-            <br>
             <div class="grid-progress-bar-placeholder">
                 <div class="progress grid-progress-bar" style="display: none;" id="progressId">
                     <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
@@ -128,6 +126,5 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-1"></div>
     </div>
 </div>
