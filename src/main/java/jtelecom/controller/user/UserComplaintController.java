@@ -2,7 +2,6 @@ package jtelecom.controller.user;
 
 
 import jtelecom.dao.complaint.Complaint;
-import jtelecom.dao.complaint.ComplaintDAO;
 import jtelecom.dao.complaint.ComplaintStatus;
 import jtelecom.dao.order.OrderDao;
 import jtelecom.dao.product.Product;
@@ -35,47 +34,82 @@ public class UserComplaintController {
     @Resource
     private ProductDao productDao;
     @Resource
-    private ComplaintDAO complaintDAO;
-    @Resource
     private ComplaintService complaintService;
     @Resource
     private OrderDao orderDAO;
     private static Logger logger = LoggerFactory.getLogger(UserComplaintController.class);
 
+    /**
+     * Method find user from the security current user.<br>
+     * After gets all active products that connected to the customer of this user
+     *
+     * @return model with list of active products
+     */
     @RequestMapping(value = "getComplaint", method = RequestMethod.GET)
     public ModelAndView getComplaint() {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         ModelAndView modelAndView = getProducts(user.getId());
+        logger.debug("Get product for complaint to {}", user.getId());
         modelAndView.setViewName("newPages/" + user.getRole().getName().toLowerCase() + "/WriteToSupport");
         return modelAndView;
     }
 
+    /**
+     * Method find user from the session.<br>
+     * After gets all active products that connected to the customer of this user
+     *
+     * @param session contains user's id
+     * @return model with list of active products
+     */
     @RequestMapping(value = "getCsrComplaint", method = RequestMethod.GET)
     public ModelAndView getCsrComplaint(HttpSession session) {
         Integer id = (Integer) session.getAttribute("userId");
         ModelAndView modelAndView = getProducts(id);
+        logger.debug("Get product for complaint to {}", id);
         modelAndView.setViewName("newPages/csr/UserWriteComplaint");
         return modelAndView;
     }
 
-
+    /**
+     * Method save the user's complaint. User's id gets from the security current user.
+     *
+     * @param productId   id of the connected product
+     * @param description text of the complaint
+     * @return message about success of the operation
+     */
     @RequestMapping(value = "writeComplaint", method = RequestMethod.POST)
-    @ResponseBody
     public String writeComplaint(@RequestParam(value = "productId") int productId,
                                  @RequestParam(value = "description") String description) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        logger.debug("Writing complaint from {}", user.getId());
         return save(user.getId(), productId, description);
     }
 
+    /**
+     * Method save the user's complaint. User's id gets from the session
+     *
+     * @param productId   id of the connected product
+     * @param description text of the complaint
+     * @param session     contains user's id
+     * @return message about success of the operation
+     */
     @RequestMapping(value = "saveComplaint", method = RequestMethod.POST)
-    @ResponseBody
     public String saveComplaint(@RequestParam(value = "productId") int productId,
                                 @RequestParam(value = "description") String description, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("userId");
+        logger.debug("Writing complaint from {}", userId);
         return save(userId, productId, description);
 
     }
 
+    /**
+     * Method filled the complaint
+     *
+     * @param userId      id of the user
+     * @param productId   id of the complaint
+     * @param description text of the complaint
+     * @return message about success of the operation
+     */
     private String save(int userId, int productId, String description) {
         String message;
         Calendar calendar = Calendar.getInstance();
@@ -85,7 +119,7 @@ public class UserComplaintController {
         complaint.setCreationDate(calendar);
         complaint.setDescription(description);
         complaint.setStatus(ComplaintStatus.Send);
-        boolean success = complaintService.save(complaint,userId);
+        boolean success = complaintService.save(complaint, userId);
         if (success) {
             logger.debug("Complaint saved: orderId " + orderId + " user id: " + userId);
 
@@ -98,6 +132,12 @@ public class UserComplaintController {
     }
 
 
+    /**
+     * Method finds user's products from database
+     *
+     * @param userId id of the user
+     * @return list of the products
+     */
     private ModelAndView getProducts(Integer userId) {
         ModelAndView modelAndView = new ModelAndView();
         List<Product> products = productDao.getActiveProductsByUserId(userId);
