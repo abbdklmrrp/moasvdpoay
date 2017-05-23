@@ -44,7 +44,7 @@ public class OrderDaoImpl implements OrderDao {
     private final static String DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT_SQL = "UPDATE ORDERS " +
             "SET CURRENT_STATUS_ID = 3 /*deactivated operation status id*/ " +
             "WHERE PRODUCT_ID = :product_id " +
-            "      AND USER_ID = :user_id AND CURRENT_STATUS_ID <> 3 /*deactivated operation status id*/";
+            "      AND USER_ID = :user_id";
     private final static String SUSPEND_ORDER_SQL = "UPDATE ORDERS " +
             "SET CURRENT_STATUS_ID = 2 /*suspended operation status id*/ " +
             "WHERE ID = :id ";
@@ -123,14 +123,15 @@ public class OrderDaoImpl implements OrderDao {
             "  JOIN OPERATION_STATUS op_status ON o.CURRENT_STATUS_ID = op_status.id\n" +
             "  LEFT JOIN  PLANNED_TASKS pt ON o.ID = pt.ORDER_ID\n" +
             "WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n" +
-            "       AND pt.STATUS_ID = 3 /*Deactivation*/  AND LOWER(name) LIKE LOWER(:pattern) || '%%')\n" +
+            "       AND pt.STATUS_ID = 3 /*Deactivation*/  AND LOWER(p.name) LIKE LOWER(:pattern) || '%%')\n" +
             "WHERE rnum < :length AND rnum >= :start";
     private final String SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT COUNT(*) " +
             "FROM ORDERS o\n" +
             "  JOIN USERS u ON u.id = o.USER_ID\n" +
+            "  JOIN PRODUCTS p ON o.PRODUCT_ID = p.ID\n " +
             "  LEFT JOIN  PLANNED_TASKS pt ON o.ID = pt.ORDER_ID\n" +
             "WHERE o.CURRENT_STATUS_ID <> 3 /*Deactivation*/ AND u.CUSTOMER_ID = :cust_id\n" +
-            "       AND pt.STATUS_ID = 3 /*Deactivation*/  AND LOWER(name) LIKE LOWER(:pattern" +
+            "       AND pt.STATUS_ID = 3 /*Deactivation*/  AND LOWER(p.name) LIKE LOWER(:pattern" +
             "" +
             "" +
             ") || '%%'";
@@ -339,7 +340,7 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("start", start);
         params.addValue("length", length + 1);
         params.addValue("cust_id", customerId);
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue("pattern", search);
         return jdbcTemplate.query(query, params, new OrdersRowDTORowMapper());
     }
 
@@ -351,7 +352,7 @@ public class OrderDaoImpl implements OrderDao {
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("cust_id", customerId);
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue("pattern", search);
         return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL, params, Integer.class);
     }
 

@@ -7,10 +7,46 @@
     <jsp:include page="../includes/head.jsp">
         <jsp:param name="tittle" value="Products"/>
     </jsp:include>
-    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">
         google.load("jquery", "1.4.4");
     </script>
+    <style type="text/css">
+
+        #back {
+            background-color: rgba(0, 0, 0, 0.4);
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: none;
+            z-index: 1000;
+        }
+
+        #prices {
+            background-color: white;
+            font-family: 'Open Sans', sans-serif;
+            width: 478px;
+            padding: 17px;
+            border-radius: 5px;
+            text-align: center;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            margin-left: -256px;
+            margin-top: -200px;
+            overflow: hidden;
+            display: none;
+            z-index: 2000;
+        }
+
+        .close {
+            margin-left: 364px;
+            margin-top: 4px;
+            cursor: pointer;
+        }
+
+    </style>
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp">
@@ -87,7 +123,16 @@
                         </div>
                         Name
                     </th>
-                    <th class="col-xs-2" data-grid-header="type_id" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="description" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Description
+                    </th>
+                    <th class="col-xs-1" data-grid-header="type_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
@@ -105,15 +150,6 @@
                         </div>
                         Customer type
                     </th>
-                    <th class="col-xs-2" data-grid-header="base_price" data-grid-header-sortable="true">
-                        <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                               data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                               data-grid-header-sortable-down="down"></a>
-                        </div>
-                        Price
-                    </th>
                     <th class="col-xs-2" data-grid-header="duration" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
@@ -121,9 +157,18 @@
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Duration
+                        Duration(in days)
                     </th>
-                    <th class="col-xs-2" data-grid-header="status">
+                    <th class="col-xs-1" data-grid-header="base_price">
+                        Price($)
+                    </th>
+                    <th class="col-xs-1" data-grid-header="status" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
                         Status
                     </th>
                 </tr>
@@ -132,10 +177,11 @@
                 <tbody>
                 <tr data-grid="row">
                     <td data-cell="name"></td>
+                    <td data-cell="description"></td>
                     <td data-cell="type_id"></td>
                     <td data-cell="customer_type_id"></td>
-                    <td data-cell="base_price"></td>
                     <td data-cell="duration"></td>
+                    <td data-cell="base_price"></td>
                     <td data-cell="status"></td>
                 </tr>
                 </tbody>
@@ -170,17 +216,60 @@
         </div>
     </div>
 </div>
+<div id="back" style='display: none;'></div>
+<div class="container" id="prices">
+    <img class="close" onclick="show('none')" src="http://sergey-oganesyan.ru/wp-content/uploads/2014/01/close.png">
+    <div id="nameProduct" align="left"></div>
+    <br>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-bordered hide" id="tbl-operations">
+                <thead>
+                <tr>
+                    <th>Place</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+                <tbody id="myTable">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 text-center">
+            <ul class="pagination" id="myPager"></ul>
+        </div>
+    </div>
+</div>
+
+
 <jsp:include page="../includes/footer.jsp"/>
 <script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/priceInfo.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/pricesPagination.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/viewPrices.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',
         ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/all.json'}),
         listeners: [
             new ElementListener($('#progressId'))
-        ]
-    })
-</script>
+        ],
+        renderers: {
+            "base_price": function (pv, wv, grid) {
+                if (wv.customer_type_id == 'Business') {
+                    return wv.base_price;
+                } else {
+                    return $('<input type="button" class="btn btn-primary" value="View" onclick="viewPrices(' + wv.id + ')">');
+                }
+            }
+        }
+    });
 
+    function show(state) {
+        document.getElementById('prices').style.display = state;
+        document.getElementById('back').style.display = state;
+    }
+</script>
+</body>
+</html>

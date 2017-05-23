@@ -29,7 +29,7 @@ import java.util.Locale;
 @ComponentScan(basePackages = "jtelecom")
 @PropertySource(value = "classpath:gmail.com.properties")
 @Import({ServicesConfig.class, SecurityConfig.class, MailConfig.class, PersistenceConfig.class})
-@EnableTransactionManagement(proxyTargetClass = true)
+@EnableTransactionManagement
 public class SpringConfig extends WebMvcConfigurerAdapter {
 
     @Bean

@@ -12,11 +12,13 @@
     </script>
 </head>
 <body>
-<jsp:include page="../includes/headers/businessHeader.jsp">
-    <jsp:param name="pageName" value="Employees"/>
-</jsp:include>
-<jsp:include page="../includes/users.jsp"/>
-<jsp:include page="../includes/footer.jsp"/>
+    <jsp:include page="../includes/headers/businessHeader.jsp">
+        <jsp:param name="pageName" value="Employees"/>
+    </jsp:include>
+    <jsp:include page="../includes/users.jsp">
+        <jsp:param name="pageName" value="Employee"/>
+    </jsp:include>
+    <jsp:include page="../includes/footer.jsp"/>
 </body>
 </html>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>

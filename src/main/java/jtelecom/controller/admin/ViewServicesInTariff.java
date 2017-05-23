@@ -2,7 +2,6 @@ package jtelecom.controller.admin;
 
 import jtelecom.dao.product.ProductDao;
 import jtelecom.dto.TariffServiceDto;
-import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -21,14 +20,9 @@ import java.util.List;
 @RequestMapping({"admin"})
 public class ViewServicesInTariff {
 
-    private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
-    private static final String ERROR_IN_CONNECTION = "Error with filling database";
-    private static final String ERROR_TYPE = "Wrong type of input data";
     private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
     @Resource
     private ProductDao productDao;
-    @Resource
-    private ProductService productService;
 
     @RequestMapping(value = {"viewServicesInTariff"}, method = RequestMethod.GET)
     public ModelAndView getServicesInTariffForUpdate(@RequestParam(value = "id") Integer tariffId,
@@ -38,6 +32,7 @@ public class ViewServicesInTariff {
         List<TariffServiceDto> servicesByTariff = productDao.getServicesByTariff(tariffId);
         logger.debug("Received services that are included in the tariff {}", servicesByTariff.toString());
         String customerType = productDao.getCustomerTypeByProductId(tariffId);
+        logger.debug("Customer type: {} ", customerType);
 
         mav.addObject("servicesByTariff", servicesByTariff);
         mav.addObject("customerType", customerType);

@@ -2,11 +2,14 @@ package jtelecom.services.product;
 
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by Anna Rysakova on 18.05.2017.
  */
 public interface ProductService {
+
+    Product foundProduct(Integer productId);
 
     Product getCategory(ProductCategories category, Product product);
 
@@ -14,6 +17,7 @@ public interface ProductService {
 
     boolean isEmptyFieldOfProduct(Product product);
 
+    @Transactional
     void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product);
 
     void fillInTariffWithServices(Integer idTariff, Integer[] arrayOfIdServices);

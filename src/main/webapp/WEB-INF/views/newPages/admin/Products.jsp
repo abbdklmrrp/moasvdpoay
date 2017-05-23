@@ -123,7 +123,16 @@
                         </div>
                         Name
                     </th>
-                    <th class="col-xs-2" data-grid-header="type_id" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="description" data-grid-header-sortable="true">
+                        <div class="pull-right order-by">
+                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
+                               data-grid-header-sortable-up="up"></a>
+                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
+                               data-grid-header-sortable-down="down"></a>
+                        </div>
+                        Description
+                    </th>
+                    <th class="col-xs-1" data-grid-header="type_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
@@ -141,17 +150,17 @@
                         </div>
                         Customer type
                     </th>
-                    <th class="col-xs-1" data-grid-header="duration" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="duration" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Duration
+                        Duration(in days)
                     </th>
                     <th class="col-xs-1" data-grid-header="base_price">
-                        Price
+                        Price($)
                     </th>
                     <th class="col-xs-1" data-grid-header="status">
                         Status
@@ -159,23 +168,19 @@
                     <th class="col-xs-1" data-grid-header="action">
                         Action
                     </th>
-                    <th class="col-xs-1" data-grid-header="info">
-                        Info
-                    </th>
                 </tr>
                 </thead>
                 <div data-grid="message"></div>
                 <tbody>
                 <tr data-grid="row">
                     <td data-cell="name"></td>
+                    <td data-cell="description"></td>
                     <td data-cell="type_id"></td>
                     <td data-cell="customer_type_id"></td>
                     <td data-cell="duration"></td>
                     <td data-cell="base_price"></td>
                     <td data-cell="status"></td>
                     <td data-cell="action"></td>
-                    <td data-cell="info"></td>
-
                 </tr>
                 </tbody>
             </table>
@@ -209,10 +214,11 @@
         </div>
     </div>
 </div>
-<div  id="back" style='display: none;'></div>
-<div class="container"  id="prices"  >
+<div id="back" style='display: none;'></div>
+<div class="container" id="prices">
     <img class="close" onclick="show('none')" src="http://sergey-oganesyan.ru/wp-content/uploads/2014/01/close.png">
-    <div id="nameProduct" align="left"></div><br>
+    <div id="nameProduct" align="left"></div>
+    <br>
     <div class="row">
         <div class="table-responsive">
             <table class="table table-bordered hide" id="tbl-operations">
@@ -248,11 +254,11 @@
             new ElementListener($('#progressId'))
         ],
         renderers: {
-            "base_price":function(pv,wv,grid){
-                if(wv.customer_type_id=='Business'){
+            "base_price": function (pv, wv, grid) {
+                if (wv.customer_type_id == 'Business') {
                     return wv.base_price;
-                }else {
-                    return $('<input type="button" class="btn btn-primary" value="View" onclick="viewPrices('+wv.id+')">');
+                } else {
+                    return $('<input type="button" class="btn btn-primary" value="View" onclick="viewPrices(' + wv.id + ')">');
                 }
             },
             "status": function (pv, wv, grid) {
@@ -268,9 +274,6 @@
                     );
                 }
             },
-            "info": function (pv, wv, grid) {
-                return $('<input type="button" class="btn btn-primary" onclick="viewProductPriceInfo(' + wv.id + ')" value="View">')
-            },
             "action": function (pv, wv, grid) {
                 return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
                     location.href = '${pageContext.request.contextPath}/admin/getDetailsProduct?id=' + wv.id
@@ -278,7 +281,7 @@
                 );
             }
         }
-    })
+    });
 
     function show(state){
         document.getElementById('prices').style.display = state;
