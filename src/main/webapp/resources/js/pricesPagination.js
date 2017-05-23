@@ -1,7 +1,7 @@
 $.fn.pageMe = function (opts, dataURL, productId) {
     var $this = this,
         defaults = {
-            perPage: 7,
+            perPage: 5,
             showPrevNext: false,
             hidePageNumbers: false
         },

@@ -249,7 +249,7 @@
         ],
         renderers: {
             "base_price":function(pv,wv,grid){
-                if(wv.customerType=='Business'){
+                if(wv.customer_type_id=='Business'){
                     return wv.base_price;
                 }else {
                     return $('<input type="button" class="btn btn-primary" value="View" onclick="viewPrices('+wv.id+')">');

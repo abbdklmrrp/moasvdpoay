@@ -10,4 +10,6 @@ public interface CustomerService {
 
     String save(Customer customer);
 
+    Integer saveForUser(Customer customer);
+
 }
