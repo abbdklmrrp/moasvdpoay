@@ -31,6 +31,11 @@ public class CreateCustomerController {
     @Resource
     private CustomerService customerService;
 
+    /**
+     * This method refers to a some page of the creating customer.<br>
+     * Address of this page determines based on the role of the user
+     * @return model which contains Customer object and page's address
+     */
     @RequestMapping(value = {"getCreateCustomer"}, method = RequestMethod.GET)
     public ModelAndView getCreateCustomer() {
         ModelAndView modelAndView = new ModelAndView();
@@ -45,6 +50,14 @@ public class CreateCustomerController {
         return modelAndView;
     }
 
+
+    /**
+     * This method gets customer from the page and save it.<br>
+     * Then redirects from the address based on the role of current user
+     * @param customer - customer with filled fields "name" and "field"
+     * @param attributes -needs for sending inform message about success of the operation
+     * @return redirect to the method {@link CreateCustomerController#getCreateCustomer()}
+     */
     @RequestMapping(value = {"createCustomer"}, method = RequestMethod.POST)
     public String createCustomer(Customer customer, RedirectAttributes attributes) {
         String redirect = "";

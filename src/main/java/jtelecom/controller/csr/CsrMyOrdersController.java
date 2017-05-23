@@ -37,6 +37,14 @@ public class CsrMyOrdersController {
     }
 
 
+    /**
+     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto} <br>.
+     * After method gets list with all orders that assigned to the csr from database.<br>.
+     * Method gets csr from the security current user.
+     *
+     * @param requestDto -contains indexes for first element and last elements and patterns for search and sort
+     * @return class which contains number of all elements with such parameters and some interval of the data
+     */
     @RequestMapping(value = "getMyOrders", method = RequestMethod.GET)
     public ListHolder getAllOrders(@ModelAttribute GridRequestDto requestDto) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
@@ -50,6 +58,13 @@ public class CsrMyOrdersController {
         return ListHolder.create(orders, count);
     }
 
+    /**
+     * Method gets id of the order, gets this order's full info <br>
+     * and redirects to the order's page
+     *
+     * @param orderId id of the order
+     * @return model with this order's info
+     */
     @RequestMapping(value = "getOrderPage")
     public ModelAndView getOrderPage(@RequestParam(name = "id") Integer orderId) {
         ModelAndView modelAndView = new ModelAndView("newPages/csr/OrderPage");
@@ -58,17 +73,30 @@ public class CsrMyOrdersController {
         return modelAndView;
     }
 
+    /**
+     * This method activates order
+     *
+     * @param orderId id of the order
+     * @return message about success of the operation
+     */
     @RequestMapping(value = "activateOrder", method = RequestMethod.POST)
     public String activateOrder(@RequestParam(value = "orderId") int orderId) {
         boolean success = orderService.activateOrderFromCsr(orderId);
         return success ? "success" : "fail";
     }
 
-    @RequestMapping(value="sendEmail",method = RequestMethod.POST)
-    public String sendEmail(@RequestParam(value="orderId") int orderId,
-                            @RequestParam(value="text") String text){
-        String email=securityAuthenticationHelper.getCurrentUser().getUsername();
-        orderService.sendEmail(orderId,text,email);
+    /**
+     * This method sends custom email from csr to client
+     *
+     * @param orderId id of the order which assigned to the csr
+     * @param text    text of the message
+     * @return message about success of the operation
+     */
+    @RequestMapping(value = "sendEmail", method = RequestMethod.POST)
+    public String sendEmail(@RequestParam(value = "orderId") int orderId,
+                            @RequestParam(value = "text") String text) {
+        String email = securityAuthenticationHelper.getCurrentUser().getUsername();
+        orderService.sendEmail(orderId, text, email);
         return "success";
     }
 

@@ -23,6 +23,15 @@ public class PmgOrdersController {
     @Resource
     private OperationHistoryDao operationHistoryDao;
 
+
+    /**
+     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto}. <br>
+     * After method gets list with all orders of client from database.<br>
+     * This client's id method gets from the session.
+     *
+     * @param request -contains indexes for first element and last elements and patterns for search and sort
+     * @return class which contains number of all elements with such parameters and some interval of the data
+     */
     @RequestMapping(value = "getOrders", method = RequestMethod.GET)
     public ListHolder getOrders(@ModelAttribute GridRequestDto request, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("userId");
@@ -35,6 +44,14 @@ public class PmgOrdersController {
         return ListHolder.create(orders, count);
     }
 
+    /**
+     * Method gets the interval of full information about operations of the some order
+     *
+     * @param startIndex first index to search
+     * @param endIndex   last index to search
+     * @param orderId    id of the order
+     * @return class which contains number of all elements with such parameters and some interval of the data
+     */
     @RequestMapping(value = "getHistory", method = RequestMethod.GET)
     public ListHolder getData(@RequestParam(name = "start") int startIndex,
                               @RequestParam(name = "end") int endIndex,

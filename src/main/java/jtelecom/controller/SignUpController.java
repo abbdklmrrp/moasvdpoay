@@ -54,16 +54,38 @@ public class SignUpController {
         return model;
     }
 
-
+    /**
+     * Method signs up the csr or admin or pmg
+     *
+     * @param user       user to sign up
+     * @param userType   see {@link jtelecom.dao.user.Role}
+     * @param attributes needs to redirect message about success of the operation
+     * @return redirect to {@link SignUpController#registrationFromAdmin()}
+     */
     @RequestMapping(value = "/signUpCoworker", method = RequestMethod.POST)
     public String signUpCoworker(User user,
                                  @RequestParam(value = "userType") String userType, RedirectAttributes attributes) {
         user.setRole(Role.getRoleByName(userType));
         String message = userService.saveWithGeneratingPassword(user);
+        if ("User successfully saved".equals(message)) {
+            logger.debug("User saved: {} {}", user.getRole().getName(), user.getEmail());
+        } else {
+            logger.error("Registration failed to {} {}", user.getRole().getName(), user.getEmail());
+        }
         attributes.addFlashAttribute("msg", message);
         return "redirect:/admin/registrationFromAdmin";
     }
 
+    /**
+     * Method signs up user from csr
+     *
+     * @param user        user to sign up
+     * @param userType    see {@link jtelecom.dao.user.Role}
+     * @param companyName customer's name of the business client
+     * @param secretKey   customer's secret key for business client
+     * @param attributes  needs to redirect message about success of the operation
+     * @return redirect to {@link SignUpController#registrationFromCsr()}
+     */
     @RequestMapping(value = "signUpUser", method = RequestMethod.POST)
     public String signUpUser(User user,
                              @RequestParam(value = "userType") String userType,
@@ -77,18 +99,32 @@ public class SignUpController {
         } else if (Role.BUSINESS == user.getRole()) {
             message = userService.saveBusinessUser(user, companyName, secretKey);
         }
+        if ("User successfully saved".equals(message)) {
+            logger.debug("User saved: {} {}", user.getRole().getName(), user.getEmail());
+        } else {
+            logger.error("Registration failed to {} {}", user.getRole().getName(), user.getEmail());
+        }
         attributes.addFlashAttribute("msg", message);
         return "redirect:/csr/registrationFromCsr";
 
     }
 
 
+    /**
+     * Methods signs up the residential ser
+     *
+     * @param user       user to save
+     * @param attributes needs to redirect message about success of the operation
+     * @return redirect to {@link SignUpController#registration()}
+     */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public String signUp(User user, RedirectAttributes attributes) {
         String message = userService.saveResidentialWithoutPasswordGenerating(user);
         if ("User successfully saved".equals(message)) {
+            logger.debug("User saved {}", user.getEmail());
             return "newPages/Login";
         } else {
+            logger.error("Registration failed {}", user.getEmail());
             attributes.addFlashAttribute("msg", message);
             return "redirect:/registration";
         }
