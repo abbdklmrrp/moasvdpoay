@@ -71,11 +71,10 @@
         <div class="col-sm-2 col-xs-2"></div>
         <button class="btn btn-success col-sm-5 col-xs-5" onclick="sendPassword(${user.id})">Send password</button>
     </div>
-    </div>
     <div class="col-md-2"></div>
     <div class="col-md-2"></div>
     <div class="container" style="margin-bottom: 30px; width:60%; max-width: 400px;">
-</div>
+    </div>
 <h2 style="text-align: center" id="infoMessage" hidden disabled="true">${msg}</h2>
 <jsp:include page="../includes/footer.jsp"/>
 </body>
