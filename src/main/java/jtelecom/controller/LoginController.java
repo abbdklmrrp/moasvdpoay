@@ -44,7 +44,7 @@ public class LoginController {
     public String index() {
         User currentUser = securityAuthenticationHelper.getCurrentUser();
         if (currentUser != null) {
-            return "redirect:" + userDao.findByEmail(currentUser.getUsername()).getRole().getNameInLowwerCase() + "/profile";
+            return "redirect:" + userDao.findByEmail(currentUser.getUsername()).getRole().getNameInLowwerCase() + "/getProfile";
         }
         return "newPages/About";
     }
@@ -53,7 +53,7 @@ public class LoginController {
     public String login() {
         User currentUser = securityAuthenticationHelper.getCurrentUser();
         if (currentUser != null) {
-            return "redirect:" + userDao.findByEmail(currentUser.getUsername()).getRole().getNameInLowwerCase() + "/profile";
+            return "redirect:" + userDao.findByEmail(currentUser.getUsername()).getRole().getNameInLowwerCase() + "/getProfile";
         }
         return "newPages/Login";
     }
