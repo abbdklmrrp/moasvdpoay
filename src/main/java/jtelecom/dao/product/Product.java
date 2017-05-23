@@ -25,6 +25,7 @@ public class Product {
     private ProductStatus status;
     @JsonProperty("base_price")
     private BigDecimal basePrice;
+    @JsonProperty("customer_type_id")
     private CustomerType customerType;
 
     public Product() {

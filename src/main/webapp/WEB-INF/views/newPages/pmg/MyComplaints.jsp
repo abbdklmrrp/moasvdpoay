@@ -16,7 +16,7 @@
     <div class="row">
         <table class="table" style="width: 220px">
             <tr>
-                <td>Complaint assigned</td>
+                <td>Complaint sent</td>
                 <td class="danger" style="width: 50px"></td>
             </tr>
             <tr>
@@ -34,8 +34,7 @@
                 <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Time</th>
-                    <th>Description</th>
+                    <th style="text-align: center">Description</th>
                 </tr>
                 </thead>
                 <tbody id="myTable">

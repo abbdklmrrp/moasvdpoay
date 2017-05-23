@@ -23,4 +23,6 @@ public interface ProductService {
     Integer saveProduct(Product product);
 
     boolean disableEnableProduct(int productId);
+
+    void validateBasePriceByCustomerType(Product product);
 }

@@ -17,20 +17,12 @@ $(function () {
             newCategoryDesc.removeAttribute("required");
         }
     });
-    $("#newCategory").keyup(function (ev) {
-        var othersOption = $('#categoryId').find('option:selected');
-        if (othersOption.val() == "") {
-            ev.preventDefault();
-            //change the selected drop down text
-            $(othersOption).html($("#newCategory").val());
-        }
-    });
 });
 function SelectedCategory(a) {
     document.getElementById("newCategory").style.display = 'none';
     document.getElementById("newCategoryDesc").style.display = 'none';
     var label = a.value;
-    if (label == "") {
+    if (label == '') {
         var d = document.getElementById("newCategory");
         var c = document.getElementById("newCategoryDesc");
         d.style.display = 'block';
@@ -38,7 +30,7 @@ function SelectedCategory(a) {
     } else {
         document.getElementById("newCategory").style.display = 'none';
         document.getElementById("newCategoryDesc").style.display = 'none';
-        document.getElementById("newCategoryID").value="";
-        document.getElementById("newCategoryDescID").value="";
+        $("#newCategory-inpt").val("");
+        $("#newCategoryDesc-inpt").val("");
     }
 }

@@ -17,7 +17,7 @@
 <jsp:include page="../includes/headers/adminHeader.jsp">
     <jsp:param name="pageName" value="UpdatePriceInRegion"/>
 </jsp:include>
-<jsp:include page="../includes/footer.jsp"/>
+<%--<jsp:include page="../includes/footer.jsp"/>--%>
 
 <div class="navbar-fixed-left">
     <div class="row">
@@ -39,13 +39,13 @@
                     <c:choose>
                         <c:when test="${param.page == 'Products'}">
                             <li class="wet-asphalt active-tab">
-                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${priceInRegionsByProduct.get(0).productId}">Product
+                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${id}">Product
                                     info</a>
                             </li>
                         </c:when>
                         <c:otherwise>
                             <li class="wet-asphalt">
-                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${priceInRegionsByProduct.get(0).productId}">Product
+                                <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${id}">Product
                                     info</a>
                             </li>
                         </c:otherwise>
@@ -55,13 +55,13 @@
                         <c:choose>
                             <c:when test="${param.page == 'UpdateServicesInTariff'}">
                                 <li class="wet-asphalt active-tab">
-                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${priceInRegionsByProduct.get(0).productId}">Services
+                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${id}">Services
                                         in tariff</a>
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li class="wet-asphalt">
-                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${priceInRegionsByProduct.get(0).productId}">Services
+                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${id}">Services
                                         in tariff</a>
                                 </li>
                             </c:otherwise>
@@ -211,24 +211,13 @@
                     ], renderers: {
                         "action": function (pv, wv, grid) {
                             return $('<input type="button" class="btn btn-success"  value="Update" >').click(function () {
-                                    location.href = '${pageContext.request.contextPath}/admin/updateProductPrice?id=' +;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                                    ${id}
+                                location.href = '${pageContext.request.contextPath}/admin/updateProductPrice?id=' +${id};
                                 }
                             );
                         }
                     }
                 })
             </script>
-            <%--<form method="get"--%>
-            <%--action="${pageContext.request.contextPath}/admin/updateProductPrice/${id}">--%>
-            <%--<div class="row" id="edit-and-changes-price-in-region">--%>
-            <%--<div class="col-sm-4 col-xs-0"></div>--%>
-            <%--<button class="btn btn-primary col-sm-5 col-xs-5" id="btn-edit-price-in-region-info">--%>
-            <%--Update price--%>
-            <%--</button>--%>
-            <%--<div class="col-sm-4 col-xs-0"></div>--%>
-            <%--</div>--%>
-            <%--</form>--%>
             <h2 style="text-align: center" id="errorMessage" hidden disabled="true">${msg}</h2>
         </main>
     </div>

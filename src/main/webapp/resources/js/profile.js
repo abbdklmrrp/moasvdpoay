@@ -20,17 +20,7 @@ $(document).ready(function () {
         oldPass.setAttribute("required", "required")
     });
     $('#btn-cancel').click(function () {
-        $('#edit-and-change').removeClass("hide");
-        $('.change-pass').addClass("hide");
-        $('#save-profile').addClass("hide");
-        newPass.removeAttribute("required");
-        confirmPass.removeAttribute("required");
-        oldPass.removeAttribute("required");
-        $("#name").prop('readonly', true);
-        $("#surname").prop('readonly', true);
-        $("#address").prop('readonly', true);
-        $("#phone").prop('readonly', true);
-        saveBtn.removeAttribute("disabled");
+        location.reload();
     });
 });
 confirmPass.onkeyup = function () {

@@ -11,6 +11,7 @@
 <jsp:include page="../includes/headers/csrHeader.jsp">
     <jsp:param name="pageName" value="Statistics"/>
 </jsp:include>
+<h3 style="text-align: center; margin-bottom: 30px;">Report about orders</h3>
 <jsp:include page="../includes/report.jsp">
     <jsp:param name="downloadUrl" value="/csr/downloadOrdersReport"/>
 </jsp:include>

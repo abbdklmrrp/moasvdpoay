@@ -95,9 +95,7 @@
                                             <option value="">-</option>
                                             <c:forEach var="product" items="${servcesByCategory.value}">
                                                 <c:forEach var="service" items="${servicesByTariff}">
-                                                    <c:if test="${service.serviceId eq product.id}">
-                                                        <option value="${product.id}" selected>${product.name}</option>
-                                                    </c:if>
+                                                    <option value="${product.id eq service.serviceId? 'selected="selected"' : ''}">${product.name}</option>
                                                 </c:forEach>
                                                 <option value="${product.id}">${product.name}</option>
                                             </c:forEach>

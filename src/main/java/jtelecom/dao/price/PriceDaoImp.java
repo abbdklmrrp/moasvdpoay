@@ -182,7 +182,7 @@ public class PriceDaoImp implements PriceDao {
     public List<PriceByRegionDto> getLimitedQuantityProductPricesInRegions(int productId, int start, int length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
-            sort = "ID";
+            sort = "PLACE";
         }
         String sql = String.format(FIND_PRICE_IN_REGIONS_FOR_ALL_PRODUCTS, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();

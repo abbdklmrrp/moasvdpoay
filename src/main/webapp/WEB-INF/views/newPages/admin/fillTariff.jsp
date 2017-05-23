@@ -6,13 +6,14 @@
     <jsp:include page="../includes/head.jsp">
         <jsp:param name="tittle" value="Fill in tariff with service"/>
     </jsp:include>
+    <link href="<c:url value="/resources/css/select.css" />" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
     <jsp:param name="pageName" value="FillTariff"/>
 </jsp:include>
 <jsp:include page="../includes/footer.jsp"/>
-<form action="/admin/fillTariff" method="post">
+<form action="${pageContext.request.contextPath}/admin/fillTariff?tariffId=${tariffId}" method="post">
     <div class="container">
         <div class="col-md-2"></div>
         <div class="col-md-8">
@@ -27,7 +28,7 @@
                     <tr>
                         <td>${servcesByCategory.key}</td>
                         <td>
-                            <select name="selectedService">
+                            <select name="selectedService" id="soflow">
                                 <option value="">-</option>
                                 <c:forEach var="product" items="${servcesByCategory.value}">
                                     <option value="${product.id}">${product.name}</option>

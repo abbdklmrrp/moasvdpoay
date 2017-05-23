@@ -219,9 +219,9 @@
 </script>
 <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
-<c:if test="${product.customerType=='Residential'}">
-    <script src="<c:url value="/resources/js/selectedCustomer.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/resources/js/productRes.js"/>"></script>
+<c:if test="${product.customerType=='Business'}">
+    <script src="<c:url value="/resources/js/selectedCustomerBus.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>
 </c:if>
 </body>
 </html>

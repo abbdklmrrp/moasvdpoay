@@ -20,8 +20,7 @@
                 <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Time</th>
-                    <th>Description</th>
+                    <th style="text-align: center">Description</th>
                 </tr>
                 </thead>
                 <tbody id="myTable">

@@ -1,5 +1,6 @@
 package jtelecom.controller.admin;
 
+import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
 import jtelecom.dao.product.ProductDao;
@@ -52,7 +53,12 @@ public class ViewProductController {
         mav.addObject("product", foundProduct);
 
         logger.debug("Product type is {} ", foundProduct.getCategoryId());
-        mav.setViewName("newPages/admin/updateProduct");
+        if (foundProduct.getCustomerType() == CustomerType.Residential) {
+            mav.setViewName("newPages/admin/updateProduct");
+        }
+        if (foundProduct.getCustomerType() == CustomerType.Business) {
+            mav.setViewName("newPages/admin/updateProductBusiness");
+        }
         return mav;
     }
 

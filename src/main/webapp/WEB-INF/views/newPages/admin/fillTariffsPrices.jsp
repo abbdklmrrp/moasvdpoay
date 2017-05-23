@@ -12,6 +12,7 @@
     <jsp:include page="../includes/head.jsp">
         <jsp:param name="tittle" value="Create service"/>
     </jsp:include>
+    <link href="<c:url value="/resources/css/price.css" />" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
@@ -19,7 +20,7 @@
 </jsp:include>
 <jsp:include page="../includes/footer.jsp"/>
 <form modelAttribute="priceByRegionDto"
-      action="${pageContext.request.contextPath}/admin/fillTariffsPrices" method="post">
+      action="${pageContext.request.contextPath}/admin/fillTariffsPrices/${id}" method="post">
     <div class="container">
         <div class="col-md-2"></div>
         <div class="col-md-8">
@@ -33,7 +34,17 @@
                 <c:forEach var="place" items="${placesForFillInTariff}">
                     <tr>
                         <td><input type="hidden" name="placeId" value="${place.id}">${place.name}</td>
-                        <td><input type="text" name="priceByRegion"></td>
+                        <td>
+                            <div class="form-group row">
+                                <label class="col-sm-4 control-label">Base price</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="currency" placeholder="0.00"
+                                           pattern="[0-9]+([,\.][0-9]+)?" step="0.01"
+                                           name="priceByRegion">
+                                    <i class="fa fa-user"></i>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>
@@ -46,3 +57,4 @@
         <div class="col-md-2"></div>
     </div>
 </form>
+<script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
