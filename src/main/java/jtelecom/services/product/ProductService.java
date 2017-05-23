@@ -2,6 +2,7 @@ package jtelecom.services.product;
 
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
+import jtelecom.dao.user.User;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -29,4 +30,6 @@ public interface ProductService {
     boolean disableEnableProduct(int productId);
 
     void validateBasePriceByCustomerType(Product product);
+
+    Product getProductForUser(User user, Integer id);
 }

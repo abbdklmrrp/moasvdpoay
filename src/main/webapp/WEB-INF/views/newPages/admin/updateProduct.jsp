@@ -123,7 +123,7 @@
                             <div class="col-sm-8">
                                 <input readonly type="number" class="currency" value=${product.basePrice}
                                         pattern="[0-9]+([,\.][0-9]+)?" step="0.01"
-                                       name="basePrice" id="basePrice" required>
+                                       name="basePrice" id="basePrice">
                                 <i class="fa fa-user"></i>
                             </div>
                         </div>
