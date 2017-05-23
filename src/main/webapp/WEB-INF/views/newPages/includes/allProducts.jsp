@@ -1,7 +1,9 @@
 <div class="container">
-    <h1 style="text-align: center">${param.pageName}</h1>
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
+    <div class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-10">
+            <h1 style="text-align: center">Products</h1>
+            <br>
     <div class="grid-progress-bar-placeholder">
         <div class="progress grid-progress-bar" style="display: none;" id="progressId">
             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
@@ -15,7 +17,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-10" data-grid="title">
-                    ${param.pageName}
+                    All products
                 </div>
                 <div class="col-md-2" style="text-align:right;">
                     <a href="javascript:" data-grid="pager-refresh">
@@ -34,7 +36,7 @@
                         <option value="200">200</option>
                     </select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <nav>
                         <ul class="pagination" style="margin:0px !important;" data-grid="pager">
                             <li data-grid="pager-prev">
@@ -51,7 +53,7 @@
                         </ul>
                     </nav>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <form class="form-inline" data-grid="search">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Query">
@@ -72,53 +74,44 @@
                         </div>
                         Name
                     </th>
-                    <th class="col-xs-2" data-grid-header="surname" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="type_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Surname
+                        Type
                     </th>
-                    <th class="col-xs-2" data-grid-header="email" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="customer_type_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Email
+                        Customer type
                     </th>
-                    <th class="col-xs-2" data-grid-header="phone" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="base_price" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Phone
+                        Price
                     </th>
-                    <th class="col-xs-2" data-grid-header="address" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="duration" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
                             <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                data-grid-header-sortable-down="down"></a>
                         </div>
-                        Address
+                        Duration
                     </th>
-                    <th class="col-xs-2" data-grid-header="role_id" data-grid-header-sortable="true">
-                        <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                               data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                               data-grid-header-sortable-down="down"></a>
-                        </div>
-                        Role
-                    </th>
-                    <th class="col-xs-2" data-grid-header="action">
-                        Action
+                    <th class="col-xs-2" data-grid-header="status">
+                        Status
                     </th>
                 </tr>
                 </thead>
@@ -126,13 +119,11 @@
                 <tbody>
                 <tr data-grid="row">
                     <td data-cell="name"></td>
-                    <td data-cell="surname"></td>
-                    <td data-cell="email"></td>
-                    <td data-cell="phone"></td>
-                    <td data-cell="address"></td>
-                    <td data-cell="role_id"></td>
-                    <td data-cell="action"></td>
-
+                    <td data-cell="type_id"></td>
+                    <td data-cell="customer_type_id"></td>
+                    <td data-cell="base_price"></td>
+                    <td data-cell="duration"></td>
+                    <td data-cell="status"></td>
                 </tr>
                 </tbody>
             </table>
@@ -165,6 +156,20 @@
             </div>
         </div>
     </div>
+        </div>
+        <div class="col-xs-1"></div>
     </div>
-    <div class="col-md-1"></div>
 </div>
+<jsp:include page="../includes/footer.jsp"/>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
+<script>
+    $().BooGrid({
+        id: 'productsIds',
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/all.json'}),
+        listeners: [
+            new ElementListener($('#progressId'))
+        ]
+    })
+</script>

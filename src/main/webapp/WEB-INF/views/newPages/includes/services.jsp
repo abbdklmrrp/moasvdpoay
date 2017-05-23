@@ -137,7 +137,7 @@
                                         </div>
                                         Category
                                     </th>
-                                    <th class="col-xs-2" data-grid-header="action">
+                                    <th class="col-xs-1" data-grid-header="action">
                                         Action
                                     </th>
                                 </tr>
@@ -251,10 +251,10 @@
                     return $('In Tariff')
                 }
                 if (!wv.status) {
-                    return $('<div id=service' + wv.id + '><input type="button" class="btn btn-success btn-block"  value="Activate" onclick="activateService(' + wv.id + ')"></div>');
+                    return $('<div id=service' + wv.id + '><input type="button" class="btn btn-success"  value="Activate" onclick="activateService(' + wv.id + ')"></div>');
                 }
                 else {
-                    return $('<div id=service' + wv.id + '><input type="button" class="btn btn-danger btn-block"  value="Deactivate" onclick="deactivateService(' + wv.id + ')"></div>');
+                    return $('<div id=service' + wv.id + '><input type="button" class="btn btn-danger"  value="Deactivate" onclick="deactivateService(' + wv.id + ')"></div>');
                 }
             },
             "name": function (pv, wv, grid) {

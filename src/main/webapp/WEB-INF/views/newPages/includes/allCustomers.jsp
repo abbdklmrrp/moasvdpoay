@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-1"></div>
         <div class="col-xs-10">
-            <h1 style="text-align: center">Complaint history</h1>
+            <h1 style="text-align: center">Customers</h1>
             <br>
             <div class="grid-progress-bar-placeholder">
                 <div class="progress grid-progress-bar" style="display: none;" id="progressId">
@@ -12,11 +12,12 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default" id="productsIds">
+
+            <div class="panel panel-default" id="customersIds">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-10" data-grid="title">
-                            Complaints
+                            Customers
                         </div>
                         <div class="col-md-2" style="text-align:right;">
                             <a href="javascript:" data-grid="pager-refresh">
@@ -29,8 +30,10 @@
                     <div class="row" style="margin: 20px 0;">
                         <div class="col-md-2">
                             <select class="form-control" data-grid="pager-length">
-                                <option value="5">5</option>
                                 <option value="10">10</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
                             </select>
                         </div>
                         <div class="col-md-5">
@@ -62,59 +65,49 @@
                     <table class="table table-striped table-bordered table-hover" data-grid="grid">
                         <thead>
                         <tr>
-                            <th class="col-xs-2" data-grid-header="productName" data-grid-header-sortable="true">
+                            <th class="col-xs-2" data-grid-header="name" data-grid-header-sortable="true">
                                 <div class="pull-right order-by">
                                     <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                        data-grid-header-sortable-up="up"></a>
                                     <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                        data-grid-header-sortable-down="down"></a>
                                 </div>
-                                Product name
+                                Name
                             </th>
-                            <th class="col-xs-2" data-grid-header="creatingDate" data-grid-header-sortable="true">
+                            <th class="col-xs-2" data-grid-header="invoice" data-grid-header-sortable="true">
                                 <div class="pull-right order-by">
                                     <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                        data-grid-header-sortable-up="up"></a>
                                     <a class="glyphicon glyphicon-chevron-down" href="javascript:"
                                        data-grid-header-sortable-down="down"></a>
                                 </div>
-                                Date
+                                Invoice
                             </th>
-                            <th class="col-xs-2" data-grid-header="status" data-grid-header-sortable="false">
-                                <div class="pull-right order-by">
-                                    <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                                       data-grid-header-sortable-up="up"></a>
-                                    <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                                       data-grid-header-sortable-down="down"></a>
-                                </div>
-                                Status
+                            <th class="col-xs-2" data-grid-header="action">
+                                Action
                             </th>
-                            <th class="col-xs-2" data-grid-header="description" data-grid-header-sortable="false">
-                                <div class="pull-right order-by">
-                                    <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                                       data-grid-header-sortable-up="up"></a>
-                                    <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                                       data-grid-header-sortable-down="down"></a>
-                                </div>
-                                Description
-                            </th>
+                            <%--<th class="col-xs-6" data-grid-header="status">--%>
+                            <%--Status--%>
+                            <%--</th>--%>
                         </tr>
                         </thead>
                         <div data-grid="message"></div>
                         <tbody>
                         <tr data-grid="row">
-                            <td data-cell="productName"></td>
-                            <td data-cell="creatingDate"></td>
-                            <td data-cell="status"></td>
-                            <td data-cell="description"></td>
+                            <td data-cell="name"></td>
+                            <td data-cell="invoice"></td>
+                            <td data-cell="action"></td>
+
                         </tr>
                         </tbody>
                     </table>
                     <div class="row" style="margin: 20px 0;">
                         <div class="col-md-2">
                             <select class="form-control" data-grid="pager-length">
-                                <option value="5">5</option>
                                 <option value="10">10</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
                             </select>
                         </div>
                         <div class="col-md-10">
@@ -141,3 +134,24 @@
         <div class="col-xs-1"></div>
     </div>
 </div>
+<jsp:include page="../includes/footer.jsp"/>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
+<script>
+    $().BooGrid({
+        id: 'customersIds',
+        ds: new RemoteDataSource({url: '${pageContext.request.contextPath}/csr/allCustomers.json'}),
+        listeners: [
+            new ElementListener($('#progressId'))
+        ],
+        renderers: {
+            "action": function (pv, wv, grid) {
+                return $('<input type="button" class="btn btn-success"  value="View" >').click(function () {
+                        location.href = '${pageContext.request.contextPath}/csr/getCustomerInfo/' + wv.id
+                    }
+                );
+            }
+        }
+    })
+</script>
