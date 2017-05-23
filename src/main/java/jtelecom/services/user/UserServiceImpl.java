@@ -8,6 +8,8 @@ import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.googleMaps.ServiceGoogleMaps;
+import jtelecom.services.customer.CustomerService;
+import jtelecom.services.customer.CustomerServiceImpl;
 import jtelecom.services.mail.MailService;
 import jtelecom.security.Md5PasswordEncoder;
 import org.slf4j.Logger;
@@ -34,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private CustomerDAO customerDAO;
     @Resource
     private MailService mailService;
+    @Resource
+    private CustomerService customerService;
 
     private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -154,7 +158,7 @@ public class UserServiceImpl implements UserService {
             if (unique) {
                 Customer customer = new Customer(user.getEmail(), user.getPassword());
                 customer.setCustomerType(CustomerType.Residential);
-                Integer customerId = customerDAO.saveCustomer(customer);
+                Integer customerId = customerService.saveForUser(customer);
                 if (customerId != null) {
                     user.setCustomerId(customerId);
                     boolean success = userDAO.save(user);
@@ -191,6 +195,8 @@ public class UserServiceImpl implements UserService {
         }
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             message.append("Email is empty;");
+        } else if (!user.getEmail().contains("@")) {
+            message.append("Incorrect email");
         }
         if (user.getAddress() == null || user.getAddress().isEmpty()) {
             message.append("Address is empty;");

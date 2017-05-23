@@ -51,6 +51,12 @@ public class MailServiceImpl implements MailService {
 
     private void send(String to, Map<String, Object> model, EmailTemplatePath path) {
         SimpleMailMessage message = email.createEmail(to, model, path);
+        try {
+            validate(message);
+        } catch (EmailException e) {
+            logger.error(e.getMessage());
+            return;
+        }
         new MailServiceImpl.MailThread(message).start();
     }
 
@@ -205,5 +211,15 @@ public class MailServiceImpl implements MailService {
                 .setEndDate(endDate)
                 .build();
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_WILL_SUSPEND);
+    }
+
+    private void validate(SimpleMailMessage email) {
+        if (email.getText() == null || email.getText().isEmpty()) {
+            throw new EmailException(EmailException.MISSING_CONTENT);
+        } else if (email.getSubject() == null || email.getSubject().isEmpty()) {
+            throw new EmailException(EmailException.MISSING_SUBJECT);
+        } else if (email.getTo() == null) {
+            throw new EmailException(EmailException.MISSING_RECIPIENT);
+        }
     }
 }

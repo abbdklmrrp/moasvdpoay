@@ -30,14 +30,29 @@ public class CustomerServiceImpl implements CustomerService {
                     return "Creating failed. Please, try again";
                 }
             } else {
-                if (customer.getCustomerType() == CustomerType.Residential) {
-                    return "Email isn't unique";
-                } else {
-                    return "Customer isn't unique";
-                }
+                    return "Customer name isn't unique";
             }
         } else {
             return message;
+        }
+    }
+
+    public Integer saveForUser(Customer customer){
+        String message = validateCustomer(customer).toString();
+        if (message.isEmpty()) {
+            boolean unique = customerDAO.isUnique(customer);
+            if (unique) {
+                Integer id = customerDAO.saveCustomer(customer);
+                if (id!=null) {
+                    return id;
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            return null;
         }
     }
 
