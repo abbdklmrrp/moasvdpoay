@@ -206,4 +206,12 @@ public class OrderService {
         }
         return success;
     }
+
+    public void sendEmail(int orderId,String text,String csrEmail){
+        User user=userDAO.getUserByOrderId(orderId);
+        User csr=userDAO.findByEmail(csrEmail);
+        String to=user.getEmail();
+        String content=text+"\n  For more information call "+csr.getPhone()+" or write to "+csrEmail;
+        mailService.sendCustomEmail(to,"Information about your order",content);
+    }
 }

@@ -173,7 +173,7 @@ public class OrderDaoImpl implements OrderDao {
     private static String SELECT_ORDER_INFO_BY_ORDER_ID = "SELECT  \n" +
             " PRODUCTS.name product_name,PRODUCTS.TYPE_ID product_type, products.CUSTOMER_TYPE_ID customer_type, \n" +
             " products.DESCRIPTION description,orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, \n" +
-            " PLACES. NAME place, users.name user_name, users.surname user_surname, users.phone user_phone \n" +
+            " PLACES. NAME place, users.name user_name, users.surname user_surname, users.phone user_phone, users.ADDRESS address \n" +
             " FROM ORDERS JOIN \n" +
             "  (SELECT MIN(OPERATION_DATE) operation_date,Order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=4 Group by order_id) a ON (ORDERS.id=a.ORDER_ID) \n" +
             "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
@@ -440,6 +440,7 @@ public class OrderDaoImpl implements OrderDao {
             order.setUserName(rs.getString("user_name"));
             order.setUserSurname(rs.getString("user_surname"));
             order.setPhone(rs.getString("user_phone"));
+            order.setAddress(rs.getString("address"));
             return order;
         });
     }

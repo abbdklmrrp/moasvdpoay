@@ -7,7 +7,7 @@ function orderInfo(orderId) {
         dataType: 'json',
         success: function (resultMsg) {
             var length=resultMsg.length;
-            var info=resultMsg.substring(0,length-1);
+            var info=resultMsg.substring(0,length);
             swal({
                 title:"Info",
                 text:info

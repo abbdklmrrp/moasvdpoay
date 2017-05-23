@@ -8,7 +8,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/csrHeader.jsp">
-    <jsp:param name="pageName" value="MyOrders"/>
+    <jsp:param name="pageName" value="Orders"/>
 </jsp:include>
 <div class="container">
     <div class="grid-progress-bar-placeholder">
