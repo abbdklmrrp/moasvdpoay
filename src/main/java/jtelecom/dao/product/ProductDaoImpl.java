@@ -208,7 +208,7 @@ public class ProductDaoImpl implements ProductDao {
             "AND (current_status_id = 1/* Active */ " +
             "     OR current_status_id = 2/* Suspended */ " +
             "     OR current_status_id = 4/* In processing */)";
-    private final static String DELETE_PLANNED_TASKS_FOR_TARIFF_SQL ="DELETE FROM planned_tasks" +
+    private final static String DELETE_PLANNED_TASKS_FOR_TARIFF_SQL = "DELETE FROM planned_tasks" +
             " WHERE order_id = (SELECT" +
             "                    id FROM Orders WHERE" +
             "                    user_id = :userId" +
@@ -307,18 +307,49 @@ public class ProductDaoImpl implements ProductDao {
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
+    private final static String SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_BUSINESS = "select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from PRODUCTS " +
+            " Where status = 1 and customer_type_id = 1 and (upper(name) like upper(:pattern) " +
+            " OR upper(description) like upper(:pattern) " +
+            " OR type_id like :pattern " +
+            " OR customer_type_id like :pattern " +
+            " OR duration like :pattern " +
+            " OR base_price like :pattern) " +
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
+    private final static String SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_RESEDINTIAL = "select *\n" +
+            "from ( select a.*, rownum rnum\n" +
+            "       from ( Select * from PRODUCTS " +
+            " Where status = 1 and customer_type_id = 2 and (upper(name) like upper(:pattern) " +
+            " OR upper(description) like upper(:pattern) " +
+            " OR type_id like :pattern " +
+            " OR customer_type_id like :pattern " +
+            " OR duration like :pattern " +
+            " OR base_price like :pattern) " +
+            " ORDER BY %s) a\n" +
+            "       where rownum <= :length )\n" +
+            "       where rnum > :start";
     private static final String SELECT_COUNT = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
             " WHERE upper(name) LIKE upper(:pattern) " +
             " OR upper(description) LIKE upper(:pattern) " +
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern ";
-    private static final String SELECT_ACTIVE_COUNT = "SELECT count(ID)\n" +
+    private static final String SELECT_ACTIVE_PRODUCT_FOR_BUSINESS_COUNT = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
-            " WHERE STATUS = 1 and (upper(name) LIKE upper(:pattern) " +
+            " Where status = 1 and customer_type_id = 1 and (upper(name) LIKE upper(:pattern) " +
             " OR upper(description) LIKE upper(:pattern) " +
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern) ";
+    private static final String SELECT_ACTIVE_PRODUCT_FOR_RESEDENTIAL_COUNT = "SELECT count(ID)\n" +
+            "  FROM PRODUCTS" +
+            " Where status = 1 and customer_type_id = 2 and (upper(name) LIKE upper(:pattern) " +
+            " OR upper(description) LIKE upper(:pattern) " +
+            " OR duration LIKE :pattern " +
+            " OR base_price LIKE :pattern) ";
+
     private final static String FIND_PRODUCT_RESEDENTIAL_WITHOUT_PRICE = "SELECT\n" +
             "  product.ID,\n" +
             "  product.NAME\n" +
@@ -728,7 +759,7 @@ public class ProductDaoImpl implements ProductDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean deletePlannedTasks (Integer userId, Integer tariffId) {
+    public boolean deletePlannedTasks(Integer userId, Integer tariffId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
         params.addValue("tariffId", tariffId);
@@ -1133,24 +1164,45 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Integer getCountActiveProductsWithSearch(String search) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("pattern", "%" + search + "%");
-        return jdbcTemplate.queryForObject(SELECT_ACTIVE_COUNT, params, Integer.class);
-    }
-
-    @Override
-    public List<Product> getLimitedQuantityActiveProduct(int start, int length, String sort, String search) {
+    public List<Product> getLimitedActiveProductsForBusiness(Integer start, Integer length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
             sort = "ID";
         }
-        String sql = String.format(SELECT_LIMITED_ACTIVE_PRODUCTS, sort);
+        String sql = String.format(SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_BUSINESS, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("start", start);
         params.addValue("length", rownum);
         params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.query(sql, params, new ProductRowMapper());
+    }
+
+    @Override
+    public List<Product> getLimitedActiveProductsForResidential(Integer start, Integer length, String sort, String search) {
+        int rownum = start + length;
+        if (sort.isEmpty()) {
+            sort = "ID";
+        }
+        String sql = String.format(SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_RESEDINTIAL, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("length", rownum);
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.query(sql, params, new ProductRowMapper());
+    }
+
+    @Override
+    public Integer getCountForLimitedActiveProductsForBusiness(String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_ACTIVE_PRODUCT_FOR_BUSINESS_COUNT, params, Integer.class);
+    }
+
+    @Override
+    public Integer getCountForLimitedActiveProductsForResidential(String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_ACTIVE_PRODUCT_FOR_RESEDENTIAL_COUNT, params, Integer.class);
     }
 
     @Override

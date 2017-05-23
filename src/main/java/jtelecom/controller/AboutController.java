@@ -4,15 +4,13 @@ import jtelecom.controller.product.ProductsEndpoint;
 import jtelecom.dao.price.PriceDao;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDao;
+import jtelecom.dto.PriceByRegionDto;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -44,17 +42,29 @@ public class AboutController {
         return "newPages/ProductsForVisitors";
     }
 
-    @RequestMapping(value = {"/getProductsForVisitors"}, method = RequestMethod.GET)
+
+    @RequestMapping(value = {"productForBusiness"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder servicesByTariff(@ModelAttribute GridRequestDto request) {
+    public ListHolder getProductListForBusiness(@ModelAttribute GridRequestDto request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
-        int length = request.getLength();
+        int length = request.getEndBorder();
         String search = request.getSearch();
-        List<Product> data = productDao.getLimitedQuantityActiveProduct(start, length, sort, search);
-        int size = productDao.getCountActiveProductsWithSearch(search);
+        List<Product> data = productDao.getLimitedActiveProductsForBusiness(start, length, sort, search);
+        int size = productDao.getCountForLimitedActiveProductsForBusiness(search);
         return ListHolder.create(data, size);
     }
 
+    @RequestMapping(value = {"productForResidential"}, method = RequestMethod.GET)
+    @ResponseBody
+    public ListHolder getProductListForResidential(@ModelAttribute GridRequestDto request) {
+        String sort = request.getSort();
+        int start = request.getStartBorder();
+        int length = request.getEndBorder();
+        String search = request.getSearch();
+        List<Product> data = productDao.getLimitedActiveProductsForResidential(start, length, sort, search);
+        int size = productDao.getCountForLimitedActiveProductsForResidential(search);
+        return ListHolder.create(data, size);
+    }
 
 }
