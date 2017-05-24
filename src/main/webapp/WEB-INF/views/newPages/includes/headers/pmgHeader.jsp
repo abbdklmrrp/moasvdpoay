@@ -59,11 +59,11 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'Statistics'}">
-                        <li class="active"><a href="${pageContext.request.contextPath}/pmg/statistics">Statistics</a>
+                        <li class="active"><a href="${pageContext.request.contextPath}/pmg/complaintStatistics">Statistics</a>
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="${pageContext.request.contextPath}/pmg/statistics">Statistics</a></li>
+                        <li><a href="${pageContext.request.contextPath}/pmg/complaintStatistics">Statistics</a></li>
                     </c:otherwise>
                 </c:choose>
                 <li><a href="<%=request.getContextPath()%>/doLogout">Logout</a></li>

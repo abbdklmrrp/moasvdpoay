@@ -5,9 +5,9 @@ import jtelecom.dao.complaint.ComplaintStatus;
 import java.util.Calendar;
 
 /**
- * This class created to transport detailed information about complaint.
+ * This class created to transfer detailed information about complaint.
  *
- * @author Aleksandr Revniuk
+ * @author Revniuk Aleksandr
  */
 public class FullComplaintInfoDTO {
     private Integer id;

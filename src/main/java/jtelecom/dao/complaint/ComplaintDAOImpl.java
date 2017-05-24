@@ -13,6 +13,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * This class implements methods from ComplaintDAO.
+ *
  * @author Revniuk Aleksandr
  */
 @Repository
@@ -93,6 +95,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
 
     }
 
+
     @Override
     public Integer saveComplaint(Complaint complaint) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -110,6 +113,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Complaint> getIntervalOfAssignedComplaints(int pmgId, int startIndex, int endIndex) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -119,6 +125,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return jdbcTemplate.query(GET_INTERVAL_BY_PMG_ID_SQL, params, complaintRowMapper);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int countAssignedComplaintsToUser(int pmgId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -126,6 +135,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return jdbcTemplate.queryForObject(COUNT_COMPLAINTS_BY_PMG_ID_SQL, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Complaint> getByOrderId(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -133,6 +145,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return jdbcTemplate.query(GET_ALL_BY_ORDER_ID_SQL, params, complaintRowMapper);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Complaint> getIntervalOfUnassignedComplaints(int startIndex, int endIndex) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -141,6 +156,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return jdbcTemplate.query(GET_INTERVAL_WHERE_PMG_ID_IS_NULL_SORTED_BY_DATE_SQL, params, complaintRowMapper);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Complaint> getByPlaceId(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -148,6 +166,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return jdbcTemplate.query(GET_ALL_BY_PLACE_ID_SQL, params, complaintRowMapper);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Complaint> getByStatusID(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -155,8 +176,10 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return jdbcTemplate.query(GET_ALL_BY_STATUS_ID_SQL, params, complaintRowMapper);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    @Transactional
     public boolean assignToUser(int complaintId, int pmgId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("pmgId", pmgId);
@@ -165,6 +188,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean changeStatus(int complaintId, int statusId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -173,7 +199,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return jdbcTemplate.update(UPDATE_STATUS_ID_SQL, params) > 0;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean changeDescription(int complaintId, String description) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -182,6 +210,9 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         return jdbcTemplate.update(UPDATE_DESCRIPTION_SQL, params) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int countUnassignedComplaintsToUser() {
         return jdbcTemplate.queryForObject(COUNT_COMPLAINTS_WHERE_PMG_ID_IS_NULL_SQL, new MapSqlParameterSource(), Integer.class);//TODO ask again

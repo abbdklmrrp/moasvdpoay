@@ -1,17 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jtelecom.dao.complaint;
 
-
 import jtelecom.dao.interfaces.Dao;
-import jtelecom.dao.user.User;
-
 import java.util.List;
 
 /**
+ * This interface has methods to work with complaints.
+ *
  * @author Revniuk Aleksandr
  */
 public interface ComplaintDAO extends Dao<Complaint> {

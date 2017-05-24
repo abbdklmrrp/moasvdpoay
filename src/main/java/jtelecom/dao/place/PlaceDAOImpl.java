@@ -10,6 +10,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * This class implements methods from PlaceDAO.
+ *
  * @author Revniuk Aleksandr
  */
 @Repository
@@ -73,6 +75,10 @@ public class PlaceDAOImpl implements PlaceDAO {
     @Resource
     private PlaceRowMapper placeRowMapper;
 
+    /**
+     * Revniuk Aleksandr
+     * {@inheritDoc}
+     */
     @Override
     public List<Place> getAll() {
         return jdbcTemplate.query(GET_ALL_SQL, placeRowMapper);

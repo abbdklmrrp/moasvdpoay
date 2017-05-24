@@ -66,11 +66,6 @@ function drawChartAndTable(dataUrl,name) {
     data.addRows(rowList);
     var select = document.getElementById('sel1');
     var options = {
-        //if graph type change back to line
-        // chart: {
-        //     title: 'Statistic in ' + select.value,
-        //     subtitle: 'Jcompany'
-        // },
         legend: {position: 'bottom'},
         axes: {
             x: {

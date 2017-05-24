@@ -9,6 +9,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
+ * This class implements RowMapper interface.
+ *
  * @author Revniuk Aleksandr
  */
 @Component

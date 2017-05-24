@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * This class need to get full information about concrete complaint.
  *
- * @author Aleksandr Revniuk
+ * @author Revniuk Aleksandr
  */
 @Repository
 public class FullComplaintInfoRepository {
@@ -68,6 +68,7 @@ public class FullComplaintInfoRepository {
     /**
      * This method return complaint by id.
      *
+     * Revniuk Aleksandr
      * @param id id of complaint
      * @return complaint
      */
