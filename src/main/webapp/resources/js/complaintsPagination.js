@@ -68,7 +68,7 @@ $.fn.pageMe = function (opts, dataURL) {
             async: false,
             success: function (response) {
                 numItems = response.amount;
-                list = response.partOfComplaints;
+                list = response.partOfData;
                 listLen = list.length;
             },
             error: function () {

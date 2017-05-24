@@ -1,11 +1,9 @@
 package jtelecom.config;
 
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
-import javax.servlet.ServletContext;
 
 /**
  * @author Rysakova Anna
@@ -26,11 +24,11 @@ public class SpringMvcInitializer extends AbstractAnnotationConfigDispatcherServ
         return new String[]{"*.htm", "*.json", "/"};
     }
 
-    @Override
-    protected void registerContextLoaderListener(ServletContext servletContext) {
-        super.registerContextLoaderListener(servletContext);
-        servletContext.addListener(HttpSessionEventPublisher.class);
-    }
+//    @Override
+//    protected void registerContextLoaderListener(ServletContext servletContext) {
+//        super.registerContextLoaderListener(servletContext);
+//        servletContext.addListener(HttpSessionEventPublisher.class);
+//    }
 
     @Override
     protected Filter[] getServletFilters() {

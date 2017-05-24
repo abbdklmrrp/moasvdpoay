@@ -51,11 +51,12 @@ public class ReportController {
     private static final String EXCEL_CONTENT_TYPE = "application/vnd.ms-excel";
     private static final String HEADER_VAR1 = "Content-Disposition";
     private static final String HEADER_VAR2 = "attachment; filename=";
+    private static final String DATA_FORMAT = "yyyy-MM-dd";
 
     private static Logger logger = LoggerFactory.getLogger(ReportController.class);
 
     private boolean validateData(String beginDate, String endDate) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATA_FORMAT);
         Calendar start = new GregorianCalendar();
         Calendar end = new GregorianCalendar();
         try {
@@ -88,7 +89,7 @@ public class ReportController {
         boolean valid = validateData(beginDate, endDate);
         if (valid) {
             try {
-                return reportsService.getComplaintsReportData(beginDate, endDate, region);//TODO return complaints
+                return reportsService.getComplaintsReportData(beginDate, endDate, region);
             } catch (ReportCreatingException e) {
                 logger.error("Can't get complaints data for web graph", e);
                 return null;
@@ -106,7 +107,7 @@ public class ReportController {
         boolean valid = validateData(beginDate, endDate);
         if (valid) {
             try {
-                return reportsService.getOrdersReportData(beginDate, endDate, region);//TODO return orders
+                return reportsService.getOrdersReportData(beginDate, endDate, region);
             } catch (ReportCreatingException e) {
                 logger.error("Can't get orders data for web graph", e);
                 return null;
@@ -168,23 +169,4 @@ public class ReportController {
         excelWorkBookWithReport.write(responseOutputStream);
         responseOutputStream.close();
     }
-//    @RequestMapping(value = "/download", method = RequestMethod.GET)
-//    public void downloadExcelDocument(HttpServletResponse response, @RequestParam(name = "region") int region,
-//                                      @RequestParam(name = "beginDate") String beginDate,
-//                                      @RequestParam(name = "endDate") String endDate) throws IOException {
-//        OutputStream outputStream = response.getOutputStream();
-//        final String fileName = beginDate + ":" + endDate + EXTENSION;
-//        ExcelReportCreator reportMaker = new ExcelReportCreator(fileName);
-//        response.setContentType(EXCEL_CONTENT_TYPE);
-//        response.setHeader
-//                (HEADER_VAR1, HEADER_VAR2 + fileName);
-//        try {
-////            reportMaker.makeOrdersReport(reportsService.getDataForReport(beginDate, endDate, region));
-//        } catch (WorkbookCreatingFailException | ReportCreatingException e) {
-//            logger.error("Error while downloading document", e);
-//            return;
-//        }
-//        reportMaker.getExcelWorkbook().write(outputStream);
-//        outputStream.close();
-//    }
 }

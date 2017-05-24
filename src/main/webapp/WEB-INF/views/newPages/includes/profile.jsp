@@ -23,14 +23,14 @@
             <div class="form-group form-group-lg">
                 <label class="col-sm-2 col-xs-3 control-label">Email</label><br>
                 <div class="col-sm-10 col-xs-9">
-                    <input readonly type="email" class="form-control" name="email" id="email"
+                    <input readonly type="email" class="form-control" name="email" id="email" title="-   Must contain @"
                            value=${user.email} required><br>
                 </div>
             </div>
             <div class="form-group form-group-lg">
                 <label class="col-sm-2 col-xs-3 control-label">Phone</label><br>
                 <div class="col-sm-10 col-xs-9">
-                    <input readonly type="text" class="form-control" name="phone" id="phone" value=${user.phone} required
+                    <input readonly type="text" class="form-control" name="phone" id="phone" title="Phone number" value=${user.phone} required
                            maxlength="12"><br>
                 </div>
             </div>

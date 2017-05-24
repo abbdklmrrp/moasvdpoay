@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="navbar-fixed-left">
     <div class="row">
-        <aside class="leftside col-lg-2 col-md-2 col-sm-2 col-xs-1">
+        <%--<aside class="leftside col-lg-2 col-md-2 col-sm-2 col-xs-1">--%>
             <div class="collapse navbar-collapse" id="mobilkat" >
                 <ul class="nav navbar-nav navbar-dikey">
                     <c:choose>

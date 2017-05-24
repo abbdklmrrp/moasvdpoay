@@ -34,7 +34,7 @@ public interface ProductDao extends Dao<Product> {
 
     void fillInTariffWithServices(List<TariffServiceDto> tariffServiceDtos);
 
-    boolean addCategory(ProductCategories categories);
+    Integer addCategory(ProductCategories categories);
 
     int findIdCategory(ProductCategories categories);
 
@@ -181,11 +181,11 @@ public interface ProductDao extends Dao<Product> {
     /**
      * Method deletes all planned tasks according to userId and tariffId from params.
      *
-     * @param userid id of user.
+     * @param userid   id of user.
      * @param tariffId id of tariff.
      * @return status of operation.
      */
-    boolean deletePlannedTasks (Integer userid, Integer tariffId);
+    boolean deletePlannedTasks(Integer userid, Integer tariffId);
 
     Integer getCountProductsWithSearch(String search);
 
@@ -211,9 +211,13 @@ public interface ProductDao extends Dao<Product> {
 
     Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId);
 
-    Integer getCountActiveProductsWithSearch(String search);
+    List<Product> getLimitedActiveProductsForBusiness(Integer start, Integer length, String sort, String search);
 
-    List<Product> getLimitedQuantityActiveProduct(int start, int length, String sort, String search);
+    List<Product> getLimitedActiveProductsForResidential(Integer start, Integer length, String sort, String search);
+
+    Integer getCountForLimitedActiveProductsForBusiness(String search);
+
+    Integer getCountForLimitedActiveProductsForResidential(String search);
 
     Integer saveProduct(Product product);
 

@@ -7,7 +7,6 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
             </button>
         </div>
         <div class="collapse navbar-collapse ">
@@ -36,14 +35,6 @@
                     </c:when>
                     <c:otherwise>
                         <li><a href="<%=request.getContextPath()%>/forCustomers">For private customers</a></li>
-                    </c:otherwise>
-                </c:choose>
-                <c:choose>
-                    <c:when test="${param.pageName == 'products'}">
-                        <li class="active"><a href="<%=request.getContextPath()%>/products">Products</a></li>
-                    </c:when>
-                    <c:otherwise>
-                        <li><a href="<%=request.getContextPath()%>/products">Products</a></li>
                     </c:otherwise>
                 </c:choose>
                 <c:choose>
