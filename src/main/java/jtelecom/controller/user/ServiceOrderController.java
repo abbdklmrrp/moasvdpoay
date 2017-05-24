@@ -14,8 +14,8 @@ import jtelecom.dto.ProductCatalogRowDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.OrderService;
-import jtelecom.services.product.ProductServiceImpl;
+import jtelecom.services.orders.OrderService;
+import jtelecom.services.product.ProductService;
 import jtelecom.util.SharedVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,17 +45,15 @@ public class ServiceOrderController implements Serializable {
     @Resource
     private UserDAO userDAO;
     @Resource
-    OrderService orderService;
-    Integer categoryId;
+    private OrderService orderService;
+    private Integer categoryId;
 
     @Resource
     private OrderDao orderDao;
     @Resource
-    private ProductServiceImpl productService;
+    private ProductService productService;
     User currentUser;
     private static Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
-
-    //   private final static String NO_PRODUCTS_FOR_YOU_MSG = "Sorry! There are no products yet here.";
     private final static String ORDER_IN_PROCESS_MSG = "Your order on %s is in process. It will be activated after processing.";
     private final static String SERVICE_WAS_ACTIVATED_MSG = "Service %s has been activated. Thank you!";
     private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing this order. Please, try again!";

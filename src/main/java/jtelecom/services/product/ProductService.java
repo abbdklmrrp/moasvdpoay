@@ -3,7 +3,10 @@ package jtelecom.services.product;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
 import jtelecom.dao.user.User;
+import jtelecom.dto.ProductCatalogRowDTO;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Created by Anna Rysakova on 18.05.2017.
@@ -32,4 +35,9 @@ public interface ProductService {
     void validateBasePriceByCustomerType(Product product);
 
     Product getProductForUser(User user, Integer id);
+
+    List<ProductCatalogRowDTO> getLimitedServicesForUser(User user, Integer start, Integer length, String sort, String search, Integer categoryId);
+
+    Integer getCountForServicesWithSearch(User user, String search, Integer categoryId);
+
 }
