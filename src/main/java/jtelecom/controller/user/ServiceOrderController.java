@@ -15,7 +15,7 @@ import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.OrderService;
-import jtelecom.services.product.ProductServiceImpl;
+import jtelecom.services.product.ProductService;
 import jtelecom.util.SharedVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,13 +45,13 @@ public class ServiceOrderController implements Serializable {
     @Resource
     private UserDAO userDAO;
     @Resource
-    OrderService orderService;
-    Integer categoryId;
+    private OrderService orderService;
+    private Integer categoryId;
 
     @Resource
     private OrderDao orderDao;
     @Resource
-    private ProductServiceImpl productService;
+    private ProductService productService;
     User currentUser;
     private static Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
 

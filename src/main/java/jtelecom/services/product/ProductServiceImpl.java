@@ -2,7 +2,6 @@ package jtelecom.services.product;
 
 
 import jtelecom.dao.entity.CustomerType;
-import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
 import jtelecom.dao.order.OrderDao;
 import jtelecom.dao.price.PriceDao;
@@ -198,53 +197,6 @@ public class ProductServiceImpl implements ProductService {
         }
         return productDao.update(product);
     }
-
-    /**
-     * This method takes user and returns all products that can be applied to this user sorted
-     * by categories.
-     * It firstly gets all the products that can be shown to user depending on his place
-     * for RESIDENTIAL user or all products for BUSINESS user.
-     * For more details about user types see: {@link Role}
-     * Then it gets all orders by this users customer's representatives.
-     * Then it sorts all products by categories and determines status for
-     * every product for current user.
-     * For more details about statuses  see: {@link OperationStatus}
-     * Besides statuses included in {@link OperationStatus} in current
-     * business case statue can also be:
-     * 'In Tariff' if user has this service in one of his tariffs
-     * <code>Null</code> if user doesn't have order for this product or user's order status for this product is 'Deactivated'
-     * created by Yuliya Pedash.
-     *
-     * @param user user
-     * @return Map with Key - category name, Value - data transfer object
-     * @see ProductCatalogRowDTO
-     */
-//    public Map<String, List<ProductCatalogRowDTO>> getCategoriesWithProductsForUser(User user) {
-//        List<Order> orders = orderDao.getOrdersByCustomerId(user.getCustomerId());
-//        List<Product> productWithoutStatuses = user.getRole() == Role.RESIDENTIAL ?
-//                productDao.getAllAvailableServicesByPlace(user.getPlaceId()) :
-//                productDao.getServicesAvailableForCustomer();
-//        Map<String, List<ProductCatalogRowDTO>> categoriesWithProducts = new HashMap<>();
-//        List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTariff(user.getId());
-//        for (Product product : productWithoutStatuses) {
-//            String categoryName = productDao.getProductCategoryById(product.getCategoryId()).getCategoryName();
-//            if (!categoriesWithProducts.containsKey(categoryName)) {
-//                categoriesWithProducts.put(categoryName, new ArrayList<>());
-//            }
-//            List<ProductCatalogRowDTO> allProductCatalogRowsForCategoryDTO = categoriesWithProducts.get(categoryName);
-//            String status = getStatusForProductAsString(product, orders, servicesOfCurrentUserTariff);
-//            Price price;
-//            if (user.getRole() == Role.RESIDENTIAL) {
-//                price = priceDao.getPriceByProductIdAndPlaceId(product.getId(), user.getPlaceId());
-//            } else {
-//                price = new Price(null, product.getId(), product.getBasePrice());
-//            }
-//            ProductCatalogRowDTO productCatalogRowDTO = new ProductCatalogRowDTO(product, status);
-//            allProductCatalogRowsForCategoryDTO.add(productCatalogRowDTO);
-//
-//        }
-//        return categoriesWithProducts;
-//    }
 
     /**
      * Yuiya Pedash
