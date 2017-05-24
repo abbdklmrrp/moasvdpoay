@@ -11,8 +11,8 @@ import jtelecom.dto.SuspendFormDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.OrderService;
-import jtelecom.services.PlannedTaskService;
+import jtelecom.services.orders.OrderService;
+import jtelecom.services.plannedTasks.PlannedTaskService;
 import jtelecom.util.DatesHelper;
 import jtelecom.util.SharedVariables;
 import org.slf4j.Logger;
@@ -150,7 +150,7 @@ public class UsersOrdersController implements Serializable {
     @ResponseBody
     public String cancelSuspense(@RequestParam Integer plannedTaskId) {
         logger.debug("Request for cancelling suspense with id  {}", plannedTaskId);
-        boolean wasSuspenseCancelled = plannedTaskService.canselSuspense(plannedTaskId);
+        boolean wasSuspenseCancelled = plannedTaskService.cancelSuspense(plannedTaskId);
         if (wasSuspenseCancelled) {
             logger.info("Suspense with id  {}  was cancelled", plannedTaskId);
             return SharedVariables.SUCCESS;

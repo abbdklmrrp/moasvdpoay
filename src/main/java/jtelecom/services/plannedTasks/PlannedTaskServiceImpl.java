@@ -1,4 +1,4 @@
-package jtelecom.services;
+package jtelecom.services.plannedTasks;
 
 import jtelecom.dao.plannedTask.PlannedTask;
 import jtelecom.dao.plannedTask.PlannedTaskDao;
@@ -10,21 +10,21 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 /**
- * Created by Yuliya Pedash on 21.05.2017.
+ * Created by Yuliya Pedash on 24.05.2017.
  */
 @Service
-public class PlannedTaskService {
+public class PlannedTaskServiceImpl implements PlannedTaskService {
     private static Logger logger = LoggerFactory.getLogger(PlannedTaskService.class);
 
     @Resource
-    PlannedTaskDao plannedTaskDao;
+    private PlannedTaskDao plannedTaskDao;
+
 
     /**
-     * @param suspensePlannedTaskId
-     * @return
+     * {@inheritDoc}
      */
     @Transactional
-    public boolean canselSuspense(Integer suspensePlannedTaskId) {
+    public boolean cancelSuspense(Integer suspensePlannedTaskId) {
         PlannedTask suspensePlannedTask = plannedTaskDao.getById(suspensePlannedTaskId);
         boolean wasSuspendedPlannedTaskDeleted = plannedTaskDao.deletePlannedTaskById(suspensePlannedTaskId);
         if (!wasSuspendedPlannedTaskDeleted) {

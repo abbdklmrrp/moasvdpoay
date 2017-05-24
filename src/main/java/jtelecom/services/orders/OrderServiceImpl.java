@@ -1,4 +1,4 @@
-package jtelecom.services;
+package jtelecom.services.orders;
 
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
@@ -21,10 +21,11 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 08.05.2017.
+ * Created by Yuliya Pedash on 24.05.2017.
  */
 @Service
-public class OrderService {
+
+public class OrderServiceImpl implements OrderService {
     @Resource
     private PlannedTaskDao plannedTaskDao;
     @Resource
@@ -37,17 +38,10 @@ public class OrderService {
     private ProductDao productDao;
     private static Logger logger = LoggerFactory.getLogger(OrderService.class);
 
+
     /**
-     * This method performs all operations needed for suspense of order.
-     * It adds records to Planned Tasks table with information about when order needs to be
-     * suspended and activated later. If order's date of suspense is equal to current date
-     * it marks this order as Suspended in orders table and adds record with information
-     * about activation of order to Planned Tasks.
-     *
-     * @param beginDate begin date os suspense of order
-     * @param endDate   end date os suspense of order
-     * @param orderId   order id
-     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     * {@inheritDoc}
+     * Yuliya Pedash
      */
     @Transactional
     public boolean suspendOrder(Calendar beginDate, Calendar endDate, Integer orderId) {
@@ -83,25 +77,20 @@ public class OrderService {
         return success;
     }
 
+
     /**
-     * This method determines if within dates when order is supposed to be suspended
-     * exist other planned tasks that can interrupt superdense process.
-     *
-     * @param beginDate begin date of superdense
-     * @param endDate   end date of superdense
-     * @return <code>true</code> if order can be suspended withing these dates, <code>false</code> otherwise.
+     * {@inheritDoc}
+     * Yuliya Pedash
      */
     public boolean canOrderBeSuspendedWithinDates(Calendar beginDate, Calendar endDate, Integer orderId) {
         List<PlannedTask> plannedTasks = plannedTaskDao.getAllPlannedTaskForDates(beginDate, endDate, orderId);
         return plannedTasks.isEmpty();
     }
 
+
     /**
-     * This methods deactivates order. It marks it as deactivated in Orders
-     * table and deletes all planned tasks for this order from planned_tasks table.
-     *
-     * @param
-     * @return
+     * {@inheritDoc}
+     * Yuliya Pedash
      */
     @Transactional
     public boolean deactivateOrderForProductOfUserCompletely(Integer productId, Integer userId) {
@@ -131,16 +120,10 @@ public class OrderService {
         return wasDeactivated;
     }
 
+
     /**
-     * This methods deletes planned task that was supposed to run
-     * when order was determined to be activated to be suspense. Then it
-     * marks marks it with 'Active" status in database.
-     * {@link OperationStatus} for details on statuses.
-     *
-     * @param orderId id of order
-     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
-     * @see PlannedTaskDao#deleteNextPlannedTaskForActivationForThisOrder(Integer)
-     * @see OrderDao#activateOrder(Integer)
+     * {@inheritDoc}
+     * Yuliya Pedash
      */
     @Transactional
     public boolean activateOrderAfterSuspense(Integer orderId) {
@@ -154,18 +137,22 @@ public class OrderService {
         return success;
     }
 
+
     /**
-     * This method will add to planned tasks  date of deactivation of order
-     *
-     * @param product
-     * @param order
-     * @return
+     * {@inheritDoc}
+     * Yuliya Pedash
      */
+    @Transactional
     public boolean activateOrder(Product product, Order order) {
+        boolean isSuccess = false;
         Calendar deactivateOrderDate = DatesHelper.getCurrentDate();
         deactivateOrderDate.add(Calendar.DATE, product.getDurationInDays());
         Integer orderId = orderDao.saveAndGetGeneratedId(order);
         if (orderId != null) {
+            PlannedTask deactPlannedTask = new PlannedTask(OperationStatus.Deactivated, orderId, deactivateOrderDate);
+            isSuccess = plannedTaskDao.save(deactPlannedTask);
+        }
+        if (isSuccess) {
             User user = userDAO.getUserById(order.getUserId());
             if (order.getCurrentStatus() == OperationStatus.InProcessing) {
                 mailService.sendProductProcessingEmail(user, product);
@@ -173,8 +160,7 @@ public class OrderService {
                 mailService.sendProductActivatedEmail(user, product);
             }
         }
-        PlannedTask deactPlannedTask = new PlannedTask(OperationStatus.Deactivated, orderId, deactivateOrderDate);
-        return plannedTaskDao.save(deactPlannedTask);
+        return isSuccess;
     }
 
     public boolean activateTariff(Integer userId, Integer tariffId) {
@@ -197,21 +183,21 @@ public class OrderService {
         return success;
     }
 
-    public boolean activateOrderFromCsr(int orderId){
-        boolean success=orderDao.activateOrder(orderId);
-        if(success){
-            User user=userDAO.getUserByOrderId(orderId);
-            Product product=productDao.getProductByOrderId(orderId);
-            mailService.sendProductActivatedEmail(user,product);
+    public boolean activateOrderFromCsr(int orderId) {
+        boolean success = orderDao.activateOrder(orderId);
+        if (success) {
+            User user = userDAO.getUserByOrderId(orderId);
+            Product product = productDao.getProductByOrderId(orderId);
+            mailService.sendProductActivatedEmail(user, product);
         }
         return success;
     }
 
-    public void sendEmail(int orderId,String text,String csrEmail){
-        User user=userDAO.getUserByOrderId(orderId);
-        User csr=userDAO.findByEmail(csrEmail);
-        String to=user.getEmail();
-        String content=text+"\n  For more information call "+csr.getPhone()+" or write to "+csrEmail;
-        mailService.sendCustomEmail(to,"Information about your order",content);
+    public void sendEmail(int orderId, String text, String csrEmail) {
+        User user = userDAO.getUserByOrderId(orderId);
+        User csr = userDAO.findByEmail(csrEmail);
+        String to = user.getEmail();
+        String content = text + "\n  For more information call " + csr.getPhone() + " or write to " + csrEmail;
+        mailService.sendCustomEmail(to, "Information about your order", content);
     }
 }
