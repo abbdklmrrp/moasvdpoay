@@ -13,7 +13,7 @@ public interface PriceService {
 
     List<Price> fillInListWithProductPriceByRegion(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion);
 
-    boolean isValid(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion);
+    boolean isValid(Integer[] placeId, BigDecimal[] priceByRegion);
 
     @Transactional
     void updateProductPriceInRegions(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion);

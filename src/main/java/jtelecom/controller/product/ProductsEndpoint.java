@@ -28,7 +28,7 @@ public class ProductsEndpoint {
 
     @RequestMapping(value = {"getProducts"}, method = RequestMethod.GET)
     public ModelAndView getProducts() {
-        return new ModelAndView("newPages/admin/Products");
+        return new ModelAndView("newPages/admin/products");
     }
 
     @RequestMapping(value = {"all"}, method = RequestMethod.GET)
@@ -59,8 +59,6 @@ public class ProductsEndpoint {
                                 @RequestParam(name = "end") int endIndex,
                                 @RequestParam(name = "productId") int productId){
         List<PriceByRegionDto> data=priceDao.getLimitedQuantityProductPricesInRegions(productId,startIndex,endIndex,"","");
-        for(PriceByRegionDto price:data){
-        }
         int size = priceDao.getCountPriceByPlace("", productId);
         return ListHolder.create(data, size);
     }

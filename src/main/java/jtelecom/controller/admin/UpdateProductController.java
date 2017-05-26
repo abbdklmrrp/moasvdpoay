@@ -8,14 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by Anna on 30.04.2017.
@@ -62,22 +61,6 @@ public class UpdateProductController {
 
         logger.debug("Attribute 'productId' was removed from session");
         mav.setViewName("redirect:/admin/getDetailsProduct?id=" + id);
-        return mav;
-    }
-
-    @ExceptionHandler({Exception.class})
-    public ModelAndView resolveException(Exception exception, HttpServletRequest request, ModelAndView mav) {
-        FlashMap outputFlashMap = RequestContextUtils.getOutputFlashMap(request);
-        if (outputFlashMap != null) {
-            if (exception instanceof MissingServletRequestParameterException) {
-                logger.error("Services must be selected", exception.getMessage());
-                outputFlashMap.put("error", ERROR_FILL_IN_TARIFF_SERVICES);
-            } else {
-                logger.error("Unexpected error", exception.getMessage());
-                outputFlashMap.put("error", ERROR_UNEXPECTED + exception.getMessage());
-            }
-        }
-        mav.setViewName("newPages/admin/Products");
         return mav;
     }
 }

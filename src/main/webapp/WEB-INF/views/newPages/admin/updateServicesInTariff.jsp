@@ -130,11 +130,6 @@
                                     id="btn-save-price-in-region">Update
                             </button>
                         </div>
-                        <%--<div class="row">--%>
-                        <%--<div class="col-sm-4 col-xs-0"></div>--%>
-                        <%--<button type="submit" class="btn btn-primary col-sm-4 col-xs-12">Update</button>--%>
-                        <%--<div class="col-sm-4 col-xs-0"></div>--%>
-                        <%--</div>--%>
                     </div>
                     <div class="col-md-2"></div>
                 </div>

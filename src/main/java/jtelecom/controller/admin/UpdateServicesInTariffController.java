@@ -18,13 +18,14 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by Anna Rysakova on 16.05.2017.
  */
 @Controller
 @RequestMapping({"admin"})
-public class UpdateServicesInTariff {
+public class UpdateServicesInTariffController {
 
     private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
     private static final String ERROR_IN_CONNECTION = "Error with filling database";
@@ -41,7 +42,7 @@ public class UpdateServicesInTariff {
                                                      ModelAndView mav) {
 
         logger.debug("Receive tariff's id {} ", tariffId);
-        List<TariffServiceDto> servicesByTariff = productDao.getServicesByTariff(tariffId);
+        List<TariffServiceDto> servicesByTariff = productDao.getServicesInfoByTariff(tariffId);
         logger.debug("Received services that are included in the tariff {}", servicesByTariff.toString());
         Map<String, List<Product>> allServicesWithCategory = productDao.getServicesNotInTariff(tariffId);
         logger.debug("Get all service's categories {} ", allServicesWithCategory.toString());
@@ -61,8 +62,8 @@ public class UpdateServicesInTariff {
                                                ModelAndView mav) {
 
         logger.debug("Receive tariff's id {} ", id);
-        Product foundProduct = productService.foundProduct(id);
-        if (foundProduct == null) {
+        Product foundProduct = productService.isValidProduct(id);
+        if (!Objects.nonNull(foundProduct)) {
             logger.error("Product with ID = {}  does not exist in the database ", id);
             mav.addObject("error", ERROR_EXIST);
             mav.setViewName("newPages/admin/updateServicesInTariff?id=" + id);

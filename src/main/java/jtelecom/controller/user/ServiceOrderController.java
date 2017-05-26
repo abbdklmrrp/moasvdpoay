@@ -69,7 +69,7 @@ public class ServiceOrderController implements Serializable {
         String categoryName = categoryId == null ? ALL_CATEGORIES :
                 productDao.getProductCategoryById(categoryId).getCategoryName();
         model.addAttribute("categoryName", categoryName);
-        List<ProductCategories> productCategories = productDao.findProductCategories();
+        List<ProductCategories> productCategories = productDao.getProductCategories();
         model.addAttribute("productsCategories", productCategories);
         model.addAttribute("userRole", userRoleLowerCase);
         return "newPages/" + userRoleLowerCase + "/Services";
@@ -93,7 +93,7 @@ public class ServiceOrderController implements Serializable {
 //    public String showServices(Model model,  @RequestParam(required = false) String categoryName ) {
 //        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
 //        logger.debug("Current user id : {} ", currentUser.getId());
-//        List<ProductCategories> productCategories = productDao.findProductCategories();
+//        List<ProductCategories> productCategories = productDao.getProductCategories();
 //        model.addAttribute( "productsCategories", productCategories);
 //        Map<String, List<ProductCatalogRowDTO>> categoriesWithProductsToShow = productService.getCategoriesWithProductsForUser(currentUser);
 //        if (categoriesWithProductsToShow.isEmpty()) {

@@ -52,7 +52,7 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <c:if test="${productType eq 'Tariff'}">
+                    <c:if test="${productType eq 'Tariff plan'}">
                         <c:choose>
                             <c:when test="${param.page == 'UpdateServicesInTariff'}">
                                 <li class="wet-asphalt active-tab">
@@ -93,7 +93,6 @@
                                     </td>
 
                                     <td>
-                                            <%--<div class="form-group row">--%>
                                         <div class="col-sm-8">
                                             <input type="number" class="currency"
                                                    value="${place.priceProduct eq null? 0 : place.priceProduct}.00"
@@ -101,7 +100,6 @@
                                                    id="basePrice" name="priceByRegion">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                            <%--</div>--%>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -129,7 +127,7 @@
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
 <script>
     document.getElementById('basePrice').onkeypress = function (e) {
-        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') { // позволяет ввести или одну точку, или одну запятую
+        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') {
             return !(/[.,А-Яа-яA-Za-z-"+"]/.test(String.fromCharCode(e.charCode)));
         }
     }

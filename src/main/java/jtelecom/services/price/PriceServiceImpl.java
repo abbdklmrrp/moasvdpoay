@@ -2,7 +2,6 @@ package jtelecom.services.price;
 
 import jtelecom.dao.price.Price;
 import jtelecom.dao.price.PriceDao;
-import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDao;
 import jtelecom.util.CollectionUtil;
 import org.slf4j.Logger;
@@ -53,13 +52,8 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public boolean isValid(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
-        if (Objects.equals(productId, null) || Objects.equals(placeId, null) || Objects.equals(priceByRegion, null)) {
-            return false;
-        }
-        Product product = productDao.getById(productId);
-        logger.debug("Checked that the product exists {} ", product.toString());
-        return !Objects.equals(product, null);
+    public boolean isValid(Integer[] placeId, BigDecimal[] priceByRegion) {
+        return (Objects.nonNull(placeId) & Objects.nonNull(priceByRegion));
     }
 
     @Override

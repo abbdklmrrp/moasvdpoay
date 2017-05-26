@@ -9,17 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +23,12 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping({"admin"})
-public class FillTariffController {
+public class FillTariffWithServicesController {
 
-    private static final String ERROR_UNIQUE_CATEGORY = "Category already exists";
     private static final String ERROR_IN_CONNECTION = "Error with filling database";
     private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
     private static final String ERROR_EXIST_PRODUCT = "Sorry, product with such ID does not exist in the database";
-    private static Logger logger = LoggerFactory.getLogger(FillTariffController.class);
+    private static Logger logger = LoggerFactory.getLogger(FillTariffWithServicesController.class);
     @Resource
     private ProductDao productDao;
     @Resource
@@ -90,23 +84,6 @@ public class FillTariffController {
         if (product.getCustomerType() == CustomerType.Residential) {
             mav.setViewName("redirect:/admin/fillTariffsPrices?id=" + tariffId);
         }
-        return mav;
-    }
-
-    @ExceptionHandler({Exception.class})
-    public ModelAndView resolveException(Exception exception, HttpServletRequest request, ModelAndView mav) {
-        FlashMap outputFlashMap = RequestContextUtils.getOutputFlashMap(request);
-        if (outputFlashMap != null) {
-            if (exception instanceof MissingServletRequestParameterException) {
-                logger.error(ERROR_FILL_IN_TARIFF_SERVICES, exception.getMessage());
-                outputFlashMap.put("error", ERROR_FILL_IN_TARIFF_SERVICES);
-
-            } else {
-                logger.error("Unexpected error", exception.getMessage());
-                outputFlashMap.put("error", "Unexpected error: " + exception.getMessage());
-            }
-        }
-        mav.setViewName("admin/index");
         return mav;
     }
 }

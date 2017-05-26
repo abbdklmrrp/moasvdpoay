@@ -1,42 +1,154 @@
 package jtelecom.dao.product;
 
+import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.interfaces.Dao;
-import jtelecom.dto.ServicesByCategoryDto;
 import jtelecom.dto.TariffServiceDto;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Rysakova Anna , Alistratenko Nikita on 23.04.2017.
+ * @author Anna Rysakova
+ * @author Yuliya Pedash
+ * @author Anton Bulgakov
+ * @author Moiseienko Petro
+ * @author Alistratenko Nikita
  */
 public interface ProductDao extends Dao<Product> {
-    List<Product> getByTypeId(int id);
 
-    List<Product> getByCategoryId(int id);
+    /**
+     * Method save Product object
+     *
+     * @param product Product object
+     * @return {@code ID} of current product in database
+     * @see Product
+     */
+    Integer saveProduct(Product product);
 
-    List<Product> getByProcessingStatus(int id);
+    /**
+     * Method save ProductCategories object
+     *
+     * @param categories ProductCategories object
+     * @return {@code ID} of current category in database
+     * @see ProductCategories
+     */
+    Integer saveCategory(ProductCategories categories);
 
-    List<String> findProductTypes();
+    /**
+     * Method return product type by product ID
+     *
+     * @param productId product ID
+     * @return product type by product ID
+     * @see ProductType
+     */
+    String getProductTypeByProductId(int productId);
 
-    List<ProductCategories> findProductCategories();
+    /**
+     * Method return customer type by product ID
+     *
+     * @param productId product ID
+     * @return customer type by product ID
+     * @see CustomerType
+     */
+    String getCustomerTypeByProductId(int productId);
 
-    List<Product> getAllServices();
+    /**
+     * Method return {@link List} of ProductCategories
+     *
+     * @return {@code List} of ProductCategories
+     * @see ProductCategories
+     * @see List
+     */
+    List<ProductCategories> getProductCategories();
 
+    /**
+     * The method is returned to the {@link Map},
+     * where the key is the category name,
+     * the value is the {@link List} of services for this category
+     *
+     * @return {@code Map}, where the key is the category name,
+     * the value is the {@code List} of services for this category
+     * @see Map
+     * @see List
+     */
+    Map<String, List<Product>> getAllServicesWithCategory();
 
-    List<Product> getAllTariffs();
+    /**
+     * Method return {@link List} of services by tariff ID
+     *
+     * @param tariffId tariff ID
+     * @return Method return {@code List} of services by tariff ID
+     * @see List
+     * @see TariffServiceDto
+     */
+    List<TariffServiceDto> getServicesInfoByTariff(int tariffId);
 
-    List<Product> getAllEnabledTariffs();
+    /**
+     * Method return {@link List} of services {@code ID}
+     * by tariff ID
+     *
+     * @param tariffId tariff ID
+     * @return Method return {@code List} of services by tariff ID
+     * @see List
+     * @see TariffServiceDto
+     */
+    List<TariffServiceDto> getServicesIDByTariff(int tariffId);
 
-    List<Product> getAllServices(String categoryName);
+    /**
+     * The method is returned to the {@link Map},
+     * where the key is the category name,
+     * the value is the list of services for this category,
+     * which is not included in the tariff
+     *
+     * @param tariffId tariff ID
+     * @return {@code Map}, where the key is the category name,
+     * the value is the list of services for this category
+     * @see Map
+     * @see List
+     */
+    Map<String, List<Product>> getServicesNotInTariff(int tariffId);
 
-    List<Product> getAllFreeTariffs();
+    /**
+     * Method count the amount of products that match the current {@code search} criteria
+     *
+     * @param search search criteria
+     * @return count the amount of products that match the current {@code search} criteria
+     */
+    Integer getCountProductsWithSearch(String search);
 
-    void fillInTariffWithServices(List<TariffServiceDto> tariffServiceDtos);
+    /**
+     * Method return {@link List} of {@code Product} by criteria {@code start},
+     * {@code length},{@code sort}, {@code search}
+     *
+     * @param start  start line number
+     * @param length end line number
+     * @param sort   field by which sorting is performed, by default - ID
+     * @param search search criteria
+     * @return {@code List} of {@code Product} by criteria {@code start},
+     * {@code length},{@code sort}, {@code search}
+     * @see List
+     * @see Product
+     */
+    List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search);
 
-    Integer addCategory(ProductCategories categories);
+    /**
+     * Method save services by tariff ID
+     *
+     * @param tariffServiceDto {@code List} of services by tariff with tariff ID
+     * @see List
+     * @see TariffServiceDto
+     */
+    void fillInTariffWithServices(List<TariffServiceDto> tariffServiceDto);
 
-    int findIdCategory(ProductCategories categories);
+    /**
+     * Method remove services from tariff
+     *
+     * @param tariffServiceDto {@code List} of services by tariff,
+     *                         which need to be removed
+     * @see List
+     * @see TariffServiceDto
+     */
+    void deleteServiceFromTariff(List<TariffServiceDto> tariffServiceDto);
 
     /**
      * Method returns all services that are available in place.
@@ -90,18 +202,6 @@ public interface ProductDao extends Dao<Product> {
      * @return list of products with service type.
      */
     List<Product> getAllServicesByCurrentUserTariff(Integer userId);
-
-
-    Map<String, List<Product>> getAllServicesWithCategory();
-//    List<Product> getAllServicesWithCategory();
-
-    List<Product> getAllProducts();
-
-    List<TariffServiceDto> getServicesByTariff(Integer tariffId);
-
-    Map<String, List<Product>> getServicesNotInTariff(Integer tariffId);
-
-    void deleteServiceFromTariff(List<TariffServiceDto> tariffServiceDtos);
 
     boolean disableEnableProduct(Product product);
 
@@ -187,12 +287,6 @@ public interface ProductDao extends Dao<Product> {
      */
     boolean deletePlannedTasks(Integer userid, Integer tariffId);
 
-    Integer getCountProductsWithSearch(String search);
-
-    List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search);
-
-    List<Product> getProductForResidentialCustomerWithoutPrice();
-
     /**
      * This method returns Product object in which <code>basePrice</code>
      * will be determined by price configured for place in prices table.
@@ -219,13 +313,7 @@ public interface ProductDao extends Dao<Product> {
 
     Integer getCountForLimitedActiveProductsForResidential(String search);
 
-    Integer saveProduct(Product product);
-
-    List<ServicesByCategoryDto> findServicesByCategoryId(Integer categoryId);
-
-    String getProductTypeByProductId(Integer productId);
-
-    String getCustomerTypeByProductId(Integer productId);
+    List<Product> getAllEnabledTariffs();
 
     /**
      * Get Product object by id of order

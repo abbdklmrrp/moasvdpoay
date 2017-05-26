@@ -17,7 +17,6 @@
 <jsp:include page="../includes/headers/adminHeader.jsp">
     <jsp:param name="pageName" value="UpdatePriceInRegion"/>
 </jsp:include>
-<%--<jsp:include page="../includes/footer.jsp"/>--%>
 
 <div class="navbar-fixed-left">
     <div class="row">
@@ -51,7 +50,7 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <c:if test="${productType eq 'Tariff'}">
+                    <c:if test="${productType eq 'Tariff plan'}">
                         <c:choose>
                             <c:when test="${param.page == 'UpdateServicesInTariff'}">
                                 <li class="wet-asphalt active-tab">

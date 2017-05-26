@@ -34,18 +34,18 @@ public class AddProductController {
     @RequestMapping(value = {"addTariff"}, method = RequestMethod.GET)
     public ModelAndView addProduct(ModelAndView mav) {
         mav.addObject("product", new Product());
-        mav.setViewName("newPages/admin/AddTariff");
+        mav.setViewName("newPages/admin/addTariff");
         return mav;
     }
 
     @RequestMapping(value = {"addService"}, method = RequestMethod.GET)
     public ModelAndView addService(ModelAndView mav) {
-        List<ProductCategories> productCategories = productDao.findProductCategories();
+        List<ProductCategories> productCategories = productDao.getProductCategories();
         logger.debug("Get all service's categories");
         mav.addObject("productCategories", productCategories);
         mav.addObject("product", new Product());
         mav.addObject("newProductCategories", new ProductCategories());
-        mav.setViewName("newPages/admin/AddService");
+        mav.setViewName("newPages/admin/addService");
         return mav;
     }
 
@@ -82,7 +82,7 @@ public class AddProductController {
         if (isEmptyFieldsOfService || isEmptyFieldsOfNewCategory) {
             mav.addObject("error", ERROR_WRONG_FIELDS);
             logger.error("Incoming request has empty fields");
-            List<ProductCategories> productCategories = productDao.findProductCategories();
+            List<ProductCategories> productCategories = productDao.getProductCategories();
             logger.debug("Get all service's categories {} ", productCategories.toString());
             mav.addObject("productCategories", productCategories);
             mav.setViewName("newPages/admin/addService");

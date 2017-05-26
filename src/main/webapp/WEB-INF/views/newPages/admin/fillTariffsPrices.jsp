@@ -16,7 +16,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
-    <jsp:param name="pageName" value="AddService"/>
+    <jsp:param name="pageName" value="FillTariffPrices"/>
 </jsp:include>
 <jsp:include page="../includes/footer.jsp"/>
 <form modelAttribute="priceByRegionDto"

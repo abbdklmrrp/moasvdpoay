@@ -4,7 +4,9 @@ import jtelecom.dao.place.Place;
 import jtelecom.dao.place.PlaceDAO;
 import jtelecom.dao.price.Price;
 import jtelecom.dao.price.PriceDao;
+import jtelecom.dao.product.Product;
 import jtelecom.services.price.PriceService;
+import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,21 +21,24 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Anna Rysakova on 9.05.2017.
  */
 @Controller
 @RequestMapping({"admin"})
-public class FillPriceByRegion {
+public class FillProductPricesController {
 
     private static final String ERROR_IN_CONNECTION = "Error with filling database";
     private static final String ERROR_FILL_IN_PRICE_BY_PRODUCT = "Please, check that the region was selected and price input";
-    private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
+    private static Logger logger = LoggerFactory.getLogger(FillProductPricesController.class);
     @Resource
     private PlaceDAO placeDAO;
     @Resource
     private PriceService priceService;
+    @Resource
+    private ProductService productService;
     @Resource
     private PriceDao priceDao;
 
@@ -56,8 +61,9 @@ public class FillPriceByRegion {
                                           @RequestParam(value = "placeId") Integer[] placeId,
                                           @RequestParam(value = "priceByRegion") BigDecimal[] priceByRegion
     ) {
-        boolean isValid = priceService.isValid(productId, placeId, priceByRegion);
-        if (!isValid) {
+        Product validProduct = productService.isValidProduct(productId);
+        boolean isValid = priceService.isValid(placeId, priceByRegion);
+        if (!Objects.nonNull(validProduct) || !isValid) {
             logger.error("Incoming data of place ID and is not correct {} {}",
                     Arrays.toString(placeId), Arrays.toString(priceByRegion));
             List<Place> placesForFillInTariff = placeDAO.getAllPlaces();
