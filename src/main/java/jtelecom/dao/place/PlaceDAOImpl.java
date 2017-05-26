@@ -16,11 +16,11 @@ import java.util.List;
  */
 @Repository
 public class PlaceDAOImpl implements PlaceDAO {
-    private final static String GET_ALL_SQL = "SELECT * FROM Places";
-    private final static String GET_PLACES_FOR_FILL_IN_TARIFF = "Select ID,NAME FROM PLACES WHERE \n" +
+    private final static String SELECT_ALL_SQL = "SELECT * FROM Places";
+    private final static String SELECT_PLACES_FOR_FILL_IN_TARIFF = "Select ID,NAME FROM PLACES WHERE \n" +
             "PARENT_ID IS NOT NULL ORDER BY NAME";
-    private final static String FIND_PLACE_ID_BY_NAME = "SELECT ID FROM PLACES WHERE NAME=:placeName";
-    private final static String FIND_PLACE_NAME_BY_ID = "SELECT NAME FROM PLACES WHERE ID=:placeId";
+    private final static String SELECT_PLACE_ID_BY_NAME = "SELECT ID FROM PLACES WHERE NAME=:placeName";
+    private final static String SELECT_PLACE_NAME_BY_ID = "SELECT NAME FROM PLACES WHERE ID=:placeId";
     private final static String SELECT_LIMITED_PLACES = "SELECT *\n" +
             "FROM (SELECT\n" +
             "        a.*,\n" +
@@ -81,12 +81,12 @@ public class PlaceDAOImpl implements PlaceDAO {
      */
     @Override
     public List<Place> getAll() {
-        return jdbcTemplate.query(GET_ALL_SQL, placeRowMapper);
+        return jdbcTemplate.query(SELECT_ALL_SQL, placeRowMapper);
     }
 
     @Override
     public List<Place> getAllPlaces() {
-        return jdbcTemplate.query(GET_PLACES_FOR_FILL_IN_TARIFF, (rs, rowNum) -> {
+        return jdbcTemplate.query(SELECT_PLACES_FOR_FILL_IN_TARIFF, (rs, rowNum) -> {
             Place place = new Place();
             place.setId(rs.getInt("ID"));
             place.setName(rs.getString("NAME"));
@@ -98,7 +98,7 @@ public class PlaceDAOImpl implements PlaceDAO {
     public Integer getPlaceIdByName(String placeName) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("placeName", placeName);
-        return jdbcTemplate.queryForObject(FIND_PLACE_ID_BY_NAME, params, (rs, rowNum) -> rs.getInt("ID"));
+        return jdbcTemplate.queryForObject(SELECT_PLACE_ID_BY_NAME, params, (rs, rowNum) -> rs.getInt("ID"));
     }
 
     @Override
@@ -152,7 +152,7 @@ public class PlaceDAOImpl implements PlaceDAO {
     public String getPlaceNameById(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("placeId", id);
-        return jdbcTemplate.queryForObject(FIND_PLACE_NAME_BY_ID, params, String.class);
+        return jdbcTemplate.queryForObject(SELECT_PLACE_NAME_BY_ID, params, String.class);
     }
 
     @Override

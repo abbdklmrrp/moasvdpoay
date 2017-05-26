@@ -205,12 +205,12 @@ public class ProductDAOImpl implements ProductDAO {
             "    ON p1.ID = TARIFF_SERVICES.TARIFF_ID\n" +
             "  JOIN PRODUCTS p2 ON p2.ID = TARIFF_SERVICES.SERVICE_ID ";
     private final static String DISABLE_ENABLE_PRODUCT = "UPDATE Products SET status=:status WHERE id=:id";
-    private final static String FIND_PRODUCT_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME," +
+    private final static String SELECT_PRODUCT_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME," +
             "prod.description AS DESCRIPTION, prod.DURATION AS duration " +
             "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
             " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
             "WHERE ord.USER_ID = :id AND status.NAME != 'Deactivated'";
-//    private final static String FIND_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME " +
+//    private final static String SELECT_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME " +
 //            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
 //            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
 //            "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
@@ -342,7 +342,7 @@ public class ProductDAOImpl implements ProductDAO {
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
-    private final static String FIND_ENABLED_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 AND STATUS=1 ORDER BY ID";
+    private final static String SELECT_ENABLED_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 AND STATUS=1 ORDER BY ID";
     private static final String SELECT_ACTIVE_PRODUCT_FOR_BUSINESS_COUNT = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
             " Where status = 1 and customer_type_id = 1 and (upper(name) LIKE upper(:pattern) " +
@@ -394,7 +394,7 @@ public class ProductDAOImpl implements ProductDAO {
             "WHERE TYPE_ID = 2\n AND STATUS = 1 /*Active*/ " +
             " AND place_id = :place_id " +
             " AND LOWER(name) LIKE LOWER(:pattern) || '%%' %s";
-    private static final String GET_PRODUCT_BY_ORDER_ID = "SELECT * " +
+    private static final String SELECT_PRODUCT_BY_ORDER_ID = "SELECT * " +
             " FROM PRODUCTS WHERE ID=( " +
             " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
     final static String AND_CATEGORY_ID_SQL = "  AND category_id = :category_id ";
@@ -671,7 +671,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<Product> getAllEnabledTariffs() {
-        return jdbcTemplate.query(FIND_ENABLED_TARIFFS, productRowMapper);
+        return jdbcTemplate.query(SELECT_ENABLED_TARIFFS, productRowMapper);
     }
 
     @Override
@@ -900,7 +900,7 @@ public class ProductDAOImpl implements ProductDAO {
     public List<Product> getProductsByUserId(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        List<Product> products = jdbcTemplate.query(FIND_PRODUCT_FOR_USER, params, (rs, rowNum) -> {
+        List<Product> products = jdbcTemplate.query(SELECT_PRODUCT_FOR_USER, params, (rs, rowNum) -> {
             Product product = new Product();
             product.setId(rs.getInt("ID"));
             product.setName(rs.getString("NAME"));
@@ -1058,7 +1058,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Product getProductByOrderId(int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
-        return jdbcTemplate.queryForObject(GET_PRODUCT_BY_ORDER_ID, params, new ProductRowMapper());
+        return jdbcTemplate.queryForObject(SELECT_PRODUCT_BY_ORDER_ID, params, new ProductRowMapper());
     }
 
     @Override

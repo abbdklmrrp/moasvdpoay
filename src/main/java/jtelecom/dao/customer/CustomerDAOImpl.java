@@ -11,7 +11,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     private static Logger logger = LoggerFactory.getLogger(CustomerDAOImpl.class);
 
-    private final static String FIND_COMPANY_SQL = "SELECT ID " +
+    private final static String SELECT_COMPANY_SQL = "SELECT ID " +
             "FROM CUSTOMERS " +
             "WHERE NAME=:name AND SECRET_KEY=:secretKey";
     private final static String SAVE_CUSTOMER_SQL = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY,TYPE_ID) " +
@@ -60,7 +59,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", name);
         params.addValue("secretKey", password);
-        return jdbcTemplate.queryForObject(FIND_COMPANY_SQL, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_COMPANY_SQL, params, Integer.class);
     }
 
     @Override

@@ -15,9 +15,9 @@ import java.util.Map;
  */
 @Service
 public class PriceDAOImp implements PriceDAO {
-    private final static String ADD_PRICE_OF_PRODUCT_BY_REGION = "INSERT INTO PRICES\n " +
+    private final static String INSERT_PRICE_OF_PRODUCT_BY_REGION = "INSERT INTO PRICES\n " +
             "VALUES(:productId,:placeId,:price)";
-    private final static String FIND_PRICE_IN_REGIONS_FOR_ALL_PRODUCTS = "SELECT *\n" +
+    private final static String SELECT_PRICE_IN_REGIONS_FOR_ALL_PRODUCTS = "SELECT *\n" +
             "FROM (SELECT\n" +
             "        a.*,\n" +
             "        rownum rnum\n" +
@@ -37,7 +37,7 @@ public class PriceDAOImp implements PriceDAO {
             "            ORDER BY %s ) a\n" +
             "      WHERE rownum <= :length)\n" +
             "WHERE rnum > :start";
-    private final static String FIND_PRICE_IN_REGION_BY_PRODUCT = "SELECT \n" +
+    private final static String SELECT_PRICE_IN_REGION_BY_PRODUCT = "SELECT \n" +
             "  product.ID,\n" +
             "  product.NAME,\n" +
             "  product.DESCRIPTION,\n" +
@@ -47,7 +47,7 @@ public class PriceDAOImp implements PriceDAO {
             "FROM PRODUCTS product\n" +
             "  JOIN PRICES price ON (product.ID = price.PRODUCT_ID)\n" +
             "  JOIN PLACES place ON (price.PLACE_ID = place.ID) WHERE product.ID=:productId";
-    private final static String FIND_ALL_PLACES_AND_PRICE_AT_PLACES = "SELECT\n" +
+    private final static String SELECT_ALL_PLACES_AND_PRICE_AT_PLACES = "SELECT\n" +
             "  PLACES.ID,\n" +
             "  PLACES.NAME,\n" +
             "  price.PRICE\n" +
@@ -57,7 +57,7 @@ public class PriceDAOImp implements PriceDAO {
             "             WHERE PRODUCT_ID = :productId AND PRICES.PRICE>0) price ON (places.id = price.PLACE_ID)\n" +
             "WHERE PLACES.PARENT_ID IS NOT NULL\n" +
             "ORDER BY PLACES.NAME";
-    private final static String FIND_ALL_PRICE_INFO_BY_PRODUCT = "SELECT * FROM PRICES\n" +
+    private final static String SELECT_ALL_PRICE_INFO_BY_PRODUCT = "SELECT * FROM PRICES\n" +
             " WHERE PRODUCT_ID=:productId";
     private final static String DELETE_PRODUCT_PRICE_FROM_REGION = "DELETE FROM PRICES\n" +
             "WHERE PRODUCT_ID=:productId AND PLACE_ID=:placeId";
@@ -112,7 +112,7 @@ public class PriceDAOImp implements PriceDAO {
                             .addValue("price", price.getPrice())
                             .getValues());
         }
-        int[] isInsert = jdbcTemplate.batchUpdate(ADD_PRICE_OF_PRODUCT_BY_REGION, batchValues.toArray(new Map[priceByRegion.size()]));
+        int[] isInsert = jdbcTemplate.batchUpdate(INSERT_PRICE_OF_PRODUCT_BY_REGION, batchValues.toArray(new Map[priceByRegion.size()]));
         return isInsert.length != 0;
     }
 
@@ -126,7 +126,7 @@ public class PriceDAOImp implements PriceDAO {
     public List<PriceByRegionDTO> getPriceInRegionsByProduct(int productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("productId", productId);
-        return jdbcTemplate.query(FIND_PRICE_IN_REGION_BY_PRODUCT, params, (rs, rowNum) -> {
+        return jdbcTemplate.query(SELECT_PRICE_IN_REGION_BY_PRODUCT, params, (rs, rowNum) -> {
             PriceByRegionDTO priceByRegionDTO = new PriceByRegionDTO();
             priceByRegionDTO.setProductId(rs.getInt("ID"));
             priceByRegionDTO.setProductName(rs.getString("NAME"));
@@ -142,7 +142,7 @@ public class PriceDAOImp implements PriceDAO {
     public List<PriceByRegionDTO> getAllRegionsAndProductPriceInRegionByProductId(Integer productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("productId", productId);
-        return jdbcTemplate.query(FIND_ALL_PLACES_AND_PRICE_AT_PLACES, params, (rs, rowNum) -> {
+        return jdbcTemplate.query(SELECT_ALL_PLACES_AND_PRICE_AT_PLACES, params, (rs, rowNum) -> {
             PriceByRegionDTO priceByRegionDTO = new PriceByRegionDTO();
             priceByRegionDTO.setPlaceId(rs.getInt("ID"));
             priceByRegionDTO.setProductId(productId);
@@ -156,7 +156,7 @@ public class PriceDAOImp implements PriceDAO {
     public List<Price> getPriceInRegionInfoByProduct(int productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("productId", productId);
-        return jdbcTemplate.query(FIND_ALL_PRICE_INFO_BY_PRODUCT, params, (rs, rowNum) -> {
+        return jdbcTemplate.query(SELECT_ALL_PRICE_INFO_BY_PRODUCT, params, (rs, rowNum) -> {
             Price price = new Price();
             price.setPlaceId(rs.getInt("PLACE_ID"));
             price.setProductId(rs.getInt("PRODUCT_ID"));
@@ -183,7 +183,7 @@ public class PriceDAOImp implements PriceDAO {
         if (sort.isEmpty()) {
             sort = "PLACE";
         }
-        String sql = String.format(FIND_PRICE_IN_REGIONS_FOR_ALL_PRODUCTS, sort);
+        String sql = String.format(SELECT_PRICE_IN_REGIONS_FOR_ALL_PRODUCTS, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("start", start);
         params.addValue("length", length);

@@ -15,13 +15,13 @@ import java.util.List;
 @Service
 public class UserDAOImpl implements UserDAO {
 
-    private final static String FIND_BY_USERNAME = "SELECT * FROM AUTHORITIES WHERE USERNAME=:username AND ENABLE=1";
-    private final static String FIND_ROLE = "SELECT id FROM ROLES WHERE NAME=:name";
+    private final static String SELECT_BY_USERNAME = "SELECT * FROM AUTHORITIES WHERE USERNAME=:username AND ENABLE=1";
+    private final static String SELECT_ROLE = "SELECT id FROM ROLES WHERE NAME=:name";
     private final static String SAVE_USER = "INSERT INTO USERS(NAME,SURNAME,EMAIL,PHONE,PASSWORD,ADDRESS,ROLE_ID,PLACE_ID,CUSTOMER_ID,ENABLE) " +
             "VALUES(:name,:surname,:email,:phone,:password, :address, :roleId, :placeId, :customerId, :enable)";
-    private final static String FIND_PLACE_ID = "SELECT ID FROM PLACES WHERE NAME=:place";
-    private final static String FIND_BY_EMAIL = "SELECT EMAIL FROM USERS WHERE upper(EMAIL)=upper(:email)";
-    private final static String FIND_ALL_CLIENTS = "SELECT " +
+    private final static String SELECT_PLACE_ID = "SELECT ID FROM PLACES WHERE NAME=:place";
+    private final static String SELECT_BY_EMAIL = "SELECT EMAIL FROM USERS WHERE upper(EMAIL)=upper(:email)";
+    private final static String SELECT_ALL_CLIENTS = "SELECT " +
             "EMAIL, NAME,ID,SURNAME,PHONE,ADDRESS " +
             "FROM USERS " +
             "WHERE ENABLE=1 AND CUSTOMER_ID IS NOT NULL";
@@ -40,12 +40,12 @@ public class UserDAOImpl implements UserDAO {
             "    FROM USERS" +
             "  WHERE EMAIL=:email";
 
-    private final static String FIND_BY_PHONE = "SELECT * FROM USERS WHERE PHONE=:phone";
+    private final static String SELECT_BY_PHONE = "SELECT * FROM USERS WHERE PHONE=:phone";
 
     private final static String UPDATE_USER = "UPDATE USERS " +
             "SET NAME=:name, SURNAME=:surname, PHONE=:phone, ENABLE= :enable, PASSWORD= :password, ADDRESS= :address " +
             "WHERE ID=:id";
-    private final static String FIND_USER_BY_ID = "SELECT * FROM USERS WHERE ID=:id";
+    private final static String SELECT_USER_BY_ID = "SELECT * FROM USERS WHERE ID=:id";
     private final static String SELECT_LIMITED_USERS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from USERS " +
@@ -132,20 +132,20 @@ public class UserDAOImpl implements UserDAO {
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
 
-    private static final String GET_USER_BY_COMPLAINT_ID = "SELECT * " +
+    private static final String SELECT_USER_BY_COMPLAINT_ID = "SELECT * " +
             " FROM USERS WHERE ID=( " +
             " SELECT USER_ID FROM ORDERS JOIN COMPLAINTS ON (ORDERS.ID=COMPLAINTS.ORDER_ID) " +
             " WHERE COMPLAINTS.ID=:complaintId)";
 
-    private static final String GET_USER_BY_ORDER_ID = "SELECT * " +
+    private static final String SELECT_USER_BY_ORDER_ID = "SELECT * " +
             " FROM USERS WHERE ID=( " +
             " SELECT USER_ID FROM ORDERS WHERE ID=:orderId)";
 
-    private static final String GET_USERS_BY_CUSTOMER_TYPE = "SELECT * " +
+    private static final String SELECT_USERS_BY_CUSTOMER_TYPE = "SELECT * " +
             " FROM USERS WHERE CUSTOMER_ID IN ( " +
             " SELECT ID FROM CUSTOMERS WHERE TYPE_ID=:typeId)";
 
-    private static final String GET_USER_BY_PRODUCT_ID = "SELECT * " +
+    private static final String SELECT_USER_BY_PRODUCT_ID = "SELECT * " +
             " FROM USERS WHERE ID IN ( " +
             " SELECT USER_ID FROM ORDERS WHERE PRODUCT_ID=:productId OR PRODUCT_ID IN ( " +
             " SELECT TARIFF_ID FROM TARIFF_SERVICES WHERE SERVICE_ID=:productId))";
@@ -167,7 +167,7 @@ public class UserDAOImpl implements UserDAO {
     public User findByUsername(String username) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("username", username);
-        List<User> users = jdbcTemplate.query(FIND_BY_USERNAME, params, (rs, rowNum) -> {
+        List<User> users = jdbcTemplate.query(SELECT_BY_USERNAME, params, (rs, rowNum) -> {
             String userName = rs.getString("USERNAME");
             String password = rs.getString("PASSWORD");
             String authorities = rs.getString("ROLE");
@@ -239,7 +239,7 @@ public class UserDAOImpl implements UserDAO {
     public Integer findRole(String name) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", name);
-        List<Integer> id = jdbcTemplate.query(FIND_ROLE, params, (rs, rowNum) -> {
+        List<Integer> id = jdbcTemplate.query(SELECT_ROLE, params, (rs, rowNum) -> {
             return rs.getInt("id");
         });
         return id.isEmpty() ? null : id.get(0);
@@ -249,7 +249,7 @@ public class UserDAOImpl implements UserDAO {
     public Integer findPlaceId(String name) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("place", name);
-        List<Integer> id = jdbcTemplate.query(FIND_PLACE_ID, params, (rs, rowNum) -> {
+        List<Integer> id = jdbcTemplate.query(SELECT_PLACE_ID, params, (rs, rowNum) -> {
             return rs.getInt("id");
         });
         return id.isEmpty() ? null : id.get(0);
@@ -261,7 +261,7 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public List<User> getAllClients() {
-        List<User> clients = jdbcTemplate.query(FIND_ALL_CLIENTS, (rs, rowNum) -> {
+        List<User> clients = jdbcTemplate.query(SELECT_ALL_CLIENTS, (rs, rowNum) -> {
             User user = new User();
             user.setEmail(rs.getString("email"));
             user.setName(rs.getString("name"));
@@ -279,7 +279,7 @@ public class UserDAOImpl implements UserDAO {
         String email = user.getEmail();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("email", email);
-        List<String> users = jdbcTemplate.query(FIND_BY_EMAIL, params, (rs, rowNum) -> {
+        List<String> users = jdbcTemplate.query(SELECT_BY_EMAIL, params, (rs, rowNum) -> {
             return rs.getString("EMAIL");
         });
         return users.isEmpty();
@@ -308,7 +308,7 @@ public class UserDAOImpl implements UserDAO {
     public User getUserByPhone(String phone) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("phone", phone);
-        List<User> users = jdbcTemplate.query(FIND_BY_PHONE, params, (rs, rowNum) -> {
+        List<User> users = jdbcTemplate.query(SELECT_BY_PHONE, params, (rs, rowNum) -> {
             User user = new User();
             user.setName(rs.getString("name"));
             user.setId(rs.getInt("id"));
@@ -327,7 +327,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getUserById(Integer id) {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        return jdbcTemplate.queryForObject(FIND_USER_BY_ID, params, new UserRowMapper());
+        return jdbcTemplate.queryForObject(SELECT_USER_BY_ID, params, new UserRowMapper());
     }
 
     @Override
@@ -419,26 +419,26 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getUserByComplaintId(int complaintId) {
         MapSqlParameterSource params = new MapSqlParameterSource("complaintId", complaintId);
-        return jdbcTemplate.queryForObject(GET_USER_BY_COMPLAINT_ID, params, new UserRowMapper());
+        return jdbcTemplate.queryForObject(SELECT_USER_BY_COMPLAINT_ID, params, new UserRowMapper());
     }
 
     @Override
     public User getUserByOrderId(int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
-        return jdbcTemplate.queryForObject(GET_USER_BY_ORDER_ID, params, new UserRowMapper());
+        return jdbcTemplate.queryForObject(SELECT_USER_BY_ORDER_ID, params, new UserRowMapper());
     }
 
     @Override
     public List<User> getUsersByCustomerType(CustomerType customerType) {
         Integer typeId = customerType.getId();
         MapSqlParameterSource params = new MapSqlParameterSource("typeId", typeId);
-        return jdbcTemplate.query(GET_USERS_BY_CUSTOMER_TYPE, params, new UserRowMapper());
+        return jdbcTemplate.query(SELECT_USERS_BY_CUSTOMER_TYPE, params, new UserRowMapper());
     }
 
     @Override
     public List<User> getUsersByProductId(int productId) {
         MapSqlParameterSource params = new MapSqlParameterSource("productId", productId);
-        return jdbcTemplate.query(GET_USER_BY_PRODUCT_ID, params, new UserRowMapper());
+        return jdbcTemplate.query(SELECT_USER_BY_PRODUCT_ID, params, new UserRowMapper());
     }
 
     @Override
