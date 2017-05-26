@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * This interface has methods to work with places.
  *
+ * @author Anna Rysakova
  * @author Revniuk Aleksandr
  */
 public interface PlaceDAO {

@@ -7,7 +7,8 @@ import java.util.List;
 
 
 /**
- * Created by Yuliya Pedash on 27.04.2017.
+ * @author Anna Rysakova
+ * @author Yuliya Pedash
  */
 public interface PriceDAO extends DAO<Price> {
     /**

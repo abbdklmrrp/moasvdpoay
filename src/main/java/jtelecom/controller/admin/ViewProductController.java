@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import java.util.Objects;
 
 /**
- * Created by Rysakova Anna on 01.05.2017., Nikita Alistratenko
+ * @author Anna Rysakova
  */
 @Controller
 @RequestMapping({"admin"})

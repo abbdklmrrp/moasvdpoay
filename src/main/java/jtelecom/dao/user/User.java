@@ -3,7 +3,7 @@ package jtelecom.dao.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 public class User {
     private Integer id;

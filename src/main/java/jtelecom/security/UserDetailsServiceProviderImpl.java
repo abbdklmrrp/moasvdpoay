@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 @Service
 public class UserDetailsServiceProviderImpl implements UserDetailsServiceProvider {

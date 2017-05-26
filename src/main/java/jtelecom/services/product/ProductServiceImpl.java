@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * Created by Rysakova Anna on 26.04.2017.
+ * @author Anna Rysakova
  */
 @Component
 public class ProductServiceImpl implements ProductService {

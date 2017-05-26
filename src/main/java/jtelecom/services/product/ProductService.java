@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Anna Rysakova on 18.05.2017.
+ * @author Anna Rysakova
  */
 public interface ProductService {
 

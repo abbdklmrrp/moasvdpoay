@@ -1,3 +1,6 @@
+<%--
+  Created by Anna Rysakova
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -276,7 +279,7 @@
             },
             "action": function (pv, wv, grid) {
                 return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
-                    location.href = '${pageContext.request.contextPath}/admin/getDetailsProduct?id=' + wv.id
+                        location.href = '${pageContext.request.contextPath}/admin/getDetailsProduct?id=' + wv.id
                     }
                 );
             }

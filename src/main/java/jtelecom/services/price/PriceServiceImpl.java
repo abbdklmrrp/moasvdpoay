@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by Anna Rysakova on 10.05.2017.
+ * @author Anna Rysakova
  */
 @Component
 public class PriceServiceImpl implements PriceService {

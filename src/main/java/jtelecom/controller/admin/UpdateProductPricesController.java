@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by Anna Rysakova on 9.05.2017.
+ * @author Anna Rysakova
  */
 @Controller
 @RequestMapping({"admin"})

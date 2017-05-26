@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 
 /**
- * Created by Anna on 30.04.2017.
+ * @author Anna Rysakova
  */
 @Controller
 @RequestMapping({"admin"})

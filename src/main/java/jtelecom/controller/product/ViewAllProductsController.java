@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by Rysakova Anna on 26.04.2017.
+ * @author Anna Rysakova
  */
 @RestController
 @RequestMapping({"admin", "csr", "pmg"})

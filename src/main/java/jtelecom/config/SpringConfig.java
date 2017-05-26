@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 @Configuration
 @EnableWebMvc

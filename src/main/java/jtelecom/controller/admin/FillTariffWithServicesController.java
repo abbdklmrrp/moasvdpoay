@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Rysakova Anna on 26.04.2017.
+ * @author Anna Rysakova
  */
 @Controller
 @RequestMapping({"admin"})

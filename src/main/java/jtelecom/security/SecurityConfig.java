@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 @Configuration
 @EnableWebSecurity

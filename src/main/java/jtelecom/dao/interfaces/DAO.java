@@ -1,7 +1,8 @@
 package jtelecom.dao.interfaces;
 
 /**
- * Created by Yuliya Pedash, Anna Rysakova on 27.04.2017.
+ * @author Yuliya Pedash
+ * @author Anna Rysakova
  */
 public interface DAO<T> {
     T getById(int id);

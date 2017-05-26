@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by Rysakova Anna on 23.04.2017.
+ * @author Anna Rysakova
  */
 @Component
 class ProductRowMapper implements RowMapper<Product> {

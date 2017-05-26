@@ -1,8 +1,5 @@
 <%--
-  Created by IntelliJ IDEA.
-  User: Anna Rysakova
-  Date: 9.05.2017
-  Time: 9:28
+  Created by Anna Rysakova
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>

@@ -1,3 +1,6 @@
+<%--
+  Created by Anna Rysakova
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <section class="container">
     <div class="col-md-4"></div>

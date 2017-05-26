@@ -1,7 +1,7 @@
 package jtelecom.dto;
 
 /**
- * Created by Anna Rysakova on 08.05.2017.
+ * @author Anna Rysakova
  */
 public class TariffServiceDTO {
     private Integer tariffId;

@@ -6,7 +6,7 @@ import jtelecom.dao.interfaces.DAO;
 import java.util.List;
 
 /**
- * Created by Rysakova Anna on 20.04.2017.
+ * @author Anna Rysakova
  */
 public interface UserDAO extends DAO<User> {
     User findByUsername(String username);

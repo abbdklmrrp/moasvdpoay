@@ -3,7 +3,7 @@ package jtelecom.dto;
 import java.math.BigDecimal;
 
 /**
- * Created by Anna Rysakova on 10.05.2017.
+ * @author Anna Rysakova
  */
 public class PriceByRegionDTO {
 

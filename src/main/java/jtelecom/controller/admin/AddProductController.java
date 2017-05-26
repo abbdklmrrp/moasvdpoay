@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by Anna on 23.04.2017.
+ * @author Anna Rysakova
  */
 @Controller
 @RequestMapping({"admin"})

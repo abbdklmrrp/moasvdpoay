@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Created by Anna Rysakova on 16.05.2017.
+ * @author Anna Rysakova
  */
 @Controller
 @RequestMapping({"admin"})

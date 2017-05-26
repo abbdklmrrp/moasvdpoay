@@ -3,7 +3,7 @@ package jtelecom.security;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 public class SpringSecurityInitializer extends AbstractSecurityWebApplicationInitializer {
 }

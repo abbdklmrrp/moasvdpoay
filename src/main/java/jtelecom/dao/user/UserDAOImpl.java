@@ -10,7 +10,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by Rysakova Anna, Moiseienko Petro on 20.04.2017.
+ * @author Anna Rysakova
+ * @author Petr Moiseienko
  */
 @Service
 public class UserDAOImpl implements UserDAO {

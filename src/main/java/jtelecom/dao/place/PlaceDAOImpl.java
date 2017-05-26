@@ -13,6 +13,7 @@ import java.util.List;
  * This class implements methods from PlaceDAO.
  *
  * @author Revniuk Aleksandr
+ * @author Anna Rysakova
  */
 @Repository
 public class PlaceDAOImpl implements PlaceDAO {

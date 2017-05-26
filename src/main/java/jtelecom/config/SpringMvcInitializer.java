@@ -8,7 +8,7 @@ import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 public class SpringMvcInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override

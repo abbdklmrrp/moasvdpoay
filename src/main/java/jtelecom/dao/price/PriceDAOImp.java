@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Yuliya Pedash on 27.04.2017.
+ * @author Anna Rysakova
+ * @author Yuliya Pedash
  */
 @Service
 public class PriceDAOImp implements PriceDAO {

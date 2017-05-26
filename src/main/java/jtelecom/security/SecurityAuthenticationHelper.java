@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 @Component
 public class SecurityAuthenticationHelper {

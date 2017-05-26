@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by Anna Rysakova on 12.05.2017.
+ * @author Anna Rysakova
  */
 public class CollectionUtil {
 
@@ -16,7 +16,7 @@ public class CollectionUtil {
      * @param compareCollection  collection from which the elements will be compared
      * @param <T>                collection type
      * @return collection Collection of elements from the first collection,
-     * which are included in the second collection
+     *                    which are included in the second collection
      * @see Collection
      * @see T
      */

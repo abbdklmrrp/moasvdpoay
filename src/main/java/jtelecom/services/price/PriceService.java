@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Created by Anna Rysakova on 18.05.2017.
+ * @author Anna Rysakova
  */
 public interface PriceService {
 
