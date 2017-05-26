@@ -15,7 +15,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
-    <jsp:param name="pageName" value="UpdatePriceInRegion"/>
+    <jsp:param name="pageName" value="ViewPriceInRegion"/>
 </jsp:include>
 
 <div class="col-xs-2">
@@ -48,47 +48,17 @@
                 </c:otherwise>
             </c:choose>
 
-                    <c:if test="${productType eq 'Tariff plan'}">
-                        <c:choose>
-                            <c:when test="${param.page == 'UpdateServicesInTariff'}">
-                                <li class="wet-asphalt active-tab">
-                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${id}">Services
-                                        in tariff</a>
-                                </li>
-                            </c:when>
-                            <c:otherwise>
-                                <li class="wet-asphalt">
-                                    <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${id}">Services
-                                        in tariff</a>
-                                </li>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:if>
-                </ul>
-            </div>
-        </aside>
-        <main class="col-lg-10 col-md-10 col-sm-10 col-xs-11">
-
-            <div class="container">
-                <div class="grid-progress-bar-placeholder">
-                    <div class="progress grid-progress-bar" style="display: none;" id="progressId">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
-                             aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                            <span class="sr-only">in progress</span>
-                        </div>
-                    </div>
-                </div>
-            <c:if test="${productType eq 'Tariff'}">
+            <c:if test="${productType eq 'Tariff plan'}">
                 <c:choose>
                     <c:when test="${param.page == 'UpdateServicesInTariff'}">
                         <li class="wet-asphalt active-tab">
-                            <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${id}">Services
+                            <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff/${id}">Services
                                 in tariff</a>
                         </li>
                     </c:when>
                     <c:otherwise>
                         <li class="wet-asphalt">
-                            <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${id}">Services
+                            <a href="${pageContext.request.contextPath}/admin/updateServicesInTariff/${id}">Services
                                 in tariff</a>
                         </li>
                     </c:otherwise>
