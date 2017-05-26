@@ -22,7 +22,7 @@
 </jsp:include>
 <div class="navbar-fixed-left">
     <div class="row">
-        <aside class="leftside col-lg-2 col-md-2 col-sm-2 col-xs-1">
+        <div class="col-xs-2">
             <div class="collapse navbar-collapse" id="mobilkat">
                 <ul class="nav navbar-nav navbar-dikey">
                     <c:choose>
@@ -71,8 +71,8 @@
                     </c:if>
                 </ul>
             </div>
-        </aside>
-        <main class="col-lg-10 col-md-10 col-sm-10 col-xs-11">
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
             <div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
                 <form method="POST" modelAttribute="product"
                       action="${pageContext.request.contextPath}/admin/updateProduct?id=${product.id}">
@@ -199,7 +199,7 @@
                 </div>
                 <h2 style="text-align: center" id="errorMessage" hidden disabled="true">${msg}</h2>
             </div>
-        </main>
+        </div>
     </div>
 </div>
 

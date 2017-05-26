@@ -63,10 +63,10 @@ public class OrderDaoImpl implements OrderDao {
             " AND Orders.product_id = :productId " +
             " AND Users.customer_id = (SELECT customer_id FROM Users WHERE id = :userId)";
     private final static String DELETE_ORDER_BY_ID_SQL = "DELETE FROM ORDERS WHERE ID = :id;";
-    private final static String SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL = "SELECT * FROM ORDERS WHERE\n" +
-            "  PRODUCT_ID = :product_id\n" +
-            "  AND USER_ID = :user_id\n " +
-            "AND CURRENT_STATUS_ID <> 3 /*Deactivated status*/";
+    private final static String SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL = "SELECT * FROM ORDERS WHERE" +
+            " PRODUCT_ID = :product_id\n" +
+            " AND USER_ID = :user_id\n " +
+            " AND CURRENT_STATUS_ID <> 3 /*Deactivated status*/";
 //    private final static String SELECT_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT\n" +
 //            "   o.id,\n" +
 //            "   p.NAME,\n" +
@@ -297,7 +297,7 @@ public class OrderDaoImpl implements OrderDao {
         params.addValue("productId", productId);
         try {
             return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.debug("There are no user`s orders with such params.");
             return null;
         }

@@ -23,6 +23,8 @@ import java.util.List;
 /**
  * @author Anton Bulgakov
  * @since 04.05.2017.
+ *
+ * Class is responsible for all actions with tariffs on all jsp pages.
  */
 @Controller
 @RequestMapping({"residential", "business", "csr"})
@@ -39,17 +41,32 @@ public class TariffsController {
 
     private static Logger logger = LoggerFactory.getLogger(TariffsController.class);
 
+    /**
+     * Method gets available tariffs for user and show them on the jsp page.
+     *
+     * @return jsp page with list of available tariffs.
+     */
     @RequestMapping(value = "tariffs")
     public String showAvailableTariffsForUser() {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         return "newPages/" + currentUser.getRole().getNameInLowwerCase() + "/Tariffs";
     }
 
+    /**
+     * Method used for showing available user`s tariffs for CSR.
+     *
+     * @return jsp page with tariffs.
+     */
     @RequestMapping(value = "availableUserTariffs")
     public String showAvailableTariffsForCSR() {
         return "newPages/csr/UserTariffs";
     }
 
+    /**
+     * Method used for filling jsp page of tariffs by records of tariffs begin with row number startIndex till endIndex from params.
+     *
+     * @return dto with tariffs.
+     */
     @RequestMapping(value = {"allTariffs"}, method = RequestMethod.GET)
     @ResponseBody
     public TariffsDataPartitionDTO showTariffsForUser(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
@@ -68,6 +85,13 @@ public class TariffsController {
         return dto;
     }
 
+    /**
+     * Method activates tariff for user with id from params.
+     *
+     * @param tariffId id of tariff.
+     * @param userId id of user.
+     * @return status of activation.
+     */
     @RequestMapping(value = {"activateTariff"}, method = RequestMethod.POST)
     @ResponseBody
     public String activateTariff(@RequestParam Integer tariffId,@RequestParam Integer userId) {
@@ -84,6 +108,13 @@ public class TariffsController {
         return statusOperation ? "success" : "fail";
     }
 
+    /**
+     * Method identified user and deactivate current tariff, if it's exists.
+     *
+     * @param tariffId id of tariff.
+     * @param userId id of user.
+     * @return status of deactivation.
+     */
     @RequestMapping(value = {"deactivateTariff"}, method = RequestMethod.POST)
     @ResponseBody
     public String deactivateTariff(@RequestParam Integer tariffId,@RequestParam Integer userId) {
@@ -100,6 +131,12 @@ public class TariffsController {
         return statusOperation ? "success" : "fail";
     }
 
+    /**
+     * Method gets all services are in tariff and sends it to the ajax function.
+     *
+     * @param tariffId id of tariff.
+     * @return
+     */
     @RequestMapping(value = {"showServicesOfTariff"}, method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public List<Product> showServicesOfTariff(@RequestParam Integer tariffId) {
@@ -107,6 +144,11 @@ public class TariffsController {
         return productDao.getServicesOfTariff(tariffId);
     }
 
+    /**
+     * Method used for filling jsp page of tariffs by records of tariffs begin with row number startIndex till endIndex from params.
+     * It used for showing tariffs of user`s for CSR.
+     * @return dto with tariffs.
+     */
     @RequestMapping(value = {"userTariffs"})
     @ResponseBody
     public TariffsDataPartitionDTO showTariffsForUser(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex, HttpSession session) {

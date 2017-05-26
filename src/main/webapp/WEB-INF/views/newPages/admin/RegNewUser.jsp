@@ -44,7 +44,9 @@
                 <i class="fa fa-user"></i>
             </div>
             <div class="row">
-                <button type="submit" class="btn btn-primary col-sm-12 col-xs-12">Sign up</button>
+                <div class="col-xs-4"></div>
+                <div class="col-xs-4"><button type="submit" class="btn btn-primary col-sm-12 col-xs-12">Sign up</button></div>
+                <div class="col-xs-4"></div>
             </div>
         </div>
     </form>
