@@ -698,7 +698,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("placeId", placeId);
         try {
             return jdbcTemplate.query(SELECT_TARIFFS_BY_PLACE_SQL, params, tariffRowMapper);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.debug("There are no tariffs in place with id {}", placeId);
             return new ArrayList<>();
         }
@@ -716,7 +716,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("endIndex", endIndex);
         try {
             return jdbcTemplate.query(SELECT_INTERVAL_TARIFFS_BY_PLACE_SQL, params, tariffRowMapper);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.debug("There are no tariffs in place with id {}", placeId);
             return new ArrayList<>();
         }
@@ -732,7 +732,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("placeId", placeId);
         try {
             return jdbcTemplate.queryForObject(SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_BY_PLACE_ID_SQL, params, Integer.class);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.debug("There are no available tariffs for user.");
             return null;
         }
@@ -747,7 +747,7 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         try {
             return jdbcTemplate.queryForObject(SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_FOR_CUSTOMERS_SQL, params, Integer.class);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.debug("There are no available tariffs for customers.");
             return null;
         }
@@ -788,7 +788,7 @@ public class ProductDaoImpl implements ProductDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         try {
             return jdbcTemplate.query(SELECT_TARIFFS_FOR_CUSTOMERS_SQL, params, tariffRowMapper);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.debug("There are no tariffs for customers.");
             return new ArrayList<>();
         }
@@ -805,7 +805,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("endIndex", endIndex);
         try {
             return jdbcTemplate.query(SELECT_INTERVAL_TARIFFS_FOR_CUSTOMERS_SQL, params, tariffRowMapper);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.debug("There are no tariffs for customers.");
             return new ArrayList<>();
         }
@@ -851,7 +851,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("customerId", customerId);
         try {
             return jdbcTemplate.queryForObject(SELECT_CURRENT_TARIFF_BY_CUSTOMER_ID_SQL, params, tariffRowMapper);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.debug("User doesn`t have tariff.");
             return null;
         }
@@ -867,7 +867,7 @@ public class ProductDaoImpl implements ProductDao {
         params.addValue("tariffId", tariffId);
         try {
             return jdbcTemplate.query(SELECT_SERVICES_OF_TARIFF_SQL, params, productRowMapper);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.debug("There are no services in tariff with id = {}", tariffId);
             return new ArrayList<>();
         }
