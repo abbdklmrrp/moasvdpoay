@@ -1,7 +1,7 @@
 package jtelecom.services.plannedTasks;
 
 import jtelecom.dao.plannedTask.PlannedTask;
-import jtelecom.dao.plannedTask.PlannedTaskDao;
+import jtelecom.dao.plannedTask.PlannedTaskDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class PlannedTaskServiceImpl implements PlannedTaskService {
     private static Logger logger = LoggerFactory.getLogger(PlannedTaskService.class);
 
     @Resource
-    private PlannedTaskDao plannedTaskDao;
+    private PlannedTaskDAO plannedTaskDAO;
 
 
     /**
@@ -25,12 +25,12 @@ public class PlannedTaskServiceImpl implements PlannedTaskService {
      */
     @Transactional
     public boolean cancelSuspense(Integer suspensePlannedTaskId) {
-        PlannedTask suspensePlannedTask = plannedTaskDao.getById(suspensePlannedTaskId);
-        boolean wasSuspendedPlannedTaskDeleted = plannedTaskDao.deletePlannedTaskById(suspensePlannedTaskId);
+        PlannedTask suspensePlannedTask = plannedTaskDAO.getById(suspensePlannedTaskId);
+        boolean wasSuspendedPlannedTaskDeleted = plannedTaskDAO.deletePlannedTaskById(suspensePlannedTaskId);
         if (!wasSuspendedPlannedTaskDeleted) {
             logger.error("Unable to delete planned task with id {} from database", suspensePlannedTask);
             return false;
         }
-        return plannedTaskDao.deletePlannedTaskForActivationOfThisSuspense(suspensePlannedTask);
+        return plannedTaskDAO.deletePlannedTaskForActivationOfThisSuspense(suspensePlannedTask);
     }
 }

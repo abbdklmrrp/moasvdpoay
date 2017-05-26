@@ -3,7 +3,7 @@ package jtelecom.controller.admin;
 import jtelecom.dao.place.Place;
 import jtelecom.dao.place.PlaceDAO;
 import jtelecom.dao.price.Price;
-import jtelecom.dao.price.PriceDao;
+import jtelecom.dao.price.PriceDAO;
 import jtelecom.dao.product.Product;
 import jtelecom.services.price.PriceService;
 import jtelecom.services.product.ProductService;
@@ -40,7 +40,7 @@ public class FillProductPricesController {
     @Resource
     private ProductService productService;
     @Resource
-    private PriceDao priceDao;
+    private PriceDAO priceDAO;
 
     @RequestMapping(value = {"fillTariffsPrices"}, method = RequestMethod.GET)
     public ModelAndView getRegionForFill(@RequestParam(value = "id") Integer id,
@@ -71,13 +71,13 @@ public class FillProductPricesController {
 
             mav.addObject("placesForFillInTariff", placesForFillInTariff);
             mav.addObject("error", ERROR_FILL_IN_PRICE_BY_PRODUCT);
-            mav.setViewName("newPages/admin/fillTariffsPrices");
+            mav.setViewName("newPages/admin/fillTariffsPrices?id=" + productId);
             return mav;
         }
 
         try {
             List<Price> priceArrayList = priceService.fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
-            boolean isFillPrice = priceDao.fillPriceOfProductByRegion(priceArrayList);
+            boolean isFillPrice = priceDAO.fillPriceOfProductByRegion(priceArrayList);
             logger.debug("Fill in tariff with services to database with success {} ", isFillPrice);
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {} ", ex.getMessage());
@@ -86,7 +86,7 @@ public class FillProductPricesController {
 
             mav.addObject("placesForFillInTariff", placesForFillInTariff);
             mav.addObject("error ", ERROR_IN_CONNECTION);
-            mav.setViewName("newPages/admin/fillTariffsPrices");
+            mav.setViewName("newPages/admin/fillTariffsPrices?id=" + productId);
             return mav;
         }
         mav.setViewName("redirect:/admin/getProducts");

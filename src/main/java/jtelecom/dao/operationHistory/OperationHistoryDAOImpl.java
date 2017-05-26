@@ -2,14 +2,11 @@ package jtelecom.dao.operationHistory;
 
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dto.FullInfoOrderDTO;
-import jtelecom.repositories.FullComplaintInfoRepository;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -17,7 +14,7 @@ import java.util.List;
  * @since 10.05.2017.
  */
 @Service
-public class OperationHistoryDaoImpl implements OperationHistoryDao {
+public class OperationHistoryDAOImpl implements OperationHistoryDAO {
     private final static String SELECT_OPERATION_HISTORY_BY_USER = "SELECT * from( \n" +
             "  select product_name,OPERATION_DATE,current_status_id, ROW_NUMBER() OVER (ORDER BY %s) R  from \n" +
             "    (Select products.name product_name, TO_CHAR(OPERATION_DATE,'YYYY-MM-DD') operation_date, STATUS_ID current_status_id \n" +

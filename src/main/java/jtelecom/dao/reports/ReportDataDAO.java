@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Created by Yuliya Pedash on 24.05.2017.
  */
-public interface ReportDataDao {
+public interface ReportDataDAO {
     /**
      * This method returns <code>Map</code> filled with information about
      * number of complaints in particular time period and place from begin date

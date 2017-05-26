@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * Created by Anna Rysakova on 10.05.2017.
  */
-public class PriceByRegionDto {
+public class PriceByRegionDTO {
 
     private Integer productId;
     private String productName;
@@ -16,7 +16,7 @@ public class PriceByRegionDto {
     private String productType;
     private String productStatus;
 
-    public PriceByRegionDto() {
+    public PriceByRegionDTO() {
     }
 
     public Integer getProductId() {
@@ -86,7 +86,7 @@ public class PriceByRegionDto {
     @Override
     public String toString() {
         return new StringBuilder()
-                .append("PriceByRegionDto{")
+                .append("PriceByRegionDTO{")
                 .append("productId=").append(productId)
                 .append(", productName='").append(productName).append('\'')
                 .append(", productDescription='").append(productDescription).append('\'')

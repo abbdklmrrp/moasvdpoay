@@ -20,9 +20,9 @@ import java.util.List;
  * Created by Yuliya Pedash on 27.04.2017.
  */
 @Service
-public class OrderDaoImpl implements OrderDao {
+public class OrderDAOImpl implements OrderDAO {
 
-    private static Logger logger = LoggerFactory.getLogger(OrderDaoImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(OrderDAOImpl.class);
 
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;

@@ -1,8 +1,8 @@
 package jtelecom.dao.product;
 
 import jtelecom.dao.entity.CustomerType;
-import jtelecom.dao.interfaces.Dao;
-import jtelecom.dto.TariffServiceDto;
+import jtelecom.dao.interfaces.DAO;
+import jtelecom.dto.TariffServiceDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
  * @author Moiseienko Petro
  * @author Alistratenko Nikita
  */
-public interface ProductDao extends Dao<Product> {
+public interface ProductDAO extends DAO<Product> {
 
     /**
      * Method save Product object
@@ -79,9 +79,9 @@ public interface ProductDao extends Dao<Product> {
      * @param tariffId tariff ID
      * @return Method return {@code List} of services by tariff ID
      * @see List
-     * @see TariffServiceDto
+     * @see TariffServiceDTO
      */
-    List<TariffServiceDto> getServicesInfoByTariff(int tariffId);
+    List<TariffServiceDTO> getServicesInfoByTariff(int tariffId);
 
     /**
      * Method return {@link List} of services {@code ID}
@@ -90,9 +90,9 @@ public interface ProductDao extends Dao<Product> {
      * @param tariffId tariff ID
      * @return Method return {@code List} of services by tariff ID
      * @see List
-     * @see TariffServiceDto
+     * @see TariffServiceDTO
      */
-    List<TariffServiceDto> getServicesIDByTariff(int tariffId);
+    List<TariffServiceDTO> getServicesIDByTariff(int tariffId);
 
     /**
      * The method is returned to the {@link Map},
@@ -134,21 +134,21 @@ public interface ProductDao extends Dao<Product> {
     /**
      * Method save services by tariff ID
      *
-     * @param tariffServiceDto {@code List} of services by tariff with tariff ID
+     * @param tariffServiceDTO {@code List} of services by tariff with tariff ID
      * @see List
-     * @see TariffServiceDto
+     * @see TariffServiceDTO
      */
-    void fillInTariffWithServices(List<TariffServiceDto> tariffServiceDto);
+    void fillInTariffWithServices(List<TariffServiceDTO> tariffServiceDTO);
 
     /**
      * Method remove services from tariff
      *
-     * @param tariffServiceDto {@code List} of services by tariff,
+     * @param tariffServiceDTO {@code List} of services by tariff,
      *                         which need to be removed
      * @see List
-     * @see TariffServiceDto
+     * @see TariffServiceDTO
      */
-    void deleteServiceFromTariff(List<TariffServiceDto> tariffServiceDto);
+    void deleteServiceFromTariff(List<TariffServiceDTO> tariffServiceDTO);
 
     /**
      * Method returns all services that are available in place.

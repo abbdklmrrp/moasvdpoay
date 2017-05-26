@@ -1,7 +1,7 @@
 package jtelecom.reports;
 
-import jtelecom.dao.reports.ReportDataDao;
-import jtelecom.dao.reports.ReportDataDaoImpl;
+import jtelecom.dao.reports.ReportDataDAO;
+import jtelecom.dao.reports.ReportDataDAOImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,22 +27,22 @@ public class ReportsService {
     private String stepPattern;
     private int periodToAdd;
     @Resource
-    private ReportDataDao reportDataDao;
+    private ReportDataDAO reportDataDAO;
 
 
     /**
      * This method takes <code>Map</code> with key <code>String</code> - time period and value <code>Integer</code> - number, begin
-     * date and end date. <code>Mape</code> returned from {@link ReportDataDaoImpl} may miss some dates, which don't
+     * date and end date. <code>Mape</code> returned from {@link ReportDataDAOImpl} may miss some dates, which don't
      * have any statisticks values. Anyways, they  are needed for creating reports, so the goal of this method is to
      * put in final <code>List</code> of <code>ReportData</code> objects with these missed dates with value 0 and to
-     * transform <code>Map</code> returned from {@link ReportDataDaoImpl} to list of <code>ReportData</code> objects.
+     * transform <code>Map</code> returned from {@link ReportDataDAOImpl} to list of <code>ReportData</code> objects.
      *
      * @param reportDataMap Map with key String<- time period and value Integer - number
      * @param beginDate     begin date
      * @param endDate       end date
      * @return list of ReportData objects
      * @see ReportData
-     * @see ReportDataDaoImpl
+     * @see ReportDataDAOImpl
      */
     private List<ReportData> formFullReportData(Map<String, Integer> reportDataMap, Calendar beginDate, Calendar endDate) {
         List<ReportData> reportDataList = new ArrayList<>();
@@ -95,14 +95,14 @@ public class ReportsService {
      * @throws ReportCreatingException if {@link #parseDates(String, String, Calendar, Calendar)} threw this Exception
      * @see ReportData
      * @see #formFullReportData(Map, Calendar, Calendar)
-     * @see ReportDataDaoImpl#getOrdersReportsDataMap(String, String, Integer, String)
+     * @see ReportDataDAOImpl#getOrdersReportsDataMap(String, String, Integer, String)
      */
     public List<ReportData> getOrdersReportData(String beginDateStr, String endDateStr, int placeId) throws ReportCreatingException {
         Calendar beginDate = new GregorianCalendar();
         Calendar endDate = new GregorianCalendar();
         parseDates(beginDateStr, endDateStr, beginDate, endDate);
         determineStepPatternAndPeriodToAdd(beginDate, endDate);
-        Map<String, Integer> ordersReportsDataMap = reportDataDao.getOrdersReportsDataMap(beginDateStr, endDateStr, placeId, stepPattern);
+        Map<String, Integer> ordersReportsDataMap = reportDataDAO.getOrdersReportsDataMap(beginDateStr, endDateStr, placeId, stepPattern);
         return formFullReportData(ordersReportsDataMap, beginDate, endDate);
     }
 
@@ -115,7 +115,7 @@ public class ReportsService {
      * @return list of <code>ReportData</code> objects
      * @throws ReportCreatingException if {@link #parseDates(String, String, Calendar, Calendar)} threw this Exception
      * @see #formFullReportData(Map, Calendar, Calendar)
-     * @see ReportDataDaoImpl#getComplaintsReportsDataMap(String, String, Integer, String)
+     * @see ReportDataDAOImpl#getComplaintsReportsDataMap(String, String, Integer, String)
      * @see ReportData
      */
     public List<ReportData> getComplaintsReportData(String beginDateStr, String endDateStr, int placeId) throws ReportCreatingException {
@@ -123,7 +123,7 @@ public class ReportsService {
         Calendar endDate = new GregorianCalendar();
         parseDates(beginDateStr, endDateStr, beginDate, endDate);
         determineStepPatternAndPeriodToAdd(beginDate, endDate);
-        Map<String, Integer> complaintsReportsDataMap = reportDataDao.getComplaintsReportsDataMap(beginDateStr, endDateStr, placeId, stepPattern);
+        Map<String, Integer> complaintsReportsDataMap = reportDataDAO.getComplaintsReportsDataMap(beginDateStr, endDateStr, placeId, stepPattern);
         return formFullReportData(complaintsReportsDataMap, beginDate, endDate);
     }
 

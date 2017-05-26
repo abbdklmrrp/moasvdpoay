@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Yuliya Pedash on 08.05.2017.
  */
 @Service
-public class PlannedTaskDaoImpl implements PlannedTaskDao {
+public class PlannedTaskDAOImpl implements PlannedTaskDAO {
     private final static String INSERT_PLANNED_TASK_SQL = "INSERT INTO PLANNED_TASKS(STATUS_ID, ORDER_ID, ACTION_DATE)\n" +
             "    VALUES (:status_id, :order_id, TO_DATE(:date, 'YYYY-MM-DD'))";
     private final static String SELECT_PLANNED_TASKS_BY_DATES_SQL = "SELECT * FROM PLANNED_TASKS WHERE\n" +

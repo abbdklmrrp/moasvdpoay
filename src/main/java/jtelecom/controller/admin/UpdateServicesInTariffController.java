@@ -1,8 +1,8 @@
 package jtelecom.controller.admin;
 
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
-import jtelecom.dto.TariffServiceDto;
+import jtelecom.dao.product.ProductDAO;
+import jtelecom.dto.TariffServiceDTO;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class UpdateServicesInTariffController {
     private static final String ERROR_EXIST = "Sorry, product doesn't exist";
     private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
     private ProductService productService;
 
@@ -42,11 +42,11 @@ public class UpdateServicesInTariffController {
                                                      ModelAndView mav) {
 
         logger.debug("Receive tariff's id {} ", tariffId);
-        List<TariffServiceDto> servicesByTariff = productDao.getServicesInfoByTariff(tariffId);
+        List<TariffServiceDTO> servicesByTariff = productDAO.getServicesInfoByTariff(tariffId);
         logger.debug("Received services that are included in the tariff {}", servicesByTariff.toString());
-        Map<String, List<Product>> allServicesWithCategory = productDao.getServicesNotInTariff(tariffId);
+        Map<String, List<Product>> allServicesWithCategory = productDAO.getServicesNotInTariff(tariffId);
         logger.debug("Get all service's categories {} ", allServicesWithCategory.toString());
-        String customerType = productDao.getCustomerTypeByProductId(tariffId);
+        String customerType = productDAO.getCustomerTypeByProductId(tariffId);
 
         mav.addObject("allServicesWithCategory", allServicesWithCategory);
         mav.addObject("servicesByTariff", servicesByTariff);
@@ -66,13 +66,13 @@ public class UpdateServicesInTariffController {
         if (!Objects.nonNull(foundProduct)) {
             logger.error("Product with ID = {}  does not exist in the database ", id);
             mav.addObject("error", ERROR_EXIST);
-            mav.setViewName("newPages/admin/updateServicesInTariff?id=" + id);
+            mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
         }
 
         if (servicesIdArray == null) {
             logger.error("Incoming data error with services ");
             mav.addObject("error", ERROR_FILL_IN_TARIFF_SERVICES);
-            mav.setViewName("newPages/admin/updateServicesInTariff?id=" + id);
+            mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
             return mav;
         }
 
@@ -87,11 +87,10 @@ public class UpdateServicesInTariffController {
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
             mav.addObject("error ", ERROR_IN_CONNECTION);
-            mav.setViewName("newPages/admin/updateServicesInTariff?id=" + id);
+            mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
             return mav;
         }
 
-        logger.debug("Attribute 'productId' was removed from session");
         mav.setViewName("redirect:/admin/viewServicesInTariff?id=" + id);
         return mav;
     }

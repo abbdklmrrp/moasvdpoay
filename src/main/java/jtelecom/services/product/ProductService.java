@@ -81,7 +81,7 @@ public interface ProductService {
     boolean updateProduct(Product updateProduct);
 
     /**
-     * This method insert to database received {@link ArrayList} of {@code TariffServiceDto}
+     * This method insert to database received {@link ArrayList} of {@code TariffServiceDTO}
      * which contains tariff ID and array of ID services.
      *
      * @param idTariff          tariff ID

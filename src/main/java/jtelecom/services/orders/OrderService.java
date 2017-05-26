@@ -2,8 +2,8 @@ package jtelecom.services.orders;
 
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
-import jtelecom.dao.order.OrderDao;
-import jtelecom.dao.plannedTask.PlannedTaskDao;
+import jtelecom.dao.order.OrderDAO;
+import jtelecom.dao.plannedTask.PlannedTaskDAO;
 import jtelecom.dao.product.Product;
 
 import java.util.Calendar;
@@ -58,10 +58,10 @@ public interface OrderService {
      *
      * @param orderId id of order
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
-     * @see PlannedTaskDao#deleteNextPlannedTaskForActivationForThisOrder(Integer)
-     * @see OrderDao#activateOrder(Integer)
+     * @see PlannedTaskDAO#deleteNextPlannedTaskForActivationForThisOrder(Integer)
+     * @see OrderDAO#activateOrder(Integer)
      */
-    public boolean activateOrderAfterSuspense(Integer orderId);
+    boolean activateOrderAfterSuspense(Integer orderId);
 
     /**
      * This method will add to planned tasks  date of deactivation of order

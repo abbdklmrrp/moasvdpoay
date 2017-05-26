@@ -1,6 +1,6 @@
 package jtelecom.dao.product;
 
-import jtelecom.dto.TariffServiceDto;
+import jtelecom.dto.TariffServiceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Alistratenko Nikita
  */
 @Service
-public class ProductDaoImpl implements ProductDao {
+public class ProductDAOImpl implements ProductDAO {
 
     private final static String INSERT_PRODUCT_SQL = "INSERT INTO PRODUCTS(" +
             " TYPE_ID," +
@@ -398,7 +398,7 @@ public class ProductDaoImpl implements ProductDao {
             " FROM PRODUCTS WHERE ID=( " +
             " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
     final static String AND_CATEGORY_ID_SQL = "  AND category_id = :category_id ";
-    private static Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(ProductDAOImpl.class);
     @Autowired
     @Qualifier("dataSource")
     private DataSource dataSource;
@@ -552,11 +552,11 @@ public class ProductDaoImpl implements ProductDao {
      * {@inheritDoc}
      */
     @Override
-    public List<TariffServiceDto> getServicesInfoByTariff(int tariffId) {
+    public List<TariffServiceDTO> getServicesInfoByTariff(int tariffId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("tariffId", tariffId);
         return jdbcTemplate.query(SELECT_SERVICES_BY_TARIFF_SQL, params, (rs, rowNum) -> {
-            TariffServiceDto productTmp = new TariffServiceDto();
+            TariffServiceDTO productTmp = new TariffServiceDTO();
             productTmp.setServiceId(rs.getInt("ID"));
             productTmp.setServiceName(rs.getString("NAME"));
             productTmp.setCategoryId(rs.getInt("CATEGORY_ID"));
@@ -570,11 +570,11 @@ public class ProductDaoImpl implements ProductDao {
      * {@inheritDoc}
      */
     @Override
-    public List<TariffServiceDto> getServicesIDByTariff(int tariffId) {
+    public List<TariffServiceDTO> getServicesIDByTariff(int tariffId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("tariffId", tariffId);
         return jdbcTemplate.query(SELECT_SERVICES_BY_TARIFF_SQL, params, (rs, rowNum) -> {
-            TariffServiceDto productTmp = new TariffServiceDto();
+            TariffServiceDTO productTmp = new TariffServiceDTO();
             productTmp.setServiceId(rs.getInt("ID"));
             productTmp.setTariffId(rs.getInt("TARIFF_ID"));
             return productTmp;
@@ -640,16 +640,16 @@ public class ProductDaoImpl implements ProductDao {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public void fillInTariffWithServices(List<TariffServiceDto> tariffServiceDtos) {
+    public void fillInTariffWithServices(List<TariffServiceDTO> tariffServiceDTOS) {
 
-        List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDtos.size());
-        for (TariffServiceDto person : tariffServiceDtos) {
+        List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDTOS.size());
+        for (TariffServiceDTO person : tariffServiceDTOS) {
             batchValues.add(
                     new MapSqlParameterSource("tariffId", person.getTariffId())
                             .addValue("serviceId", person.getServiceId())
                             .getValues());
         }
-        jdbcTemplate.batchUpdate(INSERT_TARIFF_SERVICE_SQL, batchValues.toArray(new Map[tariffServiceDtos.size()]));
+        jdbcTemplate.batchUpdate(INSERT_TARIFF_SERVICE_SQL, batchValues.toArray(new Map[tariffServiceDTOS.size()]));
     }
 
     /**
@@ -657,15 +657,15 @@ public class ProductDaoImpl implements ProductDao {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public void deleteServiceFromTariff(List<TariffServiceDto> tariffServiceDtos) {
-        List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDtos.size());
-        for (TariffServiceDto person : tariffServiceDtos) {
+    public void deleteServiceFromTariff(List<TariffServiceDTO> tariffServiceDTOS) {
+        List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDTOS.size());
+        for (TariffServiceDTO person : tariffServiceDTOS) {
             batchValues.add(
                     new MapSqlParameterSource("idTariff", person.getTariffId())
                             .addValue("idService", person.getServiceId())
                             .getValues());
         }
-        jdbcTemplate.batchUpdate(DELETE_SERVICE_FROM_TARIFF_SQL, batchValues.toArray(new Map[tariffServiceDtos.size()]));
+        jdbcTemplate.batchUpdate(DELETE_SERVICE_FROM_TARIFF_SQL, batchValues.toArray(new Map[tariffServiceDTOS.size()]));
     }
 
     @Override

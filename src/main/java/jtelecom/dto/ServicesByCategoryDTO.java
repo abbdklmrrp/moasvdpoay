@@ -8,16 +8,16 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  */
 // FIXME: 11.05.2017  services
 @JsonTypeName("category")
-public class ServicesByCategoryDto {
+public class ServicesByCategoryDTO {
     @JsonProperty("id")
     private int id;
     @JsonProperty("name")
     private String name;
 
-    public ServicesByCategoryDto() {
+    public ServicesByCategoryDTO() {
     }
 
-    ServicesByCategoryDto(int id, String name) {
+    ServicesByCategoryDTO(int id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -41,7 +41,7 @@ public class ServicesByCategoryDto {
     @Override
     public String toString() {
         return new StringBuilder()
-                .append("ServicesByCategoryDto{")
+                .append("ServicesByCategoryDTO{")
                 .append("id=").append(id)
                 .append(", name='").append(name)
                 .append('\'').append('}').toString();

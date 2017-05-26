@@ -1,7 +1,7 @@
 package jtelecom.dao.place;
 
 import jtelecom.dao.product.ProductStatus;
-import jtelecom.dto.PriceByRegionDto;
+import jtelecom.dto.PriceByRegionDTO;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -123,7 +123,7 @@ public class PlaceDAOImpl implements PlaceDAO {
     }
 
     @Override
-    public List<PriceByRegionDto> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search) {
+    public List<PriceByRegionDTO> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
             sort = "ID";
@@ -135,7 +135,7 @@ public class PlaceDAOImpl implements PlaceDAO {
         params.addValue("pattern", "%" + search + "%");
         params.addValue("placeId", placeId);
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
-            PriceByRegionDto priceByPlace = new PriceByRegionDto();
+            PriceByRegionDTO priceByPlace = new PriceByRegionDTO();
             priceByPlace.setProductId(rs.getInt("ID"));
             priceByPlace.setProductName(rs.getString("PRODUCT_NAME"));
             priceByPlace.setProductType(rs.getString("TYPE"));

@@ -1,14 +1,14 @@
 package jtelecom.dao.user;
 
 import jtelecom.dao.entity.CustomerType;
-import jtelecom.dao.interfaces.Dao;
+import jtelecom.dao.interfaces.DAO;
 
 import java.util.List;
 
 /**
  * Created by Rysakova Anna on 20.04.2017.
  */
-public interface UserDAO extends Dao<User> {
+public interface UserDAO extends DAO<User> {
     User findByUsername(String username);
 
     List<User> getAll();

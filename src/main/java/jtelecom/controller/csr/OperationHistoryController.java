@@ -1,6 +1,6 @@
 package jtelecom.controller.csr;
 
-import jtelecom.dao.operationHistory.OperationHistoryDao;
+import jtelecom.dao.operationHistory.OperationHistoryDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
@@ -28,7 +28,7 @@ import java.util.List;
 @RequestMapping({"csr", "residential", "business"})
 public class OperationHistoryController {
     @Resource
-    private OperationHistoryDao operationHistoryDao;
+    private OperationHistoryDAO operationHistoryDAO;
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
@@ -88,8 +88,8 @@ public class OperationHistoryController {
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         logger.debug("Get operation history in interval:" + start + " : " + length);
-        List<FullInfoOrderDTO> data = operationHistoryDao.getOperationHistoryByUserId(userId, start, length, sort, search);
-        int size = operationHistoryDao.getCountOperationForUser(userId, search);
+        List<FullInfoOrderDTO> data = operationHistoryDAO.getOperationHistoryByUserId(userId, start, length, sort, search);
+        int size = operationHistoryDAO.getCountOperationForUser(userId, search);
         return ListHolder.create(data, size);
     }
 

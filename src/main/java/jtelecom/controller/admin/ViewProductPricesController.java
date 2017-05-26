@@ -1,7 +1,7 @@
 package jtelecom.controller.admin;
 
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class ViewProductPricesController {
     private static final String ERROR_EXIST_PRODUCT = "Sorry, product with such ID does not exist in the database";
 
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
     private ProductService productService;
 
@@ -43,7 +43,7 @@ public class ViewProductPricesController {
             mav.addObject("error", ERROR_EXIST_PRODUCT);
             mav.setViewName("newPages/admin/viewProductPrices");
         }
-        String productType = productDao.getProductTypeByProductId(productId);
+        String productType = productDAO.getProductTypeByProductId(productId);
         logger.debug("Product type: {} ", productType);
         mav.addObject("id", productId);
         logger.debug("Product id: {}", productId);

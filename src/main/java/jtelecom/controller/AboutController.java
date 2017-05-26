@@ -1,16 +1,18 @@
 package jtelecom.controller;
 
-import jtelecom.controller.product.ProductsEndpoint;
-import jtelecom.dao.price.PriceDao;
+import jtelecom.controller.product.ViewAllProductsController;
+import jtelecom.dao.price.PriceDAO;
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
-import jtelecom.dto.PriceByRegionDto;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,11 +22,11 @@ import java.util.List;
  */
 @Controller
 public class AboutController {
-    private static Logger logger = LoggerFactory.getLogger(ProductsEndpoint.class);
+    private static Logger logger = LoggerFactory.getLogger(ViewAllProductsController.class);
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
-    private PriceDao priceDao;
+    private PriceDAO priceDAO;
 
     @RequestMapping(value = "/forBusiness")
     public String forBusiness() {
@@ -50,8 +52,8 @@ public class AboutController {
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         String search = request.getSearch();
-        List<Product> data = productDao.getLimitedActiveProductsForBusiness(start, length, sort, search);
-        int size = productDao.getCountForLimitedActiveProductsForBusiness(search);
+        List<Product> data = productDAO.getLimitedActiveProductsForBusiness(start, length, sort, search);
+        int size = productDAO.getCountForLimitedActiveProductsForBusiness(search);
         return ListHolder.create(data, size);
     }
 
@@ -62,8 +64,8 @@ public class AboutController {
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         String search = request.getSearch();
-        List<Product> data = productDao.getLimitedActiveProductsForResidential(start, length, sort, search);
-        int size = productDao.getCountForLimitedActiveProductsForResidential(search);
+        List<Product> data = productDAO.getLimitedActiveProductsForResidential(start, length, sort, search);
+        int size = productDAO.getCountForLimitedActiveProductsForResidential(search);
         return ListHolder.create(data, size);
     }
 

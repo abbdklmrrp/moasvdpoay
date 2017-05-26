@@ -1,6 +1,6 @@
 package jtelecom.dao.order;
 
-import jtelecom.dao.interfaces.Dao;
+import jtelecom.dao.interfaces.DAO;
 import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.dto.OrdersRowDTO;
 
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Yuliya Pedash on 27.04.2017.
  */
-public interface OrderDao extends Dao<Order> {
+public interface OrderDAO extends DAO<Order> {
     /**
      * This method returns all orders by one customer's users.
      * created by Yuliya Pedash

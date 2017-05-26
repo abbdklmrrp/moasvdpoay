@@ -2,11 +2,11 @@ package jtelecom.services.orders;
 
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
-import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.plannedTask.PlannedTask;
-import jtelecom.dao.plannedTask.PlannedTaskDao;
+import jtelecom.dao.plannedTask.PlannedTaskDAO;
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.services.mail.MailService;
@@ -27,15 +27,15 @@ import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
     @Resource
-    private PlannedTaskDao plannedTaskDao;
+    private PlannedTaskDAO plannedTaskDAO;
     @Resource
-    private OrderDao orderDao;
+    private OrderDAO orderDAO;
     @Resource
     private UserDAO userDAO;
     @Resource
     private MailService mailService;
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     private static Logger logger = LoggerFactory.getLogger(OrderService.class);
 
 
@@ -54,8 +54,8 @@ public class OrderServiceImpl implements OrderService {
         suspendPlanTask.setOrderId(orderId);
         suspendPlanTask.setStatus(OperationStatus.Suspended);
         User user = userDAO.getUserByOrderId(orderId);
-        Product product = productDao.getProductByOrderId(orderId);
-        boolean isActivatedPlanTaskSaved = plannedTaskDao.save(activatePlanTask);
+        Product product = productDAO.getProductByOrderId(orderId);
+        boolean isActivatedPlanTaskSaved = plannedTaskDAO.save(activatePlanTask);
         if (!isActivatedPlanTaskSaved) {
             logger.error("Unable to save activated planned task to database {}", activatePlanTask);
             return false;
@@ -63,14 +63,14 @@ public class OrderServiceImpl implements OrderService {
         Calendar currentDate = Calendar.getInstance();
         if (beginDate.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR) &&
                 beginDate.get(Calendar.DAY_OF_YEAR) == currentDate.get(Calendar.DAY_OF_YEAR)) {
-            boolean success = orderDao.suspendOrder(orderId);
+            boolean success = orderDAO.suspendOrder(orderId);
             if (success) {
                 mailService.sendProductSuspendedEmail(user, product, beginDate, endDate);
                 logger.info("Order with id {} was suspended", orderId);
             }
             return success;
         }
-        boolean success = plannedTaskDao.save(suspendPlanTask);
+        boolean success = plannedTaskDAO.save(suspendPlanTask);
         if (success) {
             mailService.sendProductWillSuspendEmail(user, product, beginDate, endDate);
         }
@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
      * Yuliya Pedash
      */
     public boolean canOrderBeSuspendedWithinDates(Calendar beginDate, Calendar endDate, Integer orderId) {
-        List<PlannedTask> plannedTasks = plannedTaskDao.getAllPlannedTaskForDates(beginDate, endDate, orderId);
+        List<PlannedTask> plannedTasks = plannedTaskDAO.getAllPlannedTaskForDates(beginDate, endDate, orderId);
         return plannedTasks.isEmpty();
     }
 
@@ -94,11 +94,11 @@ public class OrderServiceImpl implements OrderService {
      */
     @Transactional
     public boolean deactivateOrderForProductOfUserCompletely(Integer productId, Integer userId) {
-        plannedTaskDao.deleteAllPlannedTasksForProductOfUser(productId, userId);
-        boolean success = orderDao.deactivateOrderOfUserForProduct(productId, userId);
+        plannedTaskDAO.deleteAllPlannedTasksForProductOfUser(productId, userId);
+        boolean success = orderDAO.deactivateOrderOfUserForProduct(productId, userId);
         if (success) {
             User user = userDAO.getUserById(userId);
-            Product product = productDao.getById(productId);
+            Product product = productDAO.getById(productId);
             logger.info("User we deactivate product for {}, product {} ", user, product);
             mailService.sendProductDeactivated(user, product);
 
@@ -108,12 +108,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public boolean deactivateOrderCompletely(Integer orderId) {
-        Order order = orderDao.getById(orderId);
-        plannedTaskDao.deleteAllPlannedTasksForOrder(orderId);
-        boolean wasDeactivated = orderDao.deactivateOrder(orderId);
+        Order order = orderDAO.getById(orderId);
+        plannedTaskDAO.deleteAllPlannedTasksForOrder(orderId);
+        boolean wasDeactivated = orderDAO.deactivateOrder(orderId);
         if (wasDeactivated) {
             User user = userDAO.getUserById(order.getUserId());
-            Product product = productDao.getById(order.getProductId());
+            Product product = productDAO.getById(order.getProductId());
             logger.info("User we deactivate product for {}, product {} ", user, product);
             mailService.sendProductDeactivated(user, product);
         }
@@ -127,11 +127,11 @@ public class OrderServiceImpl implements OrderService {
      */
     @Transactional
     public boolean activateOrderAfterSuspense(Integer orderId) {
-        plannedTaskDao.deleteNextPlannedTaskForActivationForThisOrder(orderId);
-        boolean success = orderDao.activateOrder(orderId);
+        plannedTaskDAO.deleteNextPlannedTaskForActivationForThisOrder(orderId);
+        boolean success = orderDAO.activateOrder(orderId);
         if (success) {
             User user = userDAO.getUserByOrderId(orderId);
-            Product product = productDao.getProductByOrderId(orderId);
+            Product product = productDAO.getProductByOrderId(orderId);
             mailService.sendProductActivatedEmail(user, product);
         }
         return success;
@@ -147,10 +147,10 @@ public class OrderServiceImpl implements OrderService {
         boolean isSuccess = false;
         Calendar deactivateOrderDate = DatesHelper.getCurrentDate();
         deactivateOrderDate.add(Calendar.DATE, product.getDurationInDays());
-        Integer orderId = orderDao.saveAndGetGeneratedId(order);
+        Integer orderId = orderDAO.saveAndGetGeneratedId(order);
         if (orderId != null) {
             PlannedTask deactPlannedTask = new PlannedTask(OperationStatus.Deactivated, orderId, deactivateOrderDate);
-            isSuccess = plannedTaskDao.save(deactPlannedTask);
+            isSuccess = plannedTaskDAO.save(deactPlannedTask);
         }
         if (isSuccess) {
             User user = userDAO.getUserById(order.getUserId());
@@ -164,30 +164,30 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public boolean activateTariff(Integer userId, Integer tariffId) {
-        boolean success = productDao.activateTariff(userId, tariffId);
+        boolean success = productDAO.activateTariff(userId, tariffId);
         if (success) {
             User user = userDAO.getUserById(userId);
-            Product product = productDao.getById(tariffId);
+            Product product = productDAO.getById(tariffId);
             mailService.sendProductActivatedEmail(user, product);
         }
         return success;
     }
 
     public boolean deactivateTariff(Integer userId, Integer tariffId) {
-        boolean success = productDao.deactivateTariff(userId, tariffId);
+        boolean success = productDAO.deactivateTariff(userId, tariffId);
         if (success) {
             User user = userDAO.getUserById(userId);
-            Product product = productDao.getById(tariffId);
+            Product product = productDAO.getById(tariffId);
             mailService.sendProductDeactivated(user, product);
         }
         return success;
     }
 
     public boolean activateOrderFromCsr(int orderId) {
-        boolean success = orderDao.activateOrder(orderId);
+        boolean success = orderDAO.activateOrder(orderId);
         if (success) {
             User user = userDAO.getUserByOrderId(orderId);
-            Product product = productDao.getProductByOrderId(orderId);
+            Product product = productDAO.getProductByOrderId(orderId);
             mailService.sendProductActivatedEmail(user, product);
         }
         return success;

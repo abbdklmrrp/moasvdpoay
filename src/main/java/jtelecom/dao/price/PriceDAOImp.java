@@ -1,6 +1,6 @@
 package jtelecom.dao.price;
 
-import jtelecom.dto.PriceByRegionDto;
+import jtelecom.dto.PriceByRegionDTO;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by Yuliya Pedash on 27.04.2017.
  */
 @Service
-public class PriceDaoImp implements PriceDao {
+public class PriceDAOImp implements PriceDAO {
     private final static String ADD_PRICE_OF_PRODUCT_BY_REGION = "INSERT INTO PRICES\n " +
             "VALUES(:productId,:placeId,:price)";
     private final static String FIND_PRICE_IN_REGIONS_FOR_ALL_PRODUCTS = "SELECT *\n" +
@@ -123,32 +123,32 @@ public class PriceDaoImp implements PriceDao {
      * @return
      */
     @Override
-    public List<PriceByRegionDto> getPriceInRegionsByProduct(int productId) {
+    public List<PriceByRegionDTO> getPriceInRegionsByProduct(int productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("productId", productId);
         return jdbcTemplate.query(FIND_PRICE_IN_REGION_BY_PRODUCT, params, (rs, rowNum) -> {
-            PriceByRegionDto priceByRegionDto = new PriceByRegionDto();
-            priceByRegionDto.setProductId(rs.getInt("ID"));
-            priceByRegionDto.setProductName(rs.getString("NAME"));
-            priceByRegionDto.setProductDescription(rs.getString("DESCRIPTION"));
-            priceByRegionDto.setPlaceName(rs.getString("PLACE"));
-            priceByRegionDto.setPlaceId(rs.getInt("PLACE_ID"));
-            priceByRegionDto.setPriceProduct(rs.getBigDecimal("PRICE"));
-            return priceByRegionDto;
+            PriceByRegionDTO priceByRegionDTO = new PriceByRegionDTO();
+            priceByRegionDTO.setProductId(rs.getInt("ID"));
+            priceByRegionDTO.setProductName(rs.getString("NAME"));
+            priceByRegionDTO.setProductDescription(rs.getString("DESCRIPTION"));
+            priceByRegionDTO.setPlaceName(rs.getString("PLACE"));
+            priceByRegionDTO.setPlaceId(rs.getInt("PLACE_ID"));
+            priceByRegionDTO.setPriceProduct(rs.getBigDecimal("PRICE"));
+            return priceByRegionDTO;
         });
     }
 
     @Override
-    public List<PriceByRegionDto> getAllRegionsAndProductPriceInRegionByProductId(Integer productId) {
+    public List<PriceByRegionDTO> getAllRegionsAndProductPriceInRegionByProductId(Integer productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("productId", productId);
         return jdbcTemplate.query(FIND_ALL_PLACES_AND_PRICE_AT_PLACES, params, (rs, rowNum) -> {
-            PriceByRegionDto priceByRegionDto = new PriceByRegionDto();
-            priceByRegionDto.setPlaceId(rs.getInt("ID"));
-            priceByRegionDto.setProductId(productId);
-            priceByRegionDto.setPlaceName(rs.getString("NAME"));
-            priceByRegionDto.setPriceProduct(rs.getBigDecimal("PRICE"));
-            return priceByRegionDto;
+            PriceByRegionDTO priceByRegionDTO = new PriceByRegionDTO();
+            priceByRegionDTO.setPlaceId(rs.getInt("ID"));
+            priceByRegionDTO.setProductId(productId);
+            priceByRegionDTO.setPlaceName(rs.getString("NAME"));
+            priceByRegionDTO.setPriceProduct(rs.getBigDecimal("PRICE"));
+            return priceByRegionDTO;
         });
     }
 
@@ -179,7 +179,7 @@ public class PriceDaoImp implements PriceDao {
     }
 
     @Override
-    public List<PriceByRegionDto> getLimitedQuantityProductPricesInRegions(int productId, int start, int length, String sort, String search) {
+    public List<PriceByRegionDTO> getLimitedQuantityProductPricesInRegions(int productId, int start, int length, String sort, String search) {
         if (sort.isEmpty()) {
             sort = "PLACE";
         }
@@ -190,13 +190,13 @@ public class PriceDaoImp implements PriceDao {
         params.addValue("pattern", "%" + search + "%");
         params.addValue("productId", productId);
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
-            PriceByRegionDto priceByRegionDto = new PriceByRegionDto();
-            priceByRegionDto.setProductId(rs.getInt("ID"));
-            priceByRegionDto.setProductName(rs.getString("NAME"));
-            priceByRegionDto.setProductDescription(rs.getString("DESCRIPTION"));
-            priceByRegionDto.setPlaceName(rs.getString("PLACE"));
-            priceByRegionDto.setPriceProduct(rs.getBigDecimal("PRICE"));
-            return priceByRegionDto;
+            PriceByRegionDTO priceByRegionDTO = new PriceByRegionDTO();
+            priceByRegionDTO.setProductId(rs.getInt("ID"));
+            priceByRegionDTO.setProductName(rs.getString("NAME"));
+            priceByRegionDTO.setProductDescription(rs.getString("DESCRIPTION"));
+            priceByRegionDTO.setPlaceName(rs.getString("PLACE"));
+            priceByRegionDTO.setPriceProduct(rs.getBigDecimal("PRICE"));
+            return priceByRegionDTO;
         });
     }
 

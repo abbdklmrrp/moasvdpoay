@@ -2,11 +2,11 @@ package jtelecom.controller.user;
 
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
-import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.product.ProcessingStrategy;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
@@ -41,7 +41,7 @@ public class ServiceOrderController implements Serializable {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
     private UserDAO userDAO;
     @Resource
@@ -49,7 +49,7 @@ public class ServiceOrderController implements Serializable {
     private Integer categoryId;
 
     @Resource
-    private OrderDao orderDao;
+    private OrderDAO orderDAO;
     @Resource
     private ProductService productService;
     User currentUser;
@@ -67,9 +67,9 @@ public class ServiceOrderController implements Serializable {
         }
         this.categoryId = categoryId;
         String categoryName = categoryId == null ? ALL_CATEGORIES :
-                productDao.getProductCategoryById(categoryId).getCategoryName();
+                productDAO.getProductCategoryById(categoryId).getCategoryName();
         model.addAttribute("categoryName", categoryName);
-        List<ProductCategories> productCategories = productDao.getProductCategories();
+        List<ProductCategories> productCategories = productDAO.getProductCategories();
         model.addAttribute("productsCategories", productCategories);
         model.addAttribute("userRole", userRoleLowerCase);
         return "newPages/" + userRoleLowerCase + "/Services";
@@ -93,7 +93,7 @@ public class ServiceOrderController implements Serializable {
 //    public String showServices(Model model,  @RequestParam(required = false) String categoryName ) {
 //        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
 //        logger.debug("Current user id : {} ", currentUser.getId());
-//        List<ProductCategories> productCategories = productDao.getProductCategories();
+//        List<ProductCategories> productCategories = productDAO.getProductCategories();
 //        model.addAttribute( "productsCategories", productCategories);
 //        Map<String, List<ProductCatalogRowDTO>> categoriesWithProductsToShow = productService.getCategoriesWithProductsForUser(currentUser);
 //        if (categoriesWithProductsToShow.isEmpty()) {
@@ -116,7 +116,7 @@ public class ServiceOrderController implements Serializable {
     @RequestMapping(value = {"activateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String activateService(@RequestParam Integer serviceId) {
-        Product product = productDao.getById(serviceId);
+        Product product = productDAO.getById(serviceId);
         Order order = new Order();
         String msg;
         order.setProductId(serviceId);
@@ -142,7 +142,7 @@ public class ServiceOrderController implements Serializable {
     @RequestMapping(value = {"getNewOrderStatus"}, method = RequestMethod.GET)
     @ResponseBody
     public String getNewOrderStatus(@RequestParam Integer serviceId) {
-        Order newOrder = orderDao.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
+        Order newOrder = orderDAO.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
         logger.debug("Gotten  order of user: {} ", newOrder);
         return newOrder.getCurrentStatus().getName();
     }

@@ -14,8 +14,8 @@ import java.util.Map;
  * Created by Yuliya Pedash on 20.05.2017.
  */
 @Service
-public class ReportDataDaoImpl implements ReportDataDao {
-    private static Logger logger = LoggerFactory.getLogger(ReportDataDaoImpl.class);
+public class ReportDataDAOImpl implements ReportDataDAO {
+    private static Logger logger = LoggerFactory.getLogger(ReportDataDAOImpl.class);
     private final static String SELECT_NUMBERS_OF_ORDERS_FOR_TIME_PERIODS_BY_PLACE_SQL = "SELECT " +
             "  COUNT(*)                          COUNT," +
             "  to_char(OPERATION_DATE, '<step>') TIME_PERIOD " +

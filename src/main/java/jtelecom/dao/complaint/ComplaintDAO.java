@@ -1,6 +1,7 @@
 package jtelecom.dao.complaint;
 
-import jtelecom.dao.interfaces.Dao;
+import jtelecom.dao.interfaces.DAO;
+
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  *
  * @author Revniuk Aleksandr
  */
-public interface ComplaintDAO extends Dao<Complaint> {
+public interface ComplaintDAO extends DAO<Complaint> {
 
     /**
      * This method returns list of complaints assigned to concrete user.

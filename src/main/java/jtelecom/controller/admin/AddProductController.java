@@ -3,7 +3,7 @@ package jtelecom.controller.admin;
 import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.product.ProductType;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class AddProductController {
     private final static String ERROR_EXIST_OF_CATEGORY = "Category already exists";
     private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
     private ProductService productService;
 
@@ -40,7 +40,7 @@ public class AddProductController {
 
     @RequestMapping(value = {"addService"}, method = RequestMethod.GET)
     public ModelAndView addService(ModelAndView mav) {
-        List<ProductCategories> productCategories = productDao.getProductCategories();
+        List<ProductCategories> productCategories = productDAO.getProductCategories();
         logger.debug("Get all service's categories");
         mav.addObject("productCategories", productCategories);
         mav.addObject("product", new Product());
@@ -82,7 +82,7 @@ public class AddProductController {
         if (isEmptyFieldsOfService || isEmptyFieldsOfNewCategory) {
             mav.addObject("error", ERROR_WRONG_FIELDS);
             logger.error("Incoming request has empty fields");
-            List<ProductCategories> productCategories = productDao.getProductCategories();
+            List<ProductCategories> productCategories = productDAO.getProductCategories();
             logger.debug("Get all service's categories {} ", productCategories.toString());
             mav.addObject("productCategories", productCategories);
             mav.setViewName("newPages/admin/addService");

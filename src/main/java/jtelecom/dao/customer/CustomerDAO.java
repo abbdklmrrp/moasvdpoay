@@ -1,6 +1,6 @@
 package jtelecom.dao.customer;
 
-import jtelecom.dao.interfaces.Dao;
+import jtelecom.dao.interfaces.DAO;
 import jtelecom.dao.user.User;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
  * @author Moiseienko Petro, Alistratenko Nikita
  * @since 24.04.2017.
  */
-public interface CustomerDAO extends Dao<Customer> {
+public interface CustomerDAO extends DAO<Customer> {
     Integer getCustomerId(String name, String secretKey);
 
     boolean changeSecretKey(int customerId, String newSecretKey);

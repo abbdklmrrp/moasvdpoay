@@ -1,7 +1,7 @@
 package jtelecom.controller.csr;
 
-import jtelecom.dao.operationHistory.OperationHistoryDao;
-import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.operationHistory.OperationHistoryDAO;
+import jtelecom.dao.order.OrderDAO;
 import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
@@ -19,9 +19,9 @@ import java.util.List;
 @RequestMapping({"pmg"})
 public class PmgOrdersController {
     @Resource
-    private OrderDao orderDao;
+    private OrderDAO orderDAO;
     @Resource
-    private OperationHistoryDao operationHistoryDao;
+    private OperationHistoryDAO operationHistoryDAO;
 
 
     /**
@@ -39,8 +39,8 @@ public class PmgOrdersController {
         int length = request.getEndBorder();
         String sort = request.getSort();
         String search = request.getSearch();
-        Integer count = orderDao.getCountOrdersByUserId(userId, search);
-        List<FullInfoOrderDTO> orders = orderDao.getIntervalOrdersByUserId(start, length, sort, search, userId);
+        Integer count = orderDAO.getCountOrdersByUserId(userId, search);
+        List<FullInfoOrderDTO> orders = orderDAO.getIntervalOrdersByUserId(start, length, sort, search, userId);
         return ListHolder.create(orders, count);
     }
 
@@ -56,8 +56,8 @@ public class PmgOrdersController {
     public ListHolder getData(@RequestParam(name = "start") int startIndex,
                               @RequestParam(name = "end") int endIndex,
                               @RequestParam(name = "orderId") int orderId) {
-        Integer amount = operationHistoryDao.getCountOperationsByOrderId(orderId);
-        List<FullInfoOrderDTO> history = operationHistoryDao.getIntervalOfOperationsByOrderId(startIndex, endIndex, orderId);
+        Integer amount = operationHistoryDAO.getCountOperationsByOrderId(orderId);
+        List<FullInfoOrderDTO> history = operationHistoryDAO.getIntervalOfOperationsByOrderId(startIndex, endIndex, orderId);
         return ListHolder.create(history, amount);
 
 

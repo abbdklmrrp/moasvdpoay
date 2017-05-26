@@ -1,9 +1,9 @@
 package jtelecom.controller.admin;
 
-import jtelecom.dao.price.PriceDao;
+import jtelecom.dao.price.PriceDAO;
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
-import jtelecom.dto.PriceByRegionDto;
+import jtelecom.dao.product.ProductDAO;
+import jtelecom.dto.PriceByRegionDTO;
 import jtelecom.services.price.PriceService;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
@@ -35,9 +35,9 @@ public class UpdateProductPricesController {
     @Resource
     private ProductService productService;
     @Resource
-    private PriceDao priceDao;
+    private PriceDAO priceDAO;
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
 
     private static final String ERROR_EXIST_PRODUCT = "Sorry, product with such ID does not exist in the database";
     @RequestMapping(value = {"updateProductPrice"}, method = RequestMethod.GET)
@@ -50,9 +50,9 @@ public class UpdateProductPricesController {
             mav.setViewName("newPages/admin/products");
             return mav;
         }
-        List<PriceByRegionDto> placesAndPrice = priceDao.getAllRegionsAndProductPriceInRegionByProductId(productId);
+        List<PriceByRegionDTO> placesAndPrice = priceDAO.getAllRegionsAndProductPriceInRegionByProductId(productId);
         logger.debug("Get all places and product prices if it exist {} ", placesAndPrice.toString());
-        String productType = productDao.getProductTypeByProductId(productId);
+        String productType = productDAO.getProductTypeByProductId(productId);
 
         mav.addObject("placesAndPrice", placesAndPrice);
         mav.addObject("productType", productType);
@@ -76,7 +76,7 @@ public class UpdateProductPricesController {
         if (!isValid) {
             logger.error("Incoming data of place ID and is not correct {} {}",
                     Arrays.toString(placeId), Arrays.toString(priceByRegion));
-            List<PriceByRegionDto> placesAndPrice = priceDao.getAllRegionsAndProductPriceInRegionByProductId(productId);
+            List<PriceByRegionDTO> placesAndPrice = priceDAO.getAllRegionsAndProductPriceInRegionByProductId(productId);
             logger.debug("Get all places and product prices if it exist {} ", placesAndPrice.toString());
 
             mav.addObject("placesAndPrice", placesAndPrice);
@@ -91,7 +91,7 @@ public class UpdateProductPricesController {
             logger.debug("Update price in regions by product ");
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {} ", ex.getMessage());
-            List<PriceByRegionDto> placesAndPrice = priceDao.getAllRegionsAndProductPriceInRegionByProductId(productId);
+            List<PriceByRegionDTO> placesAndPrice = priceDAO.getAllRegionsAndProductPriceInRegionByProductId(productId);
             logger.debug("Get all places and product prices if it exist {} ", placesAndPrice.toString());
 
             mav.addObject("placesAndPrice", placesAndPrice);

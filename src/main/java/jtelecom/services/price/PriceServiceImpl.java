@@ -1,8 +1,8 @@
 package jtelecom.services.price;
 
 import jtelecom.dao.price.Price;
-import jtelecom.dao.price.PriceDao;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.price.PriceDAO;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.util.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +22,9 @@ public class PriceServiceImpl implements PriceService {
 
     private static Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
-    private PriceDao priceDao;
+    private PriceDAO priceDAO;
 
     /**
      * This method fill the <code>ArrayList</code> with the values of the product ID
@@ -58,15 +58,15 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public void updateProductPriceInRegions(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
-        List<Price> oldPriceInfo = priceDao.getPriceInRegionInfoByProduct(productId);
+        List<Price> oldPriceInfo = priceDAO.getPriceInRegionInfoByProduct(productId);
         List<Price> newPriceInfo = fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
 
         List<Price> uniqueServicesInFirstCollection = (List<Price>) CollectionUtil
                 .firstCollectionMinusSecondCollection(oldPriceInfo, newPriceInfo);
-        priceDao.deleteProductPriceInRegion(uniqueServicesInFirstCollection);
+        priceDAO.deleteProductPriceInRegion(uniqueServicesInFirstCollection);
 
         uniqueServicesInFirstCollection = (List<Price>) CollectionUtil
                 .firstCollectionMinusSecondCollection(newPriceInfo, oldPriceInfo);
-        priceDao.fillPriceOfProductByRegion(uniqueServicesInFirstCollection);
+        priceDAO.fillPriceOfProductByRegion(uniqueServicesInFirstCollection);
     }
 }

@@ -2,7 +2,7 @@ package jtelecom.controller.admin;
 
 import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class FillTariffWithServicesController {
     private static final String ERROR_EXIST_PRODUCT = "Sorry, product with such ID does not exist in the database";
     private static Logger logger = LoggerFactory.getLogger(FillTariffWithServicesController.class);
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
     private ProductService productService;
 
@@ -38,7 +38,7 @@ public class FillTariffWithServicesController {
     public ModelAndView fillTariffWithService(@RequestParam(value = "tariffId") Integer tariffId,
                                               ModelAndView mav) {
 
-        Map<String, List<Product>> allServicesWithCategory = productDao.getAllServicesWithCategory();
+        Map<String, List<Product>> allServicesWithCategory = productDAO.getAllServicesWithCategory();
         logger.debug("Get all service's categories {} ", allServicesWithCategory.toString());
 
         mav.addObject("allServicesWithCategory", allServicesWithCategory);
@@ -54,7 +54,7 @@ public class FillTariffWithServicesController {
 
         logger.debug("Get all tariff ID {} ", tariffId);
         try {
-            Product tariff = productDao.getById(tariffId);
+            Product tariff = productDAO.getById(tariffId);
             logger.debug("Checked that the tariff exists {} ", tariff.toString());
         } catch (DataAccessException ex) {
             mav.addObject("error", ERROR_EXIST_PRODUCT);
@@ -77,7 +77,7 @@ public class FillTariffWithServicesController {
             mav.setViewName("redirect:/admin/fillTariff");
             return mav;
         }
-        Product product = productDao.getById(tariffId);
+        Product product = productDAO.getById(tariffId);
         if (product.getCustomerType() == CustomerType.Business) {
             mav.setViewName("redirect:/admin/getProducts");
         }

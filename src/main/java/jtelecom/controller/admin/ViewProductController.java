@@ -1,9 +1,10 @@
 package jtelecom.controller.admin;
 
 import jtelecom.dao.entity.CustomerType;
+import jtelecom.dao.price.PriceDAO;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.product.ProductType;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
@@ -29,9 +30,16 @@ public class ViewProductController {
     private static final String ERROR_EXIST = "Sorry, product doesn't exist";
 
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
+    @Resource
+    private PriceDAO priceDAO;
     @Resource
     private ProductService productService;
+
+    @RequestMapping(value = {"getProducts"}, method = RequestMethod.GET)
+    public ModelAndView getProducts() {
+        return new ModelAndView("newPages/admin/products");
+    }
 
     @RequestMapping(value = "getDetailsProduct", method = RequestMethod.GET)
     public ModelAndView getDetailsProduct(@RequestParam(value = "id") int id,
@@ -44,7 +52,7 @@ public class ViewProductController {
         }
         logger.debug("Receive request param product id named 'id', value={} ", id);
         if (foundProduct.getProductType() == ProductType.Service) {
-            ProductCategories category = productDao.getProductCategoryById(foundProduct.getCategoryId());
+            ProductCategories category = productDAO.getProductCategoryById(foundProduct.getCategoryId());
             mav.addObject("category", category);
         }
         logger.debug("Product found in database, id={} ", id);

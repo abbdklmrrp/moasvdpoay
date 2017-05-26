@@ -3,14 +3,14 @@ package jtelecom.dto;
 /**
  * Created by Anna Rysakova on 08.05.2017.
  */
-public class TariffServiceDto {
+public class TariffServiceDTO {
     private Integer tariffId;
     private Integer serviceId;
     private Integer categoryId;
     private String serviceName;
     private String categoryName;
 
-    public TariffServiceDto() {
+    public TariffServiceDTO() {
     }
 
     public Integer getTariffId() {
@@ -56,7 +56,7 @@ public class TariffServiceDto {
     @Override
     public String toString() {
         return new StringBuilder()
-                .append("TariffServiceDto{")
+                .append("TariffServiceDTO{")
                 .append("tariffId=").append(tariffId)
                 .append(", serviceId=").append(serviceId)
                 .append(", categoryId=").append(categoryId)

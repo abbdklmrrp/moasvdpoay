@@ -2,7 +2,8 @@ package jtelecom.controller.place;
 
 import jtelecom.dao.place.Place;
 import jtelecom.dao.place.PlaceDAO;
-import jtelecom.dto.PriceByRegionDto;
+import jtelecom.dao.price.PriceDAO;
+import jtelecom.dto.PriceByRegionDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import org.slf4j.Logger;
@@ -18,10 +19,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping({"admin"})
-public class PlaceEndpoint {
-    private static Logger logger = LoggerFactory.getLogger(PlaceEndpoint.class);
+public class ViewProductPriceWithPlace {
+    private static Logger logger = LoggerFactory.getLogger(ViewProductPriceWithPlace.class);
     @Resource
     private PlaceDAO placeDAO;
+    @Resource
+    private PriceDAO priceDAO;
 
     @RequestMapping(value = {"allPlace"}, method = RequestMethod.GET)
     public ListHolder allPlaces(@ModelAttribute GridRequestDto request) {
@@ -44,14 +47,28 @@ public class PlaceEndpoint {
     }
 
     @RequestMapping(value = {"getDetailsPriceByPlace/{id}"}, method = RequestMethod.GET)
+    @ResponseBody
     public ListHolder allPricesByPlace(@ModelAttribute GridRequestDto request,
                                        @PathVariable(value = "id") Integer placeId) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getLength();
         String search = request.getSearch();
-        List<PriceByRegionDto> data = placeDAO.getLimitedQuantityPriceByPlace(placeId, start, length, sort, search);
+        List<PriceByRegionDTO> data = placeDAO.getLimitedQuantityPriceByPlace(placeId, start, length, sort, search);
         int size = placeDAO.getCountPriceByPlace(search, placeId);
+        return ListHolder.create(data, size);
+    }
+
+    @RequestMapping(value = {"productsPriceInRegions/{id}"}, method = RequestMethod.GET)
+    @ResponseBody
+    public ListHolder productsPriceInRegions(@ModelAttribute GridRequestDto request,
+                                             @PathVariable(value = "id") Integer id) {
+        String sort = request.getSort();
+        int start = request.getStartBorder();
+        int length = request.getEndBorder();
+        String search = request.getSearch();
+        List<PriceByRegionDTO> data = priceDAO.getLimitedQuantityProductPricesInRegions(id, start, length, sort, search);
+        int size = priceDAO.getCountPriceByPlace(search, id);
         return ListHolder.create(data, size);
     }
 

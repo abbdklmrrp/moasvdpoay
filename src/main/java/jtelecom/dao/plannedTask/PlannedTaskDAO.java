@@ -1,6 +1,6 @@
 package jtelecom.dao.plannedTask;
 
-import jtelecom.dao.interfaces.Dao;
+import jtelecom.dao.interfaces.DAO;
 import jtelecom.dto.PlannedTaskDTO;
 
 import java.util.Calendar;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Yuliya Pedash on 08.05.2017.
  */
-public interface PlannedTaskDao extends Dao<PlannedTask> {
+public interface PlannedTaskDAO extends DAO<PlannedTask> {
 
     /**
      * This method deletes all planed tasks from database for particular order.

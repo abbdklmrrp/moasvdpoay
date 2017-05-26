@@ -1,7 +1,7 @@
 package jtelecom.controller.product;
 
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
@@ -33,7 +33,7 @@ public class TariffsController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
     private UserDAO userDAO;
     @Resource
@@ -73,14 +73,14 @@ public class TariffsController {
         TariffsDataPartitionDTO dto = new TariffsDataPartitionDTO();
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         logger.debug("Current user: {}", currentUser.toString());
-        dto.setCurrentTariff(productDao.getCurrentCustomerTariff(currentUser.getCustomerId()));
+        dto.setCurrentTariff(productDAO.getCurrentCustomerTariff(currentUser.getCustomerId()));
         logger.debug("Current tariff of user: {}", dto.getCurrentTariff());
         if (currentUser.getRole().equals(Role.RESIDENTIAL)) {
-            dto.setQuantityOfAllTariffs(productDao.getQuantityOfAllAvailableTariffsByPlaceId(currentUser.getPlaceId()));
-            dto.setPartOfTariffs(productDao.getIntervalOfTariffsByPlace(currentUser.getPlaceId(), startIndex, endIndex));
+            dto.setQuantityOfAllTariffs(productDAO.getQuantityOfAllAvailableTariffsByPlaceId(currentUser.getPlaceId()));
+            dto.setPartOfTariffs(productDAO.getIntervalOfTariffsByPlace(currentUser.getPlaceId(), startIndex, endIndex));
         } else {
-            dto.setQuantityOfAllTariffs(productDao.getQuantityOfAllAvailableTariffsForCustomers());
-            dto.setPartOfTariffs(productDao.getIntervalOfTariffsForCustomers(startIndex, endIndex));
+            dto.setQuantityOfAllTariffs(productDAO.getQuantityOfAllAvailableTariffsForCustomers());
+            dto.setPartOfTariffs(productDAO.getIntervalOfTariffsForCustomers(startIndex, endIndex));
         }
         return dto;
     }
@@ -141,7 +141,7 @@ public class TariffsController {
     @ResponseBody
     public List<Product> showServicesOfTariff(@RequestParam Integer tariffId) {
         logger.debug("Method showServicesOfTariff param tariffId: {}", tariffId);
-        return productDao.getServicesOfTariff(tariffId);
+        return productDAO.getServicesOfTariff(tariffId);
     }
 
     /**
@@ -156,15 +156,15 @@ public class TariffsController {
         Integer userId = (Integer) session.getAttribute("userId");
         User currentUser = userDAO.getUserById(userId);
         logger.debug("Current user: {}", currentUser.toString());
-        dto.setCurrentTariff(productDao.getCurrentCustomerTariff(currentUser.getCustomerId()));
+        dto.setCurrentTariff(productDAO.getCurrentCustomerTariff(currentUser.getCustomerId()));
         logger.debug("Current tariff of user: {}", dto.getCurrentTariff());
         if (currentUser.getRole().equals(Role.RESIDENTIAL)) {
-            dto.setQuantityOfAllTariffs(productDao.getQuantityOfAllAvailableTariffsByPlaceId(currentUser.getPlaceId()));
-            dto.setPartOfTariffs(productDao.getIntervalOfTariffsByPlace(currentUser.getPlaceId(), startIndex, endIndex));
+            dto.setQuantityOfAllTariffs(productDAO.getQuantityOfAllAvailableTariffsByPlaceId(currentUser.getPlaceId()));
+            dto.setPartOfTariffs(productDAO.getIntervalOfTariffsByPlace(currentUser.getPlaceId(), startIndex, endIndex));
             dto.setUserId(userId);
         } else {
-            dto.setQuantityOfAllTariffs(productDao.getQuantityOfAllAvailableTariffsForCustomers());
-            dto.setPartOfTariffs(productDao.getIntervalOfTariffsForCustomers(startIndex, endIndex));
+            dto.setQuantityOfAllTariffs(productDAO.getQuantityOfAllAvailableTariffsForCustomers());
+            dto.setPartOfTariffs(productDAO.getIntervalOfTariffsForCustomers(startIndex, endIndex));
             dto.setUserId(userId);
         }
         return dto;

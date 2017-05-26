@@ -1,7 +1,7 @@
 package jtelecom.controller.admin;
 
-import jtelecom.dao.product.ProductDao;
-import jtelecom.dto.TariffServiceDto;
+import jtelecom.dao.product.ProductDAO;
+import jtelecom.dto.TariffServiceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -22,16 +22,16 @@ public class ViewTariffWithServicesController {
 
     private static Logger logger = LoggerFactory.getLogger(ViewTariffWithServicesController.class);
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
 
     @RequestMapping(value = {"viewServicesInTariff"}, method = RequestMethod.GET)
     public ModelAndView getServicesInTariffForUpdate(@RequestParam(value = "id") Integer tariffId,
                                                      ModelAndView mav) {
 
         logger.debug("Receive tariff's id {} ", tariffId);
-        List<TariffServiceDto> servicesByTariff = productDao.getServicesInfoByTariff(tariffId);
+        List<TariffServiceDTO> servicesByTariff = productDAO.getServicesInfoByTariff(tariffId);
         logger.debug("Received services that are included in the tariff {}", servicesByTariff.toString());
-        String customerType = productDao.getCustomerTypeByProductId(tariffId);
+        String customerType = productDAO.getCustomerTypeByProductId(tariffId);
         logger.debug("Customer type: {} ", customerType);
 
         mav.addObject("servicesByTariff", servicesByTariff);

@@ -3,15 +3,15 @@ package jtelecom.services.product;
 
 import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.order.Order;
-import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.ProductCatalogRowDTO;
-import jtelecom.dto.TariffServiceDto;
+import jtelecom.dto.TariffServiceDTO;
 import jtelecom.services.mail.MailService;
 import jtelecom.util.CollectionUtil;
 import org.slf4j.Logger;
@@ -31,9 +31,9 @@ public class ProductServiceImpl implements ProductService {
 
     private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     @Resource
-    OrderDao orderDao;
+    OrderDAO orderDAO;
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
     private UserDAO userDAO;
     @Resource
@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     public Product isValidProduct(Integer productId) throws EmptyResultDataAccessException {
         try {
             logger.debug("Received product ID {} ", productId);
-            return productDao.getById(productId);
+            return productDAO.getById(productId);
         } catch (EmptyResultDataAccessException ex) {
             logger.error("Product doesn't exist ", ex);
         }
@@ -91,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
     public Product getCategory(ProductCategories category, Product product) {
         logger.debug("Received product {} with category {}", product.toString(), category.toString());
         if (!category.getCategoryName().isEmpty()) {
-            Integer categoryId = productDao.saveCategory(category);
+            Integer categoryId = productDAO.saveCategory(category);
             logger.debug("Received ID of saved category {} ", categoryId);
             product.setCategoryId(categoryId);
         }
@@ -104,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean updateProduct(Product updateProduct) {
         int productId = updateProduct.getId();
-        Product product = productDao.getById(productId);
+        Product product = productDAO.getById(productId);
         logger.debug("Found product from database {} ", product.toString());
         if (!updateProduct.getName().isEmpty()) {
             logger.debug("Change product name to {} ", updateProduct.getName());
@@ -134,27 +134,27 @@ public class ProductServiceImpl implements ProductService {
             logger.debug("Change product customer type to {} ", updateProduct.getCustomerType());
             product.setCustomerType(updateProduct.getCustomerType());
         }
-        return productDao.update(product);
+        return productDAO.update(product);
     }
 
     /**
-     * This method convert received ID tariff, array of ID services to {@link TariffServiceDto}
+     * This method convert received ID tariff, array of ID services to {@link TariffServiceDTO}
      *
      * @param idTariff          tariff ID
      * @param arrayOfIdServices array of ID services
-     * @return {@code ArrayList} of {@code TariffServiceDto}
+     * @return {@code ArrayList} of {@code TariffServiceDTO}
      * which contains tariff ID and array of ID services.
      * @see ArrayList
-     * @see TariffServiceDto
+     * @see TariffServiceDTO
      */
-    private ArrayList<TariffServiceDto> fillInDTOForBatchUpdate(Integer idTariff, Integer[] arrayOfIdServices) {
-        ArrayList<TariffServiceDto> products = new ArrayList<>();
+    private ArrayList<TariffServiceDTO> fillInDTOForBatchUpdate(Integer idTariff, Integer[] arrayOfIdServices) {
+        ArrayList<TariffServiceDTO> products = new ArrayList<>();
         for (Integer arrayOfIdService : arrayOfIdServices) {
             if (arrayOfIdService != null) {
-                TariffServiceDto tariffServiceDto = new TariffServiceDto();
-                tariffServiceDto.setTariffId(idTariff);
-                tariffServiceDto.setServiceId(arrayOfIdService);
-                products.add(tariffServiceDto);
+                TariffServiceDTO tariffServiceDTO = new TariffServiceDTO();
+                tariffServiceDTO.setTariffId(idTariff);
+                tariffServiceDTO.setServiceId(arrayOfIdService);
+                products.add(tariffServiceDTO);
             }
         }
         return products;
@@ -166,8 +166,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void fillInTariffWithServices(Integer idTariff, Integer[] arrayOfIdServices) {
         logger.debug("Tariff ID {}, services ID", idTariff, arrayOfIdServices);
-        ArrayList<TariffServiceDto> products = fillInDTOForBatchUpdate(idTariff, arrayOfIdServices);
-        productDao.fillInTariffWithServices(products);
+        ArrayList<TariffServiceDTO> products = fillInDTOForBatchUpdate(idTariff, arrayOfIdServices);
+        productDAO.fillInTariffWithServices(products);
     }
 
     /**
@@ -176,22 +176,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product) {
-        List<TariffServiceDto> oldServiceList = productDao.getServicesIDByTariff(product.getId());
+        List<TariffServiceDTO> oldServiceList = productDAO.getServicesIDByTariff(product.getId());
         logger.debug("Old services by tariff ID {}", oldServiceList.toString());
 
-        List<TariffServiceDto> newServiceList = fillInDTOForBatchUpdate(product.getId(), servicesId);
+        List<TariffServiceDTO> newServiceList = fillInDTOForBatchUpdate(product.getId(), servicesId);
         logger.debug("New services by tariff ID {}", newServiceList.toString());
 
-        List<TariffServiceDto> uniqueServicesInFirstCollection = (List<TariffServiceDto>) CollectionUtil
+        List<TariffServiceDTO> uniqueServicesInFirstCollection = (List<TariffServiceDTO>) CollectionUtil
                 .firstCollectionMinusSecondCollection(oldServiceList, newServiceList);
         logger.debug("Unique elements in oldServiceList {}", uniqueServicesInFirstCollection.toString());
-        productDao.deleteServiceFromTariff(uniqueServicesInFirstCollection);
+        productDAO.deleteServiceFromTariff(uniqueServicesInFirstCollection);
 
-        uniqueServicesInFirstCollection = (List<TariffServiceDto>) CollectionUtil
+        uniqueServicesInFirstCollection = (List<TariffServiceDTO>) CollectionUtil
                 .firstCollectionMinusSecondCollection(newServiceList, oldServiceList);
         logger.debug("Unique elements in newServiceList {}", uniqueServicesInFirstCollection.toString());
 
-        productDao.fillInTariffWithServices(uniqueServicesInFirstCollection);
+        productDAO.fillInTariffWithServices(uniqueServicesInFirstCollection);
     }
 
     /**
@@ -207,11 +207,11 @@ public class ProductServiceImpl implements ProductService {
      */
     public List<ProductCatalogRowDTO> getLimitedServicesForUser(User user, Integer start, Integer length, String sort, String search, Integer categoryId) {
         Map<Integer, String> productCategories = new HashMap<>();
-        List<Order> orders = orderDao.getOrdersByCustomerId(user.getCustomerId());
+        List<Order> orders = orderDAO.getOrdersByCustomerId(user.getCustomerId());
         List<Product> products = user.getRole() == Role.RESIDENTIAL ?
-                productDao.getLimitedServicesForResidential(start, length, sort, search, categoryId, user.getPlaceId()) :
-                productDao.getLimitedServicesForBusiness(start, length, sort, search, categoryId);
-        List<Product> servicesOfCurrentUserTariff = productDao.getAllServicesByCurrentUserTariff(user.getId());
+                productDAO.getLimitedServicesForResidential(start, length, sort, search, categoryId, user.getPlaceId()) :
+                productDAO.getLimitedServicesForBusiness(start, length, sort, search, categoryId);
+        List<Product> servicesOfCurrentUserTariff = productDAO.getAllServicesByCurrentUserTariff(user.getId());
         List<ProductCatalogRowDTO> productCatalogRowDTOS = new ArrayList<>();
         for (Product product : products) {
             String categoryName;
@@ -219,7 +219,7 @@ public class ProductServiceImpl implements ProductService {
             if (productCategories.containsKey(productCategoryId)) {
                 categoryName = productCategories.get(product.getCategoryId());
             } else {
-                categoryName = productDao.getProductCategoryById(product.getCategoryId()).getCategoryName();
+                categoryName = productDAO.getProductCategoryById(product.getCategoryId()).getCategoryName();
                 productCategories.put(categoryId, categoryName);
             }
             String status = getStatusForProductAsString(product, orders, servicesOfCurrentUserTariff);
@@ -260,9 +260,9 @@ public class ProductServiceImpl implements ProductService {
      */
     public Product getProductForUser(User currentUser, Integer productId) {
         if (currentUser.getRole() == Role.RESIDENTIAL) {
-            return productDao.findProductWithPriceSetByPlace(productId, currentUser.getPlaceId());
+            return productDAO.findProductWithPriceSetByPlace(productId, currentUser.getPlaceId());
         }
-        return productDao.getById(productId);
+        return productDAO.getById(productId);
 
     }
 
@@ -276,14 +276,14 @@ public class ProductServiceImpl implements ProductService {
      */
     public Integer getCountForServicesWithSearch(User user, String search, Integer categoryId) {
         return user.getRole() == Role.RESIDENTIAL ?
-                productDao.getCountForLimitedServicesForResidential(search, categoryId, user.getPlaceId()) :
-                productDao.getCountForLimitedServicesForBusiness(search, categoryId);
+                productDAO.getCountForLimitedServicesForResidential(search, categoryId, user.getPlaceId()) :
+                productDAO.getCountForLimitedServicesForBusiness(search, categoryId);
 
     }
 
     @Override
     public Integer saveProduct(Product product) {
-        Integer isSave=productDao.saveProduct(product);
+        Integer isSave = productDAO.saveProduct(product);
         if(isSave!=null){
           List<User> users=userDAO.getUsersByCustomerType(product.getCustomerType());
           mailService.sendNewProductDispatch(users,product);
@@ -293,8 +293,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean disableEnableProduct(int productId) {
-        Product product=productDao.getById(productId);
-        boolean success=productDao.disableEnableProduct(product);
+        Product product = productDAO.getById(productId);
+        boolean success = productDAO.disableEnableProduct(product);
         if(success){
             if(product.getStatus().getId()==0){
                 List<User> users=userDAO.getUsersByCustomerType(product.getCustomerType());
