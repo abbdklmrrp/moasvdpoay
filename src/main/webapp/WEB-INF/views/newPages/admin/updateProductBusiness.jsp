@@ -53,7 +53,7 @@
             </c:if>
             <c:if test="${product.productType eq 'Tariff'}">
                 <c:choose>
-                    <c:when test="${param.page == 'UpdateServicesInTariff'}">
+                    <c:when test="${param.page == 'ViewServicesInTariff'}">
                         <li class="wet-asphalt active">
                             <a href="${pageContext.request.contextPath}/admin/viewServicesInTariff?id=${product.id}">Services
                                 in tariff</a>

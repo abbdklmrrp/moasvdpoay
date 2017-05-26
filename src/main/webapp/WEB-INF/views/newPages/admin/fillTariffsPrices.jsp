@@ -19,7 +19,7 @@
     <jsp:param name="pageName" value="FillTariffPrices"/>
 </jsp:include>
 <jsp:include page="../includes/footer.jsp"/>
-<form modelAttribute="priceByRegionDto"
+<form modelAttribute="priceByRegionDTO"
       action="${pageContext.request.contextPath}/admin/fillTariffsPrices/${id}" method="post">
     <div class="container">
         <div class="col-md-2"></div>

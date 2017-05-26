@@ -17,7 +17,7 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
-    <jsp:param name="pageName" value="UpdateServicesInTariff"/>
+    <jsp:param name="pageName" value="ViewServicesInTariff"/>
 </jsp:include>
 
 
@@ -50,10 +50,9 @@
                     </li>
                 </c:otherwise>
             </c:choose>
-
             <c:if test="${customerType eq 'Residential'}">
                 <c:choose>
-                    <c:when test="${param.page == 'UpdatePriceInRegion'}">
+                    <c:when test="${param.page == 'ViewPriceInRegion'}">
                         <li class="wet-asphalt active-tab">
                             <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${servicesByTariff.get(0).tariffId}">Price
                                 in regions</a>
@@ -74,7 +73,7 @@
 <div class="col-xs-6">
     <div class="container">
         <div class="col-xs-12">
-            <h1 style="text-align: center">Fill in tariff with services</h1>
+            <h1 style="text-align: center">Services in tariff</h1>
 
             <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                 <tr>
