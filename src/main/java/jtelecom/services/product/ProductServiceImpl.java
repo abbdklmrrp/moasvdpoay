@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
     private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     @Resource
-    OrderDAO orderDAO;
+    private OrderDAO orderDAO;
     @Resource
     private ProductDAO productDAO;
     @Resource
