@@ -35,7 +35,7 @@ public class UpdateProductController {
     public ModelAndView updateTariff(Product product, @RequestParam(value = "id") Integer id,
                                      ModelAndView mav) {
 
-        logger.debug("Receive tariff's id {} ", id);
+        logger.debug("Receive product ID {} ", id);
         try {
             Product tariff = productDAO.getById(id);
             logger.debug("Checked that the tariff exists {} ", tariff.toString());
@@ -47,7 +47,7 @@ public class UpdateProductController {
 
         try {
             boolean isUpdate = productService.updateProduct(product);
-            logger.debug("Update fields of service with success {} ", isUpdate);
+            logger.debug("Update fields of product with success {} ", isUpdate);
             mav.addObject("message", "success");
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {}", ex.getMessage());

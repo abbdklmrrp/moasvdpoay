@@ -31,7 +31,7 @@ public class UpdateServicesInTariffController {
     private static final String ERROR_IN_CONNECTION = "Error with filling database";
     private static final String ERROR_TYPE = "Wrong type of input data";
     private static final String ERROR_EXIST = "Sorry, product doesn't exist";
-    private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
+    private static Logger logger = LoggerFactory.getLogger(UpdateServicesInTariffController.class);
     @Resource
     private ProductDAO productDAO;
     @Resource
@@ -56,8 +56,7 @@ public class UpdateServicesInTariffController {
     }
 
     @RequestMapping(value = {"updateServicesInTariff"}, method = RequestMethod.POST)
-    public ModelAndView updateServicesInTariff(Product product,
-                                               @RequestParam(value = "id") Integer id,
+    public ModelAndView updateServicesInTariff(@RequestParam(value = "id") Integer id,
                                                @RequestParam(value = "selectedService") Integer[] servicesIdArray,
                                                ModelAndView mav) {
 
@@ -78,7 +77,7 @@ public class UpdateServicesInTariffController {
 
         try {
             logger.debug("Convert a string array of service's ID to an integer array {} ", Arrays.toString(servicesIdArray));
-            productService.updateFillingOfTariffsWithServices(servicesIdArray, product);
+            productService.updateFillingOfTariffsWithServices(servicesIdArray, id);
             logger.debug("Update tariff: removed unnecessary services, added new services");
         } catch (NumberFormatException e) {
             mav.addObject("error ", ERROR_TYPE);

@@ -173,8 +173,8 @@
                                    value="Available" ${product.status=='Available'? 'checked="checked"' : ''}>
                             <label class="col-sm-5 control-label">Available</label>
                             <input disabled type="radio" id="notAvailableStatus" name="status" class="col-sm-1"
-                                   value="NotAvailable" ${product.status=='Disable'? 'checked="checked"' : ''}>
-                            <label class="col-sm-5 control-label">Not Available</label>
+                                   value="Disable" ${product.status=='Disable'? 'checked="checked"' : ''}>
+                            <label class="col-sm-5 control-label">Disable</label>
                         </div>
                     </div>
                 </div>
@@ -202,7 +202,7 @@
 <jsp:include page="../includes/footer.jsp"/>
 <script>
     function handleChange(input) {
-        if (input.value < 0) input.value = 1;
+        if (input.value < 1) input.value = 1;
         if (input.value > 365) input.value = 365;
     }
 </script>

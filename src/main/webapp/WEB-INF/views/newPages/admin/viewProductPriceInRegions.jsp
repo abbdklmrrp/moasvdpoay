@@ -80,8 +80,11 @@
         <div class="panel panel-default" id="productsIds">
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-md-10" data-grid="title">
+                    <div class="col-md-6" data-grid="title">
                         Prices in regions
+                    </div>
+                    <div class="col-md-4" data-grid="title">
+                        <a href="${pageContext.request.contextPath}/admin/updateProductPrice?id=${id}">Update</a>
                     </div>
                     <div class="col-md-2" style="text-align:right;">
                         <a href="javascript:" data-grid="pager-refresh">

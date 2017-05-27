@@ -19,7 +19,6 @@ import java.util.List;
 @Controller
 @RequestMapping({"admin"})
 public class ViewTariffWithServicesController {
-
     private static Logger logger = LoggerFactory.getLogger(ViewTariffWithServicesController.class);
     @Resource
     private ProductDAO productDAO;
@@ -32,7 +31,7 @@ public class ViewTariffWithServicesController {
         List<TariffServiceDTO> servicesByTariff = productDAO.getServicesInfoByTariff(tariffId);
         logger.debug("Received services that are included in the tariff {}", servicesByTariff.toString());
         String customerType = productDAO.getCustomerTypeByProductId(tariffId);
-        logger.debug("Customer type: {} ", customerType);
+        logger.debug("Cus tomer type: {} ", customerType);
 
         mav.addObject("servicesByTariff", servicesByTariff);
         mav.addObject("customerType", customerType);

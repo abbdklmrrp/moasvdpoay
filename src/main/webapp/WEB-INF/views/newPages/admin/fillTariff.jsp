@@ -31,7 +31,7 @@
                         <td>${servcesByCategory.key}</td>
                         <td>
                             <select name="selectedService" id="soflow">
-                                <option value="">-</option>
+                                <option value=""></option>
                                 <c:forEach var="product" items="${servcesByCategory.value}">
                                     <option value="${product.id}">${product.name}</option>
                                 </c:forEach>

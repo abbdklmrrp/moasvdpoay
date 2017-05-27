@@ -21,7 +21,7 @@ import java.util.Objects;
 @RequestMapping({"admin"})
 public class ViewProductPricesController {
 
-    private static Logger logger = LoggerFactory.getLogger(ViewProductController.class);
+    private static Logger logger = LoggerFactory.getLogger(ViewProductPricesController.class);
     private static final String ERROR_EXIST_PRODUCT = "Sorry, product with such ID does not exist in the database";
 
     @Resource
@@ -41,7 +41,7 @@ public class ViewProductPricesController {
         Product validProduct = productService.isValidProduct(productId);
         if (!Objects.nonNull(validProduct)) {
             mav.addObject("error", ERROR_EXIST_PRODUCT);
-            mav.setViewName("newPages/admin/viewProductPrices");
+            mav.setViewName("newPages/admin/products");
         }
         String productType = productDAO.getProductTypeByProductId(productId);
         logger.debug("Product type: {} ", productType);
