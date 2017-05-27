@@ -9,6 +9,14 @@ import java.util.List;
  * @author Anna Rysakova
  */
 public interface UserDAO extends DAO<User> {
+
+    /**
+     * Method return {@code User} by username
+     *
+     * @param username {@code User} username
+     * @return {@code User} by username
+     * @see User
+     */
     User findByUsername(String username);
 
     List<User> getAll();

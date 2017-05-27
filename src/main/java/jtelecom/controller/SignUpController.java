@@ -122,7 +122,7 @@ public class SignUpController {
         String message = userService.saveResidentialWithoutPasswordGenerating(user);
         if ("User successfully saved".equals(message)) {
             logger.debug("User saved {}", user.getEmail());
-            return "newPages/Login";
+            return "newPages/login";
         } else {
             logger.error("Registration failed {}", user.getEmail());
             attributes.addFlashAttribute("msg", message);
