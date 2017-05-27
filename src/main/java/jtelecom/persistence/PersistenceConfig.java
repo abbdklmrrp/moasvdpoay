@@ -1,6 +1,8 @@
 package jtelecom.persistence;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,40 +20,41 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableTransactionManagement
-@PropertySource("classpath:db/oracle.properties")
-//@PropertySource("classpath:ANN_DB.properties")
+//@PropertySource("classpath:db/oracle.properties")
 public class PersistenceConfig {
-    @Value("${datasource.driver-class-name}")
-    private String driver;
-    @Value("${datasource.url}")
-    private String url;
-    @Value("${datasource.username}")
-    private String username;
-    @Value("${datasource.password}")
-    private String password;
+    private static Logger logger= LoggerFactory.getLogger(PersistenceConfig.class);
+    private final static String POOL_JNDI= "jdbc/ConnectionPool";
+//    @Value("${datasource.driver-class-name}")
+//    private String driver;
+//    @Value("${datasource.url}")
+//    private String url;
+//    @Value("${datasource.username}")
+//    private String username;
+//    @Value("${datasource.password}")
+//    private String password;
 
 
     @Bean(name = "dataSource")
     public DataSource dataSource() {
 //        for glassfish connection pool
-//        DataSource dataSource= null;
-//        try {
-//
-//            InitialContext initContext = new InitialContext();
-//            dataSource = (DataSource) initContext.lookup("jdbc/ConnectionPool");
-//        } catch (NamingException e) {
-//            e.printStackTrace();
-//        }
+        DataSource dataSource= null;
+        try {
+
+            InitialContext initContext = new InitialContext();
+            dataSource = (DataSource) initContext.lookup(POOL_JNDI);
+        } catch (NamingException e) {
+            logger.error("Lookup error {}",e);
+        }
 
 
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(driver);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        dataSource.setInitialSize(5);
-        dataSource.setMinIdle(10);
-        dataSource.setMaxIdle(15);
+//        BasicDataSource dataSource = new BasicDataSource();
+//        dataSource.setDriverClassName(driver);
+//        dataSource.setUrl(url);
+//        dataSource.setUsername(username);
+//        dataSource.setPassword(password);
+//        dataSource.setInitialSize(5);
+//        dataSource.setMinIdle(10);
+//        dataSource.setMaxIdle(15);
 
         return dataSource;
     }

@@ -96,8 +96,8 @@ public class CsrMyOrdersController {
     public String sendEmail(@RequestParam(value = "orderId") int orderId,
                             @RequestParam(value = "text") String text) {
         String email = securityAuthenticationHelper.getCurrentUser().getUsername();
-        orderService.sendEmail(orderId, text, email);
-        return "success";
+        boolean success=orderService.sendEmail(orderId, text, email);
+        return success?"success":"fail";
     }
 
 

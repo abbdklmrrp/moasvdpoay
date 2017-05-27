@@ -115,7 +115,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         params.addValue("secretKey", password);
         params.addValue("typeId", type);
         KeyHolder key = new GeneratedKeyHolder();
-        Integer customerId=jdbcTemplate.update(SAVE_CUSTOMER_SQL,params,key,new String[]{"ID"});
+        jdbcTemplate.update(SAVE_CUSTOMER_SQL,params,key,new String[]{"ID"});
         return key.getKey().intValue();
     }
 

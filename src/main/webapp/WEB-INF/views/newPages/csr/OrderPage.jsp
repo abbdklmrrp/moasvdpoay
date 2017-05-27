@@ -149,11 +149,17 @@
             success: function (resultMsg) {
                 if (resultMsg === '"success"') {
                     swal({
-                        title: "The email was successfully sent.",
+                        title: "The email was successfully sent",
                         type: "success"
                     });
                     $('#description').val("");
                 }
+           else if(resultMsg==='"fail"'){
+          swal({
+              title:"Email not sent",
+              type: "error"
+          })
+        }
             },
             error: function () {
                 swal("Sorry, an error on server has occurred", "please, try again.", "error");

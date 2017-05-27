@@ -7,6 +7,7 @@ import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
+import jtelecom.dao.user.UserStatus;
 import jtelecom.googleMaps.ServiceGoogleMaps;
 import jtelecom.services.customer.CustomerService;
 import jtelecom.services.customer.CustomerServiceImpl;
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
 
     private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    @Override
     public boolean updateUser(User editedUser) {
         User oldUser = userDAO.getUserById(editedUser.getId());
         logger.warn("before changes" + oldUser.toString());
@@ -102,6 +104,7 @@ public class UserServiceImpl implements UserService {
         return message;
     }
 
+    @Override
     public String saveWithGeneratingPassword(User user) {
         String password = passwordGenerator();
         user.setPassword(password);
@@ -110,6 +113,7 @@ public class UserServiceImpl implements UserService {
         return message;
     }
 
+    @Override
     public String saveBusinessUser(User user, String companyName, String secretKey) {
         Integer customerId = customerDAO.getCustomerId(companyName, secretKey);
         if (customerId == null) {
@@ -120,6 +124,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public String saveResidentialWithPasswordGenerating(User user) {
         String password = passwordGenerator();
         user.setPassword(password);
@@ -130,6 +135,7 @@ public class UserServiceImpl implements UserService {
         return message;
     }
 
+    @Override
     public String saveResidentialWithoutPasswordGenerating(User user) {
         String message = saveResidential(user);
         if (message.equals("User successfully saved")) {
@@ -138,6 +144,7 @@ public class UserServiceImpl implements UserService {
         return message;
     }
 
+    @Override
     public boolean generateNewPassword(int userId) {
         User user = userDAO.getUserById(userId);
         String password = passwordGenerator();
@@ -145,6 +152,19 @@ public class UserServiceImpl implements UserService {
         boolean success = userDAO.updatePassword(user);
         if (success) {
             mailService.sendNewPasswordEmail(user);
+        }
+        return success;
+    }
+
+    @Override
+    public boolean enableDisableUser(User user) {
+        boolean success = userDAO.enableDisableUser(user);
+        if (success) {
+            if (user.getStatus() == UserStatus.ENABLE) {
+                mailService.sendActivatedEmail(user);
+            } else if (user.getStatus() == UserStatus.DISABLE) {
+                mailService.sendBannedEmail(user);
+            }
         }
         return success;
     }

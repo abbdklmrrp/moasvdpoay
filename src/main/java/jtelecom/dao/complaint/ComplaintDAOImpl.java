@@ -101,7 +101,7 @@ public class ComplaintDAOImpl implements ComplaintDAO {
         params.addValue("statusId", complaint.getStatus().getId());
         params.addValue("description", complaint.getDescription());
         KeyHolder key = new GeneratedKeyHolder();
-        Integer productID = jdbcTemplate.update(INSERT_COMPLAINT_SQL, params, key, new String[]{"ID"});
+        jdbcTemplate.update(INSERT_COMPLAINT_SQL, params, key, new String[]{"ID"});
         return key.getKey().intValue();
     }
 

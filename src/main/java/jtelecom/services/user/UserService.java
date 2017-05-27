@@ -19,4 +19,6 @@ public interface UserService {
 
     boolean generateNewPassword(int userId);
 
+    boolean enableDisableUser(User user);
+
 }

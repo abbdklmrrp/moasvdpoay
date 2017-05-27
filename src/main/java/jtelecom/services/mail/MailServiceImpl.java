@@ -70,15 +70,8 @@ public class MailServiceImpl implements MailService {
         new MailServiceImpl.MailThread(message).start();
     }
 
-    /**
-     * Method sends custom emails
-     *
-     * @param to      recipient's email address
-     * @param subject subject of the email
-     * @param text    content of the email
-     */
     @Override
-    public void sendCustomEmail(String to, String subject, String text) {
+    public boolean sendCustomEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
@@ -87,9 +80,10 @@ public class MailServiceImpl implements MailService {
             validate(message);
         } catch (EmailException e) {
             logger.error(e.getMessage());
-            return;
+            return false;
         }
         new MailServiceImpl.MailThread(message).start();
+        return true;
     }
 
     @Override
@@ -110,6 +104,7 @@ public class MailServiceImpl implements MailService {
                 .build();
         send(user.getEmail(), model, EmailTemplatePath.REGISTRATION_WITHOUT_PASSWORD);
     }
+
 
     @Override
     public void sendComplaintSentEmail(User user, int complaintId) {
@@ -176,6 +171,7 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_PROCESSING);
     }
 
+    @Override
     public void sendProductActivatedEmail(User user, Product product) {
         Map<String, Object> model = new MapBuilder(user, product)
                 .setUserName()
@@ -243,6 +239,24 @@ public class MailServiceImpl implements MailService {
                 .setEndDate(endDate)
                 .build();
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_WILL_SUSPEND);
+    }
+
+    @Override
+    public void sendActivatedEmail(User user) {
+        Map<String, Object> model = new MapBuilder(user)
+                .setUserName()
+                .setUserSurname()
+                .build();
+        send(user.getEmail(), model, EmailTemplatePath.ACTIVATED);
+    }
+
+    @Override
+    public void sendBannedEmail(User user) {
+        Map<String, Object> model = new MapBuilder(user)
+                .setUserName()
+                .setUserSurname()
+                .build();
+        send(user.getEmail(), model, EmailTemplatePath.BANNED);
     }
 
     /**
