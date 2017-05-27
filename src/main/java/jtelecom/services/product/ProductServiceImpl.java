@@ -155,6 +155,8 @@ public class ProductServiceImpl implements ProductService {
                 tariffServiceDTO.setTariffId(idTariff);
                 tariffServiceDTO.setServiceId(arrayOfIdService);
                 products.add(tariffServiceDTO);
+                logger.debug("to list was add object TariffServiceDTO {} ", tariffServiceDTO);
+
             }
         }
         return products;
