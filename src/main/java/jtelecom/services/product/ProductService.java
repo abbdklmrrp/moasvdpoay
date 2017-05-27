@@ -3,7 +3,7 @@ package jtelecom.services.product;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
 import jtelecom.dao.user.User;
-import jtelecom.dto.ProductCatalogRowDTO;
+import jtelecom.dto.ServicesCatalogRowDTO;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.ArrayList;
@@ -122,10 +122,40 @@ public interface ProductService {
      */
     boolean disableEnableProduct(int productId);
 
-    Product getProductForUser(User user, Integer id);
+    /**
+     * Returns {@link Product} object with price detemined by user type.
+     * For Residential user price in this Product will be determined by {@link User#placeId}.
+     * Otherwise, user will see base_price for this {@link Product}
+     * Yuliya Pedash
+     *
+     * @param user      user
+     * @param productId id of product
+     * @return
+     */
+    Product getProductForUser(User user, Integer productId);
 
-    List<ProductCatalogRowDTO> getLimitedServicesForUser(User user, Integer start, Integer length, String sort, String search, Integer categoryId);
+    /**
+     * This method  get limiteds
+     * Yuiya Pedash
+     *
+     * @param start      begin index
+     * @param end        end index
+     * @param sort       column to sort on
+     * @param search     search pattern
+     * @param user       user object
+     * @param categoryId id of category
+     * @return list of {@link ServicesCatalogRowDTO}
+     */
+    List<ServicesCatalogRowDTO> getLimitedServicesForUser(User user, Integer start, Integer end, String sort, String search, Integer categoryId);
 
+    /**
+     * Yuliya Pedash
+     *
+     * @param user
+     * @param search
+     * @param categoryId
+     * @return
+     */
     Integer getCountForServicesWithSearch(User user, String search, Integer categoryId);
 
 }

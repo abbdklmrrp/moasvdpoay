@@ -26,17 +26,10 @@ public class PriceServiceImpl implements PriceService {
     private PriceDAO priceDAO;
 
     /**
-     * This method fill the <code>ArrayList</code> with the values of the product ID
-     * and its prices for the region.
-     *
-     * @param productId     product id
-     * @param placeId       place id
-     * @param priceByRegion price of product by <code>placeId</code> region
-     * @return <code>ArrayList</code> of product id, place id , price in this region
+     * {@inheritDoc}
      */
     public List<Price> fillInListWithProductPriceByRegion(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
         ArrayList<Price> listPriceByRegion = new ArrayList<>();
-        logger.debug("Create list of product price by region {} ", listPriceByRegion);
         for (int i = 0; i < priceByRegion.length; i++) {
             if (placeId[i] != 0 & priceByRegion[i].compareTo(BigDecimal.ZERO) > 0) {
                 Price price = new Price();
@@ -50,23 +43,34 @@ public class PriceServiceImpl implements PriceService {
         return listPriceByRegion;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isValid(Integer[] placeId, BigDecimal[] priceByRegion) {
         return (Objects.nonNull(placeId) & Objects.nonNull(priceByRegion));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public void updateProductPriceInRegions(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
-        List<Price> oldPriceInfo = priceDAO.getPriceInRegionInfoByProduct(productId);
-        List<Price> newPriceInfo = fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
+        List<Price> oldPriceInRegionsList = priceDAO.getPriceInRegionInfoByProduct(productId);
+        logger.debug("Old prices in regions by product ID {}", oldPriceInRegionsList.toString());
+
+        List<Price> newPriceInRegionsList = fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
+        logger.debug("New prices in regions by product ID {}", newPriceInRegionsList.toString());
 
         List<Price> uniqueServicesInFirstCollection = (List<Price>) CollectionUtil
-                .firstCollectionMinusSecondCollection(oldPriceInfo, newPriceInfo);
+                .firstCollectionMinusSecondCollection(oldPriceInRegionsList, newPriceInRegionsList);
+        logger.debug("Unique elements in oldPriceInRegionsList {}", uniqueServicesInFirstCollection.toString());
         priceDAO.deleteProductPriceInRegion(uniqueServicesInFirstCollection);
 
         uniqueServicesInFirstCollection = (List<Price>) CollectionUtil
-                .firstCollectionMinusSecondCollection(newPriceInfo, oldPriceInfo);
+                .firstCollectionMinusSecondCollection(newPriceInRegionsList, oldPriceInRegionsList);
+        logger.debug("Unique elements in newPriceInRegionsList {}", uniqueServicesInFirstCollection.toString());
         priceDAO.fillPriceOfProductByRegion(uniqueServicesInFirstCollection);
     }
 }

@@ -6,23 +6,6 @@
     <div class="row">
         <h1 style="text-align: center">Services Catalog</h1>
         <div class="col-md-2">
-            <%--<ul class="nav navbar-nav cat-dropdown">--%>
-            <%--<li class="dropdown cat-dropdown ">--%>
-            <%--<a href="#" class="dropdown-toggle" data-toggle="dropdown"> Categories </a>--%>
-            <%--<ul class="dropdown-menu cat-dropdown-menu">--%>
-            <%--<li><a href="<%=request.getContextPath()%>/${userRole}/orderService">All Categories</a></li>--%>
-            <%--<li class="divider"></li>--%>
-            <%--<c:forEach var="productCategory" items="${productsCategories}">--%>
-
-            <%--<li id="${productCategory.categoryName}">--%>
-            <%--<a href="<%=request.getContextPath()%>/${userRole}/orderService?category=${productCategory.categoryName}">${productCategory.categoryName}</a>--%>
-            <%--</li>--%>
-            <%--<li class="divider"></li>--%>
-            <%--</c:forEach>--%>
-
-            <%--</ul>--%>
-            <%--</li>--%>
-            <%--</ul>--%>
             <h2>${categoryName}</h2>
             <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Categories
@@ -181,48 +164,6 @@
                             </div>
                         </div>
                     </div>
-                    <%--<h3></h3>--%>
-                    <%--<table border="1" class="table table-striped table-hover" id="tableServiceCatalog">--%>
-                    <%--<c:if test="${not empty resultMsg}">--%>
-                    <%--<h3>${resultMsg}</h3>--%>
-                    <%--</c:if>--%>
-                    <%--<tr>--%>
-                    <%--<th>Name</th>--%>
-                    <%--<th>Description</th>--%>
-                    <%--<th>Duration(days)</th>--%>
-                    <%--<th>Price</th>--%>
-                    <%--<th>Status</th>--%>
-                    <%--</tr>--%>
-                    <%--<c:forEach var="categoriesProducts" items="${categoriesProducts}">--%>
-                    <%--<tr>--%>
-                    <%--<td colspan="5"><strong> ${categoriesProducts.key}</strong></td>--%>
-                    <%--</tr>--%>
-                    <%--<c:forEach var="productRow" items="${categoriesProducts.value}">--%>
-                    <%--<tr>--%>
-                    <%--<td>${productRow.product.name}</td>--%>
-                    <%--<td>${productRow.product.description}</td>--%>
-                    <%--<td>${productRow.product.durationInDays}</td>--%>
-                    <%--<td>${productRow.price.price}</td>--%>
-                    <%--<c:choose><c:when test="${empty productRow.status}">--%>
-                    <%--<td id="${productRow.product.id}">--%>
-                    <%--<input type="button" class="btn btn-success"--%>
-                    <%--onclick="activateService(${productRow.product.id})" value="Activate">--%>
-                    <%--</td>--%>
-                    <%--</c:when>--%>
-                    <%--<c:when test="${ productRow.status== 'Active'}">--%>
-                    <%--<td id="${productRow.product.id}">--%>
-                    <%--<input type="button" class="btn btn-danger"--%>
-                    <%--onclick="deactivateService(${productRow.product.id})"--%>
-                    <%--value="Deactivate"></td>--%>
-                    <%--</c:when>--%>
-                    <%--<c:otherwise>--%>
-                    <%--<td>${productRow.status}</td>--%>
-                    <%--</c:otherwise>--%>
-                    <%--</c:choose>--%>
-                    <%--</tr>--%>
-                    <%--</c:forEach>--%>
-                    <%--</c:forEach>--%>
-                    <%--</table>--%>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -251,10 +192,10 @@
                     return $('In Tariff')
                 }
                 if (!wv.status) {
-                    return $('<div id=service' + wv.id + '><input type="button" class="btn btn-success"  value="Activate" onclick="activateService(' + wv.id + ')"></div>');
+                    return $('<div id=service' + wv.id + '><input type="button" class="btn btn-success btn-block"  value="Activate" onclick="activateService(' + wv.id + ')"></div>');
                 }
                 else {
-                    return $('<div id=service' + wv.id + '><input type="button" class="btn btn-danger"  value="Deactivate" onclick="deactivateService(' + wv.id + ')"></div>');
+                    return $('<div id=service' + wv.id + '><input type="button" class="btn btn-danger btn-block"  value="Deactivate" onclick="deactivateService(' + wv.id + ')"></div>');
                 }
             },
             "name": function (pv, wv, grid) {

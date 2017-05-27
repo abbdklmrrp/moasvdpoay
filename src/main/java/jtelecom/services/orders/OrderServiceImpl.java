@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 08.05.2017.
+ * @author Yuliya Pedash
  */
 @Service
 
@@ -77,25 +77,20 @@ public class OrderServiceImpl implements OrderService {
         return success;
     }
 
+
     /**
-     * This method determines if within dates when order is supposed to be suspended
-     * exist other planned tasks that can interrupt superdense process.
-     *
-     * @param beginDate begin date of superdense
-     * @param endDate   end date of superdense
-     * @return <code>true</code> if order can be suspended withing these dates, <code>false</code> otherwise.
+     * {@inheritDoc}
+     * Yuliya Pedash
      */
     public boolean canOrderBeSuspendedWithinDates(Calendar beginDate, Calendar endDate, Integer orderId) {
         List<PlannedTask> plannedTasks = plannedTaskDAO.getAllPlannedTaskForDates(beginDate, endDate, orderId);
         return plannedTasks.isEmpty();
     }
 
+
     /**
-     * This methods deactivates order. It marks it as deactivated in Orders
-     * table and deletes all planned tasks for this order from planned_tasks table.
-     *
-     * @param
-     * @return
+     * {@inheritDoc}
+     * Yuliya Pedash
      */
     @Transactional
     public boolean deactivateOrderForProductOfUserCompletely(Integer productId, Integer userId) {
@@ -111,6 +106,10 @@ public class OrderServiceImpl implements OrderService {
         return success;
     }
 
+    /**
+     * {@inheritDoc}
+     * Yuliya Pedash
+     */
     @Transactional
     public boolean deactivateOrderCompletely(Integer orderId) {
         Order order = orderDAO.getById(orderId);

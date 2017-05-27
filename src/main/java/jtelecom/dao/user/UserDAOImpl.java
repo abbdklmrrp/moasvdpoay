@@ -16,7 +16,9 @@ import java.util.List;
 @Service
 public class UserDAOImpl implements UserDAO {
 
-    private final static String SELECT_BY_USERNAME = "SELECT * FROM AUTHORITIES WHERE USERNAME=:username AND ENABLE=1";
+    private final static String SELECT_BY_USERNAME = "SELECT * " +
+            "FROM AUTHORITIES " +
+            "WHERE USERNAME=:username AND ENABLE=1";
     private final static String SELECT_ROLE = "SELECT id FROM ROLES WHERE NAME=:name";
     private final static String SAVE_USER = "INSERT INTO USERS(NAME,SURNAME,EMAIL,PHONE,PASSWORD,ADDRESS,ROLE_ID,PLACE_ID,CUSTOMER_ID,ENABLE) " +
             "VALUES(:name,:surname,:email,:phone,:password, :address, :roleId, :placeId, :customerId, :enable)";
@@ -164,17 +166,19 @@ public class UserDAOImpl implements UserDAO {
 
     private Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User findByUsername(String username) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("username", username);
-        List<User> users = jdbcTemplate.query(SELECT_BY_USERNAME, params, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(SELECT_BY_USERNAME, params, (rs, rowNum) -> {
             String userName = rs.getString("USERNAME");
             String password = rs.getString("PASSWORD");
             String authorities = rs.getString("ROLE");
             return new User(userName, password, authorities);
         });
-        return users.isEmpty() ? null : users.get(0);
     }
 
     @Override

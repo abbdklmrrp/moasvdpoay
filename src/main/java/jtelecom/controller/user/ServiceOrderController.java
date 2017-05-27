@@ -10,7 +10,7 @@ import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
-import jtelecom.dto.ProductCatalogRowDTO;
+import jtelecom.dto.ServicesCatalogRowDTO;
 import jtelecom.dto.grid.GridRequestDto;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
@@ -31,89 +31,96 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 24.04.2017.
+ * Created by Yuliya Pedash on 26.05.2017.
  */
-
 @Controller
 @Scope(value = "session")
-@RequestMapping({"residential", "business", "csr", "employee"})
 public class ServiceOrderController implements Serializable {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
     private ProductDAO productDAO;
-    @Resource
-    private UserDAO userDAO;
+
     @Resource
     private OrderService orderService;
+    @Resource
+    private UserDAO userDAO;
+    User currentUser = null;
+
     private Integer categoryId;
 
     @Resource
-    private OrderDAO orderDAO;
-    @Resource
     private ProductService productService;
-    User currentUser;
     private static Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
-    private final static String ORDER_IN_PROCESS_MSG = "Your order on %s is in process. It will be activated after processing.";
+    private final static String ORDER_IN_PROCESS_MSG = "Order on %s is in process. It will be activated after processing.";
     private final static String SERVICE_WAS_ACTIVATED_MSG = "Service %s has been activated. Thank you!";
     private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing this order. Please, try again!";
     private final static String ALL_CATEGORIES = "All Categories";
-    @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
-    public String orderService(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
-        this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
-        if (currentUser.getRole() == Role.CSR) {
-            this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
-        }
+
+    /**
+     * @param model
+     * @param categoryId
+     * @throws IOException
+     */
+    public void orderService(Model model, Integer categoryId) {
         this.categoryId = categoryId;
         String categoryName = categoryId == null ? ALL_CATEGORIES :
                 productDAO.getProductCategoryById(categoryId).getCategoryName();
         model.addAttribute("categoryName", categoryName);
         List<ProductCategories> productCategories = productDAO.getProductCategories();
         model.addAttribute("productsCategories", productCategories);
-        model.addAttribute("userRole", userRoleLowerCase);
-        return "newPages/" + userRoleLowerCase + "/Services";
     }
 
+    public void orderServiceUser(Model model, Integer categoryId) {
+        String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
+        model.addAttribute("userRole", userRoleLowerCase);
+        orderService(model, categoryId);
+    }
 
-    @RequestMapping(value = {"Services"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"csr/orderServiceForUser"}, method = RequestMethod.GET)
+    public String orderService(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
+        this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
+        orderService(model, categoryId);
+        model.addAttribute("userRole", "csr");
+        return "newPages/csr/Services";
+    }
+
+    @RequestMapping(value = {"residential/orderService"}, method = RequestMethod.GET)
+    public String orderServiceResidential(Model model, @RequestParam(required = false) Integer categoryId) throws IOException {
+        this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        orderServiceUser(model, categoryId);
+        return "newPages/residential/Services";
+    }
+
+    @RequestMapping(value = {"business/orderService"}, method = RequestMethod.GET)
+    public String orderServiceBusiness(Model model, @RequestParam(required = false) Integer categoryId) throws IOException {
+        this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        orderServiceUser(model, categoryId);
+        return "newPages/business/Services";
+    }
+
+    @RequestMapping(value = {"csr/Services", "residential/Services", "business/Services"}, method = RequestMethod.GET)
     @ResponseBody
     public ListHolder showServices(@ModelAttribute GridRequestDto request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         String search = request.getSearch();
-        List<ProductCatalogRowDTO> products = productService.getLimitedServicesForUser(currentUser, start, length, sort, search, categoryId);
+        List<ServicesCatalogRowDTO> products = productService.getLimitedServicesForUser(currentUser, start, length, sort, search, categoryId);
         int size = productService.getCountForServicesWithSearch(currentUser, search, categoryId);
         logger.debug("Get products in interval:" + start + " : " + length);
         return ListHolder.create(products, size);
     }
 
-//    @RequestMapping(value = {"orderService"}, method = RequestMethod.GET)
-//    public String showServices(Model model,  @RequestParam(required = false) String categoryName ) {
-//        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-//        logger.debug("Current user id : {} ", currentUser.getId());
-//        List<ProductCategories> productCategories = productDAO.getProductCategories();
-//        model.addAttribute( "productsCategories", productCategories);
-//        Map<String, List<ProductCatalogRowDTO>> categoriesWithProductsToShow = productService.getCategoriesWithProductsForUser(currentUser);
-//        if (categoriesWithProductsToShow.isEmpty()) {
-//            model.addAttribute("msg", NO_PRODUCTS_FOR_YOU_MSG);
-//            logger.info("No products for user: {}", currentUser.getId());
-//        } else {
-//            model.addAttribute("categoriesProducts", categoriesWithProductsToShow);
-//            model.addAttribute("msg", null);
-//        }
-//        return "newPages/" + currentUser.getRole().getNameInLowwerCase() + "/Services";
-//    }
 
     /**
      * This method takes id of service and creates order for this service for
-     * currently logged user.
+     * user
      *
      * @param serviceId id of service
      * @return message with result of operation
      */
-    @RequestMapping(value = {"activateService"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"csr/activateService", "residential/activateService", "business/activateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String activateService(@RequestParam Integer serviceId) {
         Product product = productDAO.getById(serviceId);
@@ -139,13 +146,6 @@ public class ServiceOrderController implements Serializable {
 
     }
 
-    @RequestMapping(value = {"getNewOrderStatus"}, method = RequestMethod.GET)
-    @ResponseBody
-    public String getNewOrderStatus(@RequestParam Integer serviceId) {
-        Order newOrder = orderDAO.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
-        logger.debug("Gotten  order of user: {} ", newOrder);
-        return newOrder.getCurrentStatus().getName();
-    }
 
     /**
      * This method deactivates order of user for particular order.
@@ -153,7 +153,7 @@ public class ServiceOrderController implements Serializable {
      * @param serviceId id of service
      * @return String "success" if deactivation was successful, "fail" otherwise
      */
-    @RequestMapping(value = {"deactivateService"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"csr/deactivateService", "business/deactivateService", "residential/deactivateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String deactivateOrder(@RequestParam Integer serviceId) {
         Boolean wasDeactivated = orderService.deactivateOrderForProductOfUserCompletely(serviceId, currentUser.getId());
@@ -168,5 +168,4 @@ public class ServiceOrderController implements Serializable {
         return SharedVariables.FAIL;
 
     }
-
 }

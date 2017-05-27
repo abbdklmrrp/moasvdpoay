@@ -23,10 +23,12 @@
                     <c:choose>
                         <c:when test="${param.page == 'UserServices'}">
                             <li class="wet-asphalt active-tab"><a
-                                    href="${pageContext.request.contextPath}/csr/orderService">User services</a></li>
+                                    href="${pageContext.request.contextPath}/csr/orderServiceForUser">User services</a>
+                            </li>
                         </c:when>
                         <c:otherwise>
-                            <li class="wet-asphalt"><a href="${pageContext.request.contextPath}/csr/orderService">User
+                            <li class="wet-asphalt"><a
+                                    href="${pageContext.request.contextPath}/csr/orderServiceForUser">User
                                 services</a></li>
                         </c:otherwise>
                     </c:choose>
