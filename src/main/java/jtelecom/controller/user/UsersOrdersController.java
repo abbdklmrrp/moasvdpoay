@@ -38,7 +38,6 @@ public class UsersOrdersController implements Serializable {
     private final static String DATE_ERROR_MSG = "Unable to suspend this order. Please, check the dates you've entered.";
     private final static String FAIL_SUSPEND_ERROR_MSG = "Sorry! An error occurred while suspending this order. Please, try again.";
     private final static String CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG = "Unable to suspend the order within these dates, because there are other planned tasks that can interrupt suspense process.";
-
     User currentUser;
     @Resource
     private OrderDAO orderDAO;
@@ -63,7 +62,7 @@ public class UsersOrdersController implements Serializable {
     @RequestMapping(value = {"csr/orders"}, method = RequestMethod.GET)
     public String showOrdersForUserCsr(Model model, HttpSession session) {
         this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
-        showOrdersForUser(model);
+        model.addAttribute("userRole", "csr");
         logger.debug("Current user: {}", currentUser.toString());
         return "newPages/csr/Orders";
     }
