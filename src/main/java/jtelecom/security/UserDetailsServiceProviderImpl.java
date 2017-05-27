@@ -25,15 +25,7 @@ public class UserDetailsServiceProviderImpl implements UserDetailsServiceProvide
     private UserDAO userDAO;
 
     /**
-     * This method  return <code>UserDetails</code> object that contains info about current user :
-     * <code>username</code>, <code>password</code>, <code>authority</code>. Use {@link GrantedAuthority}
-     * for define user authority
-     *
-     * @param username username the username identifying the user whose data is required
-     * @return <code>UserDetails</code> with : <code>username</code>,
-     * <code>password</code>, <code>authority</code>
-     * @throws UsernameNotFoundException if the user could not be found or the user has no GrantedAuthority
-     * @see GrantedAuthority
+     * {@inheritDoc}
      */
     @Override
     public UserDetails provide(String username) throws UsernameNotFoundException {
