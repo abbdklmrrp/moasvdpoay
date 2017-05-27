@@ -1,6 +1,6 @@
 package jtelecom.controller.csr;
 
-import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping({"csr"})
 public class CsrAllOrdersController {
     @Resource
-    private OrderDao orderDao;
+    private OrderDAO orderDAO;
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
@@ -46,8 +46,8 @@ public class CsrAllOrdersController {
         Integer length = requestDto.getEndBorder();
         String sort = requestDto.getSort();
         String search = requestDto.getSearch();
-        Integer count = orderDao.getCountOrdersWithoutCsr(search);
-        List<FullInfoOrderDTO> orders = orderDao.getIntervalOrdersWithoutCsr(start, length, sort, search);
+        Integer count = orderDAO.getCountOrdersWithoutCsr(search);
+        List<FullInfoOrderDTO> orders = orderDAO.getIntervalOrdersWithoutCsr(start, length, sort, search);
         return ListHolder.create(orders, count);
     }
 
@@ -59,7 +59,7 @@ public class CsrAllOrdersController {
      */
     @RequestMapping(value = "orderInfo", method = RequestMethod.POST)
     public String orderInfo(@RequestParam(value = "orderId") int orderId) {
-        FullInfoOrderDTO order = orderDao.getOrderInfoByOrderId(orderId);
+        FullInfoOrderDTO order = orderDAO.getOrderInfoByOrderId(orderId);
         order.setOrderId(orderId);
         return order.infoMessage();
     }
@@ -73,7 +73,7 @@ public class CsrAllOrdersController {
     @RequestMapping(value = "assignOrder", method = RequestMethod.POST)
     public String assignOrder(@RequestParam(value = "orderId") int orderId) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        boolean success = orderDao.assignToUser(user.getId(), orderId);
+        boolean success = orderDAO.assignToUser(user.getId(), orderId);
         return success ? "success" : "fail";
     }
 }

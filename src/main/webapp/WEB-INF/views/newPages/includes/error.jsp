@@ -7,7 +7,7 @@
     </jsp:include>
 </head>
 <body>
-    <jsp:include page="headers/emptyHeader.jsp"/>
+<jsp:include page="headers/accessDeniedHeader.jsp"/>
     <jsp:include page="zaglushka.jsp"/>
     <jsp:include page="footer.jsp"/>
 </body>

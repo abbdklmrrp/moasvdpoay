@@ -1,20 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jtelecom.dao.complaint;
 
-
-import jtelecom.dao.interfaces.Dao;
-import jtelecom.dao.user.User;
+import jtelecom.dao.interfaces.DAO;
 
 import java.util.List;
 
 /**
+ * This interface has methods to work with complaints.
+ *
  * @author Revniuk Aleksandr
  */
-public interface ComplaintDAO extends Dao<Complaint> {
+public interface ComplaintDAO extends DAO<Complaint> {
 
     /**
      * This method returns list of complaints assigned to concrete user.
@@ -100,6 +95,11 @@ public interface ComplaintDAO extends Dao<Complaint> {
      */
     int countAssignedComplaintsToUser(int pmgId);
 
+    /**
+     * Method saves complaint
+     * @param complaint this complaint
+     * @return id of the saved complaint
+     */
     Integer saveComplaint(Complaint complaint);
 
 

@@ -6,7 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 @Service
 public class Md5PasswordEncoder implements PasswordEncoder {

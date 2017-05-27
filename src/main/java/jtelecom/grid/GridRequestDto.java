@@ -1,11 +1,9 @@
 package jtelecom.grid;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.google.common.annotations.VisibleForTesting;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-
+/**
+ * Class contains information about next part of the objects
+ * Need for object tables
+ */
 
 public class GridRequestDto {
     private int start;
@@ -16,7 +14,6 @@ public class GridRequestDto {
     public GridRequestDto() {
     }
 
-    @VisibleForTesting
     public GridRequestDto(int start, int length) {
         this.start = start;
         this.length = length;

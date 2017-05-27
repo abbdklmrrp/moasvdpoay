@@ -1,6 +1,9 @@
 package jtelecom.services.mail;
 
 /**
+ * Class contains path to the mail template files
+ * with content of the email and name of the property to the subject
+ *
  * @author Moiseienko Petro
  * @since 19.05.2017.
  */
@@ -19,8 +22,8 @@ public enum EmailTemplatePath {
     NEW_PRODUCT("new.product.subject", "fm_newProductTemplate.fpl"),
     NEW_PASSWORD("new.password.subject", "fm_newPasswordTemplate.fpl"),
     PASSWORD_CHANGED("password.changed.subject", "fm_passwordChangedTemplate.fpl"),
-    ACTIVATED("activated.subject","fm_activatedTemplate.fpl"),
-    BANNED("banned.subject","fm_bannedTemplate.fpl");
+    ACTIVATED("activated.subject", "fm_activatedTemplate.fpl"),
+    BANNED("banned.subject", "fm_bannedTemplate.fpl");
 
 
     private final String subject;

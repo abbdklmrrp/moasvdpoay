@@ -4,7 +4,7 @@ package jtelecom.dto;
 import java.util.List;
 
 /**
- * This class created to send part of complaints and length of all in one object, need for pagination.
+ * This class created to send part of data and length of all in one object, need for pagination.
  *
  * @author Revniuk Aleksandr
  */

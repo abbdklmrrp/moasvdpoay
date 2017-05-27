@@ -3,7 +3,7 @@ package jtelecom.dao.product;
 import java.util.Objects;
 
 /**
- * Created by Rysakova Anna on 24.04.2017.
+ * @author Anna Rysakova
  */
 public class ProductCategories {
 

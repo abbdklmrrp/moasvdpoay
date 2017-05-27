@@ -3,16 +3,19 @@ package jtelecom.controller.user;
 
 import jtelecom.dao.complaint.Complaint;
 import jtelecom.dao.complaint.ComplaintStatus;
-import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.complaint.ComplaintService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -32,11 +35,11 @@ public class UserComplaintController {
     @Resource
     private UserDAO userDAO;
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
     private ComplaintService complaintService;
     @Resource
-    private OrderDao orderDAO;
+    private OrderDAO orderDAO;
     private static Logger logger = LoggerFactory.getLogger(UserComplaintController.class);
 
     /**
@@ -140,7 +143,7 @@ public class UserComplaintController {
      */
     private ModelAndView getProducts(Integer userId) {
         ModelAndView modelAndView = new ModelAndView();
-        List<Product> products = productDao.getActiveProductsByUserId(userId);
+        List<Product> products = productDAO.getActiveProductsByUserId(userId);
         modelAndView.addObject("productList", products);
         return modelAndView;
     }

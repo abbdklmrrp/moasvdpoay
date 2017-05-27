@@ -1,6 +1,6 @@
 package jtelecom.controller.csr;
 
-import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping({"csr"})
 public class CsrOrderHistoryController {
     @Resource
-    private OrderDao orderDao;
+    private OrderDAO orderDAO;
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
@@ -52,9 +52,9 @@ public class CsrOrderHistoryController {
         Integer length = requestDto.getEndBorder();
         String sort = requestDto.getSort();
         String search = requestDto.getSearch();
-        Integer count = orderDao.getCountOfProcessedOrdersByCsrId(csrId, search);
+        Integer count = orderDAO.getCountOfProcessedOrdersByCsrId(csrId, search);
         System.out.println(count);
-        List<FullInfoOrderDTO> orders = orderDao.getIntervalProccesedOrdersByCsrId(start, length, sort, search, csrId);
+        List<FullInfoOrderDTO> orders = orderDAO.getIntervalProccesedOrdersByCsrId(start, length, sort, search, csrId);
         System.out.println(orders.size());
         return ListHolder.create(orders, count);
     }

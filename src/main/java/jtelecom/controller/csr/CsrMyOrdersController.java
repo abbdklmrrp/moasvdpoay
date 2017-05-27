@@ -1,13 +1,13 @@
 package jtelecom.controller.csr;
 
-import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.OrderService;
+import jtelecom.services.orders.OrderService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class CsrMyOrdersController {
 
     @Resource
-    private OrderDao orderDao;
+    private OrderDAO orderDAO;
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
@@ -53,8 +53,8 @@ public class CsrMyOrdersController {
         Integer length = requestDto.getEndBorder();
         String sort = requestDto.getSort();
         String search = requestDto.getSearch();
-        Integer count = orderDao.getCountOfInprocessingOrdersByCsrId(csrId, search);
-        List<FullInfoOrderDTO> orders = orderDao.getIntervalProcessingOrdersByCsrId(start, length, sort, search, csrId);
+        Integer count = orderDAO.getCountOfInprocessingOrdersByCsrId(csrId, search);
+        List<FullInfoOrderDTO> orders = orderDAO.getIntervalProcessingOrdersByCsrId(start, length, sort, search, csrId);
         return ListHolder.create(orders, count);
     }
 
@@ -68,7 +68,7 @@ public class CsrMyOrdersController {
     @RequestMapping(value = "getOrderPage")
     public ModelAndView getOrderPage(@RequestParam(name = "id") Integer orderId) {
         ModelAndView modelAndView = new ModelAndView("newPages/csr/OrderPage");
-        FullInfoOrderDTO order = orderDao.getOrderInfoByOrderId(orderId);
+        FullInfoOrderDTO order = orderDAO.getOrderInfoByOrderId(orderId);
         modelAndView.addObject("order", order);
         return modelAndView;
     }

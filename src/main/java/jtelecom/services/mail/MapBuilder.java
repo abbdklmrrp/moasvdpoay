@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Class which configures model for work with templates
+ *
  * @author Moiseienko Petro
  * @since 20.05.2017.
  */

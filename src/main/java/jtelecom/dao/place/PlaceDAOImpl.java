@@ -1,7 +1,7 @@
 package jtelecom.dao.place;
 
 import jtelecom.dao.product.ProductStatus;
-import jtelecom.dto.PriceByRegionDto;
+import jtelecom.dto.PriceByRegionDTO;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,15 +10,18 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * This class implements methods from PlaceDAO.
+ *
  * @author Revniuk Aleksandr
+ * @author Anna Rysakova
  */
 @Repository
 public class PlaceDAOImpl implements PlaceDAO {
-    private final static String GET_ALL_SQL = "SELECT * FROM Places";
-    private final static String GET_PLACES_FOR_FILL_IN_TARIFF = "Select ID,NAME FROM PLACES WHERE \n" +
+    private final static String SELECT_ALL_SQL = "SELECT * FROM Places";
+    private final static String SELECT_PLACES_FOR_FILL_IN_TARIFF = "Select ID,NAME FROM PLACES WHERE \n" +
             "PARENT_ID IS NOT NULL ORDER BY NAME";
-    private final static String FIND_PLACE_ID_BY_NAME = "SELECT ID FROM PLACES WHERE NAME=:placeName";
-    private final static String FIND_PLACE_NAME_BY_ID = "SELECT NAME FROM PLACES WHERE ID=:placeId";
+    private final static String SELECT_PLACE_ID_BY_NAME = "SELECT ID FROM PLACES WHERE NAME=:placeName";
+    private final static String SELECT_PLACE_NAME_BY_ID = "SELECT NAME FROM PLACES WHERE ID=:placeId";
     private final static String SELECT_LIMITED_PLACES = "SELECT *\n" +
             "FROM (SELECT\n" +
             "        a.*,\n" +
@@ -73,14 +76,18 @@ public class PlaceDAOImpl implements PlaceDAO {
     @Resource
     private PlaceRowMapper placeRowMapper;
 
+    /**
+     * Revniuk Aleksandr
+     * {@inheritDoc}
+     */
     @Override
     public List<Place> getAll() {
-        return jdbcTemplate.query(GET_ALL_SQL, placeRowMapper);
+        return jdbcTemplate.query(SELECT_ALL_SQL, placeRowMapper);
     }
 
     @Override
     public List<Place> getAllPlaces() {
-        return jdbcTemplate.query(GET_PLACES_FOR_FILL_IN_TARIFF, (rs, rowNum) -> {
+        return jdbcTemplate.query(SELECT_PLACES_FOR_FILL_IN_TARIFF, (rs, rowNum) -> {
             Place place = new Place();
             place.setId(rs.getInt("ID"));
             place.setName(rs.getString("NAME"));
@@ -92,7 +99,7 @@ public class PlaceDAOImpl implements PlaceDAO {
     public Integer getPlaceIdByName(String placeName) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("placeName", placeName);
-        return jdbcTemplate.queryForObject(FIND_PLACE_ID_BY_NAME, params, (rs, rowNum) -> rs.getInt("ID"));
+        return jdbcTemplate.queryForObject(SELECT_PLACE_ID_BY_NAME, params, (rs, rowNum) -> rs.getInt("ID"));
     }
 
     @Override
@@ -117,7 +124,7 @@ public class PlaceDAOImpl implements PlaceDAO {
     }
 
     @Override
-    public List<PriceByRegionDto> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search) {
+    public List<PriceByRegionDTO> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
             sort = "ID";
@@ -129,7 +136,7 @@ public class PlaceDAOImpl implements PlaceDAO {
         params.addValue("pattern", "%" + search + "%");
         params.addValue("placeId", placeId);
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
-            PriceByRegionDto priceByPlace = new PriceByRegionDto();
+            PriceByRegionDTO priceByPlace = new PriceByRegionDTO();
             priceByPlace.setProductId(rs.getInt("ID"));
             priceByPlace.setProductName(rs.getString("PRODUCT_NAME"));
             priceByPlace.setProductType(rs.getString("TYPE"));
@@ -146,7 +153,7 @@ public class PlaceDAOImpl implements PlaceDAO {
     public String getPlaceNameById(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("placeId", id);
-        return jdbcTemplate.queryForObject(FIND_PLACE_NAME_BY_ID, params, String.class);
+        return jdbcTemplate.queryForObject(SELECT_PLACE_NAME_BY_ID, params, String.class);
     }
 
     @Override

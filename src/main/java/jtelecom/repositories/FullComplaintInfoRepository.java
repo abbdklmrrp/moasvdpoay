@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * This class need to get full information about concrete complaint.
  *
- * @author Aleksandr Revniuk
+ * @author Revniuk Aleksandr
  */
 @Repository
 public class FullComplaintInfoRepository {
@@ -22,7 +22,7 @@ public class FullComplaintInfoRepository {
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    private static final String GET_FULL_INFO_ABOUT_COMPLAINT_BY_ID_SQL = "SELECT COMPLAINTS.ID, " +
+    private static final String SELECT_FULL_INFO_ABOUT_COMPLAINT_BY_ID_SQL = "SELECT COMPLAINTS.ID, " +
             "COMPLAINTS.CREATING_DATE, \n" +
             "  COMPLAINTS.DESCRIPTION, \n" +
             "  COMPLAINTS.STATUS_ID , \n" +
@@ -68,13 +68,14 @@ public class FullComplaintInfoRepository {
     /**
      * This method return complaint by id.
      *
+     * Revniuk Aleksandr
      * @param id id of complaint
      * @return complaint
      */
     public FullComplaintInfoDTO getById(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("complaintId", id);
-        return jdbcTemplate.queryForObject(GET_FULL_INFO_ABOUT_COMPLAINT_BY_ID_SQL, params, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(SELECT_FULL_INFO_ABOUT_COMPLAINT_BY_ID_SQL, params, (rs, rowNum) -> {
             FullComplaintInfoDTO complaint = new FullComplaintInfoDTO();
             complaint.setId(rs.getInt("ID"));
             Calendar date = new GregorianCalendar();

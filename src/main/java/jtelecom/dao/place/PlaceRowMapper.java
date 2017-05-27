@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by aleksandr on 27.04.17.
+ * This class implements RowMapper interface.
+ *
+ * @author Revniuk Aleksandr
  */
 @Component
 public class PlaceRowMapper implements RowMapper<Place> {

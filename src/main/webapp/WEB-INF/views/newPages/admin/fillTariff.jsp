@@ -1,3 +1,6 @@
+<%--
+  Created by Anna Rysakova
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -12,7 +15,6 @@
 <jsp:include page="../includes/headers/adminHeader.jsp">
     <jsp:param name="pageName" value="FillTariff"/>
 </jsp:include>
-<jsp:include page="../includes/footer.jsp"/>
 <form action="${pageContext.request.contextPath}/admin/fillTariff?tariffId=${tariffId}" method="post">
     <div class="container">
         <div class="col-md-2"></div>
@@ -29,7 +31,7 @@
                         <td>${servcesByCategory.key}</td>
                         <td>
                             <select name="selectedService" id="soflow">
-                                <option value="">-</option>
+                                <option value=""></option>
                                 <c:forEach var="product" items="${servcesByCategory.value}">
                                     <option value="${product.id}">${product.name}</option>
                                 </c:forEach>
@@ -48,3 +50,6 @@
         <div class="col-md-2"></div>
     </div>
 </form>
+<jsp:include page="../includes/footer.jsp"/>
+</body>
+</html>

@@ -8,7 +8,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Class created for send part of data and it's total count in the database
+ * @param <T> type of the data
+ */
 
 public class ListHolder<T> {
     @JsonProperty("data")
@@ -17,7 +20,7 @@ public class ListHolder<T> {
     @JsonProperty("total")
     int totalCount;
 
-    protected ListHolder() {
+    public ListHolder() {
 
     }
 

@@ -78,11 +78,11 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${param.pageName == 'Statistics'}">
-                        <li class="active"><a href="${pageContext.request.contextPath}/csr/statistics">Statistics</a>
+                        <li class="active"><a href="${pageContext.request.contextPath}/csr/orderStatistics">Statistics</a>
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="${pageContext.request.contextPath}/csr/statistics">Statistics</a></li>
+                        <li><a href="${pageContext.request.contextPath}/csr/orderStatistics">Statistics</a></li>
                     </c:otherwise>
                 </c:choose>
                 <li class="dropdown">

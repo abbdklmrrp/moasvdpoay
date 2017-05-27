@@ -2,11 +2,11 @@ package jtelecom.controller.user;
 
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
-import jtelecom.dao.order.OrderDao;
+import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.product.ProcessingStrategy;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
@@ -14,7 +14,7 @@ import jtelecom.dto.ProductCatalogRowDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.OrderService;
+import jtelecom.services.orders.OrderService;
 import jtelecom.services.product.ProductService;
 import jtelecom.util.SharedVariables;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class ServiceOrderController implements Serializable {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
     private UserDAO userDAO;
     @Resource
@@ -49,13 +49,11 @@ public class ServiceOrderController implements Serializable {
     private Integer categoryId;
 
     @Resource
-    private OrderDao orderDao;
+    private OrderDAO orderDAO;
     @Resource
     private ProductService productService;
     User currentUser;
     private static Logger logger = LoggerFactory.getLogger(ServiceOrderController.class);
-
-    //   private final static String NO_PRODUCTS_FOR_YOU_MSG = "Sorry! There are no products yet here.";
     private final static String ORDER_IN_PROCESS_MSG = "Your order on %s is in process. It will be activated after processing.";
     private final static String SERVICE_WAS_ACTIVATED_MSG = "Service %s has been activated. Thank you!";
     private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing this order. Please, try again!";
@@ -69,9 +67,9 @@ public class ServiceOrderController implements Serializable {
         }
         this.categoryId = categoryId;
         String categoryName = categoryId == null ? ALL_CATEGORIES :
-                productDao.getProductCategoryById(categoryId).getCategoryName();
+                productDAO.getProductCategoryById(categoryId).getCategoryName();
         model.addAttribute("categoryName", categoryName);
-        List<ProductCategories> productCategories = productDao.findProductCategories();
+        List<ProductCategories> productCategories = productDAO.getProductCategories();
         model.addAttribute("productsCategories", productCategories);
         model.addAttribute("userRole", userRoleLowerCase);
         return "newPages/" + userRoleLowerCase + "/Services";
@@ -95,7 +93,7 @@ public class ServiceOrderController implements Serializable {
 //    public String showServices(Model model,  @RequestParam(required = false) String categoryName ) {
 //        User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
 //        logger.debug("Current user id : {} ", currentUser.getId());
-//        List<ProductCategories> productCategories = productDao.findProductCategories();
+//        List<ProductCategories> productCategories = productDAO.getProductCategories();
 //        model.addAttribute( "productsCategories", productCategories);
 //        Map<String, List<ProductCatalogRowDTO>> categoriesWithProductsToShow = productService.getCategoriesWithProductsForUser(currentUser);
 //        if (categoriesWithProductsToShow.isEmpty()) {
@@ -118,7 +116,7 @@ public class ServiceOrderController implements Serializable {
     @RequestMapping(value = {"activateService"}, method = RequestMethod.POST)
     @ResponseBody
     public String activateService(@RequestParam Integer serviceId) {
-        Product product = productDao.getById(serviceId);
+        Product product = productDAO.getById(serviceId);
         Order order = new Order();
         String msg;
         order.setProductId(serviceId);
@@ -144,7 +142,7 @@ public class ServiceOrderController implements Serializable {
     @RequestMapping(value = {"getNewOrderStatus"}, method = RequestMethod.GET)
     @ResponseBody
     public String getNewOrderStatus(@RequestParam Integer serviceId) {
-        Order newOrder = orderDao.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
+        Order newOrder = orderDAO.getNotDeactivatedOrderByUserAndProduct(currentUser.getId(), serviceId);
         logger.debug("Gotten  order of user: {} ", newOrder);
         return newOrder.getCurrentStatus().getName();
     }

@@ -1,7 +1,7 @@
 package jtelecom.controller.admin;
 
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import java.util.List;
 public class DeleteTariffController {
 
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     @Resource
     private ProductService productService;
 
@@ -31,7 +31,7 @@ public class DeleteTariffController {
 
     @RequestMapping(value = "deleteTariff", method = RequestMethod.GET)
     public String getTariff(Model model) {
-        List<Product> products = productDao.getAllEnabledTariffs();
+        List<Product> products = productDAO.getAllEnabledTariffs();
         model.addAttribute("productList", products);
         return "admin/deleteTariff";
     }

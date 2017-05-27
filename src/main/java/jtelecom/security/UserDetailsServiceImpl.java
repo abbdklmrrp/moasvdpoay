@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

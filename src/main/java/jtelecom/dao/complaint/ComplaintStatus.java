@@ -1,6 +1,8 @@
 package jtelecom.dao.complaint;
 
 /**
+ * Contain statuses of complaints.
+ *
  * @author Revniuk Aleksandr
  */
 public enum ComplaintStatus {

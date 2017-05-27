@@ -1,10 +1,13 @@
 package jtelecom.dao.place;
 
-import jtelecom.dto.PriceByRegionDto;
+import jtelecom.dto.PriceByRegionDTO;
 
 import java.util.List;
 
 /**
+ * This interface has methods to work with places.
+ *
+ * @author Anna Rysakova
  * @author Revniuk Aleksandr
  */
 public interface PlaceDAO {
@@ -21,7 +24,7 @@ public interface PlaceDAO {
 
     List<Place> getLimitedQuantityPlace(int start, int length, String sort, String search);
 
-    List<PriceByRegionDto> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search);
+    List<PriceByRegionDTO> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search);
 
     Integer getCountPlacesWithSearch(String search);
 

@@ -18,7 +18,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Rysakova Anna, Nikita Alistratenko
+ /**
+ * @author Anna Rysakova
+ * Nikita Alistratenko
  */
 @Controller
 @RequestMapping

@@ -11,9 +11,11 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
@@ -21,12 +23,12 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "jtelecom")
-//@PropertySource(value = "classpath:gmail.com.properties")
+@PropertySource(value = "classpath:gmail.com.properties")
 @Import({SecurityConfig.class, MailConfig.class, PersistenceConfig.class})
 public class SpringConfig extends WebMvcConfigurerAdapter {
 
@@ -73,13 +75,6 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
         resolver.setCookieName("locale");
         resolver.setCookieMaxAge(4800);
         return resolver;
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
-        interceptor.setParamName("lang");
-        registry.addInterceptor(interceptor);
     }
 
     @Override

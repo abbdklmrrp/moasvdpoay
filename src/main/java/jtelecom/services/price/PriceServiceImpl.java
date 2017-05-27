@@ -1,13 +1,12 @@
 package jtelecom.services.price;
 
 import jtelecom.dao.price.Price;
-import jtelecom.dao.price.PriceDao;
-import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.price.PriceDAO;
 import jtelecom.util.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -16,16 +15,15 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by Anna Rysakova on 10.05.2017.
+ * @author Anna Rysakova
  */
 @Component
 public class PriceServiceImpl implements PriceService {
 
     private static Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
+
     @Resource
-    private ProductDao productDao;
-    @Resource
-    private PriceDao priceDao;
+    private PriceDAO priceDAO;
 
     /**
      * This method fill the <code>ArrayList</code> with the values of the product ID
@@ -40,7 +38,7 @@ public class PriceServiceImpl implements PriceService {
         ArrayList<Price> listPriceByRegion = new ArrayList<>();
         logger.debug("Create list of product price by region {} ", listPriceByRegion);
         for (int i = 0; i < priceByRegion.length; i++) {
-            if (placeId[i] != null & priceByRegion[i] != null) {
+            if (placeId[i] != 0 & priceByRegion[i].compareTo(BigDecimal.ZERO) > 0) {
                 Price price = new Price();
                 price.setProductId(productId);
                 price.setPlaceId(placeId[i]);
@@ -53,26 +51,22 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public boolean isValid(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
-        if (Objects.equals(productId, null) || Objects.equals(placeId, null) || Objects.equals(priceByRegion, null)) {
-            return false;
-        }
-        Product product = productDao.getById(productId);
-        logger.debug("Checked that the product exists {} ", product.toString());
-        return !Objects.equals(product, null);
+    public boolean isValid(Integer[] placeId, BigDecimal[] priceByRegion) {
+        return (Objects.nonNull(placeId) & Objects.nonNull(priceByRegion));
     }
 
     @Override
+    @Transactional
     public void updateProductPriceInRegions(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
-        List<Price> oldPriceInfo = priceDao.getPriceInRegionInfoByProduct(productId);
+        List<Price> oldPriceInfo = priceDAO.getPriceInRegionInfoByProduct(productId);
         List<Price> newPriceInfo = fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);
 
         List<Price> uniqueServicesInFirstCollection = (List<Price>) CollectionUtil
                 .firstCollectionMinusSecondCollection(oldPriceInfo, newPriceInfo);
-        priceDao.deleteProductPriceInRegion(uniqueServicesInFirstCollection);
+        priceDAO.deleteProductPriceInRegion(uniqueServicesInFirstCollection);
 
         uniqueServicesInFirstCollection = (List<Price>) CollectionUtil
                 .firstCollectionMinusSecondCollection(newPriceInfo, oldPriceInfo);
-        priceDao.fillPriceOfProductByRegion(uniqueServicesInFirstCollection);
+        priceDAO.fillPriceOfProductByRegion(uniqueServicesInFirstCollection);
     }
 }

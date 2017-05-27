@@ -1,7 +1,7 @@
 package jtelecom.controller.user;
 
-import jtelecom.dao.order.OrderDao;
-import jtelecom.dao.plannedTask.PlannedTaskDao;
+import jtelecom.dao.order.OrderDAO;
+import jtelecom.dao.plannedTask.PlannedTaskDAO;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
@@ -11,8 +11,8 @@ import jtelecom.dto.SuspendFormDTO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
-import jtelecom.services.OrderService;
-import jtelecom.services.PlannedTaskService;
+import jtelecom.services.orders.OrderService;
+import jtelecom.services.plannedTasks.PlannedTaskService;
 import jtelecom.util.DatesHelper;
 import jtelecom.util.SharedVariables;
 import org.slf4j.Logger;
@@ -42,14 +42,14 @@ public class UsersOrdersController implements Serializable {
     private final static String CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG = "Unable to suspend the order within these dates, because there are other planned tasks that can interrupt suspense process.";
     User user;
     @Resource
-    private OrderDao orderDao;
+    private OrderDAO orderDAO;
     @Resource
     private UserDAO userDAO;
     @Resource
     private OrderService orderService;
     private static Logger logger = LoggerFactory.getLogger(UsersOrdersController.class);
     @Resource
-    PlannedTaskDao plannedTaskDao;
+    PlannedTaskDAO plannedTaskDAO;
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
@@ -75,8 +75,8 @@ public class UsersOrdersController implements Serializable {
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         String search = request.getSearch();
-        List<OrdersRowDTO> products = orderDao.getLimitedOrderRowsDTOByCustomerId(start, length, search, sort, user.getCustomerId());
-        int size = orderDao.getCountOrdersByCustomerId(search, sort, user.getCustomerId());
+        List<OrdersRowDTO> products = orderDAO.getLimitedOrderRowsDTOByCustomerId(start, length, search, sort, user.getCustomerId());
+        int size = orderDAO.getCountOrdersByCustomerId(search, sort, user.getCustomerId());
         logger.debug("Get orders in interval:" + start + " : " + length);
         return ListHolder.create(products, size);
     }
@@ -140,8 +140,8 @@ public class UsersOrdersController implements Serializable {
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         logger.debug("Current user {} ", user);
-        List<PlannedTaskDTO> plannedTaskDTOS = plannedTaskDao.getLimitedPlannedTasksForUsersOrders(user.getId(), start, length);
-        int size = plannedTaskDao.getCountPlannedTasksForUserOrders(user.getId());
+        List<PlannedTaskDTO> plannedTaskDTOS = plannedTaskDAO.getLimitedPlannedTasksForUsersOrders(user.getId(), start, length);
+        int size = plannedTaskDAO.getCountPlannedTasksForUserOrders(user.getId());
         logger.debug("Got Planned Tasks {} ", plannedTaskDTOS);
         return ListHolder.create(plannedTaskDTOS, size);
     }
@@ -150,7 +150,7 @@ public class UsersOrdersController implements Serializable {
     @ResponseBody
     public String cancelSuspense(@RequestParam Integer plannedTaskId) {
         logger.debug("Request for cancelling suspense with id  {}", plannedTaskId);
-        boolean wasSuspenseCancelled = plannedTaskService.canselSuspense(plannedTaskId);
+        boolean wasSuspenseCancelled = plannedTaskService.cancelSuspense(plannedTaskId);
         if (wasSuspenseCancelled) {
             logger.info("Suspense with id  {}  was cancelled", plannedTaskId);
             return SharedVariables.SUCCESS;

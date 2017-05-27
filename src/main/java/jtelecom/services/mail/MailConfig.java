@@ -38,6 +38,12 @@ public class MailConfig {
 //    @Value("${mail.smtps.auth}")
 //    boolean auth;
 
+    /**
+     * Bean for {@link org.springframework.mail.javamail.JavaMailSenderImpl}
+     * Session for mail properties looks up from the javaMailSession
+     * in glassfish settings
+     * @return
+     */
     @Bean(name = "mailSender")
     public JavaMailSenderImpl javaMailService() {
         Session session=null;
@@ -63,6 +69,10 @@ public class MailConfig {
         return javaMailSender;
     }
 
+    /**
+     * Bean for {@link org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean}
+     * @return
+     */
     @Bean
     public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
         FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();

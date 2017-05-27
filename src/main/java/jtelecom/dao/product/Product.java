@@ -7,21 +7,17 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
- * Created by Rysakova Anna on 23.04.2017.
+ * @author Anna Rysakova
  */
 public class Product {
     private Integer id;
     private Integer categoryId;
-    @JsonProperty("duration")
     private Integer durationInDays;
     @JsonProperty("type_id")
     private ProductType productType;
     private ProcessingStrategy processingStrategy;
-    @JsonProperty("name")
     private String name;
-    @JsonProperty("description")
     private String description;
-    @JsonProperty("status")
     private ProductStatus status;
     @JsonProperty("base_price")
     private BigDecimal basePrice;

@@ -1,7 +1,7 @@
 package jtelecom.controller.csr;
 
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDao;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.grid.GridRequestDto;
 import jtelecom.grid.ListHolder;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ import java.util.List;
 public class ViewProductsController {
 
     @Resource
-    private ProductDao productDao;
+    private ProductDAO productDAO;
     private static Logger logger = LoggerFactory.getLogger(ViewProductsController.class);
 
     @RequestMapping(value = {"getPmgProductsPage"}, method = RequestMethod.GET)
@@ -44,8 +44,8 @@ public class ViewProductsController {
         int length = request.getLength();
         String search = request.getSearch();
         logger.debug("Get products in interval:" + start + " : " + length);
-        List<Product> data = productDao.getLimitedQuantityProduct(start, length, sort, search);
-        int size = productDao.getCountProductsWithSearch(search);
+        List<Product> data = productDAO.getLimitedQuantityProduct(start, length, sort, search);
+        int size = productDAO.getCountProductsWithSearch(search);
         return ListHolder.create(data, size);
     }
 

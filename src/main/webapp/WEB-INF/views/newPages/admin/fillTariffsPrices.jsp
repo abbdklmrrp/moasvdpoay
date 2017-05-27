@@ -1,8 +1,5 @@
 <%--
-  Created by IntelliJ IDEA.
-  User: Anna Rysakova
-  Date: 9.05.2017
-  Time: 9:28
+  Created by Anna Rysakova
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -16,10 +13,10 @@
 </head>
 <body>
 <jsp:include page="../includes/headers/adminHeader.jsp">
-    <jsp:param name="pageName" value="AddService"/>
+    <jsp:param name="pageName" value="FillTariffPrices"/>
 </jsp:include>
 <jsp:include page="../includes/footer.jsp"/>
-<form modelAttribute="priceByRegionDto"
+<form modelAttribute="priceByRegionDTO"
       action="${pageContext.request.contextPath}/admin/fillTariffsPrices/${id}" method="post">
     <div class="container">
         <div class="col-md-2"></div>

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 @Configuration
 @EnableWebSecurity
@@ -39,7 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/resources/**");
     }
 
-    //TODO: REMOVE LINE 51 in deploy
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.logout().logoutUrl("/doLogout").logoutSuccessUrl("/login.htm");
@@ -64,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login.htm")
                 .failureUrl("/failure.htm")
                 .defaultSuccessUrl("/index.htm")
-                .loginProcessingUrl("/doLogin")//login for
+                .loginProcessingUrl("/doLogin")//login form
                 .permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/accessDenied");

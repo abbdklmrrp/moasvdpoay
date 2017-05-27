@@ -1,7 +1,7 @@
 package jtelecom.security;
 
 /**
- * @author Rysakova Anna
+ * @author Anna Rysakova
  */
 public enum Authority {
     ADMIN("ADMIN"),
