@@ -2,11 +2,11 @@ package jtelecom.services.price;
 
 import jtelecom.dao.price.Price;
 import jtelecom.dao.price.PriceDAO;
-import jtelecom.dao.product.ProductDAO;
 import jtelecom.util.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -21,8 +21,7 @@ import java.util.Objects;
 public class PriceServiceImpl implements PriceService {
 
     private static Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
-    @Resource
-    private ProductDAO productDAO;
+
     @Resource
     private PriceDAO priceDAO;
 
@@ -39,7 +38,7 @@ public class PriceServiceImpl implements PriceService {
         ArrayList<Price> listPriceByRegion = new ArrayList<>();
         logger.debug("Create list of product price by region {} ", listPriceByRegion);
         for (int i = 0; i < priceByRegion.length; i++) {
-            if (placeId[i] != null & priceByRegion[i] != null) {
+            if (placeId[i] != 0 & priceByRegion[i].compareTo(BigDecimal.ZERO) > 0) {
                 Price price = new Price();
                 price.setProductId(productId);
                 price.setPlaceId(placeId[i]);
@@ -57,6 +56,7 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
+    @Transactional
     public void updateProductPriceInRegions(Integer productId, Integer[] placeId, BigDecimal[] priceByRegion) {
         List<Price> oldPriceInfo = priceDAO.getPriceInRegionInfoByProduct(productId);
         List<Price> newPriceInfo = fillInListWithProductPriceByRegion(productId, placeId, priceByRegion);

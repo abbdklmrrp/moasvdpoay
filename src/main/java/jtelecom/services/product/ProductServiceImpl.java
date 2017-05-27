@@ -175,11 +175,11 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     @Transactional
-    public void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product) {
-        List<TariffServiceDTO> oldServiceList = productDAO.getServicesIDByTariff(product.getId());
+    public void updateFillingOfTariffsWithServices(Integer[] servicesId, Integer productId) {
+        List<TariffServiceDTO> oldServiceList = productDAO.getServicesIDByTariff(productId);
         logger.debug("Old services by tariff ID {}", oldServiceList.toString());
 
-        List<TariffServiceDTO> newServiceList = fillInDTOForBatchUpdate(product.getId(), servicesId);
+        List<TariffServiceDTO> newServiceList = fillInDTOForBatchUpdate(productId, servicesId);
         logger.debug("New services by tariff ID {}", newServiceList.toString());
 
         List<TariffServiceDTO> uniqueServicesInFirstCollection = (List<TariffServiceDTO>) CollectionUtil

@@ -96,10 +96,10 @@ public interface ProductService {
      * Then new services are inserted into the database</p>
      *
      * @param servicesId {@code Array} of ID services
-     * @param product    {@code Product}
+     * @param productId    {@code Product} ID
      * @see Product
      */
-    void updateFillingOfTariffsWithServices(Integer[] servicesId, Product product);
+    void updateFillingOfTariffsWithServices(Integer[] servicesId, Integer productId);
 
     Integer saveProduct(Product product);
 

@@ -29,7 +29,7 @@ import java.util.Objects;
 public class UpdateProductPricesController {
 
     private static final String ERROR_FILL_IN_PRICE_BY_PRODUCT = "Please, check that the region was selected and price input";
-    private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
+    private static Logger logger = LoggerFactory.getLogger(UpdateProductPricesController.class);
     @Resource
     private PriceService priceService;
     @Resource

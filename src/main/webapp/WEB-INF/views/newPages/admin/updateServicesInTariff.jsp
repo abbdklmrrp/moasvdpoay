@@ -73,7 +73,7 @@
           method="post">
         <div class="container">
             <div class="col-xs-12">
-                <h1 style="text-align: center">Services in tariff</h1>
+                <h1 style="text-align: center">Update services in tariff</h1>
 
                 <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                     <tr>

@@ -31,9 +31,9 @@ public class PriceDAOImp implements PriceDAO {
             "            FROM PRODUCTS product\n" +
             "              JOIN PRICES price ON (product.ID = price.PRODUCT_ID)\n" +
             "              JOIN PLACES place ON (price.PLACE_ID = place.ID)\n" +
-            "            WHERE product.ID=:productId AND price.PRICE>0 AND (product.NAME LIKE :pattern\n" +
-            "                  OR description LIKE :pattern\n" +
-            "                  OR place.NAME LIKE :pattern\n" +
+            "            WHERE product.ID=:productId AND price.PRICE>0 AND (upper(product.NAME) LIKE upper(:pattern)\n" +
+            "                  OR upper(description) LIKE upper(:pattern)\n" +
+            "                  OR upper(place.NAME) LIKE upper(:pattern)\n" +
             "                  OR PRICE LIKE :pattern)\n" +
             "            ORDER BY %s ) a\n" +
             "      WHERE rownum <= :length)\n" +
