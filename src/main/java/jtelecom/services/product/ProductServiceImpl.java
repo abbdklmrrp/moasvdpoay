@@ -10,7 +10,7 @@ import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
-import jtelecom.dto.ProductCatalogRowDTO;
+import jtelecom.dto.ServicesCatalogRowDTO;
 import jtelecom.dto.TariffServiceDTO;
 import jtelecom.services.mail.MailService;
 import jtelecom.util.CollectionUtil;
@@ -195,24 +195,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Yuiya Pedash
-     *
-     * @param start
-     * @param length
-     * @param sort
-     * @param search
-     * @param user
-     * @param categoryId
-     * @return
+     * @autor Yuliya Pedash
+     * {@inheritDoc}
      */
-    public List<ProductCatalogRowDTO> getLimitedServicesForUser(User user, Integer start, Integer length, String sort, String search, Integer categoryId) {
+    public List<ServicesCatalogRowDTO> getLimitedServicesForUser(User user, Integer start, Integer length, String sort, String search, Integer categoryId) {
         Map<Integer, String> productCategories = new HashMap<>();
         List<Order> orders = orderDAO.getOrdersByCustomerId(user.getCustomerId());
         List<Product> products = user.getRole() == Role.RESIDENTIAL ?
                 productDAO.getLimitedServicesForResidential(start, length, sort, search, categoryId, user.getPlaceId()) :
                 productDAO.getLimitedServicesForBusiness(start, length, sort, search, categoryId);
         List<Product> servicesOfCurrentUserTariff = productDAO.getAllServicesByCurrentUserTariff(user.getId());
-        List<ProductCatalogRowDTO> productCatalogRowDTOS = new ArrayList<>();
+        List<ServicesCatalogRowDTO> servicesCatalogRowDTOS = new ArrayList<>();
         for (Product product : products) {
             String categoryName;
             Integer productCategoryId = product.getCategoryId();
@@ -223,10 +216,10 @@ public class ProductServiceImpl implements ProductService {
                 productCategories.put(categoryId, categoryName);
             }
             String status = getStatusForProductAsString(product, orders, servicesOfCurrentUserTariff);
-            ProductCatalogRowDTO productCatalogRowDTO = new ProductCatalogRowDTO(product.getId(), product.getName(), categoryName, product.getBasePrice(), status);
-            productCatalogRowDTOS.add(productCatalogRowDTO);
+            ServicesCatalogRowDTO servicesCatalogRowDTO = new ServicesCatalogRowDTO(product.getId(), product.getName(), categoryName, product.getBasePrice(), status);
+            servicesCatalogRowDTOS.add(servicesCatalogRowDTO);
         }
-        return productCatalogRowDTOS;
+        return servicesCatalogRowDTOS;
     }
 
     /**
@@ -254,9 +247,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Yuliya Pedash
-     *
-     * @return
+     * @autor Yuliya Pedash
+     * {@inheritDoc}
      */
     public Product getProductForUser(User currentUser, Integer productId) {
         if (currentUser.getRole() == Role.RESIDENTIAL) {
@@ -267,12 +259,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Yuliya Pedash
-     *
-     * @param user
-     * @param search
-     * @param categoryId
-     * @return
+     * @autor Yuliya Pedash
+     * {@inheritDoc}
      */
     public Integer getCountForServicesWithSearch(User user, String search, Integer categoryId) {
         return user.getRole() == Role.RESIDENTIAL ?

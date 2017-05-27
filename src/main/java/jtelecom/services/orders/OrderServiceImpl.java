@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 24.05.2017.
+ * @author Yuliya Pedash
  */
 @Service
 
@@ -106,6 +106,10 @@ public class OrderServiceImpl implements OrderService {
         return success;
     }
 
+    /**
+     * {@inheritDoc}
+     * Yuliya Pedash
+     */
     @Transactional
     public boolean deactivateOrderCompletely(Integer orderId) {
         Order order = orderDAO.getById(orderId);

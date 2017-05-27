@@ -1,7 +1,5 @@
 package jtelecom.dao.reports;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -15,28 +13,26 @@ import java.util.Map;
  */
 @Service
 public class ReportDataDAOImpl implements ReportDataDAO {
-    private static Logger logger = LoggerFactory.getLogger(ReportDataDAOImpl.class);
-    private final static String SELECT_NUMBERS_OF_ORDERS_FOR_TIME_PERIODS_BY_PLACE_SQL = "SELECT " +
-            "  COUNT(*)                          COUNT," +
-            "  to_char(OPERATION_DATE, '<step>') TIME_PERIOD " +
-            "FROM OPERATIONS_HISTORY " +
-            "  INNER JOIN ORDERS ON ORDERS.ID = OPERATIONS_HISTORY.ORDER_ID " +
-            "  INNER JOIN USERS ON USERS.ID = ORDERS.USER_ID  " +
-            "  INNER JOIN PLACES ON USERS.PLACE_ID = PLACES.ID " +
-            "WHERE OPERATION_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD') " +
-            "      AND (USERS.PLACE_ID = :place_id OR PLACES.PARENT_ID = :place_id) " +
-            "GROUP BY to_char(OPERATION_DATE, '<step>')";
-    private final static String SELECT_NUMBER_OF_COMPLAINTS_FOR_TIME_PERIOD_BY_PLACE_SQL = "SELECT " +
-            "  COUNT(*)                          COUNT " +
-            "  to_char(CREATING_DATE, '<step>') TIME_PERIOD " +
-            "FROM COMPLAINTS " +
-            "  INNER JOIN ORDERS ON ORDERS.ID = COMPLAINTS.ORDER_ID " +
-            "  INNER JOIN USERS ON USERS.ID = ORDERS.USER_ID " +
-            "  INNER JOIN PLACES ON USERS.PLACE_ID = PLACES.ID " +
-            "WHERE CREATING_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD') " +
-            "          AND (USERS.PLACE_ID = :place_id OR PLACES.PARENT_ID = :place_id) " +
-            "GROUP BY to_char(CREATING_DATE, '<step>')";
-    private final static String REGEX = "<step>";
+    private final static String SELECT_NUMBERS_OF_ORDERS_FOR_TIME_PERIODS_BY_PLACE_SQL = "SELECT\n" +
+            "  COUNT(*)                          COUNT,\n" +
+            "  TO_CHAR(OPERATION_DATE, '%s') TIME_PERIOD\n" +
+            "FROM OPERATIONS_HISTORY op_his\n" +
+            "   JOIN ORDERS o ON o.ID = op_his.ORDER_ID\n" +
+            "   JOIN USERS u ON u.ID = o.USER_ID\n" +
+            "   JOIN PLACES p ON u.PLACE_ID = p.ID\n" +
+            "WHERE OPERATION_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD')\n" +
+            "      AND (u.PLACE_ID = :place_id OR p.PARENT_ID = :place_id)\n" +
+            "GROUP BY TO_CHAR(OPERATION_DATE, '%s')";
+    private final static String SELECT_NUMBER_OF_COMPLAINTS_FOR_TIME_PERIOD_BY_PLACE_SQL = "SELECT\n" +
+            "  COUNT(*)                                                COUNT,\n" +
+            "  TO_CHAR(CREATING_DATE, '%s') TIME_PERIOD\n" +
+            "FROM COMPLAINTS C\n" +
+            "  JOIN ORDERS o ON o.ID = C.ORDER_ID\n" +
+            "  JOIN USERS u ON u.ID = o.USER_ID\n" +
+            "  JOIN PLACES p ON u.PLACE_ID = p.ID\n" +
+            "WHERE CREATING_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD')\n" +
+            "      AND (u.PLACE_ID = :place_id OR p.PARENT_ID = :place_id)\n" +
+            "GROUP BY TO_CHAR(CREATING_DATE, '%s')";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -65,15 +61,15 @@ public class ReportDataDAOImpl implements ReportDataDAO {
      * @param dateEndStr   end date String
      * @param placeId      id of place
      * @param stepPattern  step pattern
-     * @return
+     * @return  <code>Map</code> with key - time period, value - number of complaints
      */
     protected Map<String, Integer> getReportDataMap(String selectSql, String dateBeginStr, String dateEndStr, Integer placeId, String stepPattern) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("date_begin", dateBeginStr);
         params.addValue("date_end", dateEndStr);
         params.addValue("place_id", placeId);
-        String selectResSQL = selectSql.replaceAll(REGEX, stepPattern);
-        return jdbcTemplate.query(selectResSQL, params, rs -> {
+        selectSql = String.format(selectSql, stepPattern, stepPattern);
+        return jdbcTemplate.query(selectSql, params, rs -> {
             Map<String, Integer> mapRet = new HashMap<>();
             while (rs.next()) {
                 mapRet.put(rs.getString("time_period"), rs.getInt("count"));
