@@ -2,7 +2,6 @@ package jtelecom.controller.user;
 
 import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.plannedTask.PlannedTaskDAO;
-import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.OrdersRowDTO;
@@ -34,13 +33,13 @@ import java.util.List;
  */
 @Controller
 @Scope(value = "session")
-@RequestMapping({"residential", "business", "employee", "csr"})
 public class UsersOrdersController implements Serializable {
     private final static String SUCCESS_MSG = "Thank you! This order will be suspended from %s to %s.";
     private final static String DATE_ERROR_MSG = "Unable to suspend this order. Please, check the dates you've entered.";
     private final static String FAIL_SUSPEND_ERROR_MSG = "Sorry! An error occurred while suspending this order. Please, try again.";
     private final static String CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG = "Unable to suspend the order within these dates, because there are other planned tasks that can interrupt suspense process.";
-    User user;
+
+    User currentUser;
     @Resource
     private OrderDAO orderDAO;
     @Resource
@@ -55,42 +54,67 @@ public class UsersOrdersController implements Serializable {
     @Resource
     PlannedTaskService plannedTaskService;
 
-    @RequestMapping(value = {"orders"}, method = RequestMethod.GET)
-    public String showOrdersForUser(Model model, HttpSession session) {
-        user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        String userRoleLowerCase = user.getRole().getNameInLowwerCase();
-        if (user.getRole() == Role.CSR) {
-            this.user = userDAO.getUserById((Integer) session.getAttribute("userId"));
-        }
-        logger.debug("Current user: {}", user.toString());
+    private void showOrdersForUser(Model model) {
+        String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
+        logger.debug("Current user: {}", currentUser.toString());
         model.addAttribute("userRole", userRoleLowerCase);
-        return "newPages/" + userRoleLowerCase + "/Orders";
     }
 
+    @RequestMapping(value = {"csr/orders"}, method = RequestMethod.GET)
+    public String showOrdersForUserCsr(Model model, HttpSession session) {
+        this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
+        showOrdersForUser(model);
+        logger.debug("Current user: {}", currentUser.toString());
+        return "newPages/csr/Orders";
+    }
 
-    @RequestMapping(value = {"getOrders"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"residential/orders"}, method = RequestMethod.GET)
+    public String showOrdersForRes(Model model) {
+        this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        showOrdersForUser(model);
+        logger.debug("Current user: {}", currentUser.toString());
+        return "newPages/residential/Orders";
+    }
+
+    @RequestMapping(value = {"business/orders"}, method = RequestMethod.GET)
+    public String showOrdersForBusiness(Model model, HttpSession session) {
+        this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        showOrdersForUser(model);
+        logger.debug("Current user: {}", currentUser.toString());
+        return "newPages/business/Orders";
+    }
+
+    @RequestMapping(value = {"employee/orders"}, method = RequestMethod.GET)
+    public String showOrdersForEmp(Model model) {
+        this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
+        showOrdersForUser(model);
+        logger.debug("Current user: {}", currentUser.toString());
+        return "newPages/employee/Orders";
+    }
+
+    @RequestMapping(value = {"csr/getOrders", "residential/getOrders", "business/getOrders", "employee/getOrders"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder showServices(@ModelAttribute GridRequestDto request) {
+    public ListHolder showOrders(@ModelAttribute GridRequestDto request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         String search = request.getSearch();
-        List<OrdersRowDTO> products = orderDAO.getLimitedOrderRowsDTOByCustomerId(start, length, search, sort, user.getCustomerId());
-        int size = orderDAO.getCountOrdersByCustomerId(search, sort, user.getCustomerId());
+        List<OrdersRowDTO> products = orderDAO.getLimitedOrderRowsDTOByCustomerId(start, length, search, sort, currentUser.getCustomerId());
+        int size = orderDAO.getCountOrdersByCustomerId(search, sort, currentUser.getCustomerId());
         logger.debug("Get orders in interval:" + start + " : " + length);
         return ListHolder.create(products, size);
     }
 
-    @RequestMapping(value = {"suspend"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"csr/suspend", "residential/suspend", "business/suspend"}, method = RequestMethod.POST)
     @ResponseBody
     public String suspendOrder(@RequestBody SuspendFormDTO suspendFormDTO) {
-        logger.debug("Request foor suspense of order, SuspendFormDTO object {}", suspendFormDTO);
+        logger.debug("Request for suspense of order, SuspendFormDTO object {}", suspendFormDTO);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Calendar beginDate = suspendFormDTO.getBeginDate();
         Calendar endDate = suspendFormDTO.getEndDate();
         Integer orderId = suspendFormDTO.getOrderId();
-        boolean b = DatesHelper.areDatesCorrectForOrderSuspense(beginDate, endDate);
-        if (!b) {
+        boolean areDatesCorrect = DatesHelper.areDatesCorrectForOrderSuspense(beginDate, endDate);
+        if (!areDatesCorrect) {
             logger.error("Incorrect dates received from superdense form: {}, {}", beginDate, endDate);
             return DATE_ERROR_MSG;
         }
@@ -108,7 +132,7 @@ public class UsersOrdersController implements Serializable {
 
     }
 
-    @RequestMapping(value = {"activateAfterSuspend"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"csr/activateAfterSuspend", "residential/activateAfterSuspend", "business/activateAfterSuspend"}, method = RequestMethod.POST)
     @ResponseBody
     public Boolean activateAfterSuspend(@RequestParam Integer orderId) {
         Boolean wasOrderActivated = orderService.activateOrderAfterSuspense(orderId);
@@ -120,7 +144,7 @@ public class UsersOrdersController implements Serializable {
         return wasOrderActivated;
     }
 
-    @RequestMapping(value = {"deactivateOrder"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"csr/deactivateOrder", "residential/deactivateOrder", "business/deactivateOrder"}, method = RequestMethod.POST)
     @ResponseBody
     public String deactivateOrder(@RequestParam Integer orderId) {
         Boolean wasDeactivated = orderService.deactivateOrderCompletely(orderId);
@@ -134,19 +158,19 @@ public class UsersOrdersController implements Serializable {
         return SharedVariables.FAIL;
     }
 
-    @RequestMapping(value = {"getPlannedTasks"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"csr/getPlannedTasks", "residential/getPlannedTasks", "business/getPlannedTasks"}, method = RequestMethod.GET)
     @ResponseBody
     public ListHolder showPlannedTasks(@ModelAttribute GridRequestDto request) {
         int start = request.getStartBorder();
         int length = request.getEndBorder();
-        logger.debug("Current user {} ", user);
-        List<PlannedTaskDTO> plannedTaskDTOS = plannedTaskDAO.getLimitedPlannedTasksForUsersOrders(user.getId(), start, length);
-        int size = plannedTaskDAO.getCountPlannedTasksForUserOrders(user.getId());
+        logger.debug("Current user {} ", currentUser);
+        List<PlannedTaskDTO> plannedTaskDTOS = plannedTaskDAO.getLimitedPlannedTasksForUsersOrders(currentUser.getId(), start, length);
+        int size = plannedTaskDAO.getCountPlannedTasksForUserOrders(currentUser.getId());
         logger.debug("Got Planned Tasks {} ", plannedTaskDTOS);
         return ListHolder.create(plannedTaskDTOS, size);
     }
 
-    @RequestMapping(value = {"cancelSuspense"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"csr/cancelSuspense", "residential/cancelSuspense", "business/cancelSuspense"}, method = RequestMethod.POST)
     @ResponseBody
     public String cancelSuspense(@RequestParam Integer plannedTaskId) {
         logger.debug("Request for cancelling suspense with id  {}", plannedTaskId);

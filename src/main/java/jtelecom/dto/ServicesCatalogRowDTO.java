@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  * Created by Yuliya Pedash on 29.04.2017.
  */
-public class ProductCatalogRowDTO {
+public class ServicesCatalogRowDTO {
     @JsonProperty("id")
     private Integer id;
     private String name;
@@ -18,7 +18,7 @@ public class ProductCatalogRowDTO {
     @JsonProperty("status")
     private String status;
 
-    public ProductCatalogRowDTO(Integer id, String name, String category, BigDecimal price, String status) {
+    public ServicesCatalogRowDTO(Integer id, String name, String category, BigDecimal price, String status) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -68,7 +68,7 @@ public class ProductCatalogRowDTO {
 
     @Override
     public String toString() {
-        return "ProductCatalogRowDTO{" +
+        return "ServicesCatalogRowDTO{" +
                 "productId=" + id +
                 ", name='" + name + '\'' +
                 ", category='" + category + '\'' +

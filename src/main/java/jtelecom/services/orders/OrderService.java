@@ -42,11 +42,16 @@ public interface OrderService {
      * This methods deactivates order. It marks it as deactivated in Orders
      * table and deletes all planned tasks for this order from planned_tasks table.
      *
-     * @param
+     * @param productId id of product
+     * @param userId  id of user
      * @return
      */
     boolean deactivateOrderForProductOfUserCompletely(Integer productId, Integer userId);
 
+    /**
+     * @param orderId
+     * @return
+     */
 
     boolean deactivateOrderCompletely(Integer orderId);
 

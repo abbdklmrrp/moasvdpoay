@@ -18,14 +18,13 @@ import java.util.*;
 @Service
 public class ReportsService {
     private static Logger logger = LoggerFactory.getLogger(ReportsService.class);
-    private final static String DAY_PERIOD_PATTERN = "dd-MM-yyyy";
-    private final static String MONTH_PERIOD_PATTERN = "MM-yyyy";
-    private final static String YEAR_PERIOD_PATTERN = "yyyy";
     private final static Integer DAYS_IN_MONTH = 30;
-    private final static Integer MAX_NUMB_OF_MONTHS_FOR_DAY_PATTERN = 36;
+    private final static Integer MAX_NUMB_OF_MONTHS_FOR_DAY_PATTERN = 2;
     private final static Integer MAX_NUMB_OF_MONTHS_FOR_MONTH_PATTERN = 36;
-    private String stepPattern;
-    private int periodToAdd;
+    private final static String DAY_PERIOD_PATTERN = "dd-mm-yyyy";
+    private final static String MONTH_PERIOD_PATTERN = "mm-yyyy";
+    private final static String YEAR_PERIOD_PATTERN = "yyyy";
+    private int period;
     @Resource
     private ReportDataDAO reportDataDAO;
 
@@ -47,13 +46,13 @@ public class ReportsService {
     private List<ReportData> formFullReportData(Map<String, Integer> reportDataMap, Calendar beginDate, Calendar endDate) {
         List<ReportData> reportDataList = new ArrayList<>();
         Calendar currDate = (Calendar) beginDate.clone();
-        while (currDate.compareTo(endDate) <= 0 || (periodToAdd == Calendar.MONTH && currDate.get(Calendar.MONTH) == endDate.get(Calendar.MONTH) &&
-                currDate.get(Calendar.YEAR) == endDate.get(Calendar.YEAR)) || (periodToAdd == Calendar.YEAR && currDate.get(Calendar.YEAR) == endDate.get(Calendar.YEAR))) {
+        while (currDate.compareTo(endDate) <= 0 || (period == Calendar.MONTH && currDate.get(Calendar.MONTH) == endDate.get(Calendar.MONTH) &&
+                currDate.get(Calendar.YEAR) == endDate.get(Calendar.YEAR)) || (period == Calendar.YEAR && currDate.get(Calendar.YEAR) == endDate.get(Calendar.YEAR))) {
             ReportData reportData = new ReportData();
-            String currDateStr = getCurrentDateByPeriodToAdd(currDate, periodToAdd);
+            String currDateStr = getCurrentDateByPeriodToAdd(currDate, period);
             reportData.setTimePeriod(currDateStr);
             reportData.setAmount(reportDataMap.getOrDefault(currDateStr, 0));
-            currDate.add(periodToAdd, 1);
+            currDate.add(period, 1);
             reportDataList.add(reportData);
         }
         return reportDataList;
@@ -101,8 +100,8 @@ public class ReportsService {
         Calendar beginDate = new GregorianCalendar();
         Calendar endDate = new GregorianCalendar();
         parseDates(beginDateStr, endDateStr, beginDate, endDate);
-        determineStepPatternAndPeriodToAdd(beginDate, endDate);
-        Map<String, Integer> ordersReportsDataMap = reportDataDAO.getOrdersReportsDataMap(beginDateStr, endDateStr, placeId, stepPattern);
+        determinePeriodToAdd(beginDate, endDate);
+        Map<String, Integer> ordersReportsDataMap = reportDataDAO.getOrdersReportsDataMap(beginDateStr, endDateStr, placeId, determineDatePattern());
         return formFullReportData(ordersReportsDataMap, beginDate, endDate);
     }
 
@@ -122,8 +121,8 @@ public class ReportsService {
         Calendar beginDate = new GregorianCalendar();
         Calendar endDate = new GregorianCalendar();
         parseDates(beginDateStr, endDateStr, beginDate, endDate);
-        determineStepPatternAndPeriodToAdd(beginDate, endDate);
-        Map<String, Integer> complaintsReportsDataMap = reportDataDAO.getComplaintsReportsDataMap(beginDateStr, endDateStr, placeId, stepPattern);
+        determinePeriodToAdd(beginDate, endDate);
+        Map<String, Integer> complaintsReportsDataMap = reportDataDAO.getComplaintsReportsDataMap(beginDateStr, endDateStr, placeId, determineDatePattern());
         return formFullReportData(complaintsReportsDataMap, beginDate, endDate);
     }
 
@@ -157,17 +156,29 @@ public class ReportsService {
      * @param beginDate begin date
      * @param endDate   end date
      */
-    private void determineStepPatternAndPeriodToAdd(Calendar beginDate, Calendar endDate) {
+    private void determinePeriodToAdd(Calendar beginDate, Calendar endDate) {
         long daysDifference = ChronoUnit.DAYS.between(beginDate.toInstant(), endDate.toInstant());
         if (daysDifference < DAYS_IN_MONTH * MAX_NUMB_OF_MONTHS_FOR_DAY_PATTERN) {
-            stepPattern = DAY_PERIOD_PATTERN;
-            periodToAdd = Calendar.DATE;
+            period = Calendar.DATE;
         } else if (daysDifference < DAYS_IN_MONTH * MAX_NUMB_OF_MONTHS_FOR_MONTH_PATTERN) {
-            stepPattern = MONTH_PERIOD_PATTERN;
-            periodToAdd = Calendar.MONTH;
+            period = Calendar.MONTH;
         } else {
-            stepPattern = YEAR_PERIOD_PATTERN;
-            periodToAdd = Calendar.YEAR;
+            period = Calendar.YEAR;
+        }
+    }
+
+    private String determineDatePattern() {
+        switch (period) {
+            case (Calendar.DATE):
+                return DAY_PERIOD_PATTERN;
+            case (Calendar.MONTH):
+                return MONTH_PERIOD_PATTERN;
+            case (Calendar.YEAR):
+                return YEAR_PERIOD_PATTERN;
+            default:
+                logger.error("Wrong or not determined time period");
+                throw new IllegalStateException("Wrong or not determined time period");
+
         }
     }
 

@@ -43,7 +43,7 @@ function deactivateService(serviceId) {
                 type: "POST",
                 dataType: 'text',
                 success: function (resultMsg) {
-                    if (resultMsg === '"success"') {
+                    if (resultMsg == '"success"') {
                         swal({
                             title: "This product for you was deactivated.",
                             type: "success"

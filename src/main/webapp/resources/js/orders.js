@@ -29,7 +29,7 @@ $(document).ready(function () {
                 },
                 url: 'suspend',
                 type: "POST",
-                dataType: "json",
+                dataType: 'text',
                 data: JSON.stringify(formData),
                 success: function (resultMsg) {
                     swal(resultMsg);
@@ -95,16 +95,16 @@ function activateOrderAfterSuspend(orderId) {
         success: function (isSuccess) {
             if (isSuccess) {
                 swal({
-                    title: "Activation of order was successful",
+                    title: "Resuming was successful",
                     type: "success"
                 });
                 var $actionContainerElement = $("#order" + orderId);
                 $actionContainerElement.empty();
-                var newSuspendAction = "<input type=\"button\" onclick=\"toggleFormFunc(" + orderId + ")\" value=\"Suspend\" class=\"btn btn-warning\">";
+                var newSuspendAction = "<div id=order" + orderId + "><input type=\"button\" onclick=\"toggleFormFunc(" + orderId + ")\" value=\"Suspend\" class=\"btn btn-warning btn-block\" style=\"margin:5px 5px 5px 5px\"><input type=\"button\" onclick=\"deactivateOrder(" + orderId + ")\" value=\"Deactivate\" class=\"btn btn-danger btn-block\" style=\"margin:5px 5px 5px 5px\"></div>";
                 $actionContainerElement.html(newSuspendAction);
             }
             else {
-                swal("Activation of order failed", "Please, try again.",
+                swal("Resuming failed", "Please, try again.",
                     "error")
             }
         },
@@ -117,7 +117,7 @@ function activateOrderAfterSuspend(orderId) {
 }
 function cancelPlannedTask(plannedTaskId) {
     swal({
-            title: "Are you sure you want to cancel this Suspense?",
+            title: "Are you sure you want to cancel this suspense?",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "DD6B55",
@@ -131,7 +131,7 @@ function cancelPlannedTask(plannedTaskId) {
                 type: "POST",
                 dataType: 'text',
                 success: function (resultMsg) {
-                    if (resultMsg === '"success"') {
+                    if (resultMsg == '"success"') {
                         swal({
                             title: "This Suspense  was cancelled.",
                             type: "success"
@@ -169,7 +169,7 @@ function deactivateOrder(orderId) {
                 type: "POST",
                 dataType: 'text',
                 success: function (resultMsg) {
-                    if (resultMsg === '"success"') {
+                    if (resultMsg == '"success"') {
                         swal({
                             title: "This order was deactivated.",
                             type: "success"
@@ -188,6 +188,5 @@ function deactivateOrder(orderId) {
             })
 
         }
-    )
-    ;
+    );
 }
