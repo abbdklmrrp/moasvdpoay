@@ -31,10 +31,11 @@ public class ViewTariffWithServicesController {
         List<TariffServiceDTO> servicesByTariff = productDAO.getServicesInfoByTariff(tariffId);
         logger.debug("Received services that are included in the tariff {}", servicesByTariff.toString());
         String customerType = productDAO.getCustomerTypeByProductId(tariffId);
-        logger.debug("Cus tomer type: {} ", customerType);
+        logger.debug("Customer type: {} ", customerType);
 
         mav.addObject("servicesByTariff", servicesByTariff);
         mav.addObject("customerType", customerType);
+        mav.addObject("id", tariffId);
         mav.setViewName("newPages/admin/viewServicesInTariff");
         return mav;
     }

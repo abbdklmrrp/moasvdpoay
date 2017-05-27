@@ -1,11 +1,9 @@
 package jtelecom.controller.admin;
 
 import jtelecom.dao.product.Product;
-import jtelecom.dao.product.ProductDAO;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * @author Anna Rysakova
@@ -24,9 +23,8 @@ import javax.annotation.Resource;
 public class UpdateProductController {
 
     private static final String ERROR_IN_CONNECTION = "Error with filling database";
+    private static final String ERROR_EXIST = "Sorry, product doesn't exist";
     private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
-    @Resource
-    private ProductDAO productDAO;
     @Resource
     private ProductService productService;
 
@@ -36,11 +34,11 @@ public class UpdateProductController {
                                      ModelAndView mav) {
 
         logger.debug("Receive product ID {} ", id);
-        try {
-            Product tariff = productDAO.getById(id);
-            logger.debug("Checked that the tariff exists {} ", tariff.toString());
-        } catch (DataAccessException ex) {
+        Product foundProduct = productService.isValidProduct(id);
+        if (!Objects.nonNull(foundProduct)) {
             logger.error("Product with ID = {}  does not exist in the database ", id);
+            mav.addObject("error", ERROR_EXIST);
+            mav.setViewName("newPages/admin/products");
         }
         product.setId(id);
         logger.debug("Write ID to product {} ", product.getId());

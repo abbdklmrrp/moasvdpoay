@@ -61,8 +61,8 @@ public class UpdateProductPricesController {
     }
 
     @RequestMapping(value = {"updateProductPrices"}, method = RequestMethod.POST)
-    public ModelAndView fillPriceByRegion(@RequestParam(value = "id") Integer productId,
-                                          ModelAndView mav,
+    public ModelAndView fillPriceByRegion(ModelAndView mav,
+                                          @RequestParam(value = "id") Integer productId,
                                           @RequestParam(value = "placeId") Integer[] placeId,
                                           @RequestParam(value = "priceByRegion") BigDecimal[] priceByRegion
     ) {

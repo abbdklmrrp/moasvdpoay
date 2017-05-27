@@ -20,8 +20,6 @@ public interface PlaceDAO {
 
     List<Place> getAllPlaces();
 
-    Integer getPlaceIdByName(String placeName);
-
     List<Place> getLimitedQuantityPlace(int start, int length, String sort, String search);
 
     List<PriceByRegionDTO> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search);

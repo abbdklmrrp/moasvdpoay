@@ -35,13 +35,13 @@
             <c:choose>
                 <c:when test="${param.page == 'Products'}">
                     <li class="wet-asphalt active-tab">
-                        <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${servicesByTariff.get(0).tariffId}">Product
+                        <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${id}">Product
                             info</a>
                     </li>
                 </c:when>
                 <c:otherwise>
                     <li class="wet-asphalt">
-                        <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${servicesByTariff.get(0).tariffId}">Product
+                        <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${id}">Product
                             info</a>
                     </li>
                 </c:otherwise>
@@ -51,13 +51,13 @@
                 <c:choose>
                     <c:when test="${param.page == 'ViewPriceInRegion'}">
                         <li class="wet-asphalt active-tab">
-                            <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${servicesByTariff.get(0).tariffId}">Price
+                            <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${id}">Price
                                 in regions</a>
                         </li>
                     </c:when>
                     <c:otherwise>
                         <li class="wet-asphalt">
-                            <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${servicesByTariff.get(0).tariffId}">Price
+                            <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${id}">Price
                                 in regions</a>
                         </li>
                     </c:otherwise>
@@ -69,7 +69,7 @@
 
 <div class="col-xs-1"></div>
 <div class="col-xs-6">
-    <form action="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${servicesByTariff.get(0).tariffId}"
+    <form action="${pageContext.request.contextPath}/admin/updateServicesInTariff?id=${id}"
           method="post">
         <div class="container">
             <div class="col-xs-12">
@@ -90,17 +90,21 @@
                             <td>
                                 <select name="selectedService" id="soflow">
                                     <option value=""></option>
-                                    <c:forEach var="service" items="${servicesByTariff}">
-                                        <c:if test="${servcesByCategory.key eq service.categoryName}">
-                                            <option value="${service.serviceId}"
-                                                    selected>${service.serviceName}</option>
-                                        </c:if>
-                                    </c:forEach>
+                                    <c:if test="${servicesByTariff.size() ne 0}">
+                                        <c:forEach var="service" items="${servicesByTariff}">
+                                            <c:if test="${servcesByCategory.key eq service.categoryName}">
+                                                <option value="${service.serviceId}"
+                                                        selected>${service.serviceName}</option>
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:if>
                                     <c:forEach var="product" items="${servcesByCategory.value}">
                                         <c:if test="${product.id != ''}">
                                             <option value="${product.id}">${product.name}</option>
                                         </c:if>
                                     </c:forEach>
+                                </select>
+
                                 </select>
                             </td>
                             <td>
@@ -114,7 +118,7 @@
                 </table>
                 <div class="row " id="save-price-in-region">
                     <div class="col-xs-2"></div>
-                    <form action="${pageContext.request.contextPath}/admin/viewServicesInTariff?id=${servicesByTariff.get(0).tariffId}">
+                    <form action="${pageContext.request.contextPath}/admin/viewServicesInTariff?id=${id}">
                         <button type="submit" class="btn btn-danger col-xs-3"
                                 id="btn-cancel-price-in-region">
                             Cancel

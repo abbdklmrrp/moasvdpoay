@@ -3,8 +3,8 @@ $(document).ready(function () {
     $('#btn-edit-product-info').click(function () {
         $('#edit-and-changes').addClass("hide");
         $('#save-product').removeClass("hide");
-        $("#Name").prop('readonly', false);
-        $("#Description").prop('readonly', false);
+        $("#name").prop('readonly', false);
+        $("#description").prop('readonly', false);
         $("#basePrice").prop('readonly', false);
         $("#customerTypeId").removeAttr('disabled');
         $("#durationInDays").prop('readonly', false);
@@ -17,8 +17,8 @@ $(document).ready(function () {
     $('#btn-cancel-product').click(function () {
         $('#edit-and-changes').removeClass("hide");
         $('#save-product').addClass("hide");
-        $("#Name").prop('readonly', true);
-        $("#Description").prop('readonly', true);
+        $("#name").prop('readonly', true);
+        $("#description").prop('readonly', true);
         $("#basePrice").prop('readonly', true);
         $("#customerTypeId").prop('disabled', 'disabled');
         $("#durationInDays").prop('readonly', true);

@@ -99,6 +99,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
+     * Method remove comma from string if comma is last character
+     *
+     * @param str {@code String} field of object
+     * @return {@code String} without comma
+     */
+    private String removeComma(String str) {
+        if (str.length() > 0 && str.charAt(str.length() - 1) == ',') {
+            str = str.replaceAll(",", "");
+        }
+        return str;
+    }
+
+    /**
+     * Method remove comma from {@code Product} name and description
+     *
+     * @param product {@code Product} object
+     * @return {@code Product} object without comma at last character
+     */
+    private Product validNameDescription(Product product) {
+        String productName = removeComma(product.getName());
+        String productDescription = removeComma(product.getDescription());
+        product.setName(productName);
+        product.setDescription(productDescription);
+        return product;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -106,6 +133,7 @@ public class ProductServiceImpl implements ProductService {
         int productId = updateProduct.getId();
         Product product = productDAO.getById(productId);
         logger.debug("Found product from database {} ", product.toString());
+        updateProduct = validNameDescription(updateProduct);
         if (!updateProduct.getName().isEmpty()) {
             logger.debug("Change product name to {} ", updateProduct.getName());
             product.setName(updateProduct.getName());
@@ -273,10 +301,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Integer saveProduct(Product product) {
+        product = validNameDescription(product);
         Integer isSave = productDAO.saveProduct(product);
-        if(isSave!=null){
-          List<User> users=userDAO.getUsersByCustomerType(product.getCustomerType());
-          mailService.sendNewProductDispatch(users,product);
+        if (isSave != null) {
+            List<User> users = userDAO.getUsersByCustomerType(product.getCustomerType());
+            mailService.sendNewProductDispatch(users, product);
         }
         return isSave;
     }

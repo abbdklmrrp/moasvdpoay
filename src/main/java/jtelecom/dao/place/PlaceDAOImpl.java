@@ -20,7 +20,6 @@ public class PlaceDAOImpl implements PlaceDAO {
     private final static String SELECT_ALL_SQL = "SELECT * FROM Places";
     private final static String SELECT_PLACES_FOR_FILL_IN_TARIFF = "Select ID,NAME FROM PLACES WHERE \n" +
             "PARENT_ID IS NOT NULL ORDER BY NAME";
-    private final static String SELECT_PLACE_ID_BY_NAME = "SELECT ID FROM PLACES WHERE NAME=:placeName";
     private final static String SELECT_PLACE_NAME_BY_ID = "SELECT NAME FROM PLACES WHERE ID=:placeId";
     private final static String SELECT_LIMITED_PLACES = "SELECT *\n" +
             "FROM (SELECT\n" +
@@ -93,13 +92,6 @@ public class PlaceDAOImpl implements PlaceDAO {
             place.setName(rs.getString("NAME"));
             return place;
         });
-    }
-
-    @Override
-    public Integer getPlaceIdByName(String placeName) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("placeName", placeName);
-        return jdbcTemplate.queryForObject(SELECT_PLACE_ID_BY_NAME, params, (rs, rowNum) -> rs.getInt("ID"));
     }
 
     @Override

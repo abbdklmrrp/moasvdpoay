@@ -13,7 +13,6 @@ public enum Authority {
 
     private final String auth;
 
-
     Authority(String auth) {
         this.auth = auth;
     }
@@ -22,12 +21,8 @@ public enum Authority {
         Authority[] values = values();
         String[] auths = new String[values.length];
         for (int i = 0; i < values.length; i++) {
-            auths[i] = values[i].auth;
+            auths[i] = values[i].auth.toLowerCase();
         }
         return auths;
-    }
-
-    public String getAuth() {
-        return auth;
     }
 }

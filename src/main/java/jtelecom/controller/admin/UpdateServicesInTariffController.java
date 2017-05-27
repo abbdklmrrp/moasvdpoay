@@ -51,6 +51,7 @@ public class UpdateServicesInTariffController {
         mav.addObject("allServicesWithCategory", allServicesWithCategory);
         mav.addObject("servicesByTariff", servicesByTariff);
         mav.addObject("customerType", customerType);
+        mav.addObject("id", tariffId);
         mav.setViewName("newPages/admin/updateServicesInTariff");
         return mav;
     }

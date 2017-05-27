@@ -513,8 +513,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Rysakova Anna
-     *
      * {@inheritDoc}
      */
     @Override

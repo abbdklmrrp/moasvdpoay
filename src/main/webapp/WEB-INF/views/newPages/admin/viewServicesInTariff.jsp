@@ -35,13 +35,13 @@
             <c:choose>
                 <c:when test="${param.page == 'Products'}">
                     <li class="wet-asphalt active-tab">
-                        <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${servicesByTariff.get(0).tariffId}">Product
+                        <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${id}">Product
                             info</a>
                     </li>
                 </c:when>
                 <c:otherwise>
                     <li class="wet-asphalt">
-                        <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${servicesByTariff.get(0).tariffId}">Product
+                        <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${id}">Product
                             info</a>
                     </li>
                 </c:otherwise>
@@ -50,13 +50,13 @@
                 <c:choose>
                     <c:when test="${param.page == 'ViewPriceInRegion'}">
                         <li class="wet-asphalt active-tab">
-                            <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${servicesByTariff.get(0).tariffId}">Price
+                            <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${id}">Price
                                 in regions</a>
                         </li>
                     </c:when>
                     <c:otherwise>
                         <li class="wet-asphalt">
-                            <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${servicesByTariff.get(0).tariffId}">Price
+                            <a href="${pageContext.request.contextPath}/admin/viewProductPriceInRegions?id=${id}">Price
                                 in regions</a>
                         </li>
                     </c:otherwise>
@@ -71,6 +71,7 @@
         <div class="col-xs-12">
             <h1 style="text-align: center">Services in tariff</h1>
 
+            <c:if test="${servicesByTariff.size() eq 0}"><h1 style="text-align: center">NO DATA</h1></c:if>
             <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                 <tr>
                     <th>Category</th>
@@ -83,7 +84,7 @@
                     </tr>
                 </c:forEach>
             </table>
-            <form action="${pageContext.request.contextPath}/admin/updateServicesInTariff/${servicesByTariff.get(0).tariffId}">
+            <form action="${pageContext.request.contextPath}/admin/updateServicesInTariff/${id}">
                 <div class="row">
                     <div class="col-sm-5 col-xs-3"></div>
                     <button type="submit" class="btn btn-primary col-sm-2 col-xs-6">Update</button>

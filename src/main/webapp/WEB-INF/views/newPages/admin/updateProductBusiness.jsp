@@ -81,7 +81,7 @@
                 <div class="form-group row">
                     <label class="col-sm-4 control-label">Name</label>
                     <div class="col-sm-8">
-                        <input readonly type="text" class="form-control" placeholder="Name " id="Name"
+                        <input readonly type="text" class="form-control" placeholder="Name " id="name"
                                name="name" value="${product.name}" required>
                         <i class="fa fa-user"></i>
                     </div>
@@ -90,7 +90,7 @@
                     <label class="col-sm-4 control-label">Description</label>
                     <div class="col-sm-8">
                         <input readonly type="text" class="form-control" placeholder="Description "
-                               id="Description" name="description" value="${product.description}" required>
+                               id="description" name="description" value="${product.description}" required>
                         <i class="fa fa-user"></i>
                     </div>
                 </div>
@@ -99,8 +99,7 @@
                         <label class="col-sm-4 control-label">Category name</label>
                         <div class="col-sm-8">
                             <input readonly type="text" class="form-control" placeholder="Description "
-                                   id="categoryName" name="categoryName" value="${category.categoryName}"
-                                   required>
+                                   id="categoryName" name="categoryName" value="${category.categoryName}">
                             <i class="fa fa-user"></i>
                         </div>
                     </div>
@@ -109,7 +108,7 @@
                         <div class="col-sm-8">
                             <input readonly type="text" class="form-control" placeholder="Description "
                                    id="categoryDescription" name="description"
-                                   value="${category.categoryDescription}" required>
+                                   value="${category.categoryDescription}">
                             <i class="fa fa-user"></i>
                         </div>
                     </div>
