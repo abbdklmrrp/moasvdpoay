@@ -4,8 +4,8 @@ import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
-import jtelecom.grid.GridRequestDto;
-import jtelecom.grid.ListHolder;
+import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,7 +34,7 @@ public class CsrAllOrdersController {
 
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto}. <br>
+     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}. <br>
      * After method gets list with all orders that are in processing status <br>
      * from database.<br>
      * @param requestDto  contains indexes for first element and last elements and patterns for search and sort.

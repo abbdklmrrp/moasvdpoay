@@ -1,4 +1,4 @@
-package jtelecom.grid;
+package jtelecom.dto.grid;
 
 /**
  * Class contains information about next part of the objects

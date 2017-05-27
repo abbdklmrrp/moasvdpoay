@@ -4,8 +4,8 @@ import jtelecom.dao.operationHistory.OperationHistoryDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
-import jtelecom.grid.GridRequestDto;
-import jtelecom.grid.ListHolder;
+import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class OperationHistoryController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto}. <br>
+     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}. <br>
      * After method gets list with all operations from database.<br>
      * This user's id method gets from session.
      *
@@ -61,7 +61,7 @@ public class OperationHistoryController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto}. <br>
+     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}. <br>
      * After method gets list with all operations from database.<br>
      * This user's id method gets from the security current user.
      *
