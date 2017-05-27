@@ -17,11 +17,12 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 27.04.2017.
+ * @author Yuliya Pedash
  */
 @Service
 public class OrderDAOImpl implements OrderDAO {
 
+    private static final String CUST_ID = "cust_id";
     private static Logger logger = LoggerFactory.getLogger(OrderDAOImpl.class);
 
     @Resource
@@ -282,7 +283,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     public List<Order> getOrdersByCustomerId(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("cust_id", customerId);
+        params.addValue(CUST_ID, customerId);
         return jdbcTemplate.query(SELECT_ORDERS_BY_CUST_ID_SQL, params, new OrderRowMapper());
     }
 

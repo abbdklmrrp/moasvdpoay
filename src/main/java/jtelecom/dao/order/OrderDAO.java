@@ -7,12 +7,12 @@ import jtelecom.dto.OrdersRowDTO;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 27.04.2017.
+ * @author Yuliya Pedash
  */
 public interface OrderDAO extends DAO<Order> {
     /**
      * This method returns all orders by one customer's users.
-     * created by Yuliya Pedash
+     * @author Yuliya Pedash
      *
      * @param customerId id of customer
      * @return list of Orders

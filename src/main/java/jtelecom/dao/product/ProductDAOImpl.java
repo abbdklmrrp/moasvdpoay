@@ -43,7 +43,9 @@ public class ProductDAOImpl implements ProductDAO {
     private final static String STATUS = "STATUS";
     private final static String BASE_PRICE = "BASE_PRICE";
     private final static String CUSTOMER_TYPE_ID = "CUSTOMER_TYPE_ID";
-
+    private static final String PRODUCT_ID = "product_id";
+    private static final String PLACE_ID = "place_id";
+    private static final String LENGTH = "length";
     private final static String INSERT_PRODUCT_SQL = "INSERT INTO PRODUCTS(" +
             " TYPE_ID," +
             " CATEGORY_ID," +
@@ -409,6 +411,9 @@ public class ProductDAOImpl implements ProductDAO {
             " FROM PRODUCTS WHERE ID=( " +
             " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
     final static String AND_CATEGORY_ID_SQL = "  AND category_id = :category_id ";
+    private static final String PATTERN = "pattern";
+    private static final String START = "start";
+
     private static Logger logger = LoggerFactory.getLogger(ProductDAOImpl.class);
     @Autowired
     @Qualifier("dataSource")
@@ -949,88 +954,111 @@ public class ProductDAOImpl implements ProductDAO {
         return products;
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     public List<Product> getAllServicesByCurrentUserTariff(Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", userId);
+        params.addValue(ID, userId);
         return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TARIFF_SQL, params, new ProductRowMapper());
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     @Override
     public Product findProductWithPriceSetByPlace(Integer productId, Integer placeId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("product_id", productId);
-        params.addValue("place_id", placeId);
+        params.addValue(PRODUCT_ID, productId);
+        params.addValue(PLACE_ID, placeId);
         return jdbcTemplate.queryForObject(SELECT_PRODUCT_BY_ID_BASE_PRICE_SET_BY_PLACE_SQL, params, productRowMapper);
 
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     @Override
     public List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId) {
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {
-            sort = "name";
+            sort = NAME;
         }
         if (categoryId != null) {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, AND_CATEGORY_ID_SQL);
-            params.addValue("category_id", categoryId);
+            params.addValue(CATEGORY_ID, categoryId);
         } else {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, "");
         }
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("start", start);
-        params.addValue("length", length + 1);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(START, start);
+        params.addValue(LENGTH, length + 1);
         return jdbcTemplate.query(query, params, productRowMapper);
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     @Override
     public List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId) {
-        // String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, search, categoryId);
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {
-            sort = "name";
+            sort = NAME;
         }
         if (categoryId != null) {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, AND_CATEGORY_ID_SQL);
-            params.addValue("category_id", categoryId);
+            params.addValue(CATEGORY_ID, categoryId);
         } else {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, "");
         }
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("start", start);
-        params.addValue("length", length + 1);
-        params.addValue("place_id", placeId);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(START, start);
+        params.addValue(LENGTH, length + 1);
+        params.addValue(PLACE_ID, placeId);
         return jdbcTemplate.query(query, params, productRowMapper);
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId) {
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (categoryId != null) {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, AND_CATEGORY_ID_SQL);
-            params.addValue("category_id", categoryId);
+            params.addValue(CATEGORY_ID, categoryId);
         } else {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, "");
         }
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(query, params, Integer.class);
 
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId) {
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (categoryId != null) {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, AND_CATEGORY_ID_SQL);
-            params.addValue("category_id", categoryId);
+            params.addValue(CATEGORY_ID, categoryId);
         } else {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, "");
         }
-        params.addValue("place_id", placeId);
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(PLACE_ID, placeId);
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(query, params, Integer.class);
     }
 
