@@ -43,7 +43,14 @@ public class ProductDAOImpl implements ProductDAO {
     private final static String STATUS = "STATUS";
     private final static String BASE_PRICE = "BASE_PRICE";
     private final static String CUSTOMER_TYPE_ID = "CUSTOMER_TYPE_ID";
-
+    private static final String PRODUCT_ID = "product_id";
+    private static final String PLACE_ID = "place_id";
+    private static final String LENGTH = "length";
+    private static final String START_INDEX = "startIndex";
+    private static final String END_INDEX = "endIndex";
+    private static final String USER_ID = "user_id";
+    private static final String TARIFF_ID = "tariff_id";
+    private static final String CUSTOMER_ID = "customer_id";
     private final static String INSERT_PRODUCT_SQL = "INSERT INTO PRODUCTS(" +
             " TYPE_ID," +
             " CATEGORY_ID," +
@@ -169,7 +176,7 @@ public class ProductDAOImpl implements ProductDAO {
             " Prices.price base_price" +
             " FROM Products prod " +
             " JOIN Prices ON Prices.product_id = prod.id " +
-            " WHERE Prices.place_id = :placeId " +
+            " WHERE Prices.place_id = :place_id " +
             " AND prod.type_id = 1/* Tariff */";
     private final static String SELECT_INTERVAL_TARIFFS_BY_PLACE_SQL = "SELECT * FROM " +
             " (SELECT" +
@@ -185,7 +192,7 @@ public class ProductDAOImpl implements ProductDAO {
             " ROW_NUMBER() OVER (ORDER BY prod.id) Num" +
             " FROM Products prod" +
             " JOIN Prices ON Prices.product_id = prod.id " +
-            " WHERE Prices.place_id = :placeId " +
+            " WHERE Prices.place_id = :place_id " +
             " AND prod.type_id = 1/* Tariff */)" +
             " WHERE Num > :startIndex" +
             " AND Num <= :endIndex";
@@ -193,40 +200,9 @@ public class ProductDAOImpl implements ProductDAO {
             " COUNT(*)" +
             " FROM Products" +
             " JOIN Prices ON Prices.product_id = products.id " +
-            " WHERE Prices.place_id = :placeId " +
+            " WHERE Prices.place_id = :place_id " +
             " AND products.type_id = 1/* Tariff */";
-    private final static String SELECT_ALL_SERVICES_OF_USER_CURRENT_TARIFF_SQL = "SELECT\n" +
-            "  p2.ID,\n" +
-            "  p2.NAME,\n" +
-            "  p2.DESCRIPTION,\n" +
-            "  p2.TYPE_ID,\n" +
-            "  p2.CATEGORY_ID,\n" +
-            "  p2.DURATION,\n" +
-            "  p2.NEED_PROCESSING,\n" +
-            "  p2.DESCRIPTION,\n" +
-            "  p2.STATUS,\n" +
-            "  p2.BASE_PRICE,\n " +
-            "  p2.CUSTOMER_TYPE_ID " +
-            "FROM PRODUCTS p1\n" +
-            "  JOIN ORDERS ON ORDERS.PRODUCT_ID = p1.ID\n" +
-            "                 AND ORDERS.USER_ID = :id\n" +
-            "                 AND p1.TYPE_ID = 1\n" +
-            " AND ORDERS.CURRENT_STATUS_ID <> 3 /*Deactivated*/" +
-            "  JOIN TARIFF_SERVICES\n" +
-            "    ON p1.ID = TARIFF_SERVICES.TARIFF_ID\n" +
-            "  JOIN PRODUCTS p2 ON p2.ID = TARIFF_SERVICES.SERVICE_ID ";
-    private final static String DISABLE_ENABLE_PRODUCT = "UPDATE Products SET status=:status WHERE id=:id";
-    private final static String SELECT_PRODUCT_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME," +
-            "prod.description AS DESCRIPTION, prod.DURATION AS duration " +
-            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
-            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
-            "WHERE ord.USER_ID = :id AND status.NAME != 'Deactivated'";
-//    private final static String SELECT_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME " +
-//            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
-//            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
-//            "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
-
-    private final static String SELECT_ACTIVE_PRODUCTS_FOR_CUSTOMER = "SELECT " +
+    private final static String SELECT_ACTIVE_PRODUCTS_FOR_CUSTOMER_SQL = "SELECT " +
             "Products.id id, " +
             "Products.name name " +
             "FROM Products " +
@@ -235,18 +211,18 @@ public class ProductDAOImpl implements ProductDAO {
             "       OR Orders.current_status_id = 2/* Suspended */ " +
             "       OR Orders.current_status_id = 4/* In processing */) " +
             "AND Orders.user_id IN (SELECT id FROM Users WHERE customer_id = " +
-            "                                           (SELECT customer_id FROM USERS WHERE id = :id))";
+            "                                           (SELECT customer_id FROM USERS WHERE id = :ID))";
     private final static String DEACTIVATE_TARIFF_OF_USER_SQL = "UPDATE Orders SET current_status_id = 3/* Deactivated */" +
-            "WHERE user_id IN (SELECT id FROM Users WHERE customer_id = (SELECT customer_id FROM Users WHERE id = :userId )) " +
-            "AND product_id = :tariffId " +
+            "WHERE user_id IN (SELECT id FROM Users WHERE customer_id = (SELECT customer_id FROM Users WHERE id = :user_id )) " +
+            "AND product_id = :tariff_id " +
             "AND (current_status_id = 1/* Active */ " +
             "     OR current_status_id = 2/* Suspended */ " +
             "     OR current_status_id = 4/* In processing */)";
     private final static String DELETE_PLANNED_TASKS_FOR_TARIFF_SQL = "DELETE FROM planned_tasks" +
             " WHERE order_id = (SELECT" +
             "                    id FROM Orders WHERE" +
-            "                    user_id = :userId" +
-            "                    AND product_id = :tariffId" +
+            "                    user_id = :user_id" +
+            "                    AND product_id = :tariff_id" +
             "                    AND (current_status_id = 1/* Active */ " +
             "                         OR current_status_id = 2/* Suspended */ " +
             "                         OR current_status_id = 4/* In processing */))";
@@ -284,10 +260,6 @@ public class ProductDAOImpl implements ProductDAO {
             " FROM Products" +
             " WHERE customer_type_id = 1 /* Business */" +
             " AND type_id = 1/* Tariff */";
-    private final static String SELECT_SERVICES_FOR_CUSTOMERS_SQL = "SELECT * " +
-            "FROM Products " +
-            "WHERE customer_type_id = 1 /* Business */ " +
-            "AND TYPE_ID = 2 /*Service*/";
     private final static String SELECT_CURRENT_TARIFF_BY_CUSTOMER_ID_SQL = "SELECT " +
             "Products.id, " +
             "Products.category_id, " +
@@ -301,7 +273,7 @@ public class ProductDAOImpl implements ProductDAO {
             "FROM Products " +
             "JOIN Orders ON Orders.product_id = Products.id " +
             "WHERE Orders.user_id IN " +
-            "             (SELECT id FROM Users WHERE customer_id = :customerId) " +
+            "             (SELECT id FROM Users WHERE customer_id = :customer_id) " +
             "AND (Orders.current_status_id = 1/* Active */ " +
             "              OR Orders.current_status_id = 2/* Suspended */ " +
             "              OR Orders.current_status_id = 4/* In processing */)" +
@@ -318,7 +290,43 @@ public class ProductDAOImpl implements ProductDAO {
             " base_price," +
             " customer_type_id" +
             " FROM Products " +
-            " WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariffId)";
+            " WHERE id IN (SELECT service_id FROM Tariff_services WHERE tariff_id = :tariff_id)";
+    private final static String SELECT_ALL_SERVICES_OF_USER_CURRENT_TARIFF_SQL = "SELECT\n" +
+            "  p2.ID,\n" +
+            "  p2.NAME,\n" +
+            "  p2.DESCRIPTION,\n" +
+            "  p2.TYPE_ID,\n" +
+            "  p2.CATEGORY_ID,\n" +
+            "  p2.DURATION,\n" +
+            "  p2.NEED_PROCESSING,\n" +
+            "  p2.DESCRIPTION,\n" +
+            "  p2.STATUS,\n" +
+            "  p2.BASE_PRICE,\n " +
+            "  p2.CUSTOMER_TYPE_ID " +
+            "FROM PRODUCTS p1\n" +
+            "  JOIN ORDERS ON ORDERS.PRODUCT_ID = p1.ID\n" +
+            "                 AND ORDERS.USER_ID = :id\n" +
+            "                 AND p1.TYPE_ID = 1\n" +
+            " AND ORDERS.CURRENT_STATUS_ID <> 3 /*Deactivated*/" +
+            "  JOIN TARIFF_SERVICES\n" +
+            "    ON p1.ID = TARIFF_SERVICES.TARIFF_ID\n" +
+            "  JOIN PRODUCTS p2 ON p2.ID = TARIFF_SERVICES.SERVICE_ID ";
+    private final static String DISABLE_ENABLE_PRODUCT = "UPDATE Products SET status=:status WHERE id=:id";
+    private final static String SELECT_PRODUCT_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME," +
+            "prod.description AS DESCRIPTION, prod.DURATION AS duration " +
+            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID = ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
+            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
+            "WHERE ord.USER_ID = :id AND status.NAME != 'Deactivated'";
+//    private final static String SELECT_ACTIVE_PRODUCTS_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME " +
+//            "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID=ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
+//            " status ON(ord.CURRENT_STATUS_ID = status.ID)" +
+//            "WHERE ord.USER_ID = :id AND status.NAME = 'Active'";
+
+
+    private final static String SELECT_SERVICES_FOR_CUSTOMERS_SQL = "SELECT * " +
+            "FROM Products " +
+            "WHERE customer_type_id = 1 /* Business */ " +
+            "AND TYPE_ID = 2 /*Service*/";
     private final static String SELECT_LIMITED_ACTIVE_PRODUCTS = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from PRODUCTS " +
@@ -409,6 +417,9 @@ public class ProductDAOImpl implements ProductDAO {
             " FROM PRODUCTS WHERE ID=( " +
             " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
     final static String AND_CATEGORY_ID_SQL = "  AND category_id = :category_id ";
+    private static final String PATTERN = "pattern";
+    private static final String START = "start";
+
     private static Logger logger = LoggerFactory.getLogger(ProductDAOImpl.class);
     @Autowired
     @Qualifier("dataSource")
@@ -714,7 +725,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public List<Product> getAvailableTariffsByPlace(Integer placeId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("placeId", placeId);
+        params.addValue(PLACE_ID, placeId);
         try {
             return jdbcTemplate.query(SELECT_TARIFFS_BY_PLACE_SQL, params, tariffRowMapper);
         } catch (RuntimeException e) {
@@ -730,9 +741,9 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public List<Product> getIntervalOfTariffsByPlace(Integer placeId, Integer startIndex, Integer endIndex) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("placeId", placeId);
-        params.addValue("startIndex", startIndex);
-        params.addValue("endIndex", endIndex);
+        params.addValue(PLACE_ID, placeId);
+        params.addValue(START_INDEX, startIndex);
+        params.addValue(END_INDEX, endIndex);
         try {
             return jdbcTemplate.query(SELECT_INTERVAL_TARIFFS_BY_PLACE_SQL, params, tariffRowMapper);
         } catch (RuntimeException e) {
@@ -748,7 +759,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Integer getQuantityOfAllAvailableTariffsByPlaceId(Integer placeId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("placeId", placeId);
+        params.addValue(PLACE_ID, placeId);
         try {
             return jdbcTemplate.queryForObject(SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_BY_PLACE_ID_SQL, params, Integer.class);
         } catch (RuntimeException e) {
@@ -781,8 +792,8 @@ public class ProductDAOImpl implements ProductDAO {
     public boolean deactivateTariff(Integer userId, Integer tariffId) {
         deletePlannedTasks(userId, tariffId);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", userId);
-        params.addValue("tariffId", tariffId);
+        params.addValue(USER_ID, userId);
+        params.addValue(TARIFF_ID, tariffId);
         return (jdbcTemplate.update(DEACTIVATE_TARIFF_OF_USER_SQL, params) != 0);
     }
 
@@ -793,8 +804,8 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public boolean deletePlannedTasks(Integer userId, Integer tariffId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", userId);
-        params.addValue("tariffId", tariffId);
+        params.addValue(USER_ID, userId);
+        params.addValue(TARIFF_ID, tariffId);
         return (jdbcTemplate.update(DELETE_PLANNED_TASKS_FOR_TARIFF_SQL, params) != 0);
     }
 
@@ -820,8 +831,8 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public List<Product> getIntervalOfTariffsForCustomers(Integer startIndex, Integer endIndex) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("startIndex", startIndex);
-        params.addValue("endIndex", endIndex);
+        params.addValue(START_INDEX, startIndex);
+        params.addValue(END_INDEX, endIndex);
         try {
             return jdbcTemplate.query(SELECT_INTERVAL_TARIFFS_FOR_CUSTOMERS_SQL, params, tariffRowMapper);
         } catch (RuntimeException e) {
@@ -867,7 +878,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Product getCurrentCustomerTariff(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("customerId", customerId);
+        params.addValue(CUSTOMER_ID, customerId);
         try {
             return jdbcTemplate.queryForObject(SELECT_CURRENT_TARIFF_BY_CUSTOMER_ID_SQL, params, tariffRowMapper);
         } catch (RuntimeException e) {
@@ -883,7 +894,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public List<Product> getServicesOfTariff(Integer tariffId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("tariffId", tariffId);
+        params.addValue(TARIFF_ID, tariffId);
         try {
             return jdbcTemplate.query(SELECT_SERVICES_OF_TARIFF_SQL, params, productRowMapper);
         } catch (RuntimeException e) {
@@ -937,98 +948,121 @@ public class ProductDAOImpl implements ProductDAO {
      */
     @Override
     public List<Product> getActiveProductsByUserId(Integer id) {
-        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        List<Product> products = jdbcTemplate.query(SELECT_ACTIVE_PRODUCTS_FOR_CUSTOMER, params, (rs, rowNum) -> {
+        MapSqlParameterSource params = new MapSqlParameterSource(ID, id);
+        List<Product> products = jdbcTemplate.query(SELECT_ACTIVE_PRODUCTS_FOR_CUSTOMER_SQL, params, (rs, rowNum) -> {
             Product product = new Product();
-            product.setId(rs.getInt("ID"));
-            product.setName(rs.getString("NAME"));
+            product.setId(rs.getInt(ID));
+            product.setName(rs.getString(NAME));
             return product;
         });
         return products;
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     public List<Product> getAllServicesByCurrentUserTariff(Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", userId);
+        params.addValue(ID, userId);
         return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TARIFF_SQL, params, new ProductRowMapper());
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     @Override
     public Product findProductWithPriceSetByPlace(Integer productId, Integer placeId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("product_id", productId);
-        params.addValue("place_id", placeId);
+        params.addValue(PRODUCT_ID, productId);
+        params.addValue(PLACE_ID, placeId);
         return jdbcTemplate.queryForObject(SELECT_PRODUCT_BY_ID_BASE_PRICE_SET_BY_PLACE_SQL, params, productRowMapper);
 
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     @Override
     public List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId) {
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {
-            sort = "name";
+            sort = NAME;
         }
         if (categoryId != null) {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, AND_CATEGORY_ID_SQL);
-            params.addValue("category_id", categoryId);
+            params.addValue(CATEGORY_ID, categoryId);
         } else {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, "");
         }
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("start", start);
-        params.addValue("length", length + 1);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(START, start);
+        params.addValue(LENGTH, length + 1);
         return jdbcTemplate.query(query, params, productRowMapper);
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     @Override
     public List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId) {
-        // String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, search, categoryId);
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {
-            sort = "name";
+            sort = NAME;
         }
         if (categoryId != null) {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, AND_CATEGORY_ID_SQL);
-            params.addValue("category_id", categoryId);
+            params.addValue(CATEGORY_ID, categoryId);
         } else {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, "");
         }
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("start", start);
-        params.addValue("length", length + 1);
-        params.addValue("place_id", placeId);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(START, start);
+        params.addValue(LENGTH, length + 1);
+        params.addValue(PLACE_ID, placeId);
         return jdbcTemplate.query(query, params, productRowMapper);
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId) {
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (categoryId != null) {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, AND_CATEGORY_ID_SQL);
-            params.addValue("category_id", categoryId);
+            params.addValue(CATEGORY_ID, categoryId);
         } else {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, "");
         }
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(query, params, Integer.class);
 
     }
 
+    /**
+     * Yuliya Pedash
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId) {
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (categoryId != null) {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, AND_CATEGORY_ID_SQL);
-            params.addValue("category_id", categoryId);
+            params.addValue(CATEGORY_ID, categoryId);
         } else {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, "");
         }
-        params.addValue("place_id", placeId);
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(PLACE_ID, placeId);
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(query, params, Integer.class);
     }
 
@@ -1074,6 +1108,9 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.queryForObject(SELECT_ACTIVE_PRODUCT_FOR_RESEDENTIAL_COUNT, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Product getProductByOrderId(int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);

@@ -3,8 +3,8 @@ package jtelecom.controller.user;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullComplaintInfoDTO;
-import jtelecom.grid.GridRequestDto;
-import jtelecom.grid.ListHolder;
+import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.ListHolder;
 import jtelecom.repositories.FullComplaintInfoRepository;
 import jtelecom.security.SecurityAuthenticationHelper;
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ public class ComplaintHistoryController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto} <br>.
+     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto} <br>.
      * After method gets list with all client's complaints from database.<br>
      * This client's id method gets from the security current user.
      *

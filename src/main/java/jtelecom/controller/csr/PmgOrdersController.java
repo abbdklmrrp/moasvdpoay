@@ -3,8 +3,8 @@ package jtelecom.controller.csr;
 import jtelecom.dao.operationHistory.OperationHistoryDAO;
 import jtelecom.dao.order.OrderDAO;
 import jtelecom.dto.FullInfoOrderDTO;
-import jtelecom.grid.GridRequestDto;
-import jtelecom.grid.ListHolder;
+import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.ListHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,7 +25,7 @@ public class PmgOrdersController {
 
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto}. <br>
+     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}. <br>
      * After method gets list with all orders of client from database.<br>
      * This client's id method gets from the session.
      *

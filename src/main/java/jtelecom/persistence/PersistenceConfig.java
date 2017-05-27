@@ -9,14 +9,17 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- * @author Petr Moiseienko
+ * Created by Rysakova Anna on 20.04.2017.
  */
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:db/oracle.properties")
+//@PropertySource("classpath:ANN_DB.properties")
 public class PersistenceConfig {
     @Value("${datasource.driver-class-name}")
     private String driver;

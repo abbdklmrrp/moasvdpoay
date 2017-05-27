@@ -8,6 +8,8 @@ import jtelecom.dao.product.ProductType;
 import java.util.Calendar;
 
 /**
+ * Class contains full order info
+ *
  * @author Moiseienko Petro
  * @since 15.05.2017.
  */
@@ -177,8 +179,8 @@ public class FullInfoOrderDTO {
                 "\nCustomer's info: " +
                 "\nName: " + userName +
                 "\nSurname: " + userSurname +
-                "\nPhone: " + phone+
-                "\nAddress: "+address+" ";
+                "\nPhone: " + phone +
+                "\nAddress: " + address + " ";
         return message;
     }
 }

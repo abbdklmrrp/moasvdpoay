@@ -14,8 +14,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+
 /**
- * Created by Yuliya Pedash on 08.05.2017.
+ * @author Yuliya Pedash on 08.05.2017.
  */
 @Service
 public class PlannedTaskDAOImpl implements PlannedTaskDAO {
@@ -45,6 +46,16 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
             "AND ID < :id)";
     private final static String SELECT_BY_ID_SQL = "SELECT * FROM PLANNED_TASKS WHERE  ID = :id ";
     private final static String DELETE_PLANNED_TASKS_FOR_ORDER = "DELETE FROM PLANNED_TASKS WHERE ORDER_ID = :order_id";
+    private static final String ID = "id";
+    private static final String PRODUCT_ID = "product_id";
+    private static final String USER_ID = "user_id";
+    private static final String STATUS_ID = "status_id";
+    private static final String ORDER_ID = "order_id";
+    private static final String BEGIN_DATE = "begin_date";
+    private static final String END_DATE = "end_date";
+    private static final String START = "start";
+    private static final String END = "end";
+    private static final String DATE = "date";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
@@ -53,7 +64,7 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
     @Override
     public PlannedTask getById(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
+        params.addValue(ID, id);
         return jdbcTemplate.queryForObject(SELECT_BY_ID_SQL, params, plannedTaskRowMapper);
     }
 
@@ -65,10 +76,10 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
     @Override
     public boolean save(PlannedTask plannedTask) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("status_id", plannedTask.getStatus().getId());
-        params.addValue("order_id", plannedTask.getOrderId());
+        params.addValue(STATUS_ID, plannedTask.getStatus().getId());
+        params.addValue(ORDER_ID, plannedTask.getOrderId());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        params.addValue("date", dateFormat.format(plannedTask.getActionDate().getTime()));
+        params.addValue(DATE, dateFormat.format(plannedTask.getActionDate().getTime()));
         return jdbcTemplate.update(INSERT_PLANNED_TASK_SQL, params) > 0;
     }
 
@@ -77,8 +88,8 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
      */
     public boolean deleteAllPlannedTasksForProductOfUser(Integer productId, Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("product_id", productId);
-        params.addValue("user_id", userId);
+        params.addValue(PRODUCT_ID, productId);
+        params.addValue(USER_ID, userId);
         return jdbcTemplate.update(DELETE_PLANNED_TASKS_FOR_ORDER_OF_PRODUCT_FOR_USER_SQL, params) > 0;
     }
 
@@ -94,9 +105,9 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
     public List<PlannedTask> getAllPlannedTaskForDates(Calendar beginDate, Calendar endDate, Integer orderId) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("begin_date", simpleDateFormat.format(beginDate.getTime()));
-        params.addValue("end_date", simpleDateFormat.format(endDate.getTime()));
-        params.addValue("order_id", orderId);
+        params.addValue(BEGIN_DATE, simpleDateFormat.format(beginDate.getTime()));
+        params.addValue(END_DATE, simpleDateFormat.format(endDate.getTime()));
+        params.addValue(ORDER_ID, orderId);
         return jdbcTemplate.query(SELECT_PLANNED_TASKS_BY_DATES_SQL, params, plannedTaskRowMapper);
 
     }
@@ -107,7 +118,7 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
     @Override
     public boolean deleteNextPlannedTaskForActivationForThisOrder(Integer orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("order_id", orderId);
+        params.addValue(ORDER_ID, orderId);
         return jdbcTemplate.update(DELETE_NEXT_PLANNED_TASK_FOR_ACTIVATION_OF_ORDER_USER_SQL, params) > 0;
     }
 
@@ -118,16 +129,16 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
     public List<PlannedTaskDTO> getLimitedPlannedTasksForUsersOrders(Integer userId, Integer start, Integer end) {
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("user_id", userId);
-        params.addValue("start", start + 1);
-        params.addValue("end", end + 1);
+        params.addValue(USER_ID, userId);
+        params.addValue(START, start + 1);
+        params.addValue(END, end + 1);
         return jdbcTemplate.query(SELECT_INTERVAL_PLANNED_TASKS_DTO_FOR_USERS_ORDERS_SQL, params, (rs, rownum) -> {
             PlannedTaskDTO plannedTaskDTO = new PlannedTaskDTO();
             plannedTaskDTO.setProductName(rs.getString("name"));
             Date date = rs.getDate("action_date");
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
             plannedTaskDTO.setActionDate(simpleDateFormat.format(date));
-            plannedTaskDTO.setId(rs.getInt("id"));
+            plannedTaskDTO.setId(rs.getInt(ID));
             plannedTaskDTO.setStatus(OperationStatus.getOperationStatusFromId(rs.getInt("status_id")));
             return plannedTaskDTO;
         });
@@ -139,7 +150,7 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
     @Override
     public Integer getCountPlannedTasksForUserOrders(Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("user_id", userId);
+        params.addValue(USER_ID, userId);
         return jdbcTemplate.queryForObject(SELECT_COUNT_PLANNED_TASKS_FOR_USERS_ORDERS_SQL, params, Integer.class);
     }
 
@@ -149,7 +160,7 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
     @Override
     public boolean deletePlannedTaskById(Integer plannedTaskId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", plannedTaskId);
+        params.addValue(ID, plannedTaskId);
         return jdbcTemplate.update(DELETE_PLANNED_TASK_BY_ID_SQL, params) > 0;
     }
 
@@ -159,8 +170,8 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
     @Override
     public boolean deletePlannedTaskForActivationOfThisSuspense(PlannedTask suspensePlannedTask) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", suspensePlannedTask.getId());
-        params.addValue("order_id", suspensePlannedTask.getOrderId());
+        params.addValue(ID, suspensePlannedTask.getId());
+        params.addValue(ORDER_ID, suspensePlannedTask.getOrderId());
         return jdbcTemplate.update(DELETE_ACTIVATION_PLANNED_TASK_FOR_SUSPENSE_SQL, params) > 0;
     }
 
@@ -170,7 +181,7 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
     @Override
     public boolean deleteAllPlannedTasksForOrder(Integer orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("order_id", orderId);
+        params.addValue(ORDER_ID, orderId);
         return jdbcTemplate.update(DELETE_PLANNED_TASKS_FOR_ORDER, params) > 0;
     }
 }

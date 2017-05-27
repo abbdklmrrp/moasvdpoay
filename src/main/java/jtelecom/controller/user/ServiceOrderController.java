@@ -2,15 +2,17 @@ package jtelecom.controller.user;
 
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
+import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.product.ProcessingStrategy;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
 import jtelecom.dao.product.ProductDAO;
+import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.ServicesCatalogRowDTO;
-import jtelecom.grid.GridRequestDto;
-import jtelecom.grid.ListHolder;
+import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.orders.OrderService;
 import jtelecom.services.product.ProductService;
@@ -60,35 +62,40 @@ public class ServiceOrderController implements Serializable {
      * @param categoryId
      * @throws IOException
      */
-    public void orderService(Model model, Integer categoryId) throws IOException {
-        String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
+    public void orderService(Model model, Integer categoryId) {
         this.categoryId = categoryId;
         String categoryName = categoryId == null ? ALL_CATEGORIES :
                 productDAO.getProductCategoryById(categoryId).getCategoryName();
         model.addAttribute("categoryName", categoryName);
         List<ProductCategories> productCategories = productDAO.getProductCategories();
         model.addAttribute("productsCategories", productCategories);
+    }
+
+    public void orderServiceUser(Model model, Integer categoryId) {
+        String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
         model.addAttribute("userRole", userRoleLowerCase);
+        orderService(model, categoryId);
     }
 
     @RequestMapping(value = {"csr/orderServiceForUser"}, method = RequestMethod.GET)
     public String orderService(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
         this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
         orderService(model, categoryId);
+        model.addAttribute("userRole", "csr");
         return "newPages/csr/Services";
     }
 
     @RequestMapping(value = {"residential/orderService"}, method = RequestMethod.GET)
     public String orderServiceResidential(Model model, @RequestParam(required = false) Integer categoryId) throws IOException {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        orderService(model, categoryId);
+        orderServiceUser(model, categoryId);
         return "newPages/residential/Services";
     }
 
     @RequestMapping(value = {"business/orderService"}, method = RequestMethod.GET)
     public String orderServiceBusiness(Model model, @RequestParam(required = false) Integer categoryId) throws IOException {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        orderService(model, categoryId);
+        orderServiceUser(model, categoryId);
         return "newPages/business/Services";
     }
 

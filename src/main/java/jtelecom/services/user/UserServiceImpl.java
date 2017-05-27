@@ -7,6 +7,7 @@ import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
+import jtelecom.dao.user.UserStatus;
 import jtelecom.googleMaps.ServiceGoogleMaps;
 import jtelecom.services.customer.CustomerService;
 import jtelecom.services.customer.CustomerServiceImpl;
@@ -38,9 +39,16 @@ public class UserServiceImpl implements UserService {
     private MailService mailService;
     @Resource
     private CustomerService customerService;
-
     private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final static String SUCCESS_SAVING = "User successfully saved";
+    private final static String FAILED_SAVING = "Registration failed.Please try again";
+    private final static String NOT_UNIQUE_EMAIL = "User email isn't unique";
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean updateUser(User editedUser) {
         User oldUser = userDAO.getUserById(editedUser.getId());
         logger.warn("before changes" + oldUser.toString());
@@ -70,12 +78,6 @@ public class UserServiceImpl implements UserService {
         if (!(editedUser.getStatus() == null)) {
             oldUser.setStatus(editedUser.getStatus());
         }
-//        if (!user.getAddress().isEmpty() && !user.getAddress().equals(defaultUser.getAddress())) {
-//            defaultUser.setAddress(user.getAddress());
-//            if (!Objects.equals(user.getPlaceId(), defaultUser.getPlaceId())) {
-//                defaultUser.setPlaceId(user.getPlaceId());
-//            }
-//        }
         boolean success = userDAO.update(oldUser);
         if (success) {
             if (isPasswordChanged) {
@@ -93,15 +95,19 @@ public class UserServiceImpl implements UserService {
             if (unique) {
                 boolean success = userDAO.save(user);
                 if (success) {
-                    return "User successfully saved";
+                    return SUCCESS_SAVING;
                 }
-                return "User creating failed. Please try again";
+                return FAILED_SAVING;
             }
-            return "User email isn't unique";
+            return NOT_UNIQUE_EMAIL;
         }
         return message;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String saveWithGeneratingPassword(User user) {
         String password = passwordGenerator();
         user.setPassword(password);
@@ -110,6 +116,10 @@ public class UserServiceImpl implements UserService {
         return message;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String saveBusinessUser(User user, String companyName, String secretKey) {
         Integer customerId = customerDAO.getCustomerId(companyName, secretKey);
         if (customerId == null) {
@@ -120,24 +130,36 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String saveResidentialWithPasswordGenerating(User user) {
         String password = passwordGenerator();
         user.setPassword(password);
         String message = saveResidential(user);
-        if (message.equals("User successfully saved")) {
+        if (message.equals(SUCCESS_SAVING)) {
             mailService.sendRegistrationWithoutPasswordEmail(user);
         }
         return message;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String saveResidentialWithoutPasswordGenerating(User user) {
         String message = saveResidential(user);
-        if (message.equals("User successfully saved")) {
+        if (message.equals(SUCCESS_SAVING)) {
             mailService.sendRegistrationEmail(user);
         }
         return message;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean generateNewPassword(int userId) {
         User user = userDAO.getUserById(userId);
         String password = passwordGenerator();
@@ -149,6 +171,29 @@ public class UserServiceImpl implements UserService {
         return success;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean enableDisableUser(User user) {
+        boolean success = userDAO.enableDisableUser(user);
+        if (success) {
+            if (user.getStatus() == UserStatus.ENABLE) {
+                mailService.sendActivatedEmail(user);
+            } else if (user.getStatus() == UserStatus.DISABLE) {
+                mailService.sendBannedEmail(user);
+            }
+        }
+        return success;
+    }
+
+    /**
+     * Method saves customer to user, gets its id
+     * and saves user
+     *
+     * @param user user to saving
+     * @return message about success of the operation
+     */
     @Transactional
     private String saveResidential(User user) {
         user.setRole(Role.RESIDENTIAL);
@@ -163,19 +208,29 @@ public class UserServiceImpl implements UserService {
                     user.setCustomerId(customerId);
                     boolean success = userDAO.save(user);
                     if (success) {
-                        return "User successfully saved";
+                        return SUCCESS_SAVING;
                     } else {
-                        return "Registration failed.Please try again";
+                        return FAILED_SAVING;
                     }
                 } else {
-                    return "Registration failed.Please try again";
+                    return FAILED_SAVING;
                 }
             }
-            return "User email isn't unique";
+            return NOT_UNIQUE_EMAIL;
         }
         return message;
     }
 
+    /**
+     * Method validates user's fields and checks
+     * that field can't be empty or null
+     * For email field checks that email must contains
+     * sign "@"
+     *
+     * @param user user for validates
+     * @return message about wrong fields. If all fields filled
+     * right method returns empty string
+     */
     private StringBuilder validateFields(User user) {
         StringBuilder message = new StringBuilder();
         if (user.getSurname() == null || user.getSurname().isEmpty()) {
@@ -214,6 +269,13 @@ public class UserServiceImpl implements UserService {
         return message;
     }
 
+    /**
+     * Method generates random password.
+     * Password contains 8 signs and can contain
+     * upper or lower letters and numbers
+     *
+     * @return generated password
+     */
     private static String passwordGenerator() {
         StringBuilder password = new StringBuilder();
         Random random = new Random();

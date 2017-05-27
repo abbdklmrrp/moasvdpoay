@@ -195,13 +195,6 @@ public interface ProductDAO extends DAO<Product> {
      */
     Integer getQuantityOfAllAvailableTariffsByPlaceId(Integer placeId);
 
-    /**
-     * This method returns all services that are included in current user's Tariff.
-     *
-     * @param userId id of user
-     * @return list of products with service type.
-     */
-    List<Product> getAllServicesByCurrentUserTariff(Integer userId);
 
     boolean disableEnableProduct(Product product);
 
@@ -288,21 +281,63 @@ public interface ProductDAO extends DAO<Product> {
     boolean deletePlannedTasks(Integer userid, Integer tariffId);
 
     /**
+     * This method returns all services that are included in current user's Tariff.
+     *
+     * @param userId id of user
+     * @return list of products with service type.
+     * @author Yuliya Pedash
+     */
+    List<Product> getAllServicesByCurrentUserTariff(Integer userId);
+
+    /**
      * This method returns Product object in which <code>basePrice</code>
      * will be determined by price configured for place in prices table.
      *
      * @param productId id of product
      * @param placeId   id of place
      * @return found Product
+     * @author Yuliya Pedash
      */
     Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
 
+    /**
+     * @param start
+     * @param length
+     * @param sort
+     * @param search
+     * @param categoryId
+     * @return
+     * @author Yuliya Pedash
+     */
     List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId);
 
+    /**
+     * @param start
+     * @param length
+     * @param sort
+     * @param search
+     * @param categoryId
+     * @param placeId
+     * @return
+     * @author Yuliya Pedash
+     */
     List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId);
 
+    /**
+     * @param search
+     * @param categoryId
+     * @return
+     * @author Yuliya Pedash
+     */
     Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId);
 
+    /**
+     * @param search
+     * @param categoryId
+     * @param placeId
+     * @return
+     * @author Yuliya Pedash
+     */
     Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId);
 
     List<Product> getLimitedActiveProductsForBusiness(Integer start, Integer length, String sort, String search);

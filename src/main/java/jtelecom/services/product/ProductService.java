@@ -96,13 +96,30 @@ public interface ProductService {
      * Then new services are inserted into the database</p>
      *
      * @param servicesId {@code Array} of ID services
-     * @param productId    {@code Product} ID
+     * @param productId  {@code Product} ID
      * @see Product
      */
     void updateFillingOfTariffsWithServices(Integer[] servicesId, Integer productId);
 
+    /**
+     * Method saves product and dispatch
+     * info about it from users. Type od the users
+     * must be same to product's status
+     * {@link jtelecom.dao.entity.CustomerType}
+     *
+     * @param product this product
+     * @return id of the saved product
+     */
     Integer saveProduct(Product product);
 
+    /**
+     * Method changes status of the product
+     * ( see {@link jtelecom.dao.product.ProductStatus})
+     * and sends dispatch to users
+     *
+     * @param productId id of the product
+     * @return success of the operation
+     */
     boolean disableEnableProduct(int productId);
 
     /**

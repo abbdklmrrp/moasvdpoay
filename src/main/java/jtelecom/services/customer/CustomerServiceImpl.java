@@ -17,7 +17,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Resource
     private CustomerDAO customerDAO;
 
-
+    /**
+     * {@inheritDoc}
+     */
     public String save(Customer customer) {
         String message = validateCustomer(customer).toString();
         if (message.isEmpty()) {
@@ -30,24 +32,22 @@ public class CustomerServiceImpl implements CustomerService {
                     return "Creating failed. Please, try again";
                 }
             } else {
-                    return "Customer name isn't unique";
+                return "Customer name isn't unique";
             }
         } else {
             return message;
         }
     }
 
-    public Integer saveForUser(Customer customer){
+    /**
+     * {@inheritDoc}
+     */
+    public Integer saveForUser(Customer customer) {
         String message = validateCustomer(customer).toString();
         if (message.isEmpty()) {
             boolean unique = customerDAO.isUnique(customer);
             if (unique) {
-                Integer id = customerDAO.saveCustomer(customer);
-                if (id!=null) {
-                    return id;
-                } else {
-                    return null;
-                }
+                return customerDAO.saveCustomer(customer);
             } else {
                 return null;
             }
@@ -56,6 +56,14 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    /**
+     * Method validate customer's fields
+     * and that field can't be empty or null
+     *
+     * @param customer customer to validate
+     * @return message about wrong fields
+     * If all fields filled right returns empty string.
+     */
     private StringBuilder validateCustomer(Customer customer) {
         String name = customer.getName();
         StringBuilder message = new StringBuilder();

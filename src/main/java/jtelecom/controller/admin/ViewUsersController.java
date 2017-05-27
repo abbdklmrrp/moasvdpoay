@@ -3,9 +3,10 @@ package jtelecom.controller.admin;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dao.user.UserStatus;
-import jtelecom.grid.GridRequestDto;
-import jtelecom.grid.ListHolder;
+import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
+import jtelecom.services.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,8 @@ public class ViewUsersController {
     @Resource
     private UserDAO userDAO;
     @Resource
+    private UserService userService;
+    @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
 
     @RequestMapping(value = "getUsersPage", method = RequestMethod.GET)
@@ -39,7 +42,7 @@ public class ViewUsersController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto} <br>.
+     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto} <br>.
      * After method gets list with all users from database
      *
      * @param request -contains indexes for first element and last elements and patterns for search and sort
@@ -58,7 +61,7 @@ public class ViewUsersController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto} <br>.
+     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto} <br>.
      * After method gets list with all employees of business client from database.<br>
      * This client's id method gets from the security current user.
      *
@@ -90,7 +93,7 @@ public class ViewUsersController {
         User user = userDAO.getUserById(userId);
         String message;
         user.setStatus(UserStatus.ENABLE);
-        boolean success = userDAO.enableDisableUser(user);
+        boolean success = userService.enableDisableUser(user);
         if (success) {
             message = "success";
             logger.debug("User activated: " + userId);
@@ -112,7 +115,7 @@ public class ViewUsersController {
         User user = userDAO.getUserById(userId);
         String message;
         user.setStatus(UserStatus.DISABLE);
-        boolean success = userDAO.enableDisableUser(user);
+        boolean success = userService.enableDisableUser(user);
         if (success) {
             message = "success";
             logger.debug("User deactivated: " + userId);

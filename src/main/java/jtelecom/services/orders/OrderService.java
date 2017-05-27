@@ -77,12 +77,42 @@ public interface OrderService {
      */
     boolean activateOrder(Product product, Order order);
 
+    /**
+     * Method activates tariff and sends
+     * notification to user
+     *
+     * @param userId   user's id
+     * @param tariffId tariff's id
+     * @return success of the operation
+     */
     boolean activateTariff(Integer userId, Integer tariffId);
 
+    /**
+     * Method deactivates tariff and sends
+     * notification to user
+     *
+     * @param userId   user's id
+     * @param tariffId tariff's id
+     * @return success of the operation
+     */
     boolean deactivateTariff(Integer userId, Integer tariffId);
 
+    /**
+     * Method activates tariff from csr
+     * when order was in processing status
+     *
+     * @param orderId order's id
+     * @return success of the operation
+     */
     boolean activateOrderFromCsr(int orderId);
 
-
-    void sendEmail(int orderId, String text, String csrEmail);
+    /**
+     * Method sends custom email to user from csr
+     *
+     * @param orderId  order's id
+     * @param text     content of the email
+     * @param csrEmail email(username) of the csr
+     * @return success of the operation
+     */
+    boolean sendEmail(int orderId, String text, String csrEmail);
 }

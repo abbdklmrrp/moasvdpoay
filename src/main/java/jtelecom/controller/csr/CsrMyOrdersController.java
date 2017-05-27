@@ -4,8 +4,8 @@ import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
-import jtelecom.grid.GridRequestDto;
-import jtelecom.grid.ListHolder;
+import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.orders.OrderService;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +38,7 @@ public class CsrMyOrdersController {
 
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto} <br>.
+     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto} <br>.
      * After method gets list with all orders that assigned to the csr from database.<br>.
      * Method gets csr from the security current user.
      *
@@ -96,8 +96,8 @@ public class CsrMyOrdersController {
     public String sendEmail(@RequestParam(value = "orderId") int orderId,
                             @RequestParam(value = "text") String text) {
         String email = securityAuthenticationHelper.getCurrentUser().getUsername();
-        orderService.sendEmail(orderId, text, email);
-        return "success";
+        boolean success=orderService.sendEmail(orderId, text, email);
+        return success?"success":"fail";
     }
 
 

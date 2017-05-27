@@ -71,14 +71,10 @@ public class MailServiceImpl implements MailService {
     }
 
     /**
-     * Method sends custom emails
-     *
-     * @param to      recipient's email address
-     * @param subject subject of the email
-     * @param text    content of the email
+     * {@inheritDoc}
      */
     @Override
-    public void sendCustomEmail(String to, String subject, String text) {
+    public boolean sendCustomEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
@@ -87,11 +83,15 @@ public class MailServiceImpl implements MailService {
             validate(message);
         } catch (EmailException e) {
             logger.error(e.getMessage());
-            return;
+            return false;
         }
         new MailServiceImpl.MailThread(message).start();
+        return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendRegistrationEmail(User user) {
         Map<String, Object> model = new MapBuilder(user)
@@ -101,6 +101,9 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.REGISTRATION);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendRegistrationWithoutPasswordEmail(User user) {
         Map<String, Object> model = new MapBuilder(user)
@@ -111,6 +114,9 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.REGISTRATION_WITHOUT_PASSWORD);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendComplaintSentEmail(User user, int complaintId) {
         Map<String, Object> model = new MapBuilder(user)
@@ -121,6 +127,9 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.COMPLAINT_SENT);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendComplaintProcessingEmail(User user, int complaintId) {
         Map<String, Object> model = new MapBuilder(user)
@@ -131,6 +140,9 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.COMPLAINT_PROCESSING);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendComplaintProcessedEmail(User user, int complaintId) {
         Map<String, Object> model = new MapBuilder(user)
@@ -141,6 +153,9 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.COMPLAINT_PROCESSED);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendNewPasswordEmail(User user) {
         Map<String, Object> model = new MapBuilder(user)
@@ -151,6 +166,9 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.NEW_PASSWORD);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendNewProductDispatch(List<User> users, Product product) {
         for (User user : users) {
@@ -165,6 +183,9 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendProductProcessingEmail(User user, Product product) {
         Map<String, Object> model = new MapBuilder(user, product)
@@ -176,6 +197,10 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_PROCESSING);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void sendProductActivatedEmail(User user, Product product) {
         Map<String, Object> model = new MapBuilder(user, product)
                 .setUserName()
@@ -186,6 +211,9 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_ACTIVATED);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendProductDeactivated(User user, Product product) {
         Map<String, Object> model = new MapBuilder(user, product)
@@ -197,6 +225,9 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_DEACTIVATED);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendProductSuspendedEmail(User user, Product product, Calendar beginDate, Calendar endDate) {
         Map<String, Object> model = new MapBuilder(user, product)
@@ -210,6 +241,9 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_SUSPENDED);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendProductDeletedDispatch(List<User> users, Product product) {
         for (User user : users) {
@@ -223,6 +257,9 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendPasswordChangedEmail(User user) {
         Map<String, Object> model = new MapBuilder(user)
@@ -232,6 +269,9 @@ public class MailServiceImpl implements MailService {
         send(user.getEmail(), model, EmailTemplatePath.PASSWORD_CHANGED);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sendProductWillSuspendEmail(User user, Product product, Calendar beginDate, Calendar endDate) {
         Map<String, Object> model = new MapBuilder(user, product)
@@ -243,6 +283,30 @@ public class MailServiceImpl implements MailService {
                 .setEndDate(endDate)
                 .build();
         send(user.getEmail(), model, EmailTemplatePath.PRODUCT_WILL_SUSPEND);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void sendActivatedEmail(User user) {
+        Map<String, Object> model = new MapBuilder(user)
+                .setUserName()
+                .setUserSurname()
+                .build();
+        send(user.getEmail(), model, EmailTemplatePath.ACTIVATED);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void sendBannedEmail(User user) {
+        Map<String, Object> model = new MapBuilder(user)
+                .setUserName()
+                .setUserSurname()
+                .build();
+        send(user.getEmail(), model, EmailTemplatePath.BANNED);
     }
 
     /**

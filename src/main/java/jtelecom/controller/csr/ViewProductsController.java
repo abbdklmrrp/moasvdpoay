@@ -2,8 +2,8 @@ package jtelecom.controller.csr;
 
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDAO;
-import jtelecom.grid.GridRequestDto;
-import jtelecom.grid.ListHolder;
+import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.ListHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ModelAttribute;

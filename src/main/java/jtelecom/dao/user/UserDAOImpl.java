@@ -157,7 +157,7 @@ public class UserDAOImpl implements UserDAO {
             " SET ENABLE=:status " +
             " WHERE ID=:userId";
 
-    private static final String UPDATE_PASSWORD="UPDATE USERS " +
+    private static final String UPDATE_PASSWORD = "UPDATE USERS " +
             " SET PASSWORD=:password " +
             " WHERE ID=:userId";
 
@@ -184,50 +184,6 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getById(int id) {
         return null;
-    }
-
-    /**
-     * @param user
-     * @return
-     * @author Moiseienko Petro
-     */
-    @Override
-    public boolean update(User user) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("name", user.getName());
-        params.addValue("surname", user.getSurname());
-        params.addValue("enable", user.getStatus().getId());
-        params.addValue("phone", user.getPhone());
-        params.addValue("password", user.getPassword());
-        params.addValue("address", user.getAddress());
-//        params.addValue("placeId", user.getPlaceId());
-        params.addValue("id", user.getId());
-        int rows = jdbcTemplate.update(UPDATE_USER, params);
-        return rows > 0;
-
-    }
-
-    /**
-     * @param user
-     * @return
-     * @author Moisienko Petro
-     */
-    @Override
-    public boolean save(User user) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        String encodePassword = encoder.encode(user.getPassword());
-        params.addValue("name", user.getName());
-        params.addValue("surname", user.getSurname());
-        params.addValue("email", user.getEmail());
-        params.addValue("phone", user.getPhone());
-        params.addValue("password", encodePassword);
-        params.addValue("roleId", user.getRole().getId());
-        params.addValue("placeId", user.getPlaceId());
-        params.addValue("customerId", user.getCustomerId());
-        params.addValue("address", user.getAddress());
-        params.addValue("enable", 1);
-        int save = jdbcTemplate.update(SAVE_USER, params);
-        return save > 0;
     }
 
     @Override
@@ -279,17 +235,6 @@ public class UserDAOImpl implements UserDAO {
         return clients;
     }
 
-
-    public boolean isUnique(User user) {
-        String email = user.getEmail();
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("email", email);
-        List<String> users = jdbcTemplate.query(SELECT_BY_EMAIL, params, (rs, rowNum) -> {
-            return rs.getString("EMAIL");
-        });
-        return users.isEmpty();
-    }
-
     /**
      * This method finds user by his email
      * created by Yuliya Pedash
@@ -304,77 +249,6 @@ public class UserDAOImpl implements UserDAO {
         return jdbcTemplate.queryForObject(SELECT_USER_BY_EMAIL_SQL, params, new UserRowMapper());
     }
 
-    /**
-     * @param phone
-     * @return
-     * @author Moisienko Petro
-     */
-    @Override
-    public User getUserByPhone(String phone) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("phone", phone);
-        List<User> users = jdbcTemplate.query(SELECT_BY_PHONE, params, (rs, rowNum) -> {
-            User user = new User();
-            user.setName(rs.getString("name"));
-            user.setId(rs.getInt("id"));
-            user.setSurname(rs.getString("surname"));
-            user.setEmail(rs.getString("email"));
-            return user;
-        });
-        return users.isEmpty() ? null : users.get(0);
-    }
-
-    /**
-     * @param id
-     * @return
-     * @author Moiseienko Petro
-     */
-    @Override
-    public User getUserById(Integer id) {
-        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        return jdbcTemplate.queryForObject(SELECT_USER_BY_ID, params, new UserRowMapper());
-    }
-
-    @Override
-    public Integer getCountUsersWithSearch(String search) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("pattern", "%" + search + "%");
-        return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
-    }
-
-    @Override
-    public List<User> getLimitedQuantityUsers(int start, int length, String sort, String search) {
-        int rownum = start + length;
-        if (sort.isEmpty()) {
-            sort = "ID";
-        }
-        String sql = String.format(SELECT_LIMITED_USERS, sort);
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start);
-        params.addValue("length", rownum);
-        params.addValue("pattern", "%" + search + "%");
-        return jdbcTemplate.query(sql, params, new UserRowMapper());
-    }
-
-    @Override
-    public Integer getCountAllUsersWithSearch(String search) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("pattern", "%" + search + "%");
-        return jdbcTemplate.queryForObject(SELECT_ALL_COUNT, params, Integer.class);
-    }
-
-    @Override
-    public List<User> getLimitedQuantityAllUsers(int start, int length, String sort, String search) {
-        if (sort.isEmpty()) {
-            sort = "ID";
-        }
-        String sql = String.format(SELECT_LIMITED_ALL_USERS, sort);
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start);
-        params.addValue("length", length);
-        params.addValue("pattern", "%" + search + "%");
-        return jdbcTemplate.query(sql, params, new UserRowMapper());
-    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     @Override
@@ -398,7 +272,129 @@ public class UserDAOImpl implements UserDAO {
         params.addValue("pattern", "%" + search + "%");
         return jdbcTemplate.query(sql, params, new UserRowMapper());
     }
+    //////////////////
 
+    /**
+     * Method updates user
+     *
+     * @param user this user
+     * @return success of the operation
+     */
+    @Override
+    public boolean update(User user) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", user.getName());
+        params.addValue("surname", user.getSurname());
+        params.addValue("enable", user.getStatus().getId());
+        params.addValue("phone", user.getPhone());
+        params.addValue("password", user.getPassword());
+        params.addValue("address", user.getAddress());
+        params.addValue("id", user.getId());
+        int rows = jdbcTemplate.update(UPDATE_USER, params);
+        return rows > 0;
+
+    }
+
+    /**
+     * Method saves user
+     *
+     * @param user this user
+     * @return success of the operation
+     */
+    @Override
+    public boolean save(User user) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        String encodePassword = encoder.encode(user.getPassword());
+        params.addValue("name", user.getName());
+        params.addValue("surname", user.getSurname());
+        params.addValue("email", user.getEmail());
+        params.addValue("phone", user.getPhone());
+        params.addValue("password", encodePassword);
+        params.addValue("roleId", user.getRole().getId());
+        params.addValue("placeId", user.getPlaceId());
+        params.addValue("customerId", user.getCustomerId());
+        params.addValue("address", user.getAddress());
+        params.addValue("enable", 1);
+        int save = jdbcTemplate.update(SAVE_USER, params);
+        return save > 0;
+    }
+
+
+    public boolean isUnique(User user) {
+        String email = user.getEmail();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("email", email);
+        List<String> users = jdbcTemplate.query(SELECT_BY_EMAIL, params, (rs, rowNum) -> rs.getString("EMAIL"));
+        return users.isEmpty();
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Integer getCountAllUsersWithSearch(String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_ALL_COUNT, params, Integer.class);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User getUserById(Integer id) {
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        return jdbcTemplate.queryForObject(SELECT_USER_BY_ID, params, new UserRowMapper());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Integer getCountUsersWithSearch(String search) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<User> getLimitedQuantityUsers(int start, int length, String sort, String search) {
+        int rownum = start + length;
+        if (sort.isEmpty()) {
+            sort = "ID";
+        }
+        String sql = String.format(SELECT_LIMITED_USERS, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("length", rownum);
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.query(sql, params, new UserRowMapper());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<User> getLimitedQuantityAllUsers(int start, int length, String sort, String search) {
+        if (sort.isEmpty()) {
+            sort = "ID";
+        }
+        String sql = String.format(SELECT_LIMITED_ALL_USERS, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("start", start);
+        params.addValue("length", length);
+        params.addValue("pattern", "%" + search + "%");
+        return jdbcTemplate.query(sql, params, new UserRowMapper());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<User> getLimitedQuantityEmployeesOfCustomer(int start, int length, String sort, String search, int customerId) {
         if (sort.isEmpty()) {
@@ -413,6 +409,9 @@ public class UserDAOImpl implements UserDAO {
         return jdbcTemplate.query(sql, params, new UserRowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountEmployeesWithSearchOfCustomer(String search, int customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -421,18 +420,27 @@ public class UserDAOImpl implements UserDAO {
         return jdbcTemplate.queryForObject(SELECT_COUNT_EMPLOYEES_BY_CUSTOMER, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User getUserByComplaintId(int complaintId) {
         MapSqlParameterSource params = new MapSqlParameterSource("complaintId", complaintId);
         return jdbcTemplate.queryForObject(SELECT_USER_BY_COMPLAINT_ID, params, new UserRowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User getUserByOrderId(int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
         return jdbcTemplate.queryForObject(SELECT_USER_BY_ORDER_ID, params, new UserRowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<User> getUsersByCustomerType(CustomerType customerType) {
         Integer typeId = customerType.getId();
@@ -440,12 +448,18 @@ public class UserDAOImpl implements UserDAO {
         return jdbcTemplate.query(SELECT_USERS_BY_CUSTOMER_TYPE, params, new UserRowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<User> getUsersByProductId(int productId) {
         MapSqlParameterSource params = new MapSqlParameterSource("productId", productId);
         return jdbcTemplate.query(SELECT_USER_BY_PRODUCT_ID, params, new UserRowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean enableDisableUser(User user) {
         Integer status = user.getStatus().getId();
@@ -455,12 +469,15 @@ public class UserDAOImpl implements UserDAO {
         return jdbcTemplate.update(UPDATE_ENABLE_OR_DISABLE, params) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean updatePassword(User user) {
-        String password=encoder.encode(user.getPassword());
-        MapSqlParameterSource params=new MapSqlParameterSource();
-        params.addValue("password",password);
-        params.addValue("userId",user.getId());
-        return jdbcTemplate.update(UPDATE_PASSWORD,params)>0;
+        String password = encoder.encode(user.getPassword());
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("password", password);
+        params.addValue("userId", user.getId());
+        return jdbcTemplate.update(UPDATE_PASSWORD, params) > 0;
     }
 }

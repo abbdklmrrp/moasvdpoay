@@ -95,6 +95,11 @@ public interface ComplaintDAO extends DAO<Complaint> {
      */
     int countAssignedComplaintsToUser(int pmgId);
 
+    /**
+     * Method saves complaint
+     * @param complaint this complaint
+     * @return id of the saved complaint
+     */
     Integer saveComplaint(Complaint complaint);
 
 

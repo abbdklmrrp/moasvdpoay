@@ -1,5 +1,8 @@
 package jtelecom.services.mail;
 
+import freemarker.template.TemplateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import freemarker.template.Configuration;
@@ -21,6 +24,8 @@ public class Email {
     @Autowired
     private Configuration freemarkerConfiguration;
     private Properties properties;
+    private static Logger logger = LoggerFactory.getLogger(Email.class);
+    private static final String EMAIL_SUBJECTS_FILENAME="templates/mailSubjectTemplate.properties";
 
     /**
      * When object created it load property file with templates of the subject for email
@@ -28,11 +33,11 @@ public class Email {
     public Email() {
         properties = new Properties();
         try {
-            InputStream fis = getClass().getClassLoader().getResourceAsStream("templates/mailSubjectTemplate.properties");
-            properties.load(fis);
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(EMAIL_SUBJECTS_FILENAME);
+            properties.load(inputStream);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Property not loaded {}", e);
         }
     }
 
@@ -69,8 +74,8 @@ public class Email {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate(fileName), model));
             return content.toString();
-        } catch (Exception e) {
-            System.out.println("Exception occurred while processing mailTemplate:" + e.getMessage());
+        } catch (IOException | TemplateException e) {
+            logger.error("Exception occurred while processing mailTemplate: {}", e);
         }
         return "";
     }

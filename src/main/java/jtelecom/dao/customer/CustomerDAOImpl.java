@@ -105,6 +105,9 @@ public class CustomerDAOImpl implements CustomerDAO {
         return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer saveCustomer(Customer customer){
         String password = encoder.encode(customer.getSecretKey());
@@ -114,7 +117,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         params.addValue("secretKey", password);
         params.addValue("typeId", type);
         KeyHolder key = new GeneratedKeyHolder();
-        Integer customerId=jdbcTemplate.update(SAVE_CUSTOMER_SQL,params,key,new String[]{"ID"});
+        jdbcTemplate.update(SAVE_CUSTOMER_SQL,params,key,new String[]{"ID"});
         return key.getKey().intValue();
     }
 
@@ -123,12 +126,17 @@ public class CustomerDAOImpl implements CustomerDAO {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Customer> getAllBusinessCustomers() {
         return jdbcTemplate.query(SELECT_BUSINESS_CUSTOMERS, new CustomerRowMapper());
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     public boolean isUnique(Customer customer) {
         MapSqlParameterSource params = new MapSqlParameterSource("name", customer.getName());
         List<Integer> customers = jdbcTemplate.query(SELECT_CUSTOMERS_BY_NAME, params, (rs, rownum) -> rs.getInt("id"));

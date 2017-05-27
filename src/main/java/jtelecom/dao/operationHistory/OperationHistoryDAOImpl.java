@@ -51,7 +51,9 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<FullInfoOrderDTO> getOperationHistoryByUserId(Integer userId, int start, int length, String order, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
@@ -71,6 +73,9 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountOperationForUser(Integer userId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
@@ -78,12 +83,18 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
         return jdbcTemplate.queryForObject(SELECT_COUNT_OPERATION_FOR_USER, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountOperationsByOrderId(int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
         return jdbcTemplate.queryForObject(SELECT_COUNT_OF_OPERATIONS_BY_ORDER_ID, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<FullInfoOrderDTO> getIntervalOfOperationsByOrderId(int startIndex, int endIndex, int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();

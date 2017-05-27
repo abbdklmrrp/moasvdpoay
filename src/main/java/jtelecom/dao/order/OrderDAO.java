@@ -7,12 +7,12 @@ import jtelecom.dto.OrdersRowDTO;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 27.04.2017.
+ * @author Yuliya Pedash
  */
 public interface OrderDAO extends DAO<Order> {
     /**
      * This method returns all orders by one customer's users.
-     * created by Yuliya Pedash
+     * @author Yuliya Pedash
      *
      * @param customerId id of customer
      * @return list of Orders
@@ -72,25 +72,84 @@ public interface OrderDAO extends DAO<Order> {
      */
     Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId);
 
+    /**
+     * Method finds count all orders which connected to the user
+     * and satisfy to search pattern
+     *
+     * @param userId id of the user
+     * @param search search pattern
+     * @return total count of all orders
+     */
     Integer getCountOrdersByUserId(Integer userId, String search);
 
+    /**
+     * Method finds all orders which connected to the user,
+     * satisfy to search pattern and ordering by column name
+     *
+     * @param start  first element
+     * @param length last element
+     * @param sort   column name to ordering
+     * @param search search pattern
+     * @param userId id of the user
+     * @return list of the orders
+     */
     List<FullInfoOrderDTO> getIntervalOrdersByUserId(int start, int length, String sort, String search, int userId);
 
+    /**
+     * Method finds count all orders which not connected to the csr
+     * and satisfy to search pattern
+     *
+     * @param search search pattern
+     * @return total count of all orders
+     */
     Integer getCountOrdersWithoutCsr(String search);
 
+    /**
+     * Method finds all orders which not connected to the csr,
+     * satisfy to search pattern and ordering by column name
+     *
+     * @param start  first element
+     * @param length last element
+     * @param sort   column name to ordering
+     * @param search search pattern
+     * @return list of the orders
+     */
     List<FullInfoOrderDTO> getIntervalOrdersWithoutCsr(int start, int length, String sort, String search);
 
+    /**
+     * Method finds full info about order bu its id
+     *
+     * @param orderId id of the order
+     * @return full info about order
+     */
     FullInfoOrderDTO getOrderInfoByOrderId(Integer orderId);
 
+    /**
+     * Method set csr id to the order
+     *
+     * @param csrId   id of the csr
+     * @param orderId id of the order
+     * @return success of the operation
+     */
     boolean assignToUser(int csrId, int orderId);
 
+    /**
+     * Method finds count of the orders which connected to the csr
+     * and its status is InProcessing. Also orders satisfy to search pattern
+     *
+     * @param csrId  id of the csr
+     * @param search search pattern
+     * @return
+     */
     Integer getCountOfInprocessingOrdersByCsrId(int csrId, String search);
+
     /**
      * This method saves Order object to database and returns
      * generated primary key.
-     * @see Order
+     *
      * @param order Order object
      * @return generated primary key
+     * @see Order
      */
     Integer saveAndGetGeneratedId(Order order);
 
@@ -99,6 +158,7 @@ public interface OrderDAO extends DAO<Order> {
      * is not empty returned objects are filtered by name determined in search pattern.
      * If sort is not empty it sorts returned objects are sorted by column
      * deteermined in sort, othrwise, they are sorted by name.
+     *
      * @param start      index of begin of list
      * @param end        index of end of list
      * @param search     search pattern(name of order's product)
@@ -110,19 +170,46 @@ public interface OrderDAO extends DAO<Order> {
 
     /**
      * Gets number of orders of customer.
-     * @param search search patter
-     * @param sort column to sort on
+     *
+     * @param search     search patter
+     * @param sort       column to sort on
      * @param customerId id of customer
      * @return number of orders
      */
     Integer getCountOrdersByCustomerId(String search, String sort, Integer customerId);
 
-
+    /**
+     * Method finds all orders which connected to the csr,
+     * its status is InProcessing and
+     * satisfy to search pattern and ordering by column name
+     *
+     * @param start  first element
+     * @param length last element
+     * @param sort   column name to ordering
+     * @param search search pattern
+     * @return list of the orders
+     */
     List<FullInfoOrderDTO> getIntervalProcessingOrdersByCsrId(int start, int length, String sort, String search, int csrId);
 
-    boolean activatedOrder(int orderId);
+    /**
+     * Method finds all processed orders which connected to the csr,
+     * satisfy to search pattern and ordering by column name
+     *
+     * @param start  first element
+     * @param length last element
+     * @param sort   column name to ordering
+     * @param search search pattern
+     * @return list of the orders
+     */
+    List<FullInfoOrderDTO> getIntervalProccesedOrdersByCsrId(int start, int length, String sort, String search, int csrId);
 
-    List<FullInfoOrderDTO> getIntervalProccesedOrdersByCsrId(int start,int length,String sort, String search,int csrId);
-
+    /**
+     * Method finds count of the processed orders which connected to the csr
+     * and its status is InProcessing. Also orders satisfy to search pattern
+     *
+     * @param csrId  id of the csr
+     * @param search search pattern
+     * @return
+     */
     Integer getCountOfProcessedOrdersByCsrId(int csrId, String search);
 }

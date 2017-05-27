@@ -17,11 +17,12 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 27.04.2017.
+ * @author Yuliya Pedash
  */
 @Service
 public class OrderDAOImpl implements OrderDAO {
 
+    private static final String CUST_ID = "cust_id";
     private static Logger logger = LoggerFactory.getLogger(OrderDAOImpl.class);
 
     @Resource
@@ -282,7 +283,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     public List<Order> getOrdersByCustomerId(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("cust_id", customerId);
+        params.addValue(CUST_ID, customerId);
         return jdbcTemplate.query(SELECT_ORDERS_BY_CUST_ID_SQL, params, new OrderRowMapper());
     }
 
@@ -377,6 +378,9 @@ public class OrderDAOImpl implements OrderDAO {
         return jdbcTemplate.update(ACTIVATE_ORDER_SQL, params) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountOrdersByUserId(Integer userId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
@@ -384,6 +388,9 @@ public class OrderDAOImpl implements OrderDAO {
         return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_BY_USER_ID, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<FullInfoOrderDTO> getIntervalOrdersByUserId(int start, int length, String sort, String search, int userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -406,12 +413,18 @@ public class OrderDAOImpl implements OrderDAO {
         return orders;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountOrdersWithoutCsr(String search) {
         MapSqlParameterSource params = new MapSqlParameterSource("pattern", "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_WITHOUT_CSR, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<FullInfoOrderDTO> getIntervalOrdersWithoutCsr(int start, int length, String sort, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -425,6 +438,9 @@ public class OrderDAOImpl implements OrderDAO {
         return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FullInfoOrderDTO getOrderInfoByOrderId(Integer orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
@@ -445,6 +461,9 @@ public class OrderDAOImpl implements OrderDAO {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean assignToUser(int csrId, int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -453,6 +472,9 @@ public class OrderDAOImpl implements OrderDAO {
         return jdbcTemplate.update(SET_CSR_ID, params) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountOfInprocessingOrdersByCsrId(int csrId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -461,6 +483,9 @@ public class OrderDAOImpl implements OrderDAO {
         return jdbcTemplate.queryForObject(SELECT_COUNT_INPROCESSING_ORDERS_BY_CSR_ID, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<FullInfoOrderDTO> getIntervalProcessingOrdersByCsrId(int start, int length, String sort, String search, int csrId) {
         if (sort.isEmpty()) {
@@ -475,12 +500,9 @@ public class OrderDAOImpl implements OrderDAO {
         return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
 
-    @Override
-    public boolean activatedOrder(int orderId) {
-        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
-        return jdbcTemplate.update(ACTIVATE_INPROCESSING_ORDER, params) > 0;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<FullInfoOrderDTO> getIntervalProccesedOrdersByCsrId(int start, int length, String sort, String search, int csrId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -495,6 +517,9 @@ public class OrderDAOImpl implements OrderDAO {
         return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountOfProcessedOrdersByCsrId(int csrId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();

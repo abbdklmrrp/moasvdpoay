@@ -299,6 +299,9 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer saveProduct(Product product) {
         product = validNameDescription(product);
@@ -310,6 +313,9 @@ public class ProductServiceImpl implements ProductService {
         return isSave;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean disableEnableProduct(int productId) {
         Product product = productDAO.getById(productId);

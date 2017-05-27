@@ -1,8 +1,8 @@
 package jtelecom.controller.csr;
 
 
-import jtelecom.grid.GridRequestDto;
-import jtelecom.grid.ListHolder;
+import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class UsersDetailController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.grid.GridRequestDto}. <br>
+     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}. <br>
      * After method receives list with all clients from database.<br>
      *
      * @param request contains indexes for first element and last elements and patterns for search and sort
