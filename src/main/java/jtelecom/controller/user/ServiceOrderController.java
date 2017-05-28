@@ -2,12 +2,10 @@ package jtelecom.controller.user;
 
 import jtelecom.dao.entity.OperationStatus;
 import jtelecom.dao.order.Order;
-import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.product.ProcessingStrategy;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
 import jtelecom.dao.product.ProductDAO;
-import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.ServicesCatalogRowDTO;
@@ -57,12 +55,8 @@ public class ServiceOrderController implements Serializable {
     private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing this order. Please, try again!";
     private final static String ALL_CATEGORIES = "All Categories";
 
-    /**
-     * @param model
-     * @param categoryId
-     * @throws IOException
-     */
-    public void orderService(Model model, Integer categoryId) {
+
+    private void orderService(Model model, Integer categoryId) {
         this.categoryId = categoryId;
         String categoryName = categoryId == null ? ALL_CATEGORIES :
                 productDAO.getProductCategoryById(categoryId).getCategoryName();
@@ -77,7 +71,7 @@ public class ServiceOrderController implements Serializable {
         orderService(model, categoryId);
     }
 
-    @RequestMapping(value = {"csr/orderServiceForUser"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"csr/orderService"}, method = RequestMethod.GET)
     public String orderService(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
         this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
         orderService(model, categoryId);

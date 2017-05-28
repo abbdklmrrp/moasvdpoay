@@ -9,7 +9,7 @@ import jtelecom.dao.product.Product;
 import java.util.Calendar;
 
 /**
- * Created by Yuliya Pedash on 08.05.2017.
+ * @author Yuliya Pedash.
  */
 public interface OrderService {
 

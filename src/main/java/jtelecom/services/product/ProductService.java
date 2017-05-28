@@ -123,20 +123,22 @@ public interface ProductService {
     boolean disableEnableProduct(int productId);
 
     /**
-     * Returns {@link Product} object with price detemined by user type.
+     * This method returns {@link Product} object with price determined by user {@link jtelecom.dao.user.Role}.
      * For Residential user price in this Product will be determined by {@link User#placeId}.
-     * Otherwise, user will see base_price for this {@link Product}
-     * Yuliya Pedash
+     * Otherwise, for {@link Product#basePrice} will be set as base_price of this {@link Product} from data base.
      *
      * @param user      user
      * @param productId id of product
-     * @return
+     * @return product
+     * @author Yuliya Pedash.
      */
     Product getProductForUser(User user, Integer productId);
 
     /**
-     * This method  get limiteds
-     * Yuiya Pedash
+     * This method  gets list of {@link Product} with type Service limited by begin and end indexes,
+     * search pattern, user role and category id. Then it gets all the {@link Product} of customer of
+     * this user. After that method combines this information to form{@link ServicesCatalogRowDTO}
+     * list.
      *
      * @param start      begin index
      * @param end        end index
@@ -145,16 +147,22 @@ public interface ProductService {
      * @param user       user object
      * @param categoryId id of category
      * @return list of {@link ServicesCatalogRowDTO}
+     * @author Yuliya Pedash.
+     * @see jtelecom.dao.product.ProductType
      */
     List<ServicesCatalogRowDTO> getLimitedServicesForUser(User user, Integer start, Integer end, String sort, String search, Integer categoryId);
 
     /**
-     * Yuliya Pedash
+     * This method gets total count of all {@link Product} with type Service limited by user role,
+     * search pattern and category.
      *
-     * @param user
-     * @param search
-     * @param categoryId
-     * @return
+     * @param user       user
+     * @param search     search pattern
+     * @param categoryId id of category
+     * @return total count
+     * @author Yuliya Pedash.
+     * @see jtelecom.dao.user.Role
+     * @see jtelecom.dao.product.ProductType
      */
     Integer getCountForServicesWithSearch(User user, String search, Integer categoryId);
 

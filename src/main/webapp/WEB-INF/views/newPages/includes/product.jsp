@@ -15,7 +15,7 @@
                     <label>Description:</label> ${product.description}
                 </div>
                 <div class="row">
-                    <label>Price:</label> ${product.basePrice} hryvnas
+                    <label>Price:</label> ${product.basePrice} $
                 </div>
                 <div class="row">
                     <label>Processing Strategy:</label> ${product.processingStrategy.name}

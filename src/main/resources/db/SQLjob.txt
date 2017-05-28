@@ -1,0 +1,52 @@
+ create or replace PROCEDURE executeTodaysPlannedTasks
+
+ IS
+
+  CURSOR planned_task_cursor IS
+
+  SELECT id, status_id, order_id, action_date
+  FROM planned_tasks
+  WHERE trunc(action_date) = trunc(sysdate);
+
+ BEGIN
+
+  FOR val IN planned_task_cursor
+
+  LOOP
+
+   UPDATE  ORDERS
+
+   SET CURRENT_STATUS_ID = val.status_id
+   WHERE id = val.order_id;
+
+   DELETE FROM planned_tasks WHERE id = val.id;
+
+  END LOOP;
+
+  COMMIT;
+  EXCEPTION
+   WHEN OTHERS THEN
+     ROLLBACK;
+ END;
+ /
+
+ DBMS_SCHEDULER.create_job (
+
+ job_name        => 'exec_plan_tasks',
+
+ job_type        => 'STORED_PROCEDURE',
+
+ job_action      => 'executeTodaysPlannedTasks',
+
+ start_date      => TRUNC(SYSDATE) ,
+
+ enabled         => TRUE,
+
+ end_date        => NULL,
+
+ repeat_interval => 'freq = daily; byhour = 1',
+
+ comments        => 'Run all the planned tasks for today every day at 1 AM');
+
+end;
+/
