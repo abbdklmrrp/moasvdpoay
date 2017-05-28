@@ -46,12 +46,12 @@ public class PMGController {
 
     @RequestMapping(value = "allComplaints")
     public String getAllComplaints() {
-        return "newPages/pmg/AllComplaints";
+        return "newPages/pmg/allComplaints";
     }
 
     @RequestMapping(value = "myComplaints")
     public String getMyComplaints() {
-        return "newPages/pmg/MyComplaints";
+        return "newPages/pmg/myComplaints";
     }
 
     @RequestMapping(value = "getData")
@@ -68,7 +68,7 @@ public class PMGController {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         model.addAttribute("complaint", fullComplaintInfoRepository.getById(id));
         model.addAttribute("currentUserId", user.getId());
-        return "newPages/pmg/ComplaintInfo";
+        return "newPages/pmg/complaintInfo";
     }
 
     @RequestMapping(value = "getDataByPMG")

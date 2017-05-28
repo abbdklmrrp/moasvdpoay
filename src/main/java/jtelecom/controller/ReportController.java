@@ -87,7 +87,7 @@ public class ReportController {
     public String complaintStatistic(Model model) {
         List<Place> regions = placeDAO.getAll();
         model.addAttribute("regions", regions);
-        return "newPages/pmg/Statistics";
+        return "newPages/pmg/statistics";
     }
 
     /**
@@ -100,7 +100,7 @@ public class ReportController {
     public String orderStatistic(Model model) {
         List<Place> regions = placeDAO.getAll();
         model.addAttribute("regions", regions);
-        return "newPages/csr/Statistics";
+        return "newPages/csr/statistics";
     }
 
     /**
