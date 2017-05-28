@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 26.05.2017.
+ * @author Yuliya Pedash
  */
 @Controller
 @Scope(value = "session")
@@ -38,13 +38,11 @@ public class ServiceOrderController implements Serializable {
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
     private ProductDAO productDAO;
-
     @Resource
     private OrderService orderService;
     @Resource
     private UserDAO userDAO;
-    User currentUser = null;
-
+    private User currentUser = null;
     private Integer categoryId;
 
     @Resource

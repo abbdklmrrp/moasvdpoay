@@ -30,7 +30,8 @@ public interface OrderService {
 
     /**
      * This method determines if within dates when order is supposed to be suspended
-     * exist other planned tasks that can interrupt superdense process.
+     * exist other planned tasks that can interrupt superdense process or if begin
+     * or end dates of order suspense are after date of deactivation of order.
      *
      * @param beginDate begin date of superdense
      * @param endDate   end date of superdense

@@ -1,14 +1,16 @@
 package jtelecom.services.plannedTasks;
 
 /**
- * Created by Yuliya Pedash on 21.05.2017.
+ * @author Yuliya Pedash
  */
 public interface PlannedTaskService {
 
     /**
-     *
-     * @param suspensePlannedTaskId
-     * @return
+     * This method deletes planned task, which goal was to activate this order after
+     * Suspense and also sets this order status to 'Active'
+     * @param suspensePlannedTaskId planned task for order suspense
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise
+     * @see jtelecom.dao.entity.OperationStatus
      */
     boolean cancelSuspense(Integer suspensePlannedTaskId);
 }

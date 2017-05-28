@@ -84,7 +84,11 @@ public class OrderServiceImpl implements OrderService {
      */
     public boolean canOrderBeSuspendedWithinDates(Calendar beginDate, Calendar endDate, Integer orderId) {
         List<PlannedTask> plannedTasks = plannedTaskDAO.getAllPlannedTaskForDates(beginDate, endDate, orderId);
-        return plannedTasks.isEmpty();
+        if (!plannedTasks.isEmpty()) {
+            return false;
+        }
+        Calendar dateOfOrderDeactivation = plannedTaskDAO.getDeactivationPlannedTaskForOrder(orderId).getActionDate();
+        return (dateOfOrderDeactivation.before(beginDate) || dateOfOrderDeactivation.before(endDate)) ? false : true;
     }
 
 
@@ -168,7 +172,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public boolean activateTariff(Integer userId, Integer tariffId) {
@@ -182,7 +186,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public boolean deactivateTariff(Integer userId, Integer tariffId) {
@@ -196,7 +200,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public boolean activateOrderFromCsr(int orderId) {
@@ -210,14 +214,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
-    public boolean sendEmail(int orderId,String text,String csrEmail){
-        User user=userDAO.getUserByOrderId(orderId);
-        User csr=userDAO.findByEmail(csrEmail);
-        String to=user.getEmail();
-        String content=text+"\n  For more information call "+csr.getPhone()+" or write to "+csrEmail;
-        return mailService.sendCustomEmail(to,"Information about your order",content);
+    public boolean sendEmail(int orderId, String text, String csrEmail) {
+        User user = userDAO.getUserByOrderId(orderId);
+        User csr = userDAO.findByEmail(csrEmail);
+        String to = user.getEmail();
+        String content = text + "\n  For more information call " + csr.getPhone() + " or write to " + csrEmail;
+        return mailService.sendCustomEmail(to, "Information about your order", content);
     }
 }
