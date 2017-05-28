@@ -44,16 +44,33 @@ public class PMGController {
 
     private static Logger logger = LoggerFactory.getLogger(PMGController.class);
 
+    /**
+     * This method return page with all complaints for PMG.
+     *
+     * @return name of view
+     */
     @RequestMapping(value = "allComplaints")
     public String getAllComplaints() {
         return "newPages/pmg/allComplaints";
     }
 
+    /**
+     * This method return page with complaints assigned for concrete PMG.
+     *
+     * @return view name
+     */
     @RequestMapping(value = "myComplaints")
     public String getMyComplaints() {
         return "newPages/pmg/myComplaints";
     }
 
+    /**
+     * This method return part of complaints for pagination.
+     *
+     * @param startIndex start index
+     * @param endIndex end index
+     * @return DTO with part of complaints
+     */
     @RequestMapping(value = "getData")
     @ResponseBody
     public DataPartitionDTO getData(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
@@ -63,6 +80,13 @@ public class PMGController {
         return dto;
     }
 
+    /**
+     * This method return page with full complaint information by id of complaint.
+     *
+     * @param model used for adding attributes to the model
+     * @param id id of complaint
+     * @return view name
+     */
     @RequestMapping(value = "complaintInfo")
     public String compalaintInfo(Model model, @RequestParam(name = "id") int id) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
@@ -71,6 +95,13 @@ public class PMGController {
         return "newPages/pmg/complaintInfo";
     }
 
+    /**
+     * This method return part of complaints for pagination using concrete PMG id.
+     *
+     * @param startIndex start index
+     * @param endIndex end index
+     * @return DTO with part of complaints
+     */
     @RequestMapping(value = "getDataByPMG")
     @ResponseBody
     public DataPartitionDTO getDataByPMG(@RequestParam(name = "start") int startIndex, @RequestParam(name = "end") int endIndex) {
@@ -81,20 +112,35 @@ public class PMGController {
         return dto;
     }
 
+    /**
+     * This method assign complaint to concrete PMG.
+     *
+     * @param model used for adding attributes to the model
+     * @param complaintId  id of complaint
+     * @return forward to page with complaint info
+     */
     @RequestMapping(value = "assignTo")
-    public String assignTo(Model model, @RequestParam(name = "id") int id) {
+    public String assignTo(Model model, @RequestParam(name = "id") int complaintId) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
-        boolean success = complaintDAO.assignToUser(id, user.getId());
+        boolean success = complaintDAO.assignToUser(complaintId, user.getId());
         if (success) {
-            logger.debug("Complaint with id {} successful assigned to user with id {}", id, user.getId());
-            return "forward:complaintInfo?id=" + id;
+            logger.debug("Complaint with id {} successful assigned to user with id {}", complaintId, user.getId());
+            return "forward:complaintInfo?id=" + complaintId;
         } else {
-            logger.error("Can't assign complaint with id {} to user with id {}", id, user.getId());
+            logger.error("Can't assign complaint with id {} to user with id {}", complaintId, user.getId());
             model.addAttribute("msg", "Can't be assinged to you");
-            return "forward:complaintInfo?id=" + id;
+            return "forward:complaintInfo?id=" + complaintId;
         }
     }
 
+    /**
+     * This method change status for complaint.
+     *
+     * @param model used for adding attributes to the model
+     * @param id id of complaint
+     * @param statusId id of status
+     * @return forward to page with complaint info or to page with user complaints if status id was 3(Processed).
+     */
     @RequestMapping(value = "changeStatus")
     public String changeStatus(Model model, @RequestParam(name = "id") int id, @RequestParam(name = "statusId") int statusId) {
         boolean success = complaintService.changeStatus(id, statusId);

@@ -1,7 +1,31 @@
+/**
+ * @author Revniuk Aleksandr
+ */
+
+/**
+ * Field with old password.
+ * @type {Element}
+ */
 var oldPass = document.getElementById('oldPassword');
+/**
+ * Field with new password.
+ * @type {Element}
+ */
 var newPass = document.getElementById('password');
+/**
+ * Field need to confirm new password.
+ * @type {Element}
+ */
 var confirmPass = document.getElementById('confirmPassword');
+/**
+ * Save button.
+ * @type {Element}
+ */
 var saveBtn = document.getElementById('btn-save-profile');
+
+/**
+ * This function has main logic.
+ */
 $(document).ready(function () {
     $('#btn-edit-personal-info').click(function () {
         $('#edit-and-change').addClass("hide");
@@ -23,6 +47,10 @@ $(document).ready(function () {
         location.reload();
     });
 });
+
+/**
+ * This function disable button 'save' if confirm password is not equal new password.
+ */
 confirmPass.onkeyup = function () {
     if (this.value != newPass.value) {
         $('#div-confirmPassword').addClass("has-error");
@@ -33,14 +61,19 @@ confirmPass.onkeyup = function () {
         saveBtn.removeAttribute("disabled");
     }
 };
+
+/**
+ * This function show modal window with error message.
+ */
 window.onload = function () {
     if (document.getElementById('errorMessage').innerHTML.trim() != '') {
         sweetAlert(document.getElementById('errorMessage').innerHTML);
     }
 };
-setTimeout(function () {
-    document.getElementById("message").style.display = "none";
-}, 4000);
+
+/**
+ * This function initialize Google Maps API.
+ */
 function initialize() {
 
     var input = document.getElementById('address');

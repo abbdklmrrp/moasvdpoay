@@ -1,4 +1,11 @@
+/**
+ * @author Revniuk Aleksandr
+ */
 
+
+/**
+ * This function disable buttons if date is not valid, else enable.
+ */
 function fillData() {
     var btnShow = document.getElementById('btnShowReport');
     var btnDownload = document.getElementById('btnDownloadReport');
@@ -11,7 +18,11 @@ function fillData() {
         btnDownload.setAttribute("disabled", "disabled");
     }
 }
-
+/**
+ * This function check if date period is correct.
+ *
+ * @returns {boolean} <code>true</code> if date was valid, <code>false</code> if period of time was wrong.
+ */
 function checkDate() {
     var start = new Date($('#beginDate').val());
     var end = new Date($('#endDate').val());
@@ -23,13 +34,22 @@ function checkDate() {
         return true;
     }
 }
-
+/**
+ * This function show modal window with error.
+ *
+ * @param message message of error
+ */
 function showError(message) {
     sweetAlert("Oops...", message, "error");
 }
 
 google.charts.load('current', {'packages': ['corechart']});
-
+/**
+ * This function draw chart and table with received data.
+ *
+ * @param dataUrl url of data
+ * @param name name of object
+ */
 function drawChartAndTable(dataUrl,name) {
     var list = [];
     var len = 0;
