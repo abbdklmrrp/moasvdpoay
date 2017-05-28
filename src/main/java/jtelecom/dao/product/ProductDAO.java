@@ -302,41 +302,58 @@ public interface ProductDAO extends DAO<Product> {
     Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
 
     /**
-     * @param start
-     * @param length
-     * @param sort
-     * @param search
-     * @param categoryId
-     * @return
+     * This method returns list of available products with  type 'Service' for user with role 'Business.
+     * limited by start index, end index, category, and search and sorted by sort.
+     *
+     * @param start      start index
+     * @param end        end index
+     * @param sort       sort column
+     * @param search     search pattern
+     * @param categoryId id of category
+     * @return list of services
      * @author Yuliya Pedash
+     * @see jtelecom.dao.user.Role
+     * @see ProductType
      */
-    List<Product> getLimitedServicesForBusiness(Integer start, Integer length, String sort, String search, Integer categoryId);
+    List<Product> getLimitedServicesForBusiness(Integer start, Integer end, String sort, String search, Integer categoryId);
 
     /**
-     * @param start
-     * @param length
-     * @param sort
-     * @param search
-     * @param categoryId
-     * @param placeId
-     * @return
+     * This method returns list of available products with  type 'Service' for user with role 'Residential.
+     * limited by start index, end index, category, place and search and sorted by sort.
+     *
+     * @param start      start index
+     * @param end        end index
+     * @param sort       sort column
+     * @param search     search pattern
+     * @param categoryId id of category
+     * @param placeId    id o place
+     * @return list of services
      * @author Yuliya Pedash
+     * @see jtelecom.dao.user.Role
+     * @see ProductType
      */
-    List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId);
+    List<Product> getLimitedServicesForResidential(Integer start, Integer end, String sort, String search, Integer categoryId, Integer placeId);
 
     /**
-     * @param search
-     * @param categoryId
-     * @return
+     * This method returns total count for products with  type 'Service' for user with role 'Business'.
+     * limited by search and category
+     *
+     * @param search search pattern
+     * @param categoryId id of category
+     * @return total count
      * @author Yuliya Pedash
+     * @see jtelecom.dao.user.Role
+     * @see ProductType
      */
     Integer getCountForLimitedServicesForBusiness(String search, Integer categoryId);
 
     /**
-     * @param search
-     * @param categoryId
-     * @param placeId
-     * @return
+     * This method returns total count for products with  type 'Service' for user with role 'Residential'.
+     * limited by search, place and category
+     * @param search search pattern
+     * @param categoryId id of category
+     * @param placeId if of place
+     * @return total count
      * @author Yuliya Pedash
      */
     Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId);
