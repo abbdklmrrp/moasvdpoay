@@ -31,7 +31,8 @@ import java.util.List;
 /**
  * This controller work with reports for PMG and CSR.
  *
- * @author Revniuk Aleksandr, Yulia Pedash
+ * @author Revniuk Aleksandr
+ * @author Yulia Pedash
  */
 @Controller
 @RequestMapping({"csr", "pmg"})
@@ -49,14 +50,12 @@ public class ReportController {
     private static final String HEADER_VAR1 = "Content-Disposition";
     private static final String HEADER_VAR2 = "attachment; filename=";
     private static final String DATA_FORMAT = "yyyy-MM-dd";
-//    private static final int COMPLAINTS_REPORT_DATA = 1;
-//    private static final int ORDERS_REPORT_DATA = 2;
 
     /**
      * This method validate date.
      *
      * @param beginDate begin of period
-     * @param endDate end of period
+     * @param endDate   end of period
      * @return <code>true</code> if data was valid, <code>false</code> if date format or period of time was wrong.
      */
     private boolean validateDate(String beginDate, String endDate) {
@@ -77,9 +76,6 @@ public class ReportController {
         return true;
     }
 
-//    public List<ReportData> getReport(int type, String beginDate, String endDate, int region){
-//
-//    }
 
     /**
      * This method return page of statistics for PMG.
@@ -110,9 +106,9 @@ public class ReportController {
     /**
      * This method return list of complaints as JSON format.
      *
-     * @param region id of region
+     * @param region    id of region
      * @param beginDate begin date
-     * @param endDate end date
+     * @param endDate   end date
      * @return list of complaints if date was valid, otherwise null
      */
     @RequestMapping(value = "/getComplaintsReport")
@@ -136,9 +132,9 @@ public class ReportController {
     /**
      * This method return list of orders as JSON format.
      *
-     * @param region id of region
+     * @param region    id of region
      * @param beginDate begin date
-     * @param endDate end date
+     * @param endDate   end date
      * @return list of complaints if date was valid, otherwise null
      */
     @RequestMapping(value = "/getOrdersReport")

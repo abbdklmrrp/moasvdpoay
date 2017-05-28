@@ -97,6 +97,7 @@ public interface ComplaintDAO extends DAO<Complaint> {
 
     /**
      * Method saves complaint
+     *
      * @param complaint this complaint
      * @return id of the saved complaint
      */

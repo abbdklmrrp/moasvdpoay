@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 
 /**
- * @author Rysakova Anna, Revniuk Aleksandr
+ * This controller has main methods for PMG.
+ *
+ * @author Revniuk Aleksandr
+ * @author Rysakova Anna
  */
 @Controller
-@RequestMapping({"pmg"})
+@RequestMapping("pmg")
 public class PMGController {
     @Resource
     private ComplaintDAO complaintDAO;
@@ -61,7 +64,7 @@ public class PMGController {
     }
 
     @RequestMapping(value = "complaintInfo")
-    public String compalintInfo(Model model, @RequestParam(name = "id") int id) {
+    public String compalaintInfo(Model model, @RequestParam(name = "id") int id) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         model.addAttribute("complaint", fullComplaintInfoRepository.getById(id));
         model.addAttribute("currentUserId", user.getId());
