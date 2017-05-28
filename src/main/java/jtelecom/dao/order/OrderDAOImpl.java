@@ -23,6 +23,13 @@ import java.util.List;
 public class OrderDAOImpl implements OrderDAO {
 
     private static final String CUST_ID = "cust_id";
+    private static final String PRODUCT_ID = "product_id";
+    private static final String USER_ID = "user_id";
+    private static final String START = "start";
+    private static final String LENGTH = "length";
+    private static final String PATTERN = "pattern";
+    private static final String ID = "id";
+    private static final String CUR_STATUS_ID = "cur_status_id";
     private static Logger logger = LoggerFactory.getLogger(OrderDAOImpl.class);
 
     @Resource
@@ -68,25 +75,6 @@ public class OrderDAOImpl implements OrderDAO {
             " PRODUCT_ID = :product_id\n" +
             " AND USER_ID = :user_id\n " +
             " AND CURRENT_STATUS_ID <> 3 /*Deactivated status*/";
-//    private final static String SELECT_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT\n" +
-//            "   o.id,\n" +
-//            "   p.NAME,\n" +
-//            "   p.TYPE_ID,\n" +
-//            "   p.DURATION,\n" +
-//            "   op_his.OPERATION_DATE,\n" +
-//            "   o.CURRENT_STATUS_ID, \n" +
-//            " p.id product_id " +
-//            "FROM ORDERS o\n" +
-//            "   JOIN (SELECT\n" +
-//            "            OPERATION_DATE,\n" +
-//            "            ORDER_ID\n" +
-//            "         FROM OPERATIONS_HISTORY\n" +
-//            "         WHERE ID IN (SELECT MIN(ID)\n" +
-//            "                      FROM OPERATIONS_HISTORY\n" +
-//            "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = o.ID\n" +
-//            "   JOIN PRODUCTS p ON p.ID = o.PRODUCT_ID\n" +
-//            "   JOIN USERS u ON u.ID = o.USER_ID\n" +
-//            "WHERE o.CURRENT_STATUS_ID <> 3 AND u.CUSTOMER_ID =:cust_id";
 
     private static final String SELECT_INTERVAL_ORDERS_BY_USER_ID = "SELECT * FROM(" +
             "Select id , product_name, description, product_type, current_status_id, ROW_NUMBER() OVER (ORDER BY %s) R " +
@@ -237,36 +225,35 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public Order getById(int id) {
-
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
+        params.addValue(ID, id);
         return jdbcTemplate.queryForObject(SELECT_BY_ID, params, orderRowMapper);
-
     }
 
     @Override
     public boolean update(Order object) {
-        return false;
+        throw new UnsupportedOperationException("This operation is not supported");
     }
 
     @Override
     public boolean save(Order order) {
         MapSqlParameterSource paramsForOrder = new MapSqlParameterSource();
-        paramsForOrder.addValue("product_id", order.getProductId());
-        paramsForOrder.addValue("user_id", order.getUserId());
-        paramsForOrder.addValue("cur_status_id", order.getCurrentStatus().getId());
+        paramsForOrder.addValue(PRODUCT_ID, order.getProductId());
+        paramsForOrder.addValue(USER_ID, order.getUserId());
+        paramsForOrder.addValue(CUR_STATUS_ID, order.getCurrentStatus().getId());
         return jdbcTemplate.update(INSERT_ORDER, paramsForOrder) > 0;
     }
 
     /**
      * {@inheritDoc}
+     * @author Yuliya Pedash
      */
     public Integer saveAndGetGeneratedId(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource paramsForOrder = new MapSqlParameterSource();
-        paramsForOrder.addValue("product_id", order.getProductId());
-        paramsForOrder.addValue("user_id", order.getUserId());
-        paramsForOrder.addValue("cur_status_id", order.getCurrentStatus().getId());
+        paramsForOrder.addValue(PRODUCT_ID, order.getProductId());
+        paramsForOrder.addValue(USER_ID, order.getUserId());
+        paramsForOrder.addValue(CUR_STATUS_ID, order.getCurrentStatus().getId());
         jdbcTemplate.update(INSERT_ORDER, paramsForOrder, keyHolder, new String[]{"ID"});
         return new Integer(keyHolder.getKey().intValue());
     }
@@ -277,15 +264,109 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public boolean delete(Order order) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", order.getId());
+        params.addValue(ID, order.getId());
         return jdbcTemplate.update(DELETE_ORDER_BY_ID_SQL, params) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @author Yuliya Pedash
+     */
     public List<Order> getOrdersByCustomerId(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(CUST_ID, customerId);
         return jdbcTemplate.query(SELECT_ORDERS_BY_CUST_ID_SQL, params, new OrderRowMapper());
     }
+    /**
+     * {@inheritDoc}
+     * @author Yuliya Pedash
+     */
+    @Override
+    public boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(PRODUCT_ID, productId);
+        params.addValue(USER_ID, userId);
+        return jdbcTemplate.update(DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT_SQL, params) > 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @author Yuliya Pedash
+     */
+    @Override
+    public Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(USER_ID, userId);
+        params.addValue(PRODUCT_ID, productId);
+        return jdbcTemplate.queryForObject(SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL, params, orderRowMapper);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     * @author Yuliya Pedash
+     */
+    @Override
+    public List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer length, String search, String sort, Integer customerId) {
+        if (sort.isEmpty()) {
+            sort = "p.name";
+        }
+        String query = String.format(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(START, start);
+        params.addValue(LENGTH, length + 1);
+        params.addValue(CUST_ID, customerId);
+        params.addValue(PATTERN, search);
+        return jdbcTemplate.query(query, params, new OrdersRowDTORowMapper());
+    }
+
+    /**
+     * {@inheritDoc}
+     * @author Yuliya Pedash
+     */
+    @Override
+    public Integer getCountOrdersByCustomerId(String search, String sort, Integer customerId) {
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(CUST_ID, customerId);
+        params.addValue(PATTERN, search);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL, params, Integer.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @author Yuliya Pedash
+     */
+    @Override
+    public boolean suspendOrder(Integer orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(ID, orderId);
+        return jdbcTemplate.update(SUSPEND_ORDER_SQL, params) > 0;
+
+    }
+    /**
+     * {@inheritDoc}
+     * @author Yuliya Pedash
+     */
+    @Override
+    public boolean deactivateOrder(Integer orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(ID, orderId);
+        return jdbcTemplate.update(DEACTIVATE_ORDER_SQL, params) > 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @author Yuliya Pedash
+     */
+    @Override
+    public boolean activateOrder(Integer orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(ID, orderId);
+        return jdbcTemplate.update(ACTIVATE_ORDER_SQL, params) > 0;
+    }
+
 
     /**
      * Bulgakov Anton
@@ -304,79 +385,6 @@ public class OrderDAOImpl implements OrderDAO {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("product_id", productId);
-        params.addValue("user_id", userId);
-        return jdbcTemplate.update(DEACTIVATE_ORDER_OF_USER_FOR_PRODUCT_SQL, params) > 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("user_id", userId);
-        params.addValue("product_id", productId);
-        return jdbcTemplate.queryForObject(SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL, params, orderRowMapper);
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer length, String search, String sort, Integer customerId) {
-        if (sort.isEmpty()) {
-            sort = "p.name";
-        }
-        String query = String.format(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort);
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        //   String query = LimitedQueryBuilder.getQuery(SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL, sort, search, null);
-        params.addValue("start", start);
-        params.addValue("length", length + 1);
-        params.addValue("cust_id", customerId);
-        params.addValue("pattern", search);
-        return jdbcTemplate.query(query, params, new OrdersRowDTORowMapper());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Integer getCountOrdersByCustomerId(String search, String sort, Integer customerId) {
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("cust_id", customerId);
-        params.addValue("pattern", search);
-        return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_DTO_BY_CUSTOMER_ID_SQL, params, Integer.class);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean suspendOrder(Integer orderId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", orderId);
-        return jdbcTemplate.update(SUSPEND_ORDER_SQL, params) > 0;
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean activateOrder(Integer orderId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", orderId);
-        return jdbcTemplate.update(ACTIVATE_ORDER_SQL, params) > 0;
-    }
 
     /**
      * {@inheritDoc}
@@ -384,7 +392,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Integer getCountOrdersByUserId(Integer userId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_BY_USER_ID, params, Integer.class);
     }
 
@@ -528,14 +536,6 @@ public class OrderDAOImpl implements OrderDAO {
         return jdbcTemplate.queryForObject(SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID, params, Integer.class);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean deactivateOrder(Integer orderId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", orderId);
-        return jdbcTemplate.update(DEACTIVATE_ORDER_SQL, params) > 0;
-    }
+
 }
 

@@ -52,6 +52,9 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String USER_ID = "user_id";
     private static final String TARIFF_ID = "tariff_id";
     private static final String CUSTOMER_ID = "customer_id";
+    private final static String ID_LOWER_CASE = "id";
+    private static final String START = "start";
+    private static final String CATEGORY_ID_LOWER_CASE = "category_id";
     private final static String INSERT_PRODUCT_SQL = "INSERT INTO PRODUCTS(" +
             " TYPE_ID," +
             " CATEGORY_ID," +
@@ -419,7 +422,7 @@ public class ProductDAOImpl implements ProductDAO {
             " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
     final static String AND_CATEGORY_ID_SQL = "  AND category_id = :category_id ";
     private static final String PATTERN = "pattern";
-    private static final String START = "start";
+
 
     private static Logger logger = LoggerFactory.getLogger(ProductDAOImpl.class);
     @Autowired
@@ -962,17 +965,17 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Yuliya Pedash
+     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     public List<Product> getAllServicesByCurrentUserTariff(Integer userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(ID, userId);
+        params.addValue(ID_LOWER_CASE, userId);
         return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TARIFF_SQL, params, new ProductRowMapper());
     }
 
     /**
-     * Yuliya Pedash
+     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -985,7 +988,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Yuliya Pedash
+     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -997,7 +1000,7 @@ public class ProductDAOImpl implements ProductDAO {
         }
         if (categoryId != null) {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, AND_CATEGORY_ID_SQL);
-            params.addValue(CATEGORY_ID, categoryId);
+            params.addValue(CATEGORY_ID_LOWER_CASE, categoryId);
         } else {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL, sort, "");
         }
@@ -1008,7 +1011,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Yuliya Pedash
+     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -1020,7 +1023,7 @@ public class ProductDAOImpl implements ProductDAO {
         }
         if (categoryId != null) {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, AND_CATEGORY_ID_SQL);
-            params.addValue(CATEGORY_ID, categoryId);
+            params.addValue(CATEGORY_ID_LOWER_CASE, categoryId);
         } else {
             query = String.format(SELECT_LIMITED_SERVICES_FOR_RESIDENTIAL_SQL, sort, "");
         }
@@ -1032,7 +1035,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Yuliya Pedash
+     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -1041,7 +1044,7 @@ public class ProductDAOImpl implements ProductDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (categoryId != null) {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, AND_CATEGORY_ID_SQL);
-            params.addValue(CATEGORY_ID, categoryId);
+            params.addValue(CATEGORY_ID_LOWER_CASE, categoryId);
         } else {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_BUSINESS_SQL, "");
         }
@@ -1051,7 +1054,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Yuliya Pedash
+     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -1060,7 +1063,7 @@ public class ProductDAOImpl implements ProductDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (categoryId != null) {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, AND_CATEGORY_ID_SQL);
-            params.addValue(CATEGORY_ID, categoryId);
+            params.addValue(CATEGORY_ID_LOWER_CASE, categoryId);
         } else {
             query = String.format(SELECT_COUNT_FOR_SERVICES_FOR_RESIDENT_SQL, "");
         }

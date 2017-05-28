@@ -14,10 +14,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 
 /**
- * Created by Yuliya Pedash on 12.05.2017.
+ * This class consists solely of methods, which main goal is to show info
+ * about Product for user with different roles.
+ *
+ * @author Yuliya Pedash
+ * @see jtelecom.dao.user.Role
+ * @see User
+ * @see #showProductInfoForUser(Model, Integer)
  */
 @Controller
-@RequestMapping({"residential", "business", "csr", "employee"})
 public class ProductInfoController {
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
@@ -26,12 +31,35 @@ public class ProductInfoController {
     @Resource
     private UserDAO userDAO;
 
-    @RequestMapping(value = {"product"}, method = RequestMethod.GET)
-    public String showOrdersForUser(Model model, @RequestParam(name = "productId") Integer productId) {
+
+    private void showProductInfoForUser(Model model, Integer productId) {
         User currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Product product = productService.getProductForUser(currentUser, productId);
         model.addAttribute("product", product);
-        return "newPages/" + currentUser.getRole().getNameInLowwerCase() + "/Product";
+    }
+
+    @RequestMapping(value = {"csr/product"}, method = RequestMethod.GET)
+    public String showProductInfoForCsr(Model model, @RequestParam(name = "productId") Integer productId) {
+        showProductInfoForUser(model, productId);
+        return "newPages/csr/Product";
+    }
+
+    @RequestMapping(value = {"residential/product"}, method = RequestMethod.GET)
+    public String showProductInfoForRes(Model model, @RequestParam(name = "productId") Integer productId) {
+        showProductInfoForUser(model, productId);
+        return "newPages/residential/Product";
+    }
+
+    @RequestMapping(value = {"business/product"}, method = RequestMethod.GET)
+    public String showProductInfoForBusiness(Model model, @RequestParam(name = "productId") Integer productId) {
+        showProductInfoForUser(model, productId);
+        return "newPages/business/Product";
+    }
+
+    @RequestMapping(value = {"employee/product"}, method = RequestMethod.GET)
+    public String showProductInfoForEmp(Model model, @RequestParam(name = "productId") Integer productId) {
+        showProductInfoForUser(model, productId);
+        return "newPages/employee/Product";
     }
 
 }

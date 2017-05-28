@@ -46,6 +46,7 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
             "AND ID < :id)";
     private final static String SELECT_BY_ID_SQL = "SELECT * FROM PLANNED_TASKS WHERE  ID = :id ";
     private final static String DELETE_PLANNED_TASKS_FOR_ORDER = "DELETE FROM PLANNED_TASKS WHERE ORDER_ID = :order_id";
+    private final static String SELECT_DEACT_PLANNED_TASK = "SELECT * FROM  PLANNED_TASKS WHERE ORDER_ID = :id AND STATUS_ID = 3 /*Deactivation*/\n";
     private static final String ID = "id";
     private static final String PRODUCT_ID = "product_id";
     private static final String USER_ID = "user_id";
@@ -183,5 +184,12 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(ORDER_ID, orderId);
         return jdbcTemplate.update(DELETE_PLANNED_TASKS_FOR_ORDER, params) > 0;
+    }
+
+    @Override
+    public PlannedTask getDeactivationPlannedTaskForOrder(Integer orderId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(ID, orderId);
+        return jdbcTemplate.queryForObject(SELECT_DEACT_PLANNED_TASK, params, plannedTaskRowMapper);
     }
 }

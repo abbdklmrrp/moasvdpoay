@@ -11,29 +11,32 @@ import java.util.List;
  */
 public interface OrderDAO extends DAO<Order> {
     /**
-     * This method returns all orders by one customer's users.
-     * @author Yuliya Pedash
+     * This method returns all orders made by users of customer.
      *
      * @param customerId id of customer
      * @return list of Orders
+     * @author Yuliya Pedash
      */
     List<Order> getOrdersByCustomerId(Integer customerId);
 
     /**
-     * Method returns order id according to user id and product id with active status.
+     * Method returns order id of order with "Active' status according to user id and product id.
      *
      * @param userId    id of user.
      * @param productId id of product.
      * @return id of order.
+     * @see jtelecom.dao.entity.OperationStatus
      */
     Integer getOrderIdByUserIdAndProductId(Integer userId, Integer productId);
 
     /**
-     * Set 'Deactivated' status for order of product for user.
+     * Set 'Deactivated' status for order of product of user.
      *
      * @param productId id of product to deactivate
      * @param userId    id of user
-     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise
+     * @author Yuliya Pedash
+     * @see jtelecom.dao.entity.OperationStatus
      */
     boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId);
 
@@ -43,6 +46,8 @@ public interface OrderDAO extends DAO<Order> {
      *
      * @param orderId id of order
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     * @author Yuliya Pedash
+     * @see jtelecom.dao.entity.OperationStatus
      */
     boolean suspendOrder(Integer orderId);
 
@@ -51,6 +56,8 @@ public interface OrderDAO extends DAO<Order> {
      *
      * @param orderId id of order
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     * @author Yuliya Pedash
+     * @see jtelecom.dao.entity.OperationStatus
      */
     boolean activateOrder(Integer orderId);
 
@@ -59,9 +66,37 @@ public interface OrderDAO extends DAO<Order> {
      *
      * @param orderId id of order
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
+     * @author Yuliya Pedash
      */
+
     boolean deactivateOrder(Integer orderId);
 
+    /**
+     * This method returns list of limited OrdersRowsDTO objects. If search
+     * is not empty returned objects are filtered by name determined in search pattern.
+     * If sort is not empty this method sorts returned objects by column
+     * determined in sort, otherwise, they are sorted by name.
+     *
+     * @param start      start index
+     * @param end        end index
+     * @param search     search pattern
+     * @param sort       column to sort on
+     * @param customerId id of customer
+     * @return list of OrdersRowDTO
+     * @author Yuliya Pedash
+     */
+    List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer end, String search, String sort, Integer customerId);
+
+    /**
+     * Gets number of orders of customer.
+     *
+     * @param search     search pattern
+     * @param sort       column to sort on
+     * @param customerId id of customer
+     * @return number of orders
+     * @author Yuliya Pedash
+     */
+    Integer getCountOrdersByCustomerId(String search, String sort, Integer customerId);
 
     /**
      * This method returns order by user for particular product.
@@ -69,6 +104,7 @@ public interface OrderDAO extends DAO<Order> {
      * @param userId    id of user
      * @param productId id of product
      * @return Order object
+     * @author Yuliya Pedash
      */
     Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId);
 
@@ -149,34 +185,11 @@ public interface OrderDAO extends DAO<Order> {
      *
      * @param order Order object
      * @return generated primary key
+     * @author Yuliya Pedash
      * @see Order
      */
     Integer saveAndGetGeneratedId(Order order);
 
-    /**
-     * This method returns list of limited OrdersRowsDTO object. If search
-     * is not empty returned objects are filtered by name determined in search pattern.
-     * If sort is not empty it sorts returned objects are sorted by column
-     * deteermined in sort, othrwise, they are sorted by name.
-     *
-     * @param start      index of begin of list
-     * @param end        index of end of list
-     * @param search     search pattern(name of order's product)
-     * @param sort       column to sort on
-     * @param customerId id of customer
-     * @return list of OrdersRowDTO
-     */
-    List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer end, String search, String sort, Integer customerId);
-
-    /**
-     * Gets number of orders of customer.
-     *
-     * @param search     search patter
-     * @param sort       column to sort on
-     * @param customerId id of customer
-     * @return number of orders
-     */
-    Integer getCountOrdersByCustomerId(String search, String sort, Integer customerId);
 
     /**
      * Method finds all orders which connected to the csr,

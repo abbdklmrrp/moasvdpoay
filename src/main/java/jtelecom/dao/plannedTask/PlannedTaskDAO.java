@@ -7,15 +7,15 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 08.05.2017.
+ * @author Yuliya Pedash
  */
 public interface PlannedTaskDAO extends DAO<PlannedTask> {
 
     /**
      * This method deletes all planed tasks from database for particular order.
-     * @param productId
-     * @param userId
-     * @return
+     * @param productId id of product
+     * @param userId id of user
+     * @return  <code>true</code> if any rows were deleted, <code>false</code> otherwise
      */
     boolean deleteAllPlannedTasksForProductOfUser(Integer productId, Integer userId);
 
@@ -37,10 +37,10 @@ public interface PlannedTaskDAO extends DAO<PlannedTask> {
     boolean deleteNextPlannedTaskForActivationForThisOrder(Integer orderId);
 
     /**
-     * This method removes planned
+     * This method removes planned task by id
      *
-     * @param plannedTaskId
-     * @return
+     * @param plannedTaskId id of Planned task
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise
      */
     boolean deletePlannedTaskById(Integer plannedTaskId);
 
@@ -75,4 +75,13 @@ public interface PlannedTaskDAO extends DAO<PlannedTask> {
      * @return <code>true</code> if planned tasks were deleted, <code>false</code> otherwise
      */
     boolean deleteAllPlannedTasksForOrder(Integer orderId);
+
+    /**
+     * This method gets planned task with Status 'Deactivate' for this order.
+     *
+     * @param orderId id of order
+     * @return planned task object
+     * @see jtelecom.dao.entity.OperationStatus
+     */
+    PlannedTask getDeactivationPlannedTaskForOrder(Integer orderId);
 }

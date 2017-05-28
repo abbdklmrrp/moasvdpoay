@@ -29,16 +29,15 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by Yuliya Pedash on 07.05.2017.
+ * @author Yuliya Pedash on 07.05.2017.
  */
 @Controller
 @Scope(value = "session")
 public class UsersOrdersController implements Serializable {
     private final static String SUCCESS_MSG = "Thank you! This order will be suspended from %s to %s.";
-    private final static String DATE_ERROR_MSG = "Unable to suspend this order. Please, check the dates you've entered.";
+    private final static String DATE_ERROR_MSG = "Sorry! Unable to suspend this order. Please, check the dates you've entered.";
     private final static String FAIL_SUSPEND_ERROR_MSG = "Sorry! An error occurred while suspending this order. Please, try again.";
-    private final static String CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG = "Unable to suspend the order within these dates, because there are other planned tasks that can interrupt suspense process.";
-    User currentUser;
+    private User currentUser;
     @Resource
     private OrderDAO orderDAO;
     @Resource
@@ -47,11 +46,11 @@ public class UsersOrdersController implements Serializable {
     private OrderService orderService;
     private static Logger logger = LoggerFactory.getLogger(UsersOrdersController.class);
     @Resource
-    PlannedTaskDAO plannedTaskDAO;
+    private PlannedTaskDAO plannedTaskDAO;
     @Resource
     private SecurityAuthenticationHelper securityAuthenticationHelper;
     @Resource
-    PlannedTaskService plannedTaskService;
+    private PlannedTaskService plannedTaskService;
 
     private void showOrdersForUser(Model model) {
         String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
@@ -119,7 +118,7 @@ public class UsersOrdersController implements Serializable {
         }
         if (!orderService.canOrderBeSuspendedWithinDates(beginDate, endDate, orderId)) {
             logger.error("Unable to suspend order because of other planned tasks, orderId {} ", orderId);
-            return CANT_SUSP_BECAUSE_OF_OTHER_PLANNED_TASKS_ERROR_MSG;
+            return DATE_ERROR_MSG;
         }
         boolean isServiceSuspended = orderService.suspendOrder(beginDate, endDate, orderId);
         if (isServiceSuspended) {
