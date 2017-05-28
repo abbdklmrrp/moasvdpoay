@@ -1,5 +1,12 @@
 /**
- * Created by Aleksandr Revniuk on 11.05.17.
+ * @author Revniuk Aleksandr
+ */
+
+/**
+ * This function need for pagination.
+ *
+ * @param opts options for paging
+ * @param dataURL url of data
  */
 $.fn.pageMe = function (opts, dataURL) {
     var $this = this,
@@ -42,16 +49,27 @@ $.fn.pageMe = function (opts, dataURL) {
         return false;
     });
 
+    /**
+     * This function go to previous page.
+     */
     function previous() {
         var goToPage = parseInt(pager.data("curr")) - 1;
         goTo(goToPage);
     }
 
+    /**
+     * This function go to next page.
+     */
     function next() {
         goToPage = parseInt(pager.data("curr")) + 1;
         goTo(goToPage);
     }
 
+    /**
+     * This function go to concrete page.
+     *
+     * @param page number of page.
+     */
     function goTo(page) {
         var startAt = page * perPage,
             endOn = startAt + perPage;

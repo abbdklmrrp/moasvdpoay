@@ -59,9 +59,9 @@ public class EditProfileController {
             roleMap.put(Role.RESIDENTIAL, "residential");
         }
         urlBegin = roleMap.getOrDefault(user.getRole(), "user");
-        String view = "newPages/" + urlBegin + "/Profile";//Revniuk for new page
+        String view = "newPages/" + urlBegin + "/profile";
         model.addObject("pattern", urlBegin);
-        model.setViewName(view);//Revniuk
+        model.setViewName(view);
         return model;
     }
 

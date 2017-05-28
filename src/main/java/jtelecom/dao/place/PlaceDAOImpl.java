@@ -31,10 +31,10 @@ public class PlaceDAOImpl implements PlaceDAO {
     private final static String PATTERN = "PATTERN";
 
     private final static String SELECT_ALL_SQL = "SELECT * FROM Places";
-    private final static String SELECT_PLACES_FOR_FILL_IN_TARIFF = "SELECT ID, NAME FROM PLACES WHERE \n" +
+    private final static String SELECT_PLACES_FOR_FILL_IN_TARIFF_SQL = "SELECT ID, NAME FROM PLACES WHERE \n" +
             " PARENT_ID IS NOT NULL ORDER BY NAME";
-    private final static String SELECT_PLACE_NAME_BY_ID = "SELECT NAME FROM PLACES WHERE ID=:ID";
-    private final static String SELECT_LIMITED_PLACES = "SELECT *\n" +
+    private final static String SELECT_PLACE_NAME_BY_ID_SQL = "SELECT NAME FROM PLACES WHERE ID=:ID";
+    private final static String SELECT_LIMITED_PLACES_SQL = "SELECT *\n" +
             "FROM (SELECT\n" +
             "        a.*,\n" +
             "        rownum rnum\n" +
@@ -44,10 +44,10 @@ public class PlaceDAOImpl implements PlaceDAO {
             "            ORDER BY %s) a\n" +
             "      WHERE rownum <= :LENGTH)\n" +
             "WHERE rnum > :START";
-    private static final String SELECT_COUNT = "SELECT count(ID)\n" +
+    private static final String SELECT_COUNT_SQL = "SELECT count(ID)\n" +
             "  FROM PLACES\n" +
             " WHERE NAME LIKE :PATTERN ";
-    private final static String SELECT_LIMITED_PRICES_BY_PLACE = "SELECT *\n" +
+    private final static String SELECT_LIMITED_PRICES_BY_PLACE_SQL = "SELECT *\n" +
             "FROM (SELECT\n" +
             "        a.*,\n" +
             "        rownum rnum\n" +
@@ -72,7 +72,7 @@ public class PlaceDAOImpl implements PlaceDAO {
             "            ORDER BY %s) a\n" +
             "      WHERE rownum <= :length)\n" +
             "WHERE rnum > :start";
-    private static final String SELECT_COUNT_PRICE_BY_PLACE = "SELECT count(product.ID)\n" +
+    private static final String SELECT_COUNT_PRICE_BY_PLACE_SQL = "SELECT count(product.ID)\n" +
             "FROM\n" +
             "  PRODUCTS product\n" +
             "  JOIN PRODUCT_TYPES type ON (product.TYPE_ID = type.ID)\n" +
@@ -89,7 +89,6 @@ public class PlaceDAOImpl implements PlaceDAO {
     private PlaceRowMapper placeRowMapper;
 
     /**
-     * Revniuk Aleksandr
      * {@inheritDoc}
      */
     @Override
@@ -102,7 +101,7 @@ public class PlaceDAOImpl implements PlaceDAO {
      */
     @Override
     public List<Place> getAllPlaces() {
-        return jdbcTemplate.query(SELECT_PLACES_FOR_FILL_IN_TARIFF, (rs, rowNum) -> {
+        return jdbcTemplate.query(SELECT_PLACES_FOR_FILL_IN_TARIFF_SQL, (rs, rowNum) -> {
             Place place = new Place();
             place.setId(rs.getInt(ID));
             place.setName(rs.getString(NAME));
@@ -117,7 +116,7 @@ public class PlaceDAOImpl implements PlaceDAO {
     public String getPlaceNameById(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(ID, id);
-        return jdbcTemplate.queryForObject(SELECT_PLACE_NAME_BY_ID, params, String.class);
+        return jdbcTemplate.queryForObject(SELECT_PLACE_NAME_BY_ID_SQL, params, String.class);
     }
 
     /**
@@ -129,7 +128,7 @@ public class PlaceDAOImpl implements PlaceDAO {
         if (sort.isEmpty()) {
             sort = ID;
         }
-        String sql = String.format(SELECT_LIMITED_PLACES, sort);
+        String sql = String.format(SELECT_LIMITED_PLACES_SQL, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(START, start);
         params.addValue(LENGTH, rownum);
@@ -144,7 +143,7 @@ public class PlaceDAOImpl implements PlaceDAO {
     public Integer getCountPlacesWithSearch(String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(PATTERN, "%" + search + "%");
-        return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_SQL, params, Integer.class);
     }
 
     /**
@@ -156,7 +155,7 @@ public class PlaceDAOImpl implements PlaceDAO {
         if (sort.isEmpty()) {
             sort = "ID";
         }
-        String sql = String.format(SELECT_LIMITED_PRICES_BY_PLACE, sort);
+        String sql = String.format(SELECT_LIMITED_PRICES_BY_PLACE_SQL, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("start", start);
         params.addValue("length", rownum);
@@ -184,6 +183,6 @@ public class PlaceDAOImpl implements PlaceDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(PATTERN, "%" + search + "%");
         params.addValue(PLACE_ID, placeId);
-        return jdbcTemplate.queryForObject(SELECT_COUNT_PRICE_BY_PLACE, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_PRICE_BY_PLACE_SQL, params, Integer.class);
     }
 }

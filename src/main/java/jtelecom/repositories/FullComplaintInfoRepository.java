@@ -21,6 +21,11 @@ public class FullComplaintInfoRepository {
 
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
+    private static final String COMPLAINT_ID = "complaintId";
+    private static final String USER_ID = "userId";
+    private static final String PATTERN = "pattern";
+    private static final String START = "start";
+    private static final String LENGTH = "length";
 
     private static final String SELECT_FULL_INFO_ABOUT_COMPLAINT_BY_ID_SQL = "SELECT COMPLAINTS.ID, " +
             "COMPLAINTS.CREATING_DATE, \n" +
@@ -37,8 +42,8 @@ public class FullComplaintInfoRepository {
             "  INNER JOIN USERS ON ORDERS.USER_ID = USERS.ID\n" +
             "WHERE COMPLAINTS.ID = :complaintId";
 
-    private static final String SELECT_FULL_INFO_COMPLAINT_BY_USER_ID = "Select * from ( \n" +
-            "Select creatingDate,DESCRIPTION,STATUS_ID,productName, ROW_NUMBER() OVER (ORDER BY %s) R from ( \n" +
+    private static final String SELECT_FULL_INFO_COMPLAINT_BY_USER_ID = "SELECT * FROM ( \n" +
+            "SELECT creatingDate,DESCRIPTION,STATUS_ID,productName, ROW_NUMBER() OVER (ORDER BY %s) R from ( \n" +
             "SELECT \n" +
             " COMPLAINTS.CREATING_DATE creatingDate, \n" +
             "  COMPLAINTS.DESCRIPTION description , \n" +
@@ -49,9 +54,9 @@ public class FullComplaintInfoRepository {
             "  INNER JOIN PRODUCTS ON ORDERS.PRODUCT_ID = PRODUCTS.ID \n" +
             "  INNER JOIN USERS ON ORDERS.USER_ID = USERS.ID \n" +
             "WHERE USERS.ID IN (SELECT ID FROM USERS WHERE CUSTOMER_ID=(SELECT CUSTOMER_ID FROM USERS WHERE ID=:userId)))) \n" +
-            "where R>:start and R<=:length AND (productName like :pattern)";
-    private static final String SELECT_COUNT_OF_COMPLAINT_BY_USER_ID = "Select count(*) from ( \n" +
-            " Select creatingDate,DESCRIPTION,STATUS_ID,productName, ROW_NUMBER() OVER (ORDER BY creatingDate) R from ( \n" +
+            "WHERE R>:start and R<=:length AND (productName like :pattern)";
+    private static final String SELECT_COUNT_OF_COMPLAINT_BY_USER_ID = "SELECT COUNT (*) FROM ( \n" +
+            " SELECT creatingDate,DESCRIPTION,STATUS_ID,productName, ROW_NUMBER() OVER (ORDER BY creatingDate) R FROM ( \n" +
             " SELECT \n" +
             " COMPLAINTS.CREATING_DATE creatingDate, \n" +
             "  COMPLAINTS.DESCRIPTION description ,\n" +
@@ -62,19 +67,18 @@ public class FullComplaintInfoRepository {
             "  INNER JOIN PRODUCTS ON ORDERS.PRODUCT_ID = PRODUCTS.ID \n" +
             "  INNER JOIN USERS ON ORDERS.USER_ID = USERS.ID \n" +
             " WHERE USERS.ID IN (SELECT ID FROM USERS WHERE CUSTOMER_ID=(SELECT CUSTOMER_ID FROM USERS WHERE ID=:userId)))) \n" +
-            " where productName like :pattern";
+            " WHERE productName LIKE :pattern";
 
 
     /**
      * This method return complaint by id.
      *
-     * Revniuk Aleksandr
      * @param id id of complaint
      * @return complaint
      */
     public FullComplaintInfoDTO getById(int id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("complaintId", id);
+        params.addValue(COMPLAINT_ID, id);
         return jdbcTemplate.queryForObject(SELECT_FULL_INFO_ABOUT_COMPLAINT_BY_ID_SQL, params, (rs, rowNum) -> {
             FullComplaintInfoDTO complaint = new FullComplaintInfoDTO();
             complaint.setId(rs.getInt("ID"));
@@ -95,8 +99,8 @@ public class FullComplaintInfoRepository {
 
     public Integer getCountComplaintsByUserId(int userId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", userId);
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(USER_ID, userId);
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT_OF_COMPLAINT_BY_USER_ID, params, Integer.class);
     }
 
@@ -105,10 +109,10 @@ public class FullComplaintInfoRepository {
         if (sort.isEmpty()) {
             sort = "creatingDate";
         }
-        params.addValue("start", start);
-        params.addValue("length", length);
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("userId", userId);
+        params.addValue(START, start);
+        params.addValue(LENGTH, length);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(USER_ID, userId);
         String sql = String.format(SELECT_FULL_INFO_COMPLAINT_BY_USER_ID, sort);
         return jdbcTemplate.query(sql, params, (rs, rownum) -> {
             FullComplaintInfoDTO complaint = new FullComplaintInfoDTO();
