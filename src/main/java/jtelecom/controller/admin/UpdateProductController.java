@@ -4,7 +4,7 @@ import jtelecom.dao.product.Product;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,12 +23,27 @@ import java.util.Objects;
 @RequestMapping({"admin"})
 public class UpdateProductController {
 
-    private static final String ERROR_IN_CONNECTION = "Error with filling database";
-    private static final String ERROR_EXIST = "Sorry, product doesn't exist";
+    private static final String ERROR_WITH_DB = "Error with filling database";
+    private static final String ERROR_EXIST = "Sorry, input data is invalid";
     private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
     @Resource
     private ProductService productService;
 
+    /**
+     * Method update product and redirect to view with product info.
+     * Checks that all {@code Product} fields are correctly entered.
+     * If the wrong data - returns to the same page and displays an error message
+     *
+     * @param product    {@code Product} object
+     * @param id         {@code Product} ID
+     * @param mav        representation of the model and view
+     * @param attributes needs for sending in form message about success of the operation
+     *                   return to controller with info about {@code Product}
+     * @return redirect to controller with product's details
+     * If the wrong data - returns to the same page and displays an error message
+     * @see Product
+     * @see RedirectAttributes
+     */
     @RequestMapping(value = {"updateProduct"}, method = RequestMethod.POST)
     @ResponseBody
     public ModelAndView updateTariff(Product product, @RequestParam(value = "id") Integer id,
@@ -39,7 +54,7 @@ public class UpdateProductController {
         if (!Objects.nonNull(foundProduct)) {
             logger.error("Product with ID = {}  does not exist in the database ", id);
             mav.addObject("error", ERROR_EXIST);
-            mav.setViewName("newPages/admin/products");
+            mav.setViewName("redirect:/admin/getProducts");
         }
         product.setId(id);
         logger.debug("Write ID to product {} ", product.getId());
@@ -49,12 +64,11 @@ public class UpdateProductController {
             logger.debug("Update fields of product with success {} ", isUpdate);
             mav.addObject("message", "success");
             attributes.addFlashAttribute("msg", "Successfully updating");
-        } catch (DataIntegrityViolationException ex) {
+        } catch (DataAccessException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
-            mav.addObject("error ", ERROR_IN_CONNECTION);
+            mav.addObject("error ", ERROR_WITH_DB);
             mav.addObject("message", "Sorry, try again later");
             attributes.addFlashAttribute("msg", "Sorry, try again later");
-            mav.setViewName("redirect:/admin/getDetailsProduct?id=" + id);
             return mav;
         }
 

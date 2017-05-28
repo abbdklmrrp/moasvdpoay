@@ -2,6 +2,7 @@ package jtelecom.controller.admin;
 
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDAO;
+import jtelecom.dao.product.ProductType;
 import jtelecom.dto.TariffServiceDTO;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
@@ -29,19 +30,39 @@ import java.util.Objects;
 public class UpdateServicesInTariffController {
 
     private static final String ERROR_FILL_IN_TARIFF_SERVICES = "Please, select services to tariff";
-    private static final String ERROR_IN_CONNECTION = "Error with filling database";
+    private static final String ERROR_WITH_DB = "Error with filling database";
     private static final String ERROR_TYPE = "Wrong type of input data";
-    private static final String ERROR_EXIST = "Sorry, product doesn't exist";
+    private static final String ERROR_EXIST = "Sorry, input data is invalid";
     private static Logger logger = LoggerFactory.getLogger(UpdateServicesInTariffController.class);
     @Resource
     private ProductDAO productDAO;
     @Resource
     private ProductService productService;
 
+    /**
+     * Method refers to view with update services by tariff.
+     * Checks that there is an correct object with an {@code tariffId}. If not - returns to the page
+     * with all products. Receives a list of {@code TariffServiceDTO} with services by {code tariffId}
+     *
+     * @param mav      representation of the model and view
+     * @param tariffId {@code Product} tariff ID
+     * @return {@code ModelAndView} with {@code List} services by tariff
+     * @see Product
+     * @see TariffServiceDTO
+     * @see List
+     */
     @RequestMapping(value = {"updateServicesInTariff/{id}"}, method = RequestMethod.GET)
     public ModelAndView getServicesInTariffForUpdate(@PathVariable(value = "id") Integer tariffId,
                                                      ModelAndView mav) {
 
+        logger.debug("Receive product ID {} ", tariffId);
+        Product foundProduct = productService.isValidProduct(tariffId);
+        String productType = productDAO.getProductTypeByProductId(tariffId);
+        if (!Objects.nonNull(foundProduct) || Objects.equals(productType, ProductType.Service.getName())) {
+            logger.error("Product with ID = {}  does not exist in the database ", tariffId);
+            mav.addObject("error", ERROR_EXIST);
+            mav.setViewName("redirect:/admin/getProducts");
+        }
         logger.debug("Receive tariff's id {} ", tariffId);
         List<TariffServiceDTO> servicesByTariff = productDAO.getServicesInfoByTariff(tariffId);
         logger.debug("Received services that are included in the tariff {}", servicesByTariff.toString());
@@ -57,6 +78,22 @@ public class UpdateServicesInTariffController {
         return mav;
     }
 
+    /**
+     * Method update {@code List} services in tariff. Redirect to view with all
+     * services in tariff.
+     * Checks that {@code ID} and {@code servicesIdArray} are correctly entered.
+     * If the wrong data - returns to the same page and displays an error message
+     *
+     * @param id              {@code Product} ID
+     * @param servicesIdArray array of place ID
+     * @param mav             representation of the model and view
+     * @param attributes      needs for sending in form message about success of the operation
+     *                        return to controller with info about {@code Product}
+     * @return redirect to view with all prices in regions by product.
+     * If the wrong data - returns to the same page and displays an error message
+     * @see Product
+     * @see RedirectAttributes
+     */
     @RequestMapping(value = {"updateServicesInTariff"}, method = RequestMethod.POST)
     public ModelAndView updateServicesInTariff(@RequestParam(value = "id") Integer id,
                                                @RequestParam(value = "selectedService") Integer[] servicesIdArray,
@@ -90,7 +127,7 @@ public class UpdateServicesInTariffController {
             mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
-            mav.addObject("error ", ERROR_IN_CONNECTION);
+            mav.addObject("error ", ERROR_WITH_DB);
             attributes.addFlashAttribute("msg", "Sorry, try again later");
             mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
             return mav;

@@ -23,11 +23,13 @@
             <br>
             <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                 <tr>
+                    <td>№</td>
                     <th>Category</th>
                     <th>Services</th>
                 </tr>
-                <c:forEach var="servcesByCategory" items="${allServicesWithCategory}">
+                <c:forEach var="servcesByCategory" items="${allServicesWithCategory}" varStatus="category">
                     <tr>
+                        <td>${category.count}</td>
                         <td>${servcesByCategory.key}</td>
                         <td>
                             <select name="selectedService" id="soflow">

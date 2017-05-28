@@ -82,7 +82,8 @@
                     <label class="col-sm-4 control-label">Name</label>
                     <div class="col-sm-8">
                         <input readonly type="text" class="form-control" placeholder="Name " id="name"
-                               name="name" value="${product.name}" required>
+                               name="name" value="${product.name}"
+                               title="-   Must be only characters A-z 0-9" maxlength="25" required>
                         <i class="fa fa-user"></i>
                     </div>
                 </div>
@@ -90,7 +91,8 @@
                     <label class="col-sm-4 control-label">Description</label>
                     <div class="col-sm-8">
                         <input readonly type="text" class="form-control" placeholder="Description "
-                               id="description" name="description" value="${product.description}" required>
+                               id="description" name="description" value="${product.description}"
+                               title="-   Must be only characters A-z 0-9" maxlength="25" required>
                         <i class="fa fa-user"></i>
                     </div>
                 </div>

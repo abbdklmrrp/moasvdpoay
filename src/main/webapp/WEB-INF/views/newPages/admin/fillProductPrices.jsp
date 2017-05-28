@@ -17,7 +17,7 @@
 </jsp:include>
 <jsp:include page="../includes/footer.jsp"/>
 <form modelAttribute="priceByRegionDTO"
-      action="${pageContext.request.contextPath}/admin/fillTariffsPrices/${id}" method="post">
+      action="${pageContext.request.contextPath}/admin/fillProductPrices/${id}" method="post">
     <div class="container">
         <div class="col-md-2"></div>
         <div class="col-md-8">
@@ -33,9 +33,8 @@
                         <td><input type="hidden" name="placeId" value="${place.id}">${place.name}</td>
                         <td>
                             <div class="form-group row">
-                                <label class="col-sm-4 control-label">Base price</label>
                                 <div class="col-sm-8">
-                                    <input type="number" class="currency" placeholder="0.00"
+                                    <input type="number" class="currency" value="0.00"
                                            pattern="[0-9]+([,\.][0-9]+)?" step="0.01"
                                            name="priceByRegion">
                                     <i class="fa fa-user"></i>

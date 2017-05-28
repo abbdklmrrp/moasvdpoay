@@ -22,7 +22,7 @@ public class PlaceDAOImpl implements PlaceDAO {
     private final static String PLACE_ID = "PLACE_ID";
     private final static String NAME = "NAME";
     private final static String PRODUCT_NAME = "PRODUCT_NAME";
-    private final static String TYPE = "TYPE";
+    private final static String PRODUCT_TYPE = "PRODUCT_TYPE";
     private final static String STATUS = "STATUS";
     private final static String PLACE = "PLACE";
     private final static String PRICE = "PRICE";
@@ -40,7 +40,7 @@ public class PlaceDAOImpl implements PlaceDAO {
             "        rownum rnum\n" +
             "      FROM (SELECT *\n" +
             "            FROM PLACES\n" +
-            "            WHERE PLACES.NAME LIKE :PATTERN AND PLACES.PARENT_ID IS NOT NULL\n" +
+            "            WHERE upper(PLACES.NAME) LIKE upper(:PATTERN) AND PLACES.PARENT_ID IS NOT NULL\n" +
             "            ORDER BY %s) a\n" +
             "      WHERE rownum <= :LENGTH)\n" +
             "WHERE rnum > :START";
@@ -64,14 +64,14 @@ public class PlaceDAOImpl implements PlaceDAO {
             "              JOIN PRODUCT_TYPES type ON (product.TYPE_ID = type.ID)\n" +
             "              JOIN PRICES price ON (price.PRODUCT_ID = product.ID)\n" +
             "              JOIN PLACES place ON (price.PLACE_ID = place.ID)\n" +
-            "            WHERE place.ID = :PLACE_ID AND\n" +
-            "                  (product.NAME LIKE :PATTERN\n" +
-            "                  OR STATUS LIKE :PATTERN\n" +
-            "                  OR PRICE LIKE :PATTERN\n" +
-            "                  OR type.NAME LIKE :PATTERN)\n" +
+            "            WHERE place.ID = :placeId AND\n" +
+            "                  (upper(product.NAME) LIKE upper(:pattern)\n" +
+            "                  OR upper(STATUS) LIKE upper(:pattern)\n" +
+            "                  OR PRICE LIKE :pattern\n" +
+            "                  OR upper(type.NAME) LIKE upper(:pattern))\n" +
             "            ORDER BY %s) a\n" +
-            "      WHERE rownum <= :LENGTH)\n" +
-            "WHERE rnum > :START";
+            "      WHERE rownum <= :length)\n" +
+            "WHERE rnum > :start";
     private static final String SELECT_COUNT_PRICE_BY_PLACE = "SELECT count(product.ID)\n" +
             "FROM\n" +
             "  PRODUCTS product\n" +
@@ -154,22 +154,22 @@ public class PlaceDAOImpl implements PlaceDAO {
     public List<PriceByRegionDTO> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
-            sort = ID;
+            sort = "ID";
         }
         String sql = String.format(SELECT_LIMITED_PRICES_BY_PLACE, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(START, start);
-        params.addValue(LENGTH, rownum);
-        params.addValue(PATTERN, "%" + search + "%");
-        params.addValue(PLACE_ID, placeId);
+        params.addValue("start", start);
+        params.addValue("length", rownum);
+        params.addValue("pattern", "%" + search + "%");
+        params.addValue("placeId", placeId);
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
             PriceByRegionDTO priceByPlace = new PriceByRegionDTO();
-            priceByPlace.setProductId(rs.getInt(ID));
-            priceByPlace.setProductName(rs.getString(PRODUCT_NAME));
-            priceByPlace.setProductType(rs.getString(TYPE));
-            priceByPlace.setProductStatus(ProductStatus.getProductStatusFromId(rs.getInt(STATUS)).getName());
-            priceByPlace.setPlaceName(rs.getString(PLACE));
-            priceByPlace.setPriceProduct(rs.getBigDecimal(PRICE));
+            priceByPlace.setProductId(rs.getInt("ID"));
+            priceByPlace.setProductName(rs.getString("PRODUCT_NAME"));
+            priceByPlace.setProductType(rs.getString("TYPE"));
+            priceByPlace.setProductStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")).getName());
+            priceByPlace.setPlaceName(rs.getString("PLACE"));
+            priceByPlace.setPriceProduct(rs.getBigDecimal("PRICE"));
             priceByPlace.setPlaceId(placeId);
 
             return priceByPlace;

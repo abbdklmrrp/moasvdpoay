@@ -25,6 +25,17 @@ public class ViewAllProductsController {
     @Resource
     private PriceDAO priceDAO;
 
+    /**
+     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}.
+     * After method gets list with all product info.
+     *
+     * @param request contains indexes for first element and last elements and
+     *                patterns for search and sort.
+     * @return class which contains number of all elements with such parameters
+     * and some interval of the data
+     * @see ProductWithTypeNameDTO
+     * @see GridRequestDto
+     */
     @RequestMapping(value = {"all"}, method = RequestMethod.GET)
     public ListHolder servicesByTariff(@ModelAttribute GridRequestDto request) {
         String sort = request.getSort();
@@ -36,6 +47,15 @@ public class ViewAllProductsController {
         return ListHolder.create(data, size);
     }
 
+    /**
+     * Method get product's prices in regions info.
+     *
+     * @param startIndex index of first element
+     * @param endIndex   index of last element
+     * @param productId  {@code Product} ID
+     * @return product's prices in regions info
+     * @see PriceByRegionDTO
+     */
     @RequestMapping(value = {"getPrices"}, method = RequestMethod.GET)
     public ListHolder getPrices(@RequestParam(name = "start") int startIndex,
                                 @RequestParam(name = "end") int endIndex,

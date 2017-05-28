@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Anna Rysakova
@@ -48,7 +47,7 @@ public class PriceServiceImpl implements PriceService {
      */
     @Override
     public boolean isValid(Integer[] placeId, BigDecimal[] priceByRegion) {
-        return (Objects.nonNull(placeId) & Objects.nonNull(priceByRegion));
+        return (placeId.length == 0 & priceByRegion.length == 0);
     }
 
     /**

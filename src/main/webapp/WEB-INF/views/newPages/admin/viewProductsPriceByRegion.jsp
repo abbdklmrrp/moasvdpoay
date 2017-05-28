@@ -228,7 +228,7 @@
         ], renderers: {
             "action": function (pv, wv, grid) {
                 return $('<input type="button" class="btn btn-success"  value="Details" >').click(function () {
-                        location.href = '${pageContext.request.contextPath}/admin/getDetailsProduct?id=' + wv.id
+                    location.href = '${pageContext.request.contextPath}/admin/getDetailsProduct?id=' + wv.productId;
                     }
                 );
             }
