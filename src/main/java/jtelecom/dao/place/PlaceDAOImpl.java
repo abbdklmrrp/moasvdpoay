@@ -17,23 +17,36 @@ import java.util.List;
  */
 @Repository
 public class PlaceDAOImpl implements PlaceDAO {
+
+    private final static String ID = "ID";
+    private final static String PLACE_ID = "PLACE_ID";
+    private final static String NAME = "NAME";
+    private final static String PRODUCT_NAME = "PRODUCT_NAME";
+    private final static String TYPE = "TYPE";
+    private final static String STATUS = "STATUS";
+    private final static String PLACE = "PLACE";
+    private final static String PRICE = "PRICE";
+    private final static String START = "START";
+    private final static String LENGTH = "LENGTH";
+    private final static String PATTERN = "PATTERN";
+
     private final static String SELECT_ALL_SQL = "SELECT * FROM Places";
-    private final static String SELECT_PLACES_FOR_FILL_IN_TARIFF = "Select ID,NAME FROM PLACES WHERE \n" +
-            "PARENT_ID IS NOT NULL ORDER BY NAME";
-    private final static String SELECT_PLACE_NAME_BY_ID = "SELECT NAME FROM PLACES WHERE ID=:placeId";
+    private final static String SELECT_PLACES_FOR_FILL_IN_TARIFF = "SELECT ID, NAME FROM PLACES WHERE \n" +
+            " PARENT_ID IS NOT NULL ORDER BY NAME";
+    private final static String SELECT_PLACE_NAME_BY_ID = "SELECT NAME FROM PLACES WHERE ID=:ID";
     private final static String SELECT_LIMITED_PLACES = "SELECT *\n" +
             "FROM (SELECT\n" +
             "        a.*,\n" +
             "        rownum rnum\n" +
             "      FROM (SELECT *\n" +
             "            FROM PLACES\n" +
-            "            WHERE PLACES.NAME LIKE :pattern AND PLACES.PARENT_ID IS NOT NULL\n" +
+            "            WHERE PLACES.NAME LIKE :PATTERN AND PLACES.PARENT_ID IS NOT NULL\n" +
             "            ORDER BY %s) a\n" +
-            "      WHERE rownum <= :length)\n" +
-            "WHERE rnum > :start";
+            "      WHERE rownum <= :LENGTH)\n" +
+            "WHERE rnum > :START";
     private static final String SELECT_COUNT = "SELECT count(ID)\n" +
             "  FROM PLACES\n" +
-            " WHERE NAME LIKE :pattern ";
+            " WHERE NAME LIKE :PATTERN ";
     private final static String SELECT_LIMITED_PRICES_BY_PLACE = "SELECT *\n" +
             "FROM (SELECT\n" +
             "        a.*,\n" +
@@ -51,24 +64,24 @@ public class PlaceDAOImpl implements PlaceDAO {
             "              JOIN PRODUCT_TYPES type ON (product.TYPE_ID = type.ID)\n" +
             "              JOIN PRICES price ON (price.PRODUCT_ID = product.ID)\n" +
             "              JOIN PLACES place ON (price.PLACE_ID = place.ID)\n" +
-            "            WHERE place.ID = :placeId AND\n" +
-            "                  (product.NAME LIKE :pattern\n" +
-            "                  OR STATUS LIKE :pattern\n" +
-            "                  OR PRICE LIKE :pattern\n" +
-            "                  OR type.NAME LIKE :pattern)\n" +
+            "            WHERE place.ID = :PLACE_ID AND\n" +
+            "                  (product.NAME LIKE :PATTERN\n" +
+            "                  OR STATUS LIKE :PATTERN\n" +
+            "                  OR PRICE LIKE :PATTERN\n" +
+            "                  OR type.NAME LIKE :PATTERN)\n" +
             "            ORDER BY %s) a\n" +
-            "      WHERE rownum <= :length)\n" +
-            "WHERE rnum > :start";
+            "      WHERE rownum <= :LENGTH)\n" +
+            "WHERE rnum > :START";
     private static final String SELECT_COUNT_PRICE_BY_PLACE = "SELECT count(product.ID)\n" +
             "FROM\n" +
             "  PRODUCTS product\n" +
             "  JOIN PRODUCT_TYPES type ON (product.TYPE_ID = type.ID)\n" +
             "  JOIN PRICES price ON (price.PRODUCT_ID = product.ID)\n" +
             "  JOIN PLACES place ON (price.PLACE_ID = place.ID)\n" +
-            "WHERE place.ID = :placeId AND\n" +
-            "      (product.NAME LIKE :pattern\n" +
-            "       OR STATUS LIKE :pattern\n" +
-            "       OR PRICE LIKE :pattern OR type.NAME LIKE :pattern)";
+            "WHERE place.ID = :PLACE_ID AND\n" +
+            "      (product.NAME LIKE :PATTERN\n" +
+            "       OR STATUS LIKE :PATTERN\n" +
+            "       OR PRICE LIKE :PATTERN OR type.NAME LIKE :PATTERN)";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -84,75 +97,93 @@ public class PlaceDAOImpl implements PlaceDAO {
         return jdbcTemplate.query(SELECT_ALL_SQL, placeRowMapper);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Place> getAllPlaces() {
         return jdbcTemplate.query(SELECT_PLACES_FOR_FILL_IN_TARIFF, (rs, rowNum) -> {
             Place place = new Place();
-            place.setId(rs.getInt("ID"));
-            place.setName(rs.getString("NAME"));
+            place.setId(rs.getInt(ID));
+            place.setName(rs.getString(NAME));
             return place;
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPlaceNameById(int id) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(ID, id);
+        return jdbcTemplate.queryForObject(SELECT_PLACE_NAME_BY_ID, params, String.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Place> getLimitedQuantityPlace(int start, int length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
-            sort = "ID";
+            sort = ID;
         }
         String sql = String.format(SELECT_LIMITED_PLACES, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start);
-        params.addValue("length", rownum);
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(START, start);
+        params.addValue(LENGTH, rownum);
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.query(sql, params, new PlaceRowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountPlacesWithSearch(String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<PriceByRegionDTO> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
-            sort = "ID";
+            sort = ID;
         }
         String sql = String.format(SELECT_LIMITED_PRICES_BY_PLACE, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start);
-        params.addValue("length", rownum);
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("placeId", placeId);
+        params.addValue(START, start);
+        params.addValue(LENGTH, rownum);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(PLACE_ID, placeId);
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
             PriceByRegionDTO priceByPlace = new PriceByRegionDTO();
-            priceByPlace.setProductId(rs.getInt("ID"));
-            priceByPlace.setProductName(rs.getString("PRODUCT_NAME"));
-            priceByPlace.setProductType(rs.getString("TYPE"));
-            priceByPlace.setProductStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")).getName());
-            priceByPlace.setPlaceName(rs.getString("PLACE"));
-            priceByPlace.setPriceProduct(rs.getBigDecimal("PRICE"));
+            priceByPlace.setProductId(rs.getInt(ID));
+            priceByPlace.setProductName(rs.getString(PRODUCT_NAME));
+            priceByPlace.setProductType(rs.getString(TYPE));
+            priceByPlace.setProductStatus(ProductStatus.getProductStatusFromId(rs.getInt(STATUS)).getName());
+            priceByPlace.setPlaceName(rs.getString(PLACE));
+            priceByPlace.setPriceProduct(rs.getBigDecimal(PRICE));
             priceByPlace.setPlaceId(placeId);
 
             return priceByPlace;
         });
     }
 
-    @Override
-    public String getPlaceNameById(int id) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("placeId", id);
-        return jdbcTemplate.queryForObject(SELECT_PLACE_NAME_BY_ID, params, String.class);
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountPriceByPlace(String search, Integer placeId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("placeId", placeId);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(PLACE_ID, placeId);
         return jdbcTemplate.queryForObject(SELECT_COUNT_PRICE_BY_PLACE, params, Integer.class);
     }
 }

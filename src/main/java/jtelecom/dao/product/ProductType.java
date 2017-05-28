@@ -9,7 +9,7 @@ import java.util.Objects;
  * Created by Yuliya Pedash on 28.04.2017.
  */
 public enum ProductType {
-    Tariff(1, "Tariff"),
+    Tariff(1, "Tariff plan"),
     Service(2, "Service");
     private static Logger logger = LoggerFactory.getLogger(ProcessingStrategy.class);
     private static String WRONG_ID_ERROR_MSG = "Wrong id: ";

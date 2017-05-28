@@ -1,9 +1,9 @@
 package jtelecom.controller.product;
 
 import jtelecom.dao.price.PriceDAO;
-import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDAO;
 import jtelecom.dto.PriceByRegionDTO;
+import jtelecom.dto.ProductWithTypeNameDTO;
 import jtelecom.dto.grid.GridRequestDto;
 import jtelecom.dto.grid.ListHolder;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class ViewAllProductsController {
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         String search = request.getSearch();
-        List<Product> data = productDAO.getLimitedQuantityProduct(start, length, sort, search);
+        List<ProductWithTypeNameDTO> data = productDAO.getLimitedQuantityProduct(start, length, sort, search);
         int size = productDAO.getCountProductsWithSearch(search);
         return ListHolder.create(data, size);
     }

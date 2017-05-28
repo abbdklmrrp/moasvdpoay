@@ -2,6 +2,7 @@ package jtelecom.dao.product;
 
 import jtelecom.dao.entity.CustomerType;
 import jtelecom.dao.interfaces.DAO;
+import jtelecom.dto.ProductWithTypeNameDTO;
 import jtelecom.dto.TariffServiceDTO;
 
 import java.util.List;
@@ -129,7 +130,7 @@ public interface ProductDAO extends DAO<Product> {
      * @see List
      * @see Product
      */
-    List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search);
+    List<ProductWithTypeNameDTO> getLimitedQuantityProduct(int start, int length, String sort, String search);
 
     /**
      * Method save services by tariff ID

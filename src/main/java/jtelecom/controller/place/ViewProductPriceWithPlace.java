@@ -3,6 +3,7 @@ package jtelecom.controller.place;
 import jtelecom.dao.place.Place;
 import jtelecom.dao.place.PlaceDAO;
 import jtelecom.dao.price.PriceDAO;
+import jtelecom.dao.product.ProductDAO;
 import jtelecom.dto.PriceByRegionDTO;
 import jtelecom.dto.grid.GridRequestDto;
 import jtelecom.dto.grid.ListHolder;
@@ -25,6 +26,8 @@ public class ViewProductPriceWithPlace {
     private PlaceDAO placeDAO;
     @Resource
     private PriceDAO priceDAO;
+    @Resource
+    private ProductDAO productDAO;
 
     @RequestMapping(value = {"allPlace"}, method = RequestMethod.GET)
     public ListHolder allPlaces(@ModelAttribute GridRequestDto request) {
@@ -40,7 +43,9 @@ public class ViewProductPriceWithPlace {
     @RequestMapping(value = {"viewPriceByPlace"}, method = RequestMethod.GET)
     public ModelAndView getDetailsPriceByRegion(@RequestParam(value = "id") Integer id, ModelAndView mav) {
         mav.addObject("id", id);
+        String productType = productDAO.getProductTypeByProductId(id);
         String placeName = placeDAO.getPlaceNameById(id);
+        mav.addObject("productType", productType);
         mav.addObject("placeName", placeName);
         mav.setViewName("newPages/admin/viewProductsPriceByRegion");
         return mav;

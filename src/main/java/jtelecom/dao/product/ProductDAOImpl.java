@@ -1,5 +1,6 @@
 package jtelecom.dao.product;
 
+import jtelecom.dto.ProductWithTypeNameDTO;
 import jtelecom.dto.TariffServiceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -431,6 +432,8 @@ public class ProductDAOImpl implements ProductDAO {
     @Resource
     private ProductRowMapper productRowMapper;
     @Resource
+    private ProductWithTypeNameRowMapper productWithTypeNameRowMapper;
+    @Resource
     private TariffRowMapper tariffRowMapper;
 
     /**
@@ -653,7 +656,7 @@ public class ProductDAOImpl implements ProductDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Product> getLimitedQuantityProduct(int start, int length, String sort, String search) {
+    public List<ProductWithTypeNameDTO> getLimitedQuantityProduct(int start, int length, String sort, String search) {
         if (sort.isEmpty()) {
             sort = ID;
         }
@@ -662,7 +665,7 @@ public class ProductDAOImpl implements ProductDAO {
         params.addValue("start", start);
         params.addValue("length", length);
         params.addValue("pattern", "%" + search + "%");
-        return jdbcTemplate.query(sql, params, new ProductRowMapper());
+        return jdbcTemplate.query(sql, params, productWithTypeNameRowMapper);
     }
 
     /**

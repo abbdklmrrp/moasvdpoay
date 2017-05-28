@@ -1,7 +1,7 @@
 package jtelecom.controller.csr;
 
-import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDAO;
+import jtelecom.dto.ProductWithTypeNameDTO;
 import jtelecom.dto.grid.GridRequestDto;
 import jtelecom.dto.grid.ListHolder;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class ViewProductsController {
         int length = request.getLength();
         String search = request.getSearch();
         logger.debug("Get products in interval:" + start + " : " + length);
-        List<Product> data = productDAO.getLimitedQuantityProduct(start, length, sort, search);
+        List<ProductWithTypeNameDTO> data = productDAO.getLimitedQuantityProduct(start, length, sort, search);
         int size = productDAO.getCountProductsWithSearch(search);
         return ListHolder.create(data, size);
     }
