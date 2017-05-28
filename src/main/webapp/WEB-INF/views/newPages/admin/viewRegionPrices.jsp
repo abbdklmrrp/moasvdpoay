@@ -195,7 +195,7 @@
             </div>
         </div>
     </div>
-    <h2 style="text-align: center" id="errorMessage" hidden disabled="true">${msg}</h2>
+    <h2 style="text-align: center" id="resultMessage" hidden disabled="true">${msg}</h2>
 </div>
 <div class="col-xs-3"></div>
 <jsp:include page="../includes/footer.jsp"/>
@@ -219,5 +219,6 @@
         }
     })
 </script>
+<script src="${pageContext.request.contextPath}/resources/js/alertAfterUpdateProduct.js"></script>
 </body>
 </html>

@@ -193,7 +193,7 @@
             </button>
             <div class="col-sm-4 col-xs-0"></div>
         </div>
-        <h2 style="text-align: center" id="errorMessage" hidden disabled="true">${msg}</h2>
+        <h2 style="text-align: center" id="resultMessage" hidden disabled="true">${msg}</h2>
     </div>
 </div>
 <div class="col-xs-3"></div>
@@ -212,10 +212,11 @@
         }
     }
 </script>
+<script src="${pageContext.request.contextPath}/resources/js/alertAfterUpdateProduct.js"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
+<script src="<c:url value="/resources/js/selectedCustomerBus.js"/>"></script>
 <c:if test="${product.customerType=='Business'}">
-    <script src="<c:url value="/resources/js/selectedCustomerBus.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>
 </c:if>
 </body>

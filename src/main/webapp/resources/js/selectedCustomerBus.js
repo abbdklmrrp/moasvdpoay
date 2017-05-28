@@ -19,7 +19,7 @@ function selectedCustomer(a) {
     if (label == 'Business') {
         var c = document.getElementById("price");
         c.style.display = 'block';
-        $("#basePrice").val("100.00");
+        // $("#basePrice").val("100.00");
     } else {
         document.getElementById("price").style.display = 'none';
         $("#basePrice").val("");

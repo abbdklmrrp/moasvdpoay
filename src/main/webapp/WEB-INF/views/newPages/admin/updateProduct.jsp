@@ -80,7 +80,7 @@
                 <div class="form-group row">
                     <label class="col-sm-4 control-label">Name</label>
                     <div class="col-sm-8">
-                        <input readonly type="text" class="form-control" placeholder="Name " id="Name"
+                        <input readonly type="text" class="form-control" placeholder="Name " id="name"
                                name="name" value="${product.name}" required>
                         <i class="fa fa-user"></i>
                     </div>
@@ -194,7 +194,7 @@
             </button>
             <div class="col-sm-4 col-xs-0"></div>
         </div>
-        <h2 style="text-align: center" id="errorMessage" hidden disabled="true">${msg}</h2>
+        <h2 style="text-align: center" id="resultMessage" hidden disabled="true">${msg}</h2>
     </div>
 </div>
 <div class="col-xs-3"></div>
@@ -213,6 +213,7 @@
         }
     }
 </script>
+<script src="${pageContext.request.contextPath}/resources/js/alertAfterUpdateProduct.js"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
 <c:if test="${product.customerType=='Residential'}">

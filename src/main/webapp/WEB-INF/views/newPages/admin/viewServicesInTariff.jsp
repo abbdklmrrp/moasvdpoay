@@ -91,9 +91,11 @@
                     <div class="col-sm-5 col-xs-3"></div>
                 </div>
             </form>
+            <h2 style="text-align: center" id="resultMessage" hidden disabled="true">${msg}</h2>
         </div>
     </div>
     <br>
 </div>
 <div class="col-xs-3"></div>
 <jsp:include page="../includes/footer.jsp"/>
+<script src="${pageContext.request.contextPath}/resources/js/alertAfterUpdateProduct.js"></script>

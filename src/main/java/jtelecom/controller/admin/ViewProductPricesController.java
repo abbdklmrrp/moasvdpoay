@@ -29,9 +29,9 @@ public class ViewProductPricesController {
     @Resource
     private ProductService productService;
 
-    @RequestMapping(value = "viewAllProducts", method = RequestMethod.GET)
+    @RequestMapping(value = "viewAllPlaces", method = RequestMethod.GET)
     public ModelAndView getAllProductPrice(ModelAndView mav) {
-        mav.setViewName("newPages/admin/viewProductPrices");
+        mav.setViewName("newPages/admin/viewAllPlaces");
         return mav;
     }
 
@@ -48,7 +48,7 @@ public class ViewProductPricesController {
         mav.addObject("id", productId);
         logger.debug("Product id: {}", productId);
         mav.addObject("productType", productType);
-        mav.setViewName("newPages/admin/viewProductPriceInRegions");
+        mav.setViewName("newPages/admin/viewRegionPrices");
         return mav;
     }
 }

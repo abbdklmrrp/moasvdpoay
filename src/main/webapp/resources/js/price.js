@@ -15,6 +15,8 @@
                     value = min;
                 if (isNaN(value))
                     value = min;
+                if (value.length = 0)
+                    value = min;
                 else if (value > max)
                     value = max;
                 $(this).val(value.toFixed(2));

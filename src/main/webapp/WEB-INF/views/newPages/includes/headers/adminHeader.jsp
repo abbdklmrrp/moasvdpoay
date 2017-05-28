@@ -33,7 +33,7 @@
                         <li><a href="${pageContext.request.contextPath}/admin/getProducts">All products</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/addTariff">New tariff</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/addService">New service</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/viewAllProducts">View product prices by
+                        <li><a href="${pageContext.request.contextPath}/admin/viewAllPlaces">View product prices by
                             region</a></li>
                     </ul>
                 </li>

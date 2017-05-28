@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -64,7 +65,8 @@ public class UpdateProductPricesController {
     public ModelAndView fillPriceByRegion(ModelAndView mav,
                                           @RequestParam(value = "id") Integer productId,
                                           @RequestParam(value = "placeId") Integer[] placeId,
-                                          @RequestParam(value = "priceByRegion") BigDecimal[] priceByRegion
+                                          @RequestParam(value = "priceByRegion") BigDecimal[] priceByRegion,
+                                          RedirectAttributes attributes
     ) {
         logger.debug("Receive product's id {} ", productId);
         Product validProduct = productService.isValidProduct(productId);
@@ -89,6 +91,7 @@ public class UpdateProductPricesController {
         try {
             priceService.updateProductPriceInRegions(productId, placeId, priceByRegion);
             logger.debug("Update price in regions by product ");
+            attributes.addFlashAttribute("msg", "Successfully updating");
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {} ", ex.getMessage());
             List<PriceByRegionDTO> placesAndPrice = priceDAO.getAllRegionsAndProductPriceInRegionByProductId(productId);
@@ -96,6 +99,7 @@ public class UpdateProductPricesController {
 
             mav.addObject("placesAndPrice", placesAndPrice);
             mav.addObject("error", ERROR_FILL_IN_PRICE_BY_PRODUCT);
+            attributes.addFlashAttribute("msg", "Sorry, try again later");
             mav.setViewName("newPages/admin/updateProductPrice?id=" + productId);
             return mav;
         }

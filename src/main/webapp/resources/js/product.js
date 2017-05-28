@@ -1,4 +1,3 @@
-var saveBtn = document.getElementById('btn-save-product');
 $(document).ready(function () {
     $('#btn-edit-product-info').click(function () {
         $('#edit-and-changes').addClass("hide");
@@ -15,26 +14,6 @@ $(document).ready(function () {
     });
 
     $('#btn-cancel-product').click(function () {
-        $('#edit-and-changes').removeClass("hide");
-        $('#save-product').addClass("hide");
-        $("#name").prop('readonly', true);
-        $("#description").prop('readonly', true);
-        $("#basePrice").prop('readonly', true);
-        $("#customerTypeId").prop('disabled', 'disabled');
-        $("#durationInDays").prop('readonly', true);
-        $("#processingStrategy").prop('disabled', 'disabled');
-        $("#notProcessingStrategy").prop('disabled', 'disabled');
-        $("#availableStatus").prop('disabled', 'disabled');
-        $("#notAvailableStatus").prop('disabled', 'disabled');
-        saveBtn.removeAttribute("disabled");
+        location.reload();
     });
 });
-
-window.onload = function () {
-    if (document.getElementById('errorMessage').innerHTML.trim() != '') {
-        sweetAlert(document.getElementById('errorMessage').innerHTML);
-    }
-};
-setTimeout(function () {
-    document.getElementById("message").style.display = "none";
-}, 4000);

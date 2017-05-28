@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -59,6 +60,7 @@ public class UpdateServicesInTariffController {
     @RequestMapping(value = {"updateServicesInTariff"}, method = RequestMethod.POST)
     public ModelAndView updateServicesInTariff(@RequestParam(value = "id") Integer id,
                                                @RequestParam(value = "selectedService") Integer[] servicesIdArray,
+                                               RedirectAttributes attributes,
                                                ModelAndView mav) {
 
         logger.debug("Receive tariff's id {} ", id);
@@ -80,13 +82,16 @@ public class UpdateServicesInTariffController {
             logger.debug("Convert a string array of service's ID to an integer array {} ", Arrays.toString(servicesIdArray));
             productService.updateFillingOfTariffsWithServices(servicesIdArray, id);
             logger.debug("Update tariff: removed unnecessary services, added new services");
+            attributes.addFlashAttribute("msg", "Successfully updating");
         } catch (NumberFormatException e) {
             mav.addObject("error ", ERROR_TYPE);
             logger.error("Wrong parameter's type ", e.getMessage());
-            mav.setViewName("newPages/admin/updateServicesInTariff?id=" + id);
+            attributes.addFlashAttribute("msg", "Sorry, try again later");
+            mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
             mav.addObject("error ", ERROR_IN_CONNECTION);
+            attributes.addFlashAttribute("msg", "Sorry, try again later");
             mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
             return mav;
         }

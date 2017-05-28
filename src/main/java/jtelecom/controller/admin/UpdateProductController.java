@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -31,7 +32,7 @@ public class UpdateProductController {
     @RequestMapping(value = {"updateProduct"}, method = RequestMethod.POST)
     @ResponseBody
     public ModelAndView updateTariff(Product product, @RequestParam(value = "id") Integer id,
-                                     ModelAndView mav) {
+                                     ModelAndView mav, RedirectAttributes attributes) {
 
         logger.debug("Receive product ID {} ", id);
         Product foundProduct = productService.isValidProduct(id);
@@ -47,10 +48,12 @@ public class UpdateProductController {
             boolean isUpdate = productService.updateProduct(product);
             logger.debug("Update fields of product with success {} ", isUpdate);
             mav.addObject("message", "success");
+            attributes.addFlashAttribute("msg", "Successfully updating");
         } catch (DataIntegrityViolationException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
             mav.addObject("error ", ERROR_IN_CONNECTION);
             mav.addObject("message", "Sorry, try again later");
+            attributes.addFlashAttribute("msg", "Sorry, try again later");
             mav.setViewName("redirect:/admin/getDetailsProduct?id=" + id);
             return mav;
         }

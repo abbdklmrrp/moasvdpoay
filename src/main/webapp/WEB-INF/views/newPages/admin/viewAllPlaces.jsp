@@ -132,6 +132,7 @@
         </div>
     </div>
 </div>
+<h2 style="text-align: center" id="errorMessage" hidden disabled="true">${msg}</h2>
 <jsp:include page="../includes/footer.jsp"/>
 <script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
