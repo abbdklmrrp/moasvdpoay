@@ -49,7 +49,7 @@
     </style>
 </head>
 <body>
-<jsp:include page="../includes/headers/adminHeader.jsp">
+<jsp:include page="../includes/headers/pmgHeader.jsp">
     <jsp:param name="pageName" value="Products"/>
 </jsp:include>
 <div class="container">
