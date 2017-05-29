@@ -1,5 +1,6 @@
 /**
- * Created by Yuliya Pedash on 06.05.2017.
+ * @author Yuliya Pedash
+ * @since 06.05.2017.
  */
 $(document).ready(function () {
     $(".dropdown-toggle").dropdown();
@@ -11,7 +12,6 @@ function activateService(serviceId) {
         data: {serviceId: serviceId},
         type: "POST",
         dataType: 'text',
-        //  async: false,
         success: function (resultMsg) {
             swal(resultMsg);
             var $statusElement = $('#service' + serviceId);

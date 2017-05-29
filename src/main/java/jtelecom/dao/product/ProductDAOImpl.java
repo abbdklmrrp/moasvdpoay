@@ -507,7 +507,7 @@ public class ProductDAOImpl implements ProductDAO {
 
     /**
      * Rysakova Anna
-     *
+     * <p>
      * {@inheritDoc}
      */
     @Override
@@ -711,12 +711,6 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.query(SELECT_ENABLED_TARIFFS, productRowMapper);
     }
 
-    @Override
-    public List<Product> getAllAvailableServicesByPlace(Integer placeId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("place_id", placeId);
-        return jdbcTemplate.query(SELECT_SERVICES_BY_PLACE_PRICE_DEFINED_BY_PLACE_SQL, params, new ProductRowMapper());
-    }
 
     @Override
     public ProductCategories getProductCategoryById(Integer categoryId) {
@@ -954,7 +948,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     public List<Product> getAllServicesByCurrentUserTariff(Integer userId) {
@@ -963,8 +956,8 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TARIFF_SQL, params, new ProductRowMapper());
     }
 
+
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -977,7 +970,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -1000,7 +992,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -1027,7 +1018,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -1046,7 +1036,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override

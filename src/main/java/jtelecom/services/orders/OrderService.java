@@ -45,13 +45,14 @@ public interface OrderService {
      *
      * @param productId id of product
      * @param userId  id of user
-     * @return
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
     boolean deactivateOrderForProductOfUserCompletely(Integer productId, Integer userId);
 
-    /**
-     * @param orderId
-     * @return
+    /**This methods marks order as 'Deactivated' and removes all planned tasks
+     * for it from data base
+     * @param orderId id of order
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
      */
 
     boolean deactivateOrderCompletely(Integer orderId);
@@ -70,11 +71,12 @@ public interface OrderService {
     boolean activateOrderAfterSuspense(Integer orderId);
 
     /**
-     * This method will add to planned tasks  date of deactivation of order
+     * This method will add  an order to database and add
+     * to planned tasks  date of deactivation of this order
      *
-     * @param product
-     * @param order
-     * @return
+     * @param product product
+     * @param order order
+     * @return <code>true</code> if activation was successful, <code>false</code> otherwise
      */
     boolean activateOrder(Product product, Order order);
 

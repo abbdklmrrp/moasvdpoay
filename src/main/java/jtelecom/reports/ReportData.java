@@ -1,7 +1,8 @@
 package jtelecom.reports;
 
 /**
- * Created by Yuliya Pedash on 16.04.2017.
+ * @author  Yuliya Pedash
+ * @since 16.04.2017.
  */
 public class ReportData {
     private String timePeriod;

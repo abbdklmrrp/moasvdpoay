@@ -96,8 +96,7 @@ public class OrderDAOImpl implements OrderDAO {
             "(select customer_id from users where id=:userId)) and orders.CURRENT_STATUS_ID<>3)) \n" +
             " where R>:start and R<=:length and upper(product_name) like upper(:pattern) ";
 
-    //    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
-//            " where R>:start and R<=:length and name like :pattern ";
+
     private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FROM (SELECT\n" +
             "  o.id           order_id,\n" +
             "  p.name,\n" +
@@ -247,7 +246,6 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
-     * @author Yuliya Pedash
      */
     public Integer saveAndGetGeneratedId(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -272,7 +270,6 @@ public class OrderDAOImpl implements OrderDAO {
     /**
      * {@inheritDoc}
      *
-     * @author Yuliya Pedash
      */
     public List<Order> getOrdersByCustomerId(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -281,7 +278,6 @@ public class OrderDAOImpl implements OrderDAO {
     }
     /**
      * {@inheritDoc}
-     * @author Yuliya Pedash
      */
     @Override
     public boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId) {
@@ -293,20 +289,6 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
-     * @author Yuliya Pedash
-     */
-    @Override
-    public Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(USER_ID, userId);
-        params.addValue(PRODUCT_ID, productId);
-        return jdbcTemplate.queryForObject(SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL, params, orderRowMapper);
-    }
-
-
-    /**
-     * {@inheritDoc}
-     * @author Yuliya Pedash
      */
     @Override
     public List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer length, String search, String sort, Integer customerId) {
@@ -324,7 +306,6 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
-     * @author Yuliya Pedash
      */
     @Override
     public Integer getCountOrdersByCustomerId(String search, String sort, Integer customerId) {
@@ -337,7 +318,6 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
-     * @author Yuliya Pedash
      */
     @Override
     public boolean suspendOrder(Integer orderId) {
@@ -348,7 +328,6 @@ public class OrderDAOImpl implements OrderDAO {
     }
     /**
      * {@inheritDoc}
-     * @author Yuliya Pedash
      */
     @Override
     public boolean deactivateOrder(Integer orderId) {
@@ -359,7 +338,6 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
-     * @author Yuliya Pedash
      */
     @Override
     public boolean activateOrder(Integer orderId) {

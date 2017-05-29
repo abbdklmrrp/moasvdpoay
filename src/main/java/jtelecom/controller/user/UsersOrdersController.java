@@ -29,7 +29,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * @author Yuliya Pedash on 07.05.2017.
+ * @author Yuliya Pedash
  */
 @Controller
 @Scope(value = "session")
@@ -52,12 +52,24 @@ public class UsersOrdersController implements Serializable {
     @Resource
     private PlannedTaskService plannedTaskService;
 
+    /**
+     * This method makes preparations for showing view for  for user.
+     * It adds role of current user to view page.
+     * @param model model
+     */
     private void showOrdersForUser(Model model) {
         String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
         logger.debug("Current user: {}", currentUser.toString());
         model.addAttribute("userRole", userRoleLowerCase);
     }
 
+    /**
+     * This method forms view of orders page for  user with role {@link jtelecom.dao.user.Role#CSR}
+     * @param model model
+     * @param session session
+     * @return view address
+     * @see jtelecom.dao.user.Role
+     */
     @RequestMapping(value = {"csr/orders"}, method = RequestMethod.GET)
     public String showOrdersForUserCsr(Model model, HttpSession session) {
         this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
@@ -66,6 +78,12 @@ public class UsersOrdersController implements Serializable {
         return "newPages/csr/Orders";
     }
 
+    /**
+     * This method forms view of orders page for  user with role {@link jtelecom.dao.user.Role#RESIDENTIAL}
+     * @param model model
+     * @return view address
+     * @see jtelecom.dao.user.Role
+     */
     @RequestMapping(value = {"residential/orders"}, method = RequestMethod.GET)
     public String showOrdersForRes(Model model) {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
@@ -73,15 +91,25 @@ public class UsersOrdersController implements Serializable {
         logger.debug("Current user: {}", currentUser.toString());
         return "newPages/residential/Orders";
     }
-
+    /**
+     * This method forms view of orders page for user with role {@link jtelecom.dao.user.Role#BUSINESS}
+     * @param model model
+     * @return view address
+     * @see jtelecom.dao.user.Role
+     */
     @RequestMapping(value = {"business/orders"}, method = RequestMethod.GET)
-    public String showOrdersForBusiness(Model model, HttpSession session) {
+    public String showOrdersForBusiness(Model model) {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         showOrdersForUser(model);
         logger.debug("Current user: {}", currentUser.toString());
         return "newPages/business/Orders";
     }
-
+    /**
+     * This method forms view of orders page for  user with role {@link jtelecom.dao.user.Role#EMPLOYEE}
+     * @param model model
+     * @return view address
+     * @see jtelecom.dao.user.Role
+     */
     @RequestMapping(value = {"employee/orders"}, method = RequestMethod.GET)
     public String showOrdersForEmp(Model model) {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
@@ -90,6 +118,16 @@ public class UsersOrdersController implements Serializable {
         return "newPages/employee/Orders";
     }
 
+    /**
+     * This method takes {@link GridRequestDto} as parameter object and returns all orders
+     * limited by parameters in {@link GridRequestDto} object, such as
+     * start, sort, length and search.
+     * @param request {@link GridRequestDto} object
+     * @return {@link ListHolder} object which contains data and total count of data
+     * @see GridRequestDto
+     * @see OrderDAO#getCountOrdersByCustomerId(String, String, Integer)
+     * @see OrderDAO#getLimitedOrderRowsDTOByCustomerId(Integer, Integer, String, String, Integer)
+     */
     @RequestMapping(value = {"csr/getOrders", "residential/getOrders", "business/getOrders", "employee/getOrders"}, method = RequestMethod.GET)
     @ResponseBody
     public ListHolder showOrders(@ModelAttribute GridRequestDto request) {
@@ -103,6 +141,17 @@ public class UsersOrdersController implements Serializable {
         return ListHolder.create(products, size);
     }
 
+    /**
+     * This method controls suspense of order. It calls methods for checking
+     * correctness of dates {@link DatesHelper#areDatesCorrectForOrderSuspense(Calendar, Calendar)},
+     * checks if order can be suspended within these days logically {@link OrderService#canOrderBeSuspendedWithinDates(Calendar, Calendar, Integer)}.
+     * If all tests were passes successfully it will call method for suspense of order.
+     * @param suspendFormDTO form with info for order suspense
+     * @return success of operation
+     * @see jtelecom.dao.order.Order
+     * @see SuspendFormDTO
+     * @see OrderService#suspendOrder(Calendar, Calendar, Integer)
+     */
     @RequestMapping(value = {"csr/suspend", "residential/suspend", "business/suspend"}, method = RequestMethod.POST)
     @ResponseBody
     public String suspendOrder(@RequestBody SuspendFormDTO suspendFormDTO) {
@@ -130,6 +179,12 @@ public class UsersOrdersController implements Serializable {
 
     }
 
+    /**
+     * This controls current urgent activation of order during its suspense.
+     * @param orderId id of order
+     * @return <code>true</code> if operation was successful, <code>false</code> otherwise
+     * @see OrderService#activateOrderAfterSuspense(Integer)
+     */
     @RequestMapping(value = {"csr/activateAfterSuspend", "residential/activateAfterSuspend", "business/activateAfterSuspend"}, method = RequestMethod.POST)
     @ResponseBody
     public Boolean activateAfterSuspend(@RequestParam Integer orderId) {
@@ -142,6 +197,12 @@ public class UsersOrdersController implements Serializable {
         return wasOrderActivated;
     }
 
+    /**
+     * This method controls deactivation of  order.
+     * @param orderId id of order
+     * @return success of operation
+     * @see OrderService#deactivateOrderCompletely(Integer)
+     */
     @RequestMapping(value = {"csr/deactivateOrder", "residential/deactivateOrder", "business/deactivateOrder"}, method = RequestMethod.POST)
     @ResponseBody
     public String deactivateOrder(@RequestParam Integer orderId) {
@@ -155,7 +216,16 @@ public class UsersOrdersController implements Serializable {
         }
         return SharedVariables.FAIL;
     }
-
+    /**
+     * This method takes {@link GridRequestDto} object as parameter and returns all planned tasks
+     * limited by parameters in {@link GridRequestDto} object, such as
+     * start, sort, length and search.
+     * @param request {@link GridRequestDto} object
+     * @return {@link ListHolder} object which contains data and total count of data
+     * @see GridRequestDto
+     * @see PlannedTaskDAO#getLimitedPlannedTasksForUsersOrders(Integer, Integer, Integer)
+     * @see PlannedTaskDAO#getCountPlannedTasksForUserOrders(Integer)
+     */
     @RequestMapping(value = {"csr/getPlannedTasks", "residential/getPlannedTasks", "business/getPlannedTasks"}, method = RequestMethod.GET)
     @ResponseBody
     public ListHolder showPlannedTasks(@ModelAttribute GridRequestDto request) {
@@ -168,6 +238,12 @@ public class UsersOrdersController implements Serializable {
         return ListHolder.create(plannedTaskDTOS, size);
     }
 
+    /**
+     * This method controls cancelling of future order's suspense.
+     * @param plannedTaskId id of planned task for suspense
+     * @return success of operation
+     * @see PlannedTaskService#cancelSuspense(Integer)
+     */
     @RequestMapping(value = {"csr/cancelSuspense", "residential/cancelSuspense", "business/cancelSuspense"}, method = RequestMethod.POST)
     @ResponseBody
     public String cancelSuspense(@RequestParam Integer plannedTaskId) {

@@ -31,9 +31,9 @@ public class ReportsService {
 
     /**
      * This method takes <code>Map</code> with key <code>String</code> - time period and value <code>Integer</code> - number, begin
-     * date and end date. <code>Mape</code> returned from {@link ReportDataDAOImpl} may miss some dates, which don't
-     * have any statisticks values. Anyways, they  are needed for creating reports, so the goal of this method is to
-     * put in final <code>List</code> of <code>ReportData</code> objects with these missed dates with value 0 and to
+     * date and end date. <code>Map</code> returned from {@link ReportDataDAOImpl} may miss some dates, for which there is
+     * no statistics yet. Anyways, these dates are needed for creating reports, so the goal of this method is to
+     * put in final <code>List</code> of <code>ReportData</code> objects  these missed dates with value 0 and to
      * transform <code>Map</code> returned from {@link ReportDataDAOImpl} to list of <code>ReportData</code> objects.
      *
      * @param reportDataMap Map with key String<- time period and value Integer - number
