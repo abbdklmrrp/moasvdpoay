@@ -53,7 +53,7 @@ public class UsersDetailController {
         String search = request.getSearch();
         List<User> data = userDAO.getLimitedQuantityUsers(start, length, sort, search);
         int size = userDAO.getCountUsersWithSearch(search);
-        logger.debug("Get clients in interval:" + start + " : " + length);
+        logger.debug("Get clients in interval: {} : {}",start ,length);
         return ListHolder.create(data, size);
     }
 

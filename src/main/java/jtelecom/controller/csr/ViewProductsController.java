@@ -43,7 +43,7 @@ public class ViewProductsController {
         int start = request.getStartBorder();
         int length = request.getLength();
         String search = request.getSearch();
-        logger.debug("Get products in interval:" + start + " : " + length);
+        logger.debug("Get products in interval: {} : {}",start,length);
         List<ProductWithTypeNameDTO> data = productDAO.getLimitedQuantityProduct(start, length, sort, search);
         int size = productDAO.getCountProductsWithSearch(search);
         return ListHolder.create(data, size);

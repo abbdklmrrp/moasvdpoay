@@ -30,11 +30,16 @@ public class SignUpController {
     @Resource
     private UserService userService;
     private static Logger logger = LoggerFactory.getLogger(SignUpController.class);
+    private final static String SUCCESS_MESSAGE = "User successfully saved";
+    private final static String FAIL_LOG = "Registration failed to {} {}";
+    private final static String SUCCESS_LOG = "User saved: {} {}";
+    private final static String USER = "user";
+    private final static String MSG = "msg";
 
     @RequestMapping(method = RequestMethod.GET, value = "/registration")
     public ModelAndView registration() {
         ModelAndView model = new ModelAndView("newPages/Registration");
-        model.addObject("user", new User());
+        model.addObject(USER, new User());
         return model;
     }
 
@@ -43,14 +48,14 @@ public class SignUpController {
         ModelAndView model = new ModelAndView("newPages/csr/RegNewUser");
         List<Customer> customers = customerDAO.getAllBusinessCustomers();
         model.addObject("customers", customers);
-        model.addObject("user", new User());
+        model.addObject(USER, new User());
         return model;
     }
 
     @RequestMapping(value = "registrationFromAdmin", method = RequestMethod.GET)
     public ModelAndView registrationFromAdmin() {
         ModelAndView model = new ModelAndView("newPages/admin/RegNewUser");
-        model.addObject("user", new User());
+        model.addObject(USER, new User());
         return model;
     }
 
@@ -67,12 +72,12 @@ public class SignUpController {
                                  @RequestParam(value = "userType") String userType, RedirectAttributes attributes) {
         user.setRole(Role.getRoleByName(userType));
         String message = userService.saveWithGeneratingPassword(user);
-        if ("User successfully saved".equals(message)) {
-            logger.debug("User saved: {} {}", user.getRole().getName(), user.getEmail());
+        if (SUCCESS_MESSAGE.equals(message)) {
+            logger.debug(SUCCESS_LOG, user.getRole().getName(), user.getEmail());
         } else {
-            logger.error("Registration failed to {} {}", user.getRole().getName(), user.getEmail());
+            logger.error(FAIL_LOG, user.getRole().getName(), user.getEmail());
         }
-        attributes.addFlashAttribute("msg", message);
+        attributes.addFlashAttribute(MSG, message);
         return "redirect:/admin/registrationFromAdmin";
     }
 
@@ -99,12 +104,12 @@ public class SignUpController {
         } else if (Role.BUSINESS == user.getRole()) {
             message = userService.saveBusinessUser(user, companyName, secretKey);
         }
-        if ("User successfully saved".equals(message)) {
-            logger.debug("User saved: {} {}", user.getRole().getName(), user.getEmail());
+        if (SUCCESS_MESSAGE.equals(message)) {
+            logger.debug(SUCCESS_LOG, user.getRole().getName(), user.getEmail());
         } else {
-            logger.error("Registration failed to {} {}", user.getRole().getName(), user.getEmail());
+            logger.error(FAIL_LOG, user.getRole().getName(), user.getEmail());
         }
-        attributes.addFlashAttribute("msg", message);
+        attributes.addFlashAttribute(MSG, message);
         return "redirect:/csr/registrationFromCsr";
 
     }
@@ -120,12 +125,12 @@ public class SignUpController {
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public String signUp(User user, RedirectAttributes attributes) {
         String message = userService.saveResidentialWithoutPasswordGenerating(user);
-        if ("User successfully saved".equals(message)) {
+        if (SUCCESS_MESSAGE.equals(message)) {
             logger.debug("User saved {}", user.getEmail());
             return "newPages/login";
         } else {
             logger.error("Registration failed {}", user.getEmail());
-            attributes.addFlashAttribute("msg", message);
+            attributes.addFlashAttribute(MSG, message);
             return "redirect:/registration";
         }
     }
