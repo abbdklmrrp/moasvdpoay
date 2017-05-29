@@ -134,8 +134,9 @@ public class ProductDAOImpl implements ProductDAO {
             " OR base_price LIKE :pattern ";
     private static final String SELECT_PRODUCT_NAME_SQL = "SELECT * " +
             "FROM PRODUCTS WHERE upper(PRODUCTS.NAME)=upper(:NAME)";
-    private static final String SELECT_PRODUCT_NAME_WITH_ID_SQL = "SELECT * " +
-            "FROM PRODUCTS WHERE upper(PRODUCTS.NAME)=upper(:NAME) AND PRODUCTS.ID<>:ID";
+    private static final String SELECT_PRODUCT_NAME_WITH_ID_SQL = "SELECT *\n" +
+            "FROM PRODUCTS\n" +
+            "WHERE upper(NAME) = upper(:NAME) AND (ID != :ID)";
     private final static String SELECT_LIMITED_PRODUCTS_SQL = "SELECT *\n" +
             " FROM ( SELECT a.*, rownum rnum\n" +
             "       FROM ( SELECT * FROM PRODUCTS " +
@@ -726,11 +727,12 @@ public class ProductDAOImpl implements ProductDAO {
      * {@inheritDoc}
      */
     @Override
-    public Product getProductByName(Product product) {
+    public boolean getProductByName(Product product, int productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(NAME, product.getName());
-        List<Product> existProduct = jdbcTemplate.query(SELECT_PRODUCT_NAME_SQL, params, productRowMapper);
-        return existProduct.isEmpty() ? null : existProduct.get(0);
+        params.addValue(ID, productId);
+        List<Product> existProduct = jdbcTemplate.query(SELECT_PRODUCT_NAME_WITH_ID_SQL, params, productRowMapper);
+        return existProduct.isEmpty();
     }
 
     @Override

@@ -66,8 +66,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public boolean isExistProductNameForUpdate(Product product, Integer id) {
-        Product foundProduct = productDAO.getProductByName(product);
-        return Objects.nonNull(foundProduct) && !Objects.equals(foundProduct.getId(), id);
+        return !productDAO.getProductByName(product, id);
     }
 
     /**

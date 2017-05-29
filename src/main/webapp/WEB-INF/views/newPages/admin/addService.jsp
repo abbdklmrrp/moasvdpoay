@@ -80,7 +80,7 @@
                     <label class="col-sm-4 control-label">Base price</label>
                     <div class="col-sm-8">
                         <input type="number" class="currency"
-                               pattern="[0-9]+([,\.][0-9]+)?" step="0.01"
+                               pattern="[0-9]+([,\.][0-9]+)?" step="0.01" value="100.00"
                                name="basePrice" id="basePrice" required>
                         <i class="fa fa-user"></i>
                     </div>
@@ -90,8 +90,8 @@
                     <div class="col-sm-8">
                         <select name="customerType" class="form-control" id="customerTypeId"
                                 onclick="selectedCustomer(this)">
-                            <option value="Residential" selected>Residential</option>
-                            <option value="Business">Business</option>
+                            <option value="Residential">Residential</option>
+                            <option value="Business" selected>Business</option>
                         </select></div>
                 </div>
                 <div class="form-group row">
@@ -158,7 +158,7 @@
 </script>
 <script type="text/javascript" src="<c:url value="/resources/js/patternInputText.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/newCategoryService.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/js/selectedCustomer.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/selectedCustomerBus.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
 </body>
 </html>

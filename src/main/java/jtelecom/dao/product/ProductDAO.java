@@ -169,7 +169,7 @@ public interface ProductDAO extends DAO<Product> {
      * @return {@code true} if object doesn't exist, {@code false} if exist.
      * @see Product
      */
-    Product getProductByName(Product product);
+    boolean getProductByName(Product product, int productId);
 
     /**
      * Gets category of admin by id
