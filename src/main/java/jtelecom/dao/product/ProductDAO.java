@@ -172,15 +172,6 @@ public interface ProductDAO extends DAO<Product> {
     Product getProductByName(Product product);
 
     /**
-     * Method returns all services that are available in place.
-     * created by Yuliya Pedash
-     *
-     * @param placeId id of place
-     * @return all available services
-     */
-    List<Product> getAllAvailableServicesByPlace(Integer placeId);
-
-    /**
      * Gets category of admin by id
      *
      * @param categoryId id of category

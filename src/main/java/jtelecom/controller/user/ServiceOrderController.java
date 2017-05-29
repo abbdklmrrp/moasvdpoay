@@ -133,14 +133,14 @@ public class ServiceOrderController implements Serializable {
     }
 
     /**
-     * This method {@link GridRequestDto} object and returns all services
-     * limited by parameters in {@link GridRequestDto} object, such as
+     * This method {@link GridRequestDTO} object and returns all services
+     * limited by parameters in {@link GridRequestDTO} object, such as
      * start, sort, length and search.
-     * @param request {@link GridRequestDto} object
+     * @param request {@link GridRequestDTO} object
      * @return {@link ListHolder} object which contains data and total count of data
      * @see  ProductService#getLimitedServicesForUser(User, Integer, Integer, String, String, Integer)
      * @see  ProductService#getCountForServicesWithSearch(User, String, Integer)
-     * @see GridRequestDto
+     * @see GridRequestDTO
      */
     @RequestMapping(value = {"csr/Services", "residential/Services", "business/Services"}, method = RequestMethod.GET)
     @ResponseBody
