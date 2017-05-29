@@ -1,6 +1,7 @@
 package jtelecom.dao.place;
 
 import jtelecom.dao.product.ProductStatus;
+import jtelecom.dao.product.ProductType;
 import jtelecom.dto.PriceByRegionDTO;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -53,6 +54,7 @@ public class PlaceDAOImpl implements PlaceDAO {
             "        rownum rnum\n" +
             "      FROM (SELECT\n" +
             "              product.ID,\n" +
+            "              product.TYPE_ID,\n" +
             "              type.NAME      TYPE,\n" +
             "              product.NAME   PRODUCT_NAME,\n" +
             "              product.STATUS STATUS,\n" +
@@ -165,7 +167,7 @@ public class PlaceDAOImpl implements PlaceDAO {
             PriceByRegionDTO priceByPlace = new PriceByRegionDTO();
             priceByPlace.setProductId(rs.getInt("ID"));
             priceByPlace.setProductName(rs.getString("PRODUCT_NAME"));
-            priceByPlace.setProductType(rs.getString("TYPE"));
+            priceByPlace.setProductType(ProductType.getProductTypeFromId(rs.getInt("TYPE_ID")).getName());
             priceByPlace.setProductStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")).getName());
             priceByPlace.setPlaceName(rs.getString("PLACE"));
             priceByPlace.setPriceProduct(rs.getBigDecimal("PRICE"));

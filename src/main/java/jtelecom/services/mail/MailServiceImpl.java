@@ -1,5 +1,6 @@
 package jtelecom.services.mail;
 
+import com.google.common.annotations.VisibleForTesting;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.user.User;
 import org.slf4j.Logger;
@@ -59,6 +60,7 @@ public class MailServiceImpl implements MailService {
      * @param model map with parameters
      * @param path  name of subject template and path to content template file
      */
+    @VisibleForTesting
     private void send(String to, Map<String, Object> model, EmailTemplatePath path) {
         SimpleMailMessage message = email.createEmail(to, model, path);
         try {

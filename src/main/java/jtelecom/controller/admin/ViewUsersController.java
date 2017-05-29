@@ -3,7 +3,7 @@ package jtelecom.controller.admin;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dao.user.UserStatus;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.user.UserService;
@@ -42,14 +42,14 @@ public class ViewUsersController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto} <br>.
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO} <br>.
      * After method gets list with all users from database
      *
      * @param request -contains indexes for first element and last elements and patterns for search and sort
      * @return class which contains number of all elements with such parameters and some interval of the data
      */
     @RequestMapping(value = {"getUsers"}, method = RequestMethod.GET)
-    public ListHolder getUsers(@ModelAttribute GridRequestDto request) {
+    public ListHolder getUsers(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
@@ -61,7 +61,7 @@ public class ViewUsersController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto} <br>.
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO} <br>.
      * After method gets list with all employees of business client from database.<br>
      * This client's id method gets from the security current user.
      *
@@ -69,7 +69,7 @@ public class ViewUsersController {
      * @return class which contains number of all elements with such parameters and some interval of the data
      */
     @RequestMapping(value = {"getEmployees"}, method = RequestMethod.GET)
-    public ListHolder getEmployees(@ModelAttribute GridRequestDto requestDto) {
+    public ListHolder getEmployees(@ModelAttribute GridRequestDTO requestDto) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Integer customerId = user.getCustomerId();
         String sort = requestDto.getSort();

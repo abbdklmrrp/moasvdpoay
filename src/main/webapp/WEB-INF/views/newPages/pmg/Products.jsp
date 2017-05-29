@@ -1,3 +1,6 @@
+<%--
+  Created by Anna Rysakova
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -132,7 +135,7 @@
                         </div>
                         Description
                     </th>
-                    <th class="col-xs-1" data-grid-header="product_type_name" data-grid-header-sortable="true">
+                    <th class="col-xs-1" data-grid-header="type_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
@@ -150,7 +153,7 @@
                         </div>
                         Customer type
                     </th>
-                    <th class="col-xs-2" data-grid-header="durationInDays" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="duration_in_days" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
@@ -162,13 +165,7 @@
                     <th class="col-xs-1" data-grid-header="base_price">
                         Price($)
                     </th>
-                    <th class="col-xs-1" data-grid-header="status" data-grid-header-sortable="true">
-                        <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                               data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                               data-grid-header-sortable-down="down"></a>
-                        </div>
+                    <th class="col-xs-1" data-grid-header="status">
                         Status
                     </th>
                 </tr>
@@ -178,9 +175,9 @@
                 <tr data-grid="row">
                     <td data-cell="name"></td>
                     <td data-cell="description"></td>
-                    <td data-cell="product_type_name"></td>
+                    <td data-cell="type_id"></td>
                     <td data-cell="customer_type_id"></td>
-                    <td data-cell="durationInDays"></td>
+                    <td data-cell="duration_in_days"></td>
                     <td data-cell="base_price"></td>
                     <td data-cell="status"></td>
                 </tr>

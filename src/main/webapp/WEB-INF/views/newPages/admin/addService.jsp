@@ -18,12 +18,12 @@
 <div class="col-xs-3"></div>
 <div class="col-xs-6">
     <div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
-        <form method="POST" modelAttribute="product" action="${pageContext.request.contextPath}/admin/addService">
+        <form:form method="POST" modelAttribute="product" action="${pageContext.request.contextPath}/admin/addService">
             <div class="login-form">
                 <h1 style="text-align: center">Create service</h1>
 
                 <c:if test="${not empty error}">
-                    <span style="float:right ; color: #10CE88;">${error}</span>
+                    <h2 style="text-align: center">${error}</h2>
                 </c:if>
 
                 <div class="form-group row" id='categoryId'>
@@ -132,7 +132,9 @@
                 </div>
 
             </div>
-        </form>
+        </form:form>
+        <h2 style="text-align: center" id="errorMessage" hidden disabled="true">${errorMsg}</h2>
+
     </div>
 </div>
 

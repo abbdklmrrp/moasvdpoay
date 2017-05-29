@@ -5,7 +5,7 @@ import jtelecom.dao.customer.Customer;
 import jtelecom.dao.customer.CustomerDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.customer.CustomerServiceImpl;
@@ -48,7 +48,7 @@ public class CustomerController {
     }
 
     @RequestMapping(value = {"allCustomers"}, method = RequestMethod.GET)
-    public ListHolder servicesByTariff(@ModelAttribute GridRequestDto request) {
+    public ListHolder servicesByTariff(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         if (!sort.isEmpty()) {
             String[] array = sort.split("=");
@@ -81,7 +81,7 @@ public class CustomerController {
     }
 
     @RequestMapping(value = {"AllUsersOfCustomer"}, method = RequestMethod.GET)
-    public ListHolder allUsersOfCustomer(@ModelAttribute GridRequestDto request) {
+    public ListHolder allUsersOfCustomer(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         if (!sort.isEmpty()) {
             String[] array = sort.split("=");

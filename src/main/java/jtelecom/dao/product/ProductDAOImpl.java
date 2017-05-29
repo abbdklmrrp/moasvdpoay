@@ -132,6 +132,10 @@ public class ProductDAOImpl implements ProductDAO {
             " OR upper(description) LIKE upper(:pattern) " +
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern ";
+    private static final String SELECT_PRODUCT_NAME_SQL = "SELECT * " +
+            "FROM PRODUCTS WHERE upper(PRODUCTS.NAME)=upper(:NAME)";
+    private static final String SELECT_PRODUCT_NAME_WITH_ID_SQL = "SELECT * " +
+            "FROM PRODUCTS WHERE upper(PRODUCTS.NAME)=upper(:NAME) AND PRODUCTS.ID<>:ID";
     private final static String SELECT_LIMITED_PRODUCTS_SQL = "SELECT *\n" +
             " FROM ( SELECT a.*, rownum rnum\n" +
             "       FROM ( SELECT * FROM PRODUCTS " +
@@ -342,43 +346,43 @@ public class ProductDAOImpl implements ProductDAO {
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
-    private final static String SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_BUSINESS = "select *\n" +
-            "from ( select a.*, rownum rnum\n" +
+    private final static String SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_BUSINESS_SQL = "SELECT *\n" +
+            "FROM ( select a.*, rownum rnum\n" +
             "       from ( Select * from PRODUCTS " +
-            " Where status = 1 and customer_type_id = 1 and (upper(name) like upper(:pattern) " +
+            " WHERE status = 1 and customer_type_id = 1 and (upper(name) like upper(:pattern) " +
             " OR upper(description) like upper(:pattern) " +
-            " OR type_id like :pattern " +
-            " OR customer_type_id like :pattern " +
-            " OR duration like :pattern " +
-            " OR base_price like :pattern) " +
+            " OR upper(type_id) like upper(:pattern) " +
+            " OR upper(customer_type_id) like upper(:pattern) " +
+            " OR upper(duration) like upper(:pattern) " +
+            " OR upper(base_price) like upper(:pattern)) " +
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
-    private final static String SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_RESEDINTIAL = "select *\n" +
+    private final static String SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_RESEDINTIAL_SQL = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from PRODUCTS " +
             " Where status = 1 and customer_type_id = 2 and (upper(name) like upper(:pattern) " +
             " OR upper(description) like upper(:pattern) " +
-            " OR type_id like :pattern " +
-            " OR customer_type_id like :pattern " +
-            " OR duration like :pattern " +
-            " OR base_price like :pattern) " +
+            " OR upper(type_id) like upper(:pattern) " +
+            " OR upper(customer_type_id) like upper(:pattern) " +
+            " OR upper(duration) like upper(:pattern) " +
+            " OR upper(base_price) like upper(:pattern)) " +
             " ORDER BY %s) a\n" +
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
     private final static String SELECT_ENABLED_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 AND STATUS=1 ORDER BY ID";
-    private static final String SELECT_ACTIVE_PRODUCT_FOR_BUSINESS_COUNT = "SELECT count(ID)\n" +
+    private static final String SELECT_ACTIVE_PRODUCT_FOR_BUSINESS_COUNT_SQL = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
             " Where status = 1 and customer_type_id = 1 and (upper(name) LIKE upper(:pattern) " +
             " OR upper(description) LIKE upper(:pattern) " +
-            " OR duration LIKE :pattern " +
-            " OR base_price LIKE :pattern) ";
-    private static final String SELECT_ACTIVE_PRODUCT_FOR_RESEDENTIAL_COUNT = "SELECT count(ID)\n" +
+            " OR upper(duration) LIKE upper(:pattern) " +
+            " OR upper(base_price) LIKE upper(:pattern) ";
+    private static final String SELECT_ACTIVE_PRODUCT_FOR_RESEDENTIAL_COUNT_SQL = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
             " Where status = 1 and customer_type_id = 2 and (upper(name) LIKE upper(:pattern) " +
             " OR upper(description) LIKE upper(:pattern) " +
-            " OR duration LIKE :pattern " +
-            " OR base_price LIKE :pattern) ";
+            " OR upper(duration) LIKE upper(:pattern) " +
+            " OR upper(base_price) LIKE upper(:pattern)) ";
     private final static String SELECT_LIMITED_SERVICES_FOR_BUSINESS_SQL = "SELECT *\n" +
             "FROM (SELECT\n" +
             "        products.*,\n" +
@@ -418,9 +422,11 @@ public class ProductDAOImpl implements ProductDAO {
             "WHERE TYPE_ID = 2\n AND STATUS = 1 /*Active*/ " +
             " AND place_id = :place_id " +
             " AND LOWER(name) LIKE LOWER(:pattern) || '%%' %s";
-    private static final String SELECT_PRODUCT_BY_ORDER_ID = "SELECT * " +
+    private static final String SELECT_PRODUCT_BY_ORDER_ID_SQL = "SELECT * " +
             " FROM PRODUCTS WHERE ID=( " +
-            " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
+            "  SELECT PRODUCT_ID " +
+            "  FROM ORDERS " +
+            "  WHERE ID=:orderId)";
     final static String AND_CATEGORY_ID_SQL = "  AND category_id = :category_id ";
     private static final String PATTERN = "pattern";
 
@@ -703,6 +709,28 @@ public class ProductDAOImpl implements ProductDAO {
                             .getValues());
         }
         jdbcTemplate.batchUpdate(DELETE_SERVICE_FROM_TARIFF_SQL, batchValues.toArray(new Map[tariffServiceDTOS.size()]));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getProductName(Product product) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(NAME, product.getName());
+        List<Product> existProduct = jdbcTemplate.query(SELECT_PRODUCT_NAME_SQL, params, productRowMapper);
+        return existProduct.isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Product getProductByName(Product product) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(NAME, product.getName());
+        List<Product> existProduct = jdbcTemplate.query(SELECT_PRODUCT_NAME_SQL, params, productRowMapper);
+        return existProduct.isEmpty() ? null : existProduct.get(0);
     }
 
     @Override
@@ -1053,13 +1081,17 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.queryForObject(query, params, Integer.class);
     }
 
+    /**
+     * @author Nikita Alistratenko
+     * {@inheritDoc}
+     */
     @Override
     public List<Product> getLimitedActiveProductsForBusiness(Integer start, Integer length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
             sort = "ID";
         }
-        String sql = String.format(SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_BUSINESS, sort);
+        String sql = String.format(SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_BUSINESS_SQL, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("start", start);
         params.addValue("length", rownum);
@@ -1067,13 +1099,17 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.query(sql, params, new ProductRowMapper());
     }
 
+    /**
+     * @author Nikita Alistratenko
+     * {@inheritDoc}
+     */
     @Override
     public List<Product> getLimitedActiveProductsForResidential(Integer start, Integer length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
             sort = "ID";
         }
-        String sql = String.format(SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_RESEDINTIAL, sort);
+        String sql = String.format(SELECT_LIMITED_ACTIVE_PRODUCTS_FOR_RESEDINTIAL_SQL, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("start", start);
         params.addValue("length", rownum);
@@ -1081,18 +1117,26 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.query(sql, params, new ProductRowMapper());
     }
 
+    /**
+     * @author Nikita Alistratenko
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountForLimitedActiveProductsForBusiness(String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("pattern", "%" + search + "%");
-        return jdbcTemplate.queryForObject(SELECT_ACTIVE_PRODUCT_FOR_BUSINESS_COUNT, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_ACTIVE_PRODUCT_FOR_BUSINESS_COUNT_SQL, params, Integer.class);
     }
 
+    /**
+     * @author Nikita Alistratenko
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountForLimitedActiveProductsForResidential(String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("pattern", "%" + search + "%");
-        return jdbcTemplate.queryForObject(SELECT_ACTIVE_PRODUCT_FOR_RESEDENTIAL_COUNT, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_ACTIVE_PRODUCT_FOR_RESEDENTIAL_COUNT_SQL, params, Integer.class);
     }
 
     /**
@@ -1101,7 +1145,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Product getProductByOrderId(int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
-        return jdbcTemplate.queryForObject(SELECT_PRODUCT_BY_ORDER_ID, params, new ProductRowMapper());
+        return jdbcTemplate.queryForObject(SELECT_PRODUCT_BY_ORDER_ID_SQL, params, new ProductRowMapper());
     }
 
     @Override

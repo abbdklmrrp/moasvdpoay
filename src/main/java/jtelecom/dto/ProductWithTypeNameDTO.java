@@ -7,7 +7,7 @@ import jtelecom.dao.product.Product;
  * @author Anna Rysakova
  */
 public class ProductWithTypeNameDTO extends Product {
-    @JsonProperty("product_type_name")
+    @JsonProperty("type_id")
     private String productTypeName;
 
     public String getProductTypeName() {

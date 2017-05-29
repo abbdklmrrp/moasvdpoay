@@ -3,7 +3,7 @@ package jtelecom.controller.csr;
 import jtelecom.dao.operationHistory.OperationHistoryDAO;
 import jtelecom.dao.order.OrderDAO;
 import jtelecom.dto.FullInfoOrderDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,7 @@ public class PmgOrdersController {
 
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}. <br>
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO}. <br>
      * After method gets list with all orders of client from database.<br>
      * This client's id method gets from the session.
      *
@@ -33,7 +33,7 @@ public class PmgOrdersController {
      * @return class which contains number of all elements with such parameters and some interval of the data
      */
     @RequestMapping(value = "getOrders", method = RequestMethod.GET)
-    public ListHolder getOrders(@ModelAttribute GridRequestDto request, HttpSession session) {
+    public ListHolder getOrders(@ModelAttribute GridRequestDTO request, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("userId");
         int start = request.getStartBorder();
         int length = request.getEndBorder();

@@ -1,5 +1,7 @@
 package jtelecom.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 /**
@@ -13,7 +15,9 @@ public class PriceByRegionDTO {
     private String placeName;
     private BigDecimal priceProduct;
     private Integer placeId;
+    @JsonProperty("type_id")
     private String productType;
+    @JsonProperty("status")
     private String productStatus;
 
     public PriceByRegionDTO() {

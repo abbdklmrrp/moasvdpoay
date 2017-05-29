@@ -31,6 +31,8 @@ public class CreateCustomerController {
     @Resource
     private CustomerService customerService;
 
+    private static final String MSG="msg";
+
     /**
      * This method refers to a some page of the creating customer.<br>
      * Address of this page determines based on the role of the user
@@ -71,9 +73,9 @@ public class CreateCustomerController {
         customer.setCustomerType(CustomerType.Business);
         String message = customerService.save(customer);
         if (message == null) {
-            attributes.addFlashAttribute("msg", "Customer created successfully");
+            attributes.addFlashAttribute(MSG, "Customer created successfully");
         } else {
-            attributes.addFlashAttribute("msg", message);
+            attributes.addFlashAttribute(MSG, message);
         }
         return redirect;
     }

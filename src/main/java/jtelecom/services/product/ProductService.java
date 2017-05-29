@@ -26,6 +26,26 @@ public interface ProductService {
     Product isValidProduct(Integer productId) throws EmptyResultDataAccessException;
 
     /**
+     * Method check that product name exist in database. Return {@code true}
+     * if exist, {@code false} if not exist.
+     *
+     * @param product {@code Product} object
+     * @return {@code true} if exist, {@code false} if not exist.
+     * @see Product
+     */
+    boolean isExistProductName(Product product);
+
+    /**
+     * Method check that product name for updating product exist in database.
+     * Return {@code true} if exist, {@code false} if not exist.
+     *
+     * @param product {@code Product} object
+     * @return {@code true} if exist, {@code false} if not exist.
+     * @see Product
+     */
+    boolean isExistProductNameForUpdate(Product product, Integer id);
+
+    /**
      * Returns {@code true} if, and only if, fields {@code name}
      * and {@code description}of {@link Product} is {@code 0}.
      *

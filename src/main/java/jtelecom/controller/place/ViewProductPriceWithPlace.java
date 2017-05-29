@@ -4,7 +4,7 @@ import jtelecom.dao.place.Place;
 import jtelecom.dao.place.PlaceDAO;
 import jtelecom.dao.price.PriceDAO;
 import jtelecom.dto.PriceByRegionDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class ViewProductPriceWithPlace {
     private PriceDAO priceDAO;
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}.
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO}.
      * After method gets list with all places.
      *
      * @param request contains indexes for first element and last elements and
@@ -35,10 +35,10 @@ public class ViewProductPriceWithPlace {
      * @return class which contains number of all elements with such parameters
      * and some interval of the data
      * @see Place
-     * @see GridRequestDto
+     * @see GridRequestDTO
      */
     @RequestMapping(value = {"allPlace"}, method = RequestMethod.GET)
-    public ListHolder allPlaces(@ModelAttribute GridRequestDto request) {
+    public ListHolder allPlaces(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getLength();
@@ -67,7 +67,7 @@ public class ViewProductPriceWithPlace {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}.
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO}.
      * After method gets list with all product prices by regions.
      *
      * @param request contains indexes for first element and last elements and
@@ -75,12 +75,12 @@ public class ViewProductPriceWithPlace {
      * @return class which contains number of all elements with such parameters
      * and some interval of the data
      * @see Place
-     * @see GridRequestDto
+     * @see GridRequestDTO
      * @see PriceByRegionDTO
      */
     @RequestMapping(value = {"getDetailsPriceByPlace/{id}"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder allPricesByPlace(@ModelAttribute GridRequestDto request,
+    public ListHolder allPricesByPlace(@ModelAttribute GridRequestDTO request,
                                        @PathVariable(value = "id") Integer placeId) {
         String sort = request.getSort();
         int start = request.getStartBorder();
@@ -92,7 +92,7 @@ public class ViewProductPriceWithPlace {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}.
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO}.
      * After method gets list with product prices in regions.
      *
      * @param request contains indexes for first element and last elements and
@@ -100,12 +100,12 @@ public class ViewProductPriceWithPlace {
      * @return class which contains number of all elements with such parameters
      * and some interval of the data
      * @see Place
-     * @see GridRequestDto
+     * @see GridRequestDTO
      * @see PriceByRegionDTO
      */
     @RequestMapping(value = {"productsPriceInRegions/{id}"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder productsPriceInRegions(@ModelAttribute GridRequestDto request,
+    public ListHolder productsPriceInRegions(@ModelAttribute GridRequestDTO request,
                                              @PathVariable(value = "id") Integer id) {
         String sort = request.getSort();
         int start = request.getStartBorder();

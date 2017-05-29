@@ -4,7 +4,7 @@ import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.orders.OrderService;
@@ -30,6 +30,8 @@ public class CsrMyOrdersController {
     private UserDAO userDAO;
     @Resource
     private OrderService orderService;
+    private final static String SUCCESS = "success";
+    private final static String FAIL = "fail";
 
     @RequestMapping(value = "getMyOrdersPage", method = RequestMethod.GET)
     public ModelAndView getMyOrdersPage() {
@@ -38,7 +40,7 @@ public class CsrMyOrdersController {
 
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto} <br>.
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO} <br>.
      * After method gets list with all orders that assigned to the csr from database.<br>.
      * Method gets csr from the security current user.
      *
@@ -46,7 +48,7 @@ public class CsrMyOrdersController {
      * @return class which contains number of all elements with such parameters and some interval of the data
      */
     @RequestMapping(value = "getMyOrders", method = RequestMethod.GET)
-    public ListHolder getAllOrders(@ModelAttribute GridRequestDto requestDto) {
+    public ListHolder getAllOrders(@ModelAttribute GridRequestDTO requestDto) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Integer csrId = user.getId();
         Integer start = requestDto.getStartBorder();
@@ -82,7 +84,7 @@ public class CsrMyOrdersController {
     @RequestMapping(value = "activateOrder", method = RequestMethod.POST)
     public String activateOrder(@RequestParam(value = "orderId") int orderId) {
         boolean success = orderService.activateOrderFromCsr(orderId);
-        return success ? "success" : "fail";
+        return success ? SUCCESS : FAIL;
     }
 
     /**
@@ -96,8 +98,8 @@ public class CsrMyOrdersController {
     public String sendEmail(@RequestParam(value = "orderId") int orderId,
                             @RequestParam(value = "text") String text) {
         String email = securityAuthenticationHelper.getCurrentUser().getUsername();
-        boolean success=orderService.sendEmail(orderId, text, email);
-        return success?"success":"fail";
+        boolean success = orderService.sendEmail(orderId, text, email);
+        return success ? SUCCESS : FAIL;
     }
 
 

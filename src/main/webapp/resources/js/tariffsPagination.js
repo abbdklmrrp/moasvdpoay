@@ -132,7 +132,7 @@ $.fn.pageMe = function (opts, dataURL) {
             html += "<tr>";
             html += "<td class=\"" + list[i].id + "\">" + list[i].name + "</td>";
             html += "<td>" + list[i].description + "</td>";
-            html += "<td>" + list[i].duration + "</td>";
+            html += "<td>" + list[i].duration_in_days + "</td>";
             html += "<td>" + list[i].base_price + "</td>";
             html += "<td><input type=\"button\" onclick=\"showServicesOfTariff(" + list[i].id + ")\" value=\"Show\" class=\"btn btn-primary\"></td>";
             if (currentUserTariff == null) {

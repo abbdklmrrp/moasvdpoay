@@ -2,12 +2,13 @@ package jtelecom.controller.user;
 
 import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.plannedTask.PlannedTaskDAO;
+import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.OrdersRowDTO;
 import jtelecom.dto.PlannedTaskDTO;
 import jtelecom.dto.SuspendFormDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.orders.OrderService;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -71,8 +73,12 @@ public class UsersOrdersController implements Serializable {
      * @see jtelecom.dao.user.Role
      */
     @RequestMapping(value = {"csr/orders"}, method = RequestMethod.GET)
-    public String showOrdersForUserCsr(Model model, HttpSession session) {
+    public String showOrdersForUserCsr(Model model, HttpSession session, RedirectAttributes attributes) {
         this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
+        if (currentUser.getRole() == Role.EMPLOYEE) {
+            attributes.addFlashAttribute("msg", "Employee can't see this page");
+            return "redirect:/csr/getUserProfile";
+        }
         model.addAttribute("userRole", "csr");
         logger.debug("Current user: {}", currentUser.toString());
         return "newPages/csr/Orders";
@@ -130,7 +136,7 @@ public class UsersOrdersController implements Serializable {
      */
     @RequestMapping(value = {"csr/getOrders", "residential/getOrders", "business/getOrders", "employee/getOrders"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder showOrders(@ModelAttribute GridRequestDto request) {
+    public ListHolder showOrders(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
@@ -228,7 +234,7 @@ public class UsersOrdersController implements Serializable {
      */
     @RequestMapping(value = {"csr/getPlannedTasks", "residential/getPlannedTasks", "business/getPlannedTasks"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder showPlannedTasks(@ModelAttribute GridRequestDto request) {
+    public ListHolder showPlannedTasks(@ModelAttribute GridRequestDTO request) {
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         logger.debug("Current user {} ", currentUser);
