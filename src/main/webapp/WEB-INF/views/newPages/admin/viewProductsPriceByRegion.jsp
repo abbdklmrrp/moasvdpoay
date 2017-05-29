@@ -33,37 +33,6 @@
                     </li>
                 </c:otherwise>
             </c:choose>
-            <c:choose>
-                <c:when test="${param.page == 'Products'}">
-                    <li class="wet-asphalt active-tab">
-                        <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${id}">Product
-                            info</a>
-                    </li>
-                </c:when>
-                <c:otherwise>
-                    <li class="wet-asphalt">
-                        <a href="${pageContext.request.contextPath}/admin/getDetailsProduct?id=${id}">Product
-                            info</a>
-                    </li>
-                </c:otherwise>
-            </c:choose>
-
-            <c:if test="${productType eq 'Tariff plan'}">
-                <c:choose>
-                    <c:when test="${param.page == 'ViewServicesInTariff'}">
-                        <li class="wet-asphalt active-tab">
-                            <a href="${pageContext.request.contextPath}/admin/viewServicesInTariff?id=${id}">Services
-                                in tariff</a>
-                        </li>
-                    </c:when>
-                    <c:otherwise>
-                        <li class="wet-asphalt">
-                            <a href="${pageContext.request.contextPath}/admin/viewServicesInTariff?id=${id}">Services
-                                in tariff</a>
-                        </li>
-                    </c:otherwise>
-                </c:choose>
-            </c:if>
         </ul>
     </div>
 </div>

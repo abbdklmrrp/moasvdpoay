@@ -23,15 +23,6 @@ public class OrdersRowDTO {
     public OrdersRowDTO() {
     }
 
-    public OrdersRowDTO(Integer orderId, String name, ProductType productType, Integer productId, String endDate, String operationStatus) {
-        this.orderId = orderId;
-        this.name = name;
-        this.productType = productType;
-        this.productId = productId;
-        this.endDate = endDate;
-        this.operationStatus = operationStatus;
-    }
-
     public Integer getOrderId() {
         return orderId;
     }
@@ -78,5 +69,17 @@ public class OrdersRowDTO {
 
     public void setOperationStatus(String operationStatus) {
         this.operationStatus = operationStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "OrdersRowDTO{" +
+                "orderId=" + orderId +
+                ", name='" + name + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", productType=" + productType +
+                ", productId=" + productId +
+                ", operationStatus='" + operationStatus + '\'' +
+                '}';
     }
 }

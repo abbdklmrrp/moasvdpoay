@@ -66,7 +66,7 @@ public class PlaceDAOImpl implements PlaceDAO {
             "              JOIN PLACES place ON (price.PLACE_ID = place.ID)\n" +
             "            WHERE place.ID = :placeId AND\n" +
             "                  (upper(product.NAME) LIKE upper(:pattern)\n" +
-            "                  OR upper(STATUS) LIKE upper(:pattern)\n" +
+            "                  OR STATUS LIKE :pattern\n" +
             "                  OR PRICE LIKE :pattern\n" +
             "                  OR upper(type.NAME) LIKE upper(:pattern))\n" +
             "            ORDER BY %s) a\n" +

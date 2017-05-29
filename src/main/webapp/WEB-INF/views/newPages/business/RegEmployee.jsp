@@ -44,13 +44,6 @@
                                required>
                         <i class="fa fa-user"></i>
                     </div>
-                    <div class="form-group ">
-                        <input type="password" class="form-control" name="password" id="password" placeholder="Password"
-                               pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$" minlength="6" maxlength="24"
-                               title="•   Must be 6-24 characters
-•   Must contain uppercase and lowercase letters, numbers">
-                        <i class="fa fa-user"></i>
-                    </div>
                     <div style="text-align: center">
                         <button type="submit" class="btn btn-primary">Confirm</button>
                     </div>

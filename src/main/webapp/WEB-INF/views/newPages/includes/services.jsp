@@ -189,7 +189,7 @@
         renderers: {
             "action": function (pv, wv, grid) {
                 if (wv.status == 'In Tariff') {
-                    return $('In Tariff')
+                    return $('<div>' + wv.status + '</div>')
                 }
                 if (!wv.status) {
                     return $('<div id=service' + wv.id + '><input type="button" class="btn btn-success btn-block"  value="Activate" onclick="activateService(' + wv.id + ')"></div>');

@@ -7,6 +7,7 @@ import jtelecom.dto.FullInfoOrderDTO;
 import jtelecom.dto.OrdersRowDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -396,7 +397,6 @@ public class OrderDAOImpl implements OrderDAO {
 
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -406,7 +406,7 @@ public class OrderDAOImpl implements OrderDAO {
         params.addValue(PRODUCTID, productId);
         try {
             return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             logger.debug("There are no user`s orders with such params.");
             return null;
         }
