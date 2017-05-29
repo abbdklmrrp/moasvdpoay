@@ -23,7 +23,7 @@
                 <h1 style="text-align: center;">Create new tariff</h1>
 
                 <c:if test="${not empty error}">
-                    <span style="float:right ; color: #10CE88;">${error}</span>
+                    <h2 style="text-align: center">${error}</h2>
                 </c:if>
 
                 <div class="form-group row">
@@ -122,4 +122,5 @@
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/selectedCustomer.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/patternInputText.js"/>"></script>
+<script src="${pageContext.request.contextPath}/resources/js/alertAfterUpdateProduct.js"></script>
 </html>

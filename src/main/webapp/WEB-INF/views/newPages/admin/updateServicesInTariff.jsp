@@ -104,8 +104,6 @@
                                         </c:if>
                                     </c:forEach>
                                 </select>
-
-                                </select>
                             </td>
                             <td>
                                 <c:forEach var="service" items="${servicesByTariff}">

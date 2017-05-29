@@ -132,6 +132,10 @@ public class ProductDAOImpl implements ProductDAO {
             " OR upper(description) LIKE upper(:pattern) " +
             " OR duration LIKE :pattern " +
             " OR base_price LIKE :pattern ";
+    private static final String SELECT_PRODUCT_NAME_SQL = "SELECT * " +
+            "FROM PRODUCTS WHERE upper(PRODUCTS.NAME)=upper(:NAME)";
+    private static final String SELECT_PRODUCT_NAME_WITH_ID_SQL = "SELECT * " +
+            "FROM PRODUCTS WHERE upper(PRODUCTS.NAME)=upper(:NAME) AND PRODUCTS.ID<>:ID";
     private final static String SELECT_LIMITED_PRODUCTS_SQL = "SELECT *\n" +
             " FROM ( SELECT a.*, rownum rnum\n" +
             "       FROM ( SELECT * FROM PRODUCTS " +
@@ -705,6 +709,28 @@ public class ProductDAOImpl implements ProductDAO {
                             .getValues());
         }
         jdbcTemplate.batchUpdate(DELETE_SERVICE_FROM_TARIFF_SQL, batchValues.toArray(new Map[tariffServiceDTOS.size()]));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getProductName(Product product) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(NAME, product.getName());
+        List<Product> existProduct = jdbcTemplate.query(SELECT_PRODUCT_NAME_SQL, params, productRowMapper);
+        return existProduct.isEmpty();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Product getProductByName(Product product) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue(NAME, product.getName());
+        List<Product> existProduct = jdbcTemplate.query(SELECT_PRODUCT_NAME_SQL, params, productRowMapper);
+        return existProduct.isEmpty() ? null : existProduct.get(0);
     }
 
     @Override

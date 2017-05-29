@@ -215,6 +215,7 @@
     }
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/alertAfterUpdateProduct.js"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/patternInputText.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
 <script src="<c:url value="/resources/js/selectedCustomerBus.js"/>"></script>

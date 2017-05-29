@@ -27,6 +27,7 @@ public class AddProductController {
 
     private final static String ERROR_WRONG_FIELDS = "Please, check the correctness of the input data";
     private final static String ERROR_EXIST_OF_CATEGORY = "Category already exists";
+    private final static String ERROR_EXIST_PRODUCT_NAME = "Product name already exists";
     private static Logger logger = LoggerFactory.getLogger(AddProductController.class);
     @Resource
     private ProductDAO productDAO;
@@ -80,6 +81,13 @@ public class AddProductController {
     @RequestMapping(value = {"addTariff"}, method = RequestMethod.POST)
     public ModelAndView createTariff(Product product, ModelAndView mav) {
         product.setProductType(ProductType.Tariff);
+        boolean isExistProductName = productService.isExistProductName(product);
+        if (isExistProductName) {
+            logger.error("Tariff name already exist");
+            mav.addObject("error", ERROR_EXIST_PRODUCT_NAME);
+            mav.setViewName("newPages/admin/addTariff");
+            return mav;
+        }
         boolean isEmptyFieldsOfTariff = productService.isEmptyFieldOfProduct(product);
         logger.debug("Check that the incoming tariff fields are not empty {} ", isEmptyFieldsOfTariff);
         productService.validateBasePriceByCustomerType(product);
@@ -116,6 +124,13 @@ public class AddProductController {
                                       ProductCategories productCategory,
                                       Product product) {
         product.setProductType(ProductType.Service);
+        boolean isExistProductName = productService.isExistProductName(product);
+        if (isExistProductName) {
+            logger.error("Service name already exist");
+            mav.addObject("error", ERROR_EXIST_PRODUCT_NAME);
+            mav.setViewName("newPages/admin/addTariff");
+            return mav;
+        }
         boolean isEmptyFieldsOfService = productService.isEmptyFieldOfProduct(product);
         logger.debug("Check that the incoming tariff fields are not empty {} ", isEmptyFieldsOfService);
         boolean isEmptyFieldsOfNewCategory = productService.isEmptyFieldsOfNewCategory(productCategory);
