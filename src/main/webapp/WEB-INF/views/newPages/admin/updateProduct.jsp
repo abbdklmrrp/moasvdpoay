@@ -69,8 +69,8 @@
 <div class="col-xs-1"></div>
 <div class="col-xs-6">
     <div class="container" style="margin-bottom: 30px; width:60%; max-width: 600px;">
-        <form method="POST" modelAttribute="product"
-              action="${pageContext.request.contextPath}/admin/updateProduct?id=${product.id}">
+        <form:form method="POST" modelAttribute="product"
+                   action="${pageContext.request.contextPath}/admin/updateProduct?id=${product.id}">
             <div class="login-form">
                 <h1 style="text-align: center">Product info</h1>
                 <br>
@@ -99,16 +99,15 @@
                     <div class="form-group row">
                         <label class="col-sm-4 control-label">Category name</label>
                         <div class="col-sm-8">
-                            <input readonly type="text" class="form-control" placeholder="Description "
-                                   id="categoryName" name="categoryName" value="${category.categoryName}">
+                            <input readonly type="text" class="form-control"
+                                   value="${category.categoryName}">
                             <i class="fa fa-user"></i>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-4 control-label">Category description</label>
                         <div class="col-sm-8">
-                            <input readonly type="text" class="form-control" placeholder="Description "
-                                   id="categoryDescription" name="description"
+                            <input readonly type="text" class="form-control"
                                    value="${category.categoryDescription}">
                             <i class="fa fa-user"></i>
                         </div>
@@ -188,7 +187,7 @@
                     </button>
                 </div>
             </div>
-        </form>
+        </form:form>
         <div class="row" id="edit-and-changes">
             <div class="col-sm-4 col-xs-0"></div>
             <button class="btn btn-primary col-sm-5 col-xs-5" id="btn-edit-product-info">Edit product info
@@ -217,6 +216,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/alertAfterUpdateProduct.js"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/patternInputText.js"/>"></script>
 <c:if test="${product.customerType=='Residential'}">
     <script src="<c:url value="/resources/js/selectedCustomer.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/resources/js/productRes.js"/>"></script>

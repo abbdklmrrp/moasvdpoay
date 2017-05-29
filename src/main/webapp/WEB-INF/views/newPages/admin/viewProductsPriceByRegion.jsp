@@ -119,7 +119,7 @@
                             </div>
                             Price
                         </th>
-                        <th class="col-xs-2" data-grid-header="productType" data-grid-header-sortable="true">
+                        <th class="col-xs-2" data-grid-header="type_id" data-grid-header-sortable="true">
                             <div class="pull-right order-by">
                                 <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                    data-grid-header-sortable-up="up"></a>
@@ -128,7 +128,7 @@
                             </div>
                             Type
                         </th>
-                        <th class="col-xs-1" data-grid-header="productStatus" data-grid-header-sortable="true">
+                        <th class="col-xs-1" data-grid-header="status" data-grid-header-sortable="true">
                             <div class="pull-right order-by">
                                 <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                    data-grid-header-sortable-up="up"></a>
@@ -147,8 +147,8 @@
                     <tr data-grid="row">
                         <td data-cell="productName"></td>
                         <td data-cell="priceProduct"></td>
-                        <td data-cell="productType"></td>
-                        <td data-cell="productStatus"></td>
+                        <td data-cell="type_id"></td>
+                        <td data-cell="status"></td>
                         <td data-cell="action"></td>
                     </tr>
                     </tbody>
@@ -182,12 +182,14 @@
                 </div>
             </div>
         </div>
+        <h2 style="text-align: center" id="resultMessage" hidden disabled="true">${msg}</h2>
     </div>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
 <script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/alertAfterUpdateProduct.js"></script>
 <script>
     $().BooGrid({
         id: 'productsIds',

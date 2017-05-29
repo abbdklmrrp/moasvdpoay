@@ -152,6 +152,26 @@ public interface ProductDAO extends DAO<Product> {
     void deleteServiceFromTariff(List<TariffServiceDTO> tariffServiceDTO);
 
     /**
+     * Method search {@code Product} name by incoming object {@code Product}
+     * Return {@code true} if object doesn't exist, {@code false} if exist.
+     *
+     * @param product {@code Product} object.
+     * @return {@code true} if object doesn't exist, {@code false} if exist.
+     * @see Product
+     */
+    boolean getProductName(Product product);
+
+    /**
+     * Method search {@code Product} {@code Product} by incoming object {@code Product}
+     * Return {@code Product} object if object  exist, {@code null} if doesn't exist.
+     *
+     * @param product {@code Product} object.
+     * @return {@code true} if object doesn't exist, {@code false} if exist.
+     * @see Product
+     */
+    Product getProductByName(Product product);
+
+    /**
      * Method returns all services that are available in place.
      * created by Yuliya Pedash
      *

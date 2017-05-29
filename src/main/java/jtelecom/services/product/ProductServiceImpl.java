@@ -57,6 +57,23 @@ public class ProductServiceImpl implements ProductService {
      * {@inheritDoc}
      */
     @Override
+    public boolean isExistProductName(Product product) {
+        return !productDAO.getProductName(product);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isExistProductNameForUpdate(Product product, Integer id) {
+        Product foundProduct = productDAO.getProductByName(product);
+        return Objects.nonNull(foundProduct) && !Objects.equals(foundProduct.getId(), id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean isEmptyFieldOfProduct(Product product) {
         logger.debug("Received product {} ", product.toString());
         return (product.getName().isEmpty() || product.getDescription().isEmpty());

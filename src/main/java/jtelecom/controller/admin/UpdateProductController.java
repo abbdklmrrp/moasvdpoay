@@ -25,6 +25,7 @@ public class UpdateProductController {
 
     private static final String ERROR_WITH_DB = "Error with filling database";
     private static final String ERROR_EXIST = "Sorry, input data is invalid";
+    private final static String ERROR_EXIST_PRODUCT_NAME = "Product name already exists";
     private static Logger logger = LoggerFactory.getLogger(UpdateProductController.class);
     @Resource
     private ProductService productService;
@@ -59,10 +60,16 @@ public class UpdateProductController {
         product.setId(id);
         logger.debug("Write ID to product {} ", product.getId());
 
+        boolean isExistProductName = productService.isExistProductNameForUpdate(product, id);
+        if (isExistProductName) {
+            logger.error("Tariff name already exist in database");
+            mav.setViewName("redirect:/admin/getDetailsProduct?id=" + id);
+            return mav;
+        }
+
         try {
             boolean isUpdate = productService.updateProduct(product);
             logger.debug("Update fields of product with success {} ", isUpdate);
-            mav.addObject("message", "success");
             attributes.addFlashAttribute("msg", "Successfully updating");
         } catch (DataAccessException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
