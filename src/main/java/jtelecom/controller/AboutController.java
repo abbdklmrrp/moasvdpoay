@@ -18,15 +18,16 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by Nikita on 02.05.2017.
+ * @author Nikita Alistratenko
+ * @since 02.05.2017
  */
 @Controller
 public class AboutController {
+
     private static Logger logger = LoggerFactory.getLogger(ViewAllProductsController.class);
+
     @Resource
     private ProductDAO productDAO;
-    @Resource
-    private PriceDAO priceDAO;
 
     @RequestMapping(value = "/forBusiness")
     public String forBusiness() {
@@ -38,10 +39,16 @@ public class AboutController {
         return "newPages/ForPrivateCustomers";
     }
 
-
+    /**
+     * Creates JSON with data for table in ForBusiness.jsp
+     *
+     * @param request info about table configuration
+     * @return {@link ListHolder list} with data for table as JSON
+     */
     @RequestMapping(value = {"productForBusiness"}, method = RequestMethod.GET)
     @ResponseBody
     public ListHolder getProductListForBusiness(@ModelAttribute GridRequestDTO request) {
+        logger.debug("Created JSON for ForBusiness.jsp");
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
@@ -51,9 +58,17 @@ public class AboutController {
         return ListHolder.create(data, size);
     }
 
+
+    /**
+     * Creates JSON with data for table in ForResidential.jsp
+     *
+     * @param request info about table configuration
+     * @return {@link ListHolder list} with data for table as JSON
+     */
     @RequestMapping(value = {"productForResidential"}, method = RequestMethod.GET)
     @ResponseBody
     public ListHolder getProductListForResidential(@ModelAttribute GridRequestDTO request) {
+        logger.debug("Created JSON for ForResidential.jsp");
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();

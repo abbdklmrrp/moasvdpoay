@@ -1092,6 +1092,9 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.queryForObject(query, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Product> getLimitedActiveProductsForBusiness(Integer start, Integer length, String sort, String search) {
         int rownum = start + length;
@@ -1106,6 +1109,9 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.query(sql, params, new ProductRowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Product> getLimitedActiveProductsForResidential(Integer start, Integer length, String sort, String search) {
         int rownum = start + length;
@@ -1120,6 +1126,9 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.query(sql, params, new ProductRowMapper());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountForLimitedActiveProductsForBusiness(String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -1127,6 +1136,9 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.queryForObject(SELECT_ACTIVE_PRODUCT_FOR_BUSINESS_COUNT, params, Integer.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer getCountForLimitedActiveProductsForResidential(String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();

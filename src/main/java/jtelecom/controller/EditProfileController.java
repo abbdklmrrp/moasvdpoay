@@ -24,13 +24,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Moiseienko Petro , Anton Bulgakov
+ * @author Moiseienko Petro
+ * @author Nikita Alistratenko
+ * @author Anton Bulgakov
  * @since 05.05.2017.
  */
 @Controller
 @RequestMapping({"admin", "csr", "pmg", "business", "employee", "residential"})
 public class EditProfileController {
-
     private static Logger logger = LoggerFactory.getLogger(EditProfileController.class);
 
     @Resource
@@ -66,23 +67,28 @@ public class EditProfileController {
     }
 
     /**
+     * Updates info about user of any role
+     *
      * @param editedUser new user info
-     * @param attributes for passing messages to jsp
-     * @param request    to get additional parameters
-     * @return redirect to view
-     * @Author Nikita Alistratenko
+     * @param attributes needs to  pass messages to jsp
+     * @param request    to get additional parameters like old pass
+     * @return redirect to profile view
      */
     @RequestMapping(value = "/editProfile", method = RequestMethod.POST)
-    public String editProfile1(@ModelAttribute("user") User editedUser, RedirectAttributes attributes, HttpServletRequest request) {
-        logger.debug("User sent to be edited = {} ", editedUser);
-        //Message of the updating
+    public String editProfile(@ModelAttribute("user") User editedUser, RedirectAttributes attributes, HttpServletRequest request) {
+        logger.debug("User sent info to update = {} ", editedUser);
+        //Message of the updating result
         String errorMessage = null;
-        //needs to get id for user from db. JSP/SpringSecurity does not contain its id
+        //user that sent info to update
         User sessionUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         //needs to set placeID to new copy of user
         Integer placeId = sessionUser.getPlaceId();
         label:
         {
+            if (!isUserInfoValid(editedUser)) {
+                errorMessage = "Users info is invalid.";
+                break label;
+            }
             //if address was changed
             if (!editedUser.getAddress().equals(sessionUser.getAddress())) {
                 String place = serviceGoogleMaps.getRegion(editedUser.getAddress());
@@ -113,7 +119,7 @@ public class EditProfileController {
             }
         }
         attributes.addFlashAttribute("msg", errorMessage);
-        return "redirect:/" + sessionUser.getRole().getNameInLowwerCase() + "/getProfile";
+        return "redirect:/" + sessionUser.getRole().toString().toLowerCase() + "/getProfile";
     }
 
     @RequestMapping(value = "editUser", method = RequestMethod.POST)
@@ -136,6 +142,32 @@ public class EditProfileController {
         modelAndView.addObject("msg", message);
         modelAndView.addObject("user", user);
         return modelAndView;
+    }
+
+
+    /**
+     * Checks if users info is valid
+     *
+     * @param user user to check
+     * @return result of checking
+     */
+    private boolean isUserInfoValid(User user) {
+        if (user.getName() == null || user.getName().trim().equals("")) {
+            return false;
+        }
+        if (user.getSurname() == null || user.getSurname().trim().equals("")) {
+            return false;
+        }
+        if (user.getEmail() == null || user.getEmail().trim().equals("")) {
+            return false;
+        }
+        if (user.getPhone() == null || user.getPhone().trim().equals("")) {
+            return false;
+        }
+        if (user.getAddress() == null || user.getAddress().trim().equals("")) {
+            return false;
+        }
+        return true;
     }
 
 }
