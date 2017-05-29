@@ -24,16 +24,17 @@ public class CustomerDAOImpl implements CustomerDAO {
     private static Logger logger = LoggerFactory.getLogger(CustomerDAOImpl.class);
 
     private final static String SELECT_COMPANY_SQL = "SELECT ID " +
-            "FROM CUSTOMERS " +
-            "WHERE NAME=:name AND SECRET_KEY=:secretKey";
-    private final static String SAVE_CUSTOMER_SQL = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY,TYPE_ID) " +
+            " FROM CUSTOMERS " +
+            " WHERE NAME=:name AND SECRET_KEY=:secretKey";
+    private final static String INSERT_CUSTOMER_SQL = "INSERT INTO CUSTOMERS(NAME,SECRET_KEY,TYPE_ID) " +
             "VALUES(:name, :secretKey,:typeId)";
 
-    private final static String SELECT_BUSINESS_CUSTOMERS = "SELECT * FROM CUSTOMERS\n" +
+    private final static String SELECT_BUSINESS_CUSTOMERS_SQL = "SELECT * FROM CUSTOMERS " +
             "WHERE TYPE_ID=1";
-    private final static String SELECT_CUSTOMERS_BY_NAME = "SELECT ID FROM CUSTOMERS WHERE upper(NAME)=upper(:name)";
+    private final static String SELECT_CUSTOMERS_BY_NAME_SQL = "SELECT ID FROM CUSTOMERS " +
+            " WHERE upper(NAME)=upper(:name)";
 
-    private final static String SELECT_LIMITED_CUSTOMERS = "select *\n" +
+    private final static String SELECT_LIMITED_CUSTOMERS_SQL = "select *\n" +
             "from ( select a.*, rownum rnum\n" +
             "       from ( Select * from CUSTOMERS " +
             " Where upper(name) like upper(:pattern) " +
@@ -41,7 +42,7 @@ public class CustomerDAOImpl implements CustomerDAO {
             "       where rownum <= :length )\n" +
             "       where rnum > :start";
 
-    private static final String SELECT_COUNT = "SELECT count(ID)\n" +
+    private static final String SELECT_COUNT_SQL = "SELECT count(ID)\n" +
             "  FROM CUSTOMERS" +
             " WHERE upper(name) LIKE upper(:pattern) " +
             " OR invoice LIKE :pattern ";
@@ -102,7 +103,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         params.addValue("name", customer.getName());
         params.addValue("secretKey", password);
         params.addValue("typeId", type);
-        return jdbcTemplate.update(SAVE_CUSTOMER_SQL, params) > 0;
+        return jdbcTemplate.update(INSERT_CUSTOMER_SQL, params) > 0;
     }
 
     /**
@@ -117,7 +118,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         params.addValue("secretKey", password);
         params.addValue("typeId", type);
         KeyHolder key = new GeneratedKeyHolder();
-        jdbcTemplate.update(SAVE_CUSTOMER_SQL,params,key,new String[]{"ID"});
+        jdbcTemplate.update(INSERT_CUSTOMER_SQL,params,key,new String[]{"ID"});
         return key.getKey().intValue();
     }
 
@@ -131,7 +132,7 @@ public class CustomerDAOImpl implements CustomerDAO {
      */
     @Override
     public List<Customer> getAllBusinessCustomers() {
-        return jdbcTemplate.query(SELECT_BUSINESS_CUSTOMERS, new CustomerRowMapper());
+        return jdbcTemplate.query(SELECT_BUSINESS_CUSTOMERS_SQL, new CustomerRowMapper());
     }
 
     /**
@@ -139,7 +140,7 @@ public class CustomerDAOImpl implements CustomerDAO {
      */
     public boolean isUnique(Customer customer) {
         MapSqlParameterSource params = new MapSqlParameterSource("name", customer.getName());
-        List<Integer> customers = jdbcTemplate.query(SELECT_CUSTOMERS_BY_NAME, params, (rs, rownum) -> rs.getInt("id"));
+        List<Integer> customers = jdbcTemplate.query(SELECT_CUSTOMERS_BY_NAME_SQL, params, (rs, rownum) -> rs.getInt("id"));
         return customers.isEmpty();
     }
 
@@ -149,7 +150,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         if (sort.isEmpty()) {
             sort = "ID";
         }
-        String sql = String.format(SELECT_LIMITED_CUSTOMERS, sort);
+        String sql = String.format(SELECT_LIMITED_CUSTOMERS_SQL, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("start", start);
         params.addValue("length", rownum);
@@ -162,7 +163,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     public Integer getCountCustomersWithSearch(String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("pattern", "%" + search + "%");
-        return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_SQL, params, Integer.class);
     }
 
 }

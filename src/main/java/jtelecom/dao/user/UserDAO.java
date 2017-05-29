@@ -21,8 +21,6 @@ public interface UserDAO extends DAO<User> {
 
     List<User> getAll();
 
-    List<User> getAllClients();
-
     Integer findRole(String name);
 
     Integer findPlaceId(String name);

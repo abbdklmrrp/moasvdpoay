@@ -255,9 +255,9 @@
 </body>
 </html>
 
-<script src="${contextPath}/resources/js/grid/ElementListener.js"></script>
-<script src="${contextPath}/resources/js/grid/RemoteDataSource.js"></script>
-<script src="${contextPath}/resources/js/grid/BooGrid.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/ElementListener.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/RemoteDataSource.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/grid/BooGrid.js"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/operationHistoryPagination.js"/>"></script>
 <%--<script type="text/javascript" src="<c:url value="/resources/js/showOperationHistory.js"/>"></script>--%>
 

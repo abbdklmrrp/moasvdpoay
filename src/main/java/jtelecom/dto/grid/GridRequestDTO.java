@@ -5,16 +5,16 @@ package jtelecom.dto.grid;
  * Need for object tables
  */
 
-public class GridRequestDto {
+public class GridRequestDTO {
     private int start;
     private int length;
     private String search = "";
     private String sort = "";
 
-    public GridRequestDto() {
+    public GridRequestDTO() {
     }
 
-    public GridRequestDto(int start, int length) {
+    public GridRequestDTO(int start, int length) {
         this.start = start;
         this.length = length;
     }

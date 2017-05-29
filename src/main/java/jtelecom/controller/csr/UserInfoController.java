@@ -30,6 +30,9 @@ public class UserInfoController {
     @Resource
     private UserService userService;
     private static Logger logger = LoggerFactory.getLogger(UserInfoController.class);
+    private final static String USER_ID = "userId";
+    private static final String USER = "user";
+    private final static String GO_TO_USER_PAGE = "Go to user page, id {}";
 
     /**
      * Method finds information about client and redirect it to the some page.<br>
@@ -44,10 +47,10 @@ public class UserInfoController {
         ModelAndView model = new ModelAndView();
         User sessionUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         User user = userDAO.getUserById(id);
-        session.setAttribute("userId", id);
+        session.setAttribute(USER_ID, id);
         model.setViewName("newPages/" + sessionUser.getRole().getNameInLowwerCase() + "/UserInfo");
-        model.addObject("user", user);
-        logger.debug("Get to user page, id " + id);
+        model.addObject(USER, user);
+        logger.debug(GO_TO_USER_PAGE, id);
         return model;
     }
 
@@ -71,12 +74,12 @@ public class UserInfoController {
      */
     @RequestMapping(value = "getUserProfile", method = RequestMethod.GET)
     public ModelAndView getProfile(HttpSession session) {
-        Integer userId = (Integer) session.getAttribute("userId");
+        Integer userId = (Integer) session.getAttribute(USER_ID);
         User user = userDAO.getUserById(userId);
         ModelAndView model = new ModelAndView();
         model.setViewName("newPages/csr/UserInfo");
-        model.addObject("user", user);
-        logger.debug("Get to user page, id " + userId);
+        model.addObject(USER, user);
+        logger.debug(GO_TO_USER_PAGE, userId);
         return model;
 
     }
