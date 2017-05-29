@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -751,7 +752,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -760,14 +760,13 @@ public class ProductDAOImpl implements ProductDAO {
         params.addValue(PLACE_ID, placeId);
         try {
             return jdbcTemplate.query(SELECT_TARIFFS_BY_PLACE_SQL, params, tariffRowMapper);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             logger.debug("There are no tariffs in place with id {}", placeId);
             return new ArrayList<>();
         }
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -778,14 +777,13 @@ public class ProductDAOImpl implements ProductDAO {
         params.addValue(END_INDEX, endIndex);
         try {
             return jdbcTemplate.query(SELECT_INTERVAL_TARIFFS_BY_PLACE_SQL, params, tariffRowMapper);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             logger.debug("There are no tariffs in place with id {}", placeId);
             return new ArrayList<>();
         }
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -794,14 +792,13 @@ public class ProductDAOImpl implements ProductDAO {
         params.addValue(PLACE_ID, placeId);
         try {
             return jdbcTemplate.queryForObject(SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_BY_PLACE_ID_SQL, params, Integer.class);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             logger.debug("There are no available tariffs for user.");
             return null;
         }
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -809,14 +806,13 @@ public class ProductDAOImpl implements ProductDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         try {
             return jdbcTemplate.queryForObject(SELECT_QUANTITY_OF_AVAILABLE_TARIFFS_FOR_CUSTOMERS_SQL, params, Integer.class);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             logger.debug("There are no available tariffs for customers.");
             return null;
         }
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -830,7 +826,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -842,7 +837,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -850,14 +844,13 @@ public class ProductDAOImpl implements ProductDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         try {
             return jdbcTemplate.query(SELECT_TARIFFS_FOR_CUSTOMERS_SQL, params, tariffRowMapper);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             logger.debug("There are no tariffs for customers.");
             return new ArrayList<>();
         }
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -867,7 +860,7 @@ public class ProductDAOImpl implements ProductDAO {
         params.addValue(END_INDEX, endIndex);
         try {
             return jdbcTemplate.query(SELECT_INTERVAL_TARIFFS_FOR_CUSTOMERS_SQL, params, tariffRowMapper);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             logger.debug("There are no tariffs for customers.");
             return new ArrayList<>();
         }
@@ -875,7 +868,6 @@ public class ProductDAOImpl implements ProductDAO {
 
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -884,7 +876,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -904,7 +895,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -913,14 +903,13 @@ public class ProductDAOImpl implements ProductDAO {
         params.addValue(CUSTOMER_ID, customerId);
         try {
             return jdbcTemplate.queryForObject(SELECT_CURRENT_TARIFF_BY_CUSTOMER_ID_SQL, params, tariffRowMapper);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             logger.debug("User doesn`t have tariff.");
             return null;
         }
     }
 
     /**
-     * Bulgakov Anton
      * {@inheritDoc}
      */
     @Override
@@ -929,7 +918,7 @@ public class ProductDAOImpl implements ProductDAO {
         params.addValue(TARIFF_ID, tariffId);
         try {
             return jdbcTemplate.query(SELECT_SERVICES_OF_TARIFF_SQL, params, productRowMapper);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             logger.debug("There are no services in tariff with id = {}", tariffId);
             return new ArrayList<>();
         }

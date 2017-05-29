@@ -14,24 +14,38 @@ import java.util.Map;
 @Service
 public class ReportDataDAOImpl implements ReportDataDAO {
     private final static String SELECT_NUMBERS_OF_ORDERS_FOR_TIME_PERIODS_BY_PLACE_SQL = "SELECT\n" +
-            "  COUNT(*)                          COUNT,\n" +
+            "  COUNT(*)                        COUNT,\n" +
             "  TO_CHAR(OPERATION_DATE, '%s') TIME_PERIOD\n" +
             "FROM OPERATIONS_HISTORY op_his\n" +
-            "   JOIN ORDERS o ON o.ID = op_his.ORDER_ID\n" +
-            "   JOIN USERS u ON u.ID = o.USER_ID\n" +
-            "   JOIN PLACES p ON u.PLACE_ID = p.ID\n" +
-            "WHERE OPERATION_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD')\n" +
-            "      AND (u.PLACE_ID = :place_id OR p.PARENT_ID = :place_id)\n" +
-            "GROUP BY TO_CHAR(OPERATION_DATE, '%s')";
+            "  JOIN ORDERS o ON o.ID = op_his.ORDER_ID\n" +
+            "  JOIN USERS u ON u.ID = o.USER_ID\n" +
+            "WHERE OPERATION_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD') + 1\n" +
+            "      AND (u.PLACE_ID IN (SELECT plL3.id\n" +
+            "                          FROM Places plL1\n" +
+            "                            JOIN Places plL2 ON plL1.id = plL2.parent_id\n" +
+            "                            JOIN Places plL3 ON plL2.id = plL3.PARENT_ID\n" +
+            "                          WHERE plL1.id = :place_id\n" +
+            "                          UNION\n" +
+            "                          SELECT id\n" +
+            "                          FROM Places\n" +
+            "                          WHERE id = :place_id OR parent_id = :place_id))\n" +
+            "GROUP BY TO_CHAR(OPERATION_DATE, '%s')\n";
     private final static String SELECT_NUMBER_OF_COMPLAINTS_FOR_TIME_PERIOD_BY_PLACE_SQL = "SELECT\n" +
             "  COUNT(*)                                                COUNT,\n" +
             "  TO_CHAR(CREATING_DATE, '%s') TIME_PERIOD\n" +
             "FROM COMPLAINTS C\n" +
             "  JOIN ORDERS o ON o.ID = C.ORDER_ID\n" +
             "  JOIN USERS u ON u.ID = o.USER_ID\n" +
-            "  JOIN PLACES p ON u.PLACE_ID = p.ID\n" +
-            "WHERE CREATING_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD')\n" +
-            "      AND (u.PLACE_ID = :place_id OR p.PARENT_ID = :place_id)\n" +
+            "WHERE CREATING_DATE BETWEEN TO_DATE(:date_begin, 'YYYY/MM/DD') AND TO_DATE(:date_end, 'YYYY/MM/DD') + 1\n" +
+            "      AND (u.PLACE_ID IN (SELECT plL3.id\n" +
+            "                          FROM Places plL1\n" +
+            "                            JOIN Places plL2 ON plL1.id = plL2.parent_id\n" +
+            "                            JOIN Places plL3 ON plL2.id = plL3.PARENT_ID\n" +
+            "                          WHERE plL1.id = :place_id\n" +
+            "                          UNION\n" +
+            "                          SELECT id\n" +
+            "                          FROM Places\n" +
+            "                          WHERE id = :place_id OR parent_id = :place_id))\n" +
             "GROUP BY TO_CHAR(CREATING_DATE, '%s')";
     @Resource
     private NamedParameterJdbcTemplate jdbcTemplate;
