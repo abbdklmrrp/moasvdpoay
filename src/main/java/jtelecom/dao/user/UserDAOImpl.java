@@ -173,12 +173,13 @@ public class UserDAOImpl implements UserDAO {
     public User findByUsername(String username) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("username", username);
-        return jdbcTemplate.queryForObject(SELECT_BY_USERNAME, params, (rs, rowNum) -> {
+        List<User> users = jdbcTemplate.query(SELECT_BY_USERNAME, params, (rs, rowNum) -> {
             String userName = rs.getString("USERNAME");
             String password = rs.getString("PASSWORD");
             String authorities = rs.getString("ROLE");
             return new User(userName, password, authorities);
         });
+        return users.isEmpty() ? null : users.get(0);
     }
 
     @Override

@@ -13,7 +13,7 @@
     </appender>
     <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="INFO"/>
-        <param name="File" value="${basedir}/JTelecom.log"/>
+        <param name="File" value="./JTelecom.log"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d  %-5p  [%c{1}] %m %n"/>
         </layout>

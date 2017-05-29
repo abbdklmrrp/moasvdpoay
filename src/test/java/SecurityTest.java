@@ -1,4 +1,5 @@
 import jtelecom.config.SpringConfig;
+import jtelecom.security.SecurityConfig;
 import jtelecom.security.TestSecured;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebAppConfiguration
-@DirtiesContext
-@ContextConfiguration(classes = {SpringConfig.class})
+@ContextConfiguration(classes = {SpringConfig.class, SecurityConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SecurityTest {
 
@@ -36,7 +35,7 @@ public class SecurityTest {
      */
     @Test
     public void testDataSource() {
-        UserDetails userDetails = userDetailsService.loadUserByUsername("admin");
+        UserDetails userDetails = userDetailsService.loadUserByUsername("rysakova.ann@gmail.com");
         Authentication authToken = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }
@@ -46,11 +45,10 @@ public class SecurityTest {
      */
     @Test(expected = AccessDeniedException.class)
     public void testInvalidRole() {
-        UserDetails userDetails = userDetailsService.loadUserByUsername("admin");
+        UserDetails userDetails = userDetailsService.loadUserByUsername("rysakova.ann@gmail.com");
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_INVALID"));
         Authentication authToken = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), authorities);
-
         SecurityContextHolder.getContext().setAuthentication(authToken);
         testSecured.testSecured();
     }
