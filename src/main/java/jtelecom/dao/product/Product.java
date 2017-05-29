@@ -12,6 +12,7 @@ import java.util.Objects;
 public class Product {
     private Integer id;
     private Integer categoryId;
+    @JsonProperty("duration")
     private Integer durationInDays;
     @JsonProperty("type_id")
     private ProductType productType;
