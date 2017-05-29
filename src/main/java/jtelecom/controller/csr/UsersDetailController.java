@@ -49,7 +49,7 @@ public class UsersDetailController {
     public ListHolder getUsers(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
-        int length = request.getLength();
+        int length = request.getEndBorder();
         String search = request.getSearch();
         List<User> data = userDAO.getLimitedQuantityUsers(start, length, sort, search);
         int size = userDAO.getCountUsersWithSearch(search);

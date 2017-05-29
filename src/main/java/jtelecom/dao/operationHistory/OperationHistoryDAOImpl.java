@@ -27,37 +27,60 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
     private static final String END = "end";
     private static final String PATTERN = "pattern";
 
-    private final static String SELECT_OPERATION_HISTORY_BY_USER = "SELECT * from( \n" +
-            "  select product_name,OPERATION_DATE,current_status_id, ROW_NUMBER() OVER (ORDER BY %s) R  from \n" +
-            "    (Select products.name product_name, TO_CHAR(OPERATION_DATE,'YYYY-MM-DD') operation_date, STATUS_ID current_status_id \n" +
-            "     from OPERATIONS_HISTORY \n" +
-            "       join ORDERS on OPERATIONS_HISTORY.ORDER_ID = ORDERS.ID \n" +
-            "       join products on ORDERS.PRODUCT_ID=PRODUCTS.id \n" +
-            "       WHERE ORDER_ID IN (SELECT ID FROM ORDERS WHERE USER_ID IN (Select id from users where customer_id= " +
-            " (Select customer_id from users where id=:userId))))) \n" +
-            "    where R>:start and R<=:end AND (upper(product_name) LIKE upper(:pattern)  " +
-            " or upper(operation_date) like upper(:pattern))";
+    private final static String SELECT_OPERATION_HISTORY_BY_USER_SQL = "SELECT * FROM( \n" +
+            " SELECT product_name, " +
+            " operation_date, " +
+            " current_status_id, " +
+            " ROW_NUMBER() OVER (ORDER BY %s) R  FROM \n" +
+            "   (SELECT PRODUCTS.name product_name, " +
+            "    TO_CHAR(operation_date,'YYYY-MM-DD') operation_date, " +
+            "    status_id current_status_id \n" +
+            "    FROM OPERATIONS_HISTORY \n" +
+            "    JOIN ORDERS ON (OPERATIONS_HISTORY.order_id = ORDERS.id) \n" +
+            "    JOIN PRODUCTS ON ORDERS.product_id=PRODUCTS.id \n" +
+            "    WHERE ORDER_ID IN (SELECT id " +
+            "                       FROM ORDERS " +
+            "                       WHERE USER_ID IN (SELECT id " +
+            "                                         FROM USERS " +
+            "                                         WHERE customer_id= " +
+            "                                          (SELECT customer_id " +
+            "                                           FROM USERS " +
+            "                                           WHERE id=:userId))))) \n" +
+            " WHERE R>:start AND R<=:end AND (upper(product_name) LIKE upper(:pattern)  " +
+            " OR upper(operation_date) LIKE upper(:pattern))";
 
-    private final static String SELECT_COUNT_OPERATION_FOR_USER = "Select count(*) from ( Select " +
-            "products.name product_name, TO_CHAR(OPERATION_DATE,'YYYY-MM-DD') operation_date, STATUS_ID \n" +
-            "from OPERATIONS_HISTORY \n" +
-            "  join ORDERS on OPERATIONS_HISTORY.ORDER_ID = ORDERS.ID \n" +
-            "  join products on ORDERS.PRODUCT_ID=PRODUCTS.id \n" +
-            "WHERE ORDER_ID IN (SELECT ID FROM ORDERS WHERE USER_ID IN (Select id from users where customer_id= " +
-            " (Select customer_id from users where id=:userId)))) \n" +
-            "where upper(product_name) like upper(:pattern) " +
-            " or upper(operation_date) like upper(:pattern)";
+    private final static String SELECT_COUNT_OPERATION_FOR_USER_SQL = "SELECT COUNT(*) FROM ( " +
+            " SELECT PRODUCTS.name product_name, " +
+            " TO_CHAR(operation_date,'YYYY-MM-DD') operation_date, " +
+            " status_id \n" +
+            " FROM OPERATIONS_HISTORY \n" +
+            " JOIN ORDERS on (OPERATIONS_HISTORY.order_id = ORDERS.id) \n" +
+            " JOIN PRODUCTS on (ORDERS.product_id=PRODUCTS.id) \n" +
+            " WHERE ORDER_ID IN (SELECT ID " +
+            "                    FROM ORDERS " +
+            "                    WHERE USER_ID IN (SELECT id " +
+            "                                      FROM USERS " +
+            "                                      WHERE customer_id= " +
+            "                                       (SELECT customer_id " +
+            "                                        FROM USERS " +
+            "                                        WHERE id=:userId)))) \n" +
+            " WHERE upper(product_name) LIKE upper(:pattern) " +
+            " OR upper(operation_date) LIKE upper(:pattern)";
 
-    private final static String SELECT_COUNT_OF_OPERATIONS_BY_ORDER_ID = "SELECT COUNT(ID) \n" +
+    private final static String SELECT_COUNT_OF_OPERATIONS_BY_ORDER_ID_SQL = "SELECT COUNT(ID) \n" +
             "  FROM OPERATIONS_HISTORY \n" +
             "  WHERE ORDER_ID=:orderId";
 
-    private final static String SELECT_INTERVAL_OF_OPERATIONS_BY_ORDER_ID = "SELECT * FROM \n" +
-            "(SELECT TO_CHAR(OPERATION_DATE,'YYYY-MM-DD') operation_date, STATUS_ID, PRODUCTS.NAME product_name, ROW_NUMBER() OVER (ORDER BY OPERATION_DATE) R\n" +
-            "FROM OPERATIONS_HISTORY JOIN ORDERS ON OPERATIONS_HISTORY.ORDER_ID = ORDERS.ID \n" +
-            "  JOIN PRODUCTS ON PRODUCTS.ID=ORDERS.PRODUCT_ID \n" +
-            "WHERE ORDER_ID=:orderId ) \n" +
-            "WHERE R > :start AND R <= :end";
+    private final static String SELECT_INTERVAL_OF_OPERATIONS_BY_ORDER_ID_SQL = "SELECT * FROM \n" +
+            " (SELECT TO_CHAR(operation_date,'YYYY-MM-DD') operation_date, " +
+            "  status_id, " +
+            "  PRODUCTS.name product_name, " +
+            "  ROW_NUMBER() OVER (ORDER BY OPERATION_DATE) R\n" +
+            "  FROM OPERATIONS_HISTORY " +
+            "  JOIN ORDERS ON (OPERATIONS_HISTORY.order_id = ORDERS.ID) \n" +
+            "  JOIN PRODUCTS ON (PRODUCTS.id=ORDERS.product_id) \n" +
+            "  WHERE ORDER_ID=:orderId ) \n" +
+            " WHERE R > :start AND R <= :end";
 
 
     @Resource
@@ -75,7 +98,7 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
         params.addValue(START, start);
         params.addValue(END, length);
         params.addValue(PATTERN, "%" + search + "%");
-        String sql = String.format(SELECT_OPERATION_HISTORY_BY_USER, order);
+        String sql = String.format(SELECT_OPERATION_HISTORY_BY_USER_SQL, order);
         return jdbcTemplate.query(sql, params, (rs, rownum) -> {
             FullInfoOrderDTO history = new FullInfoOrderDTO();
             history.setProductName(rs.getString(PRODUCT_NAME));
@@ -92,7 +115,7 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
     public Integer getCountOperationForUser(Integer userId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource(USER_ID, userId);
         params.addValue(PATTERN, "%" + search + "%");
-        return jdbcTemplate.queryForObject(SELECT_COUNT_OPERATION_FOR_USER, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_OPERATION_FOR_USER_SQL, params, Integer.class);
     }
 
     /**
@@ -101,7 +124,7 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
     @Override
     public Integer getCountOperationsByOrderId(int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource(ORDER_ID, orderId);
-        return jdbcTemplate.queryForObject(SELECT_COUNT_OF_OPERATIONS_BY_ORDER_ID, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_OF_OPERATIONS_BY_ORDER_ID_SQL, params, Integer.class);
     }
 
     /**
@@ -113,7 +136,7 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
         params.addValue(START, startIndex);
         params.addValue(END, endIndex);
         params.addValue(ORDER_ID, orderId);
-        List<FullInfoOrderDTO> history = jdbcTemplate.query(SELECT_INTERVAL_OF_OPERATIONS_BY_ORDER_ID, params, (rs, rownum) -> {
+        List<FullInfoOrderDTO> history = jdbcTemplate.query(SELECT_INTERVAL_OF_OPERATIONS_BY_ORDER_ID_SQL, params, (rs, rownum) -> {
             FullInfoOrderDTO order = new FullInfoOrderDTO();
             order.setActionDate(rs.getString(OPERATION_DATE));
             Integer status = rs.getInt(STATUS_ID);

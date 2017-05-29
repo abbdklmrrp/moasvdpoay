@@ -94,27 +94,35 @@ public class OrderDAOImpl implements OrderDAO {
             " AND USER_ID = :user_id\n " +
             " AND CURRENT_STATUS_ID <> 3 /*Deactivated status*/";
 
-    private static final String SELECT_INTERVAL_ORDERS_BY_USER_ID = "SELECT * FROM(" +
-            "Select id , product_name, description, product_type, current_status_id, ROW_NUMBER() OVER (ORDER BY %s) R " +
+    private static final String SELECT_INTERVAL_ORDERS_BY_USER_ID_SQL = "SELECT * FROM( " +
+            " SELECT id , " +
+            " product_name, " +
+            " description, " +
+            " product_type, " +
+            " current_status_id, " +
+            " ROW_NUMBER() OVER (ORDER BY %s) R " +
             " FROM \n" +
-            " (Select orders.id id, " +
-            " products.name product_name, \n" +
-            " products.DESCRIPTION description, \n" +
-            " products.type_id product_type, \n" +
-            "  orders.CURRENT_STATUS_ID current_status_id \n" +
-            " from orders join products on (orders.PRODUCT_ID=products.id) join (SELECT \n" +
-            "       OPERATION_DATE, \n" +
-            "            ORDER_ID \n" +
-            "         FROM OPERATIONS_HISTORY \n" +
-            "         WHERE ID IN (SELECT MIN(ID) \n" +
+            "  (SELECT ORDERS.id id, " +
+            "   PRODUCTS.name product_name, \n" +
+            "   PRODUCTS.description description, \n" +
+            "   PRODUCTS.type_id product_type, \n" +
+            "   ORDERS.CURRENT_STATUS_ID current_status_id \n" +
+            "   FROM ORDERS JOIN PRODUCTS ON (ORDERS.product_id=PRODUCTS.id) " +
+            "   JOIN (SELECT \n" +
+            "        OPERATION_DATE, \n" +
+            "        ORDER_ID \n" +
+            "        FROM OPERATIONS_HISTORY \n" +
+            "        WHERE ID IN (SELECT MIN(ID) \n" +
             "                      FROM OPERATIONS_HISTORY \n" +
-            "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = orders.ID \n" +
-            " where USER_ID in (select id from users where customer_id= " +
-            "(select customer_id from users where id=:userId)) and orders.CURRENT_STATUS_ID<>3)) \n" +
-            " where R>:start and R<=:length and upper(product_name) like upper(:pattern) ";
+            "                      GROUP BY ORDER_ID)) OP_HIS ON OP_HIS.order_id = ORDERS.ID \n" +
+            "   WHERE USER_ID IN (SELECT id " +
+            "                     FROM USERS " +
+            "                     WHERE customer_id= " +
+            "                      (SELECT customer_id " +
+            "                       FROM USERS " +
+            "                       WHERE id=:userId)) AND orders.CURRENT_STATUS_ID<>3)) \n" +
+            " WHERE R>:start AND R<=:length AND UPPER(product_name) LIKE UPPER(:pattern) ";
 
-    //    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
-//            " where R>:start and R<=:length and name like :pattern ";
     private final String SELECT_LIMITED_ORDERS_DTO_BY_CUSTOMER_ID_SQL = "SELECT * FROM (SELECT\n" +
             "  o.id           order_id,\n" +
             "  p.name,\n" +
@@ -142,103 +150,182 @@ public class OrderDAOImpl implements OrderDAO {
             "" +
             "" +
             ") || '%%'";
-    private static final String SELECT_COUNT_ORDERS_BY_USER_ID = "Select COUNT(ROWNUM) COUNT \n" +
-            " from orders join products on (orders.PRODUCT_ID=products.id) join (SELECT \n" +
+    private static final String SELECT_COUNT_ORDERS_BY_USER_ID_SQL = "SELECT COUNT(ROWNUM) COUNT \n" +
+            " FROM ORDERS JOIN PRODUCTS ON (ORDERS.product_id=PRODUCTS.id) " +
+            " JOIN (SELECT \n" +
             "       OPERATION_DATE, \n" +
-            "            ORDER_ID \n" +
-            "         FROM OPERATIONS_HISTORY \n" +
-            "         WHERE ID IN (SELECT MIN(ID) \n" +
+            "       ORDER_ID \n" +
+            "       FROM OPERATIONS_HISTORY \n" +
+            "       WHERE ID IN (SELECT MIN(ID) \n" +
             "                      FROM OPERATIONS_HISTORY \n" +
-            "                      GROUP BY ORDER_ID)) op_his ON op_his.ORDER_ID = orders.ID \n" +
-            " where USER_ID in (select id from users where customer_id= " +
-            "(select customer_id from users where id=:userId)) and orders.CURRENT_STATUS_ID<>3 AND upper(PRODUCTS.NAME) LIKE upper(:pattern)";
+            "                      GROUP BY ORDER_ID)) OP_HIS ON OP_HIS.order_id = ORDERS.id \n" +
+            " WHERE USER_ID IN (SELECT id " +
+            "                   FROM USERS " +
+            "                   WHERE customer_id= " +
+            "                    (SELECT customer_id " +
+            "                     FROM USERS " +
+            "                     WHERE id=:userId)) " +
+            " AND ORDERS.current_status_id<>3 " +
+            " AND upper(PRODUCTS.NAME) LIKE upper(:pattern)";
 
-    private static final String SELECT_ALL_ORDERS_WITHOUT_CSR = "SELECT * FROM ( \n" +
-            " SELECT product_name,product_type,customer_type,order_id, " +
-            " TO_CHAR(operation_date,'YYYY-MM-DD') operation_date,place, \n" +
-            "  ROW_NUMBER() OVER (ORDER BY %s) R FROM  (\n" +
-            " SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID product_type, products.CUSTOMER_TYPE_ID customer_type, \n" +
-            "  orders.id order_id,a.OPERATION_DATE operation_date, PLACES. NAME place \n" +
-            " FROM ORDERS JOIN \n" +
-            "  (SELECT * FROM OPERATIONS_HISTORY WHERE STATUS_ID=4) a ON (ORDERS.id=a.ORDER_ID) \n" +
-            "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
-            "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
-            " WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id IS NULL)) \n" +
-            "  WHERE R>:start AND R<=:length AND (upper(operation_date) LIKE upper(:pattern) " +
+    private static final String SELECT_ALL_ORDERS_WITHOUT_CSR_SQL = "SELECT * FROM ( \n" +
+            " SELECT product_name, " +
+            " product_type, " +
+            " customer_type, " +
+            " order_id, " +
+            " TO_CHAR(operation_date,'YYYY-MM-DD') operation_date, " +
+            " place, \n" +
+            " ROW_NUMBER() OVER (ORDER BY %s) R FROM (\n" +
+            "   SELECT  PRODUCTS.name product_name, " +
+            "   PRODUCTS.type_id product_type, " +
+            "   PRODUCTS.customer_type_id customer_type, \n" +
+            "   ORDERS.id order_id, " +
+            "   a.operation_date operation_date, " +
+            "   PLACES.name place \n" +
+            "   FROM ORDERS JOIN \n" +
+            "    (SELECT * " +
+            "     FROM OPERATIONS_HISTORY " +
+            "     WHERE STATUS_ID=4) a " +
+            "   ON (ORDERS.id=a.order_id) \n" +
+            "   JOIN PRODUCTS ON (ORDERS.product_id=PRODUCTS.id) \n" +
+            "   JOIN USERS ON (USERS.id=ORDERS_user_id) " +
+            "   JOIN PLACES ON (USERS.place_id=PLACES.id) \n" +
+            "   WHERE ORDERS.current_status_id=4 AND ORDERS.csr_id IS NULL)) \n" +
+            " WHERE R>:start AND R<=:length AND " +
+            " (upper(operation_date) LIKE upper(:pattern) " +
             " OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern))";
 
-    private static final String SELECT_COUNT_ORDERS_WITHOUT_CSR = "SELECT COUNT(rownum) FROM " +
-            " (SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID, products.CUSTOMER_TYPE_ID customer_type, \n" +
-            " orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, PLACES. NAME place \n" +
-            " FROM ORDERS JOIN \n" +
-            " (SELECT * FROM OPERATIONS_HISTORY WHERE STATUS_ID=4) a ON (ORDERS.id=a.ORDER_ID) \n" +
-            " JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
-            " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
-            " WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id IS NULL) \n" +
-            "  WHERE upper(product_name) LIKE upper(:pattern) OR upper(operation_date) LIKE upper(:pattern) OR " +
-            " upper(place) LIKE upper(:pattern)";
-    private static String SELECT_ORDER_INFO_BY_ORDER_ID = "SELECT  \n" +
-            " PRODUCTS.name product_name,PRODUCTS.TYPE_ID product_type, products.CUSTOMER_TYPE_ID customer_type, \n" +
-            " products.DESCRIPTION description,orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, \n" +
-            " PLACES. NAME place, users.name user_name, users.surname user_surname, users.phone user_phone, users.ADDRESS address \n" +
-            " FROM ORDERS JOIN \n" +
-            "  (SELECT MIN(OPERATION_DATE) operation_date,Order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=4 Group by order_id) a ON (ORDERS.id=a.ORDER_ID) \n" +
-            "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
-            "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
-            "  WHERE orders.id=:orderId";
-
-    private final static String SET_CSR_ID = "UPDATE ORDERS SET CSR_ID=:csrId WHERE ID=:orderId AND CSR_ID IS NULL";
-
-    private final static String SELECT_INPROCESSING_ORDERS_BY_CSR_ID = "SELECT * FROM ( \n" +
-            "  SELECT product_name,product_type,customer_type,order_id, \n" +
-            "  TO_CHAR(operation_date,'YYYY-MM-DD') operation_date,place, \n" +
-            "  ROW_NUMBER() OVER (ORDER BY %s) R FROM  ( \n" +
-            "  SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID product_type, products.CUSTOMER_TYPE_ID customer_type, \n" +
-            "  orders.id order_id,a.OPERATION_DATE operation_date, PLACES. NAME place \n" +
+    private static final String SELECT_COUNT_ORDERS_WITHOUT_CSR_SQL = "SELECT COUNT(rownum) FROM " +
+            " (SELECT  PRODUCTS.name product_name," +
+            "  PRODUCTS.type_id, " +
+            "  PRODUCTS.customer_type_id customer_type, \n" +
+            "  ORDERS.id order_id, " +
+            "  TO_CHAR(a.operation_date, 'YYYY-MM-DD') operation_date, " +
+            "  PLACES.name place \n" +
             "  FROM ORDERS JOIN \n" +
-            "  (SELECT MIN(OPERATION_DATE) operation_date,Order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=4 Group by order_id) a ON (ORDERS.id=a.ORDER_ID) \n" +
-            "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
-            "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
-            "  WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id=:csrId)) \n" +
-            "  WHERE R>:start AND R<=:length AND (upper(operation_date) LIKE upper(:pattern) \n" +
-            "  OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern))";
-    private final static String SELECT_COUNT_INPROCESSING_ORDERS_BY_CSR_ID = "SELECT COUNT(rownum) FROM " +
-            " (SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID, products.CUSTOMER_TYPE_ID customer_type, \n" +
-            " orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, PLACES. NAME place \n" +
-            " FROM ORDERS JOIN \n" +
-            " (SELECT MIN(OPERATION_DATE) operation_date,Order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=4 Group by order_id) a ON (ORDERS.id=a.ORDER_ID) \n" +
-            " JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
-            " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
-            " WHERE orders.CURRENT_STATUS_ID=4 AND orders.csr_id=:csrId) \n" +
-            "  WHERE upper(product_name) LIKE upper(:pattern) OR upper(operation_date) LIKE upper(:pattern) " +
+            "   (SELECT * " +
+            "    FROM OPERATIONS_HISTORY " +
+            "    WHERE STATUS_ID=4) a " +
+            "  ON (ORDERS.id=a.order_id) \n" +
+            "  JOIN PRODUCTS ON (ORDERS.product_id=PRODUCTS.id) \n" +
+            "  JOIN USERS ON (users.id=orders.user_id) " +
+            "  JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
+            "  WHERE ORDERS.current_status_id=4 AND ORDERS.csr_id IS NULL) \n" +
+            " WHERE upper(product_name) LIKE upper(:pattern) OR upper(operation_date) LIKE upper(:pattern) " +
             " OR upper(place) LIKE upper(:pattern)";
-    private final static String ACTIVATE_INPROCESSING_ORDER = "UPDATE ORDERS SET " +
-            "CURRENT_STATUS_ID=1" +
-            "WHERE ID=:orderId AND CURRENT_STATUS_ID=4";
-
-    private final static String SELECT_PROCESSED_ORDERS_BY_CSR_ID = "SELECT * FROM ( \n" +
-            "  SELECT product_name,product_type,customer_type,order_id, \n" +
-            "  TO_CHAR(operation_date,'YYYY-MM-DD') operation_date,place, \n" +
-            "  ROW_NUMBER() OVER (ORDER BY %s) R FROM  ( \n" +
-            "  SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID product_type, products.CUSTOMER_TYPE_ID customer_type, \n" +
-            "  orders.id order_id,a.OPERATION_DATE operation_date, PLACES. NAME place \n" +
-            "  FROM ORDERS JOIN \n" +
-            "  (SELECT min(OPERATION_DATE) operation_date,order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=1 GROUP BY ORDER_ID) a ON (ORDERS.id=a.ORDER_ID) \n" +
-            "  JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
-            "  JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
-            "  WHERE  orders.csr_id=:csrId)) \n" +
-            "  WHERE R>:start AND R<=:length AND (upper(operation_date) LIKE upper(:pattern) \n" +
-            "  OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern))";
-    private static final String SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID = "SELECT COUNT(rownum) FROM " +
-            " (SELECT  PRODUCTS.name product_name,PRODUCTS.TYPE_ID, products.CUSTOMER_TYPE_ID customer_type, \n" +
-            " orders.id order_id,TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, PLACES. NAME place \n" +
+    private static String SELECT_ORDER_INFO_BY_ORDER_ID_SQL = "SELECT  \n" +
+            " PRODUCTS.name product_name, " +
+            " PRODUCTS.type_id product_type, " +
+            " PRODUCTS.customer_type_id customer_type, \n" +
+            " PRODUCTS.description description, " +
+            " ORDERS.id order_id, " +
+            " TO_CHAR(a.OPERATION_DATE, 'YYYY-MM-DD') operation_date, \n" +
+            " PLACES.name place, " +
+            " USERS.name user_name, " +
+            " USERS.surname user_surname, " +
+            " USERS.phone user_phone, " +
+            " USERS.address address \n" +
             " FROM ORDERS JOIN \n" +
-            " (SELECT min(OPERATION_DATE) operation_date,order_id FROM OPERATIONS_HISTORY WHERE STATUS_ID=1 GROUP BY ORDER_ID) a ON (ORDERS.id=a.ORDER_ID) \n" +
-            " JOIN PRODUCTS ON (ORDERS.PRODUCT_ID=PRODUCTS.id) \n" +
-            " JOIN USERS ON (users.id=orders.USER_ID) JOIN PLACES ON (users.PLACE_ID=PLACES.ID) \n" +
-            " WHERE orders.csr_id=:csrId) \n" +
-            "  WHERE upper(product_name) LIKE upper(:pattern) OR " +
-            "  upper(operation_date) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern)";
+            "  (SELECT MIN(operation_date) operation_date,order_id " +
+            "   FROM OPERATIONS_HISTORY " +
+            "   WHERE STATUS_ID=4 GROUP BY order_id) a " +
+            " ON (ORDERS.id=a.order_id) \n" +
+            "  JOIN PRODUCTS ON (ORDERS.product_id=PRODUCTS.id) \n" +
+            "  JOIN USERS ON (USERS.id=ORDERS.user_id) " +
+            "  JOIN PLACES ON (USERS.place_id=PLACES.id) \n" +
+            " WHERE ORDERS.id=:orderId";
+
+    private final static String UPDATE_CSR_ID_SQL = "UPDATE ORDERS " +
+            " SET CSR_ID=:csrId " +
+            " WHERE ID=:orderId AND CSR_ID IS NULL";
+
+    private final static String SELECT_PROCESSING_ORDERS_BY_CSR_ID_SQL = "SELECT * FROM ( \n" +
+            " SELECT product_name, " +
+            " product_type, " +
+            " customer_type, " +
+            " order_id, \n" +
+            " TO_CHAR(operation_date,'YYYY-MM-DD') operation_date," +
+            " place, \n" +
+            " ROW_NUMBER() OVER (ORDER BY %s) R FROM  ( \n" +
+            "  SELECT  PRODUCTS.name product_name, " +
+            "  PRODUCTS.type_id product_type, " +
+            "  PRODUCTS.customer_type_id customer_type, \n" +
+            "  ORDERS.id order_id, " +
+            "  a.operation_date operation_date, " +
+            "  PLACES.name place \n" +
+            "  FROM ORDERS JOIN \n" +
+            "    (SELECT MIN(operation_date) operation_date,order_id " +
+            "     FROM OPERATIONS_HISTORY WHERE STATUS_ID=4 GROUP BY order_id) a " +
+            "  ON (ORDERS.id=a.order_id) \n" +
+            "  JOIN PRODUCTS ON (ORDERS.product_id=PRODUCTS.id) \n" +
+            "  JOIN USERS ON (USERS.id=ORDERS.user_id) " +
+            "  JOIN PLACES ON (USERS.place_id=PLACES.id) \n" +
+            "  WHERE ORDERS.CURRENT_STATUS_ID=4 AND ORDERS.csr_id=:csrId)) \n" +
+            " WHERE R>:start AND R<=:length AND (upper(operation_date) LIKE upper(:pattern) \n" +
+            " OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern))";
+    private final static String SELECT_COUNT_PROCESSING_ORDERS_BY_CSR_ID_SQL = "SELECT COUNT(rownum) FROM " +
+            " (SELECT  PRODUCTS.name product_name, " +
+            "  PRODUCTS.type_id, " +
+            "  PRODUCTS.customer_type_id customer_type, \n" +
+            "  ORDERS.id order_id, " +
+            "  TO_CHAR(a.operation_date, 'YYYY-MM-DD') operation_date, " +
+            "  PLACES.name place \n" +
+            "  FROM ORDERS JOIN \n" +
+            "   (SELECT MIN(operation_date) operation_date,order_id " +
+            "    FROM OPERATIONS_HISTORY " +
+            "    WHERE STATUS_ID=4 GROUP BY order_id) a " +
+            "   ON (ORDERS.id=a.order_id) \n" +
+            "  JOIN PRODUCTS ON (ORDERS.product_id=PRODUCTS.id) \n" +
+            "  JOIN USERS ON (USERS.id=ORDERS.user_id) " +
+            "  JOIN PLACES ON (USERS.place_id=PLACES.id) \n" +
+            "  WHERE ORDERS.current_status_id=4 AND ORDERS.csr_id=:csrId) \n" +
+            " WHERE upper(product_name) LIKE upper(:pattern) OR upper(operation_date) LIKE upper(:pattern) " +
+            " OR upper(place) LIKE upper(:pattern)";
+    private final static String SELECT_PROCESSED_ORDERS_BY_CSR_ID_SQL = "SELECT * FROM ( \n" +
+            "  SELECT product_name, " +
+            "  product_type, " +
+            "  customer_type, " +
+            "  order_id, \n" +
+            "  TO_CHAR(operation_date,'YYYY-MM-DD') operation_date, " +
+            "  place, \n" +
+            "  ROW_NUMBER() OVER (ORDER BY %s) R FROM  ( \n" +
+            "    SELECT  PRODUCTS.name product_name, " +
+            "    PRODUCTS.type_id product_type, " +
+            "    PRODUCTS.customer_type_id customer_type, \n" +
+            "    ORDERS.id order_id, " +
+            "    a.operation_date operation_date, " +
+            "    PLACES.name place \n" +
+            "    FROM ORDERS JOIN \n" +
+            "     (SELECT MIN(operation_date) operation_date,order_id " +
+            "      FROM OPERATIONS_HISTORY " +
+            "      WHERE STATUS_ID=1 GROUP BY ORDER_ID) a " +
+            "    ON (ORDERS.id=a.order_id) \n" +
+            "    JOIN PRODUCTS ON (ORDERS.product_id=PRODUCTS.id) \n" +
+            "    JOIN USERS ON (USERS.id=ORDERS.user_id) " +
+            "    JOIN PLACES ON (USERS.place_id=PLACES.id) \n" +
+            "    WHERE  ORDERS.csr_id=:csrId)) \n" +
+            " WHERE R>:start AND R<=:length AND (upper(operation_date) LIKE upper(:pattern) \n" +
+            " OR upper(product_name) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern))";
+
+    private static final String SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID_SQL = "SELECT COUNT(rownum) FROM " +
+            " (SELECT  PRODUCTS.name product_name, " +
+            "  PRODUCTS.type_id, " +
+            "  PRODUCTS.customer_type_id customer_type, \n" +
+            "  ORDERS.id order_id, " +
+            "  TO_CHAR(a.operation_date, 'YYYY-MM-DD') operation_date, " +
+            "  PLACES.name place \n" +
+            "  FROM ORDERS JOIN \n" +
+            "    (SELECT MIN(operation_date) operation_date,order_id " +
+            "     FROM OPERATIONS_HISTORY " +
+            "     WHERE STATUS_ID=1 GROUP BY ORDER_ID) a " +
+            "  ON (ORDERS.id=a.order_id) \n" +
+            "  JOIN PRODUCTS ON (ORDERS.product_id=PRODUCTS.id) \n" +
+            "  JOIN USERS ON (USERS.id=ORDERS.user_id) " +
+            "  JOIN PLACES ON (USERS.place_id=PLACES.id) \n" +
+            "  WHERE ORDERS.csr_id=:csrId) \n" +
+            " WHERE upper(product_name) LIKE upper(:pattern) OR " +
+            " upper(operation_date) LIKE upper(:pattern) OR upper(place) LIKE upper(:pattern)";
+
     private final static String SELECT_BY_ID = "SELECT * FROM ORDERS WHERE id =  :id";
 
     @Override
@@ -420,7 +507,7 @@ public class OrderDAOImpl implements OrderDAO {
     public Integer getCountOrdersByUserId(Integer userId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource(USERID, userId);
         params.addValue(PATTERN, "%" + search + "%");
-        return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_BY_USER_ID, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_BY_USER_ID_SQL, params, Integer.class);
     }
 
     /**
@@ -436,7 +523,7 @@ public class OrderDAOImpl implements OrderDAO {
         params.addValue(LENGTH, length);
         params.addValue(PATTERN, "%" + search + "%");
         params.addValue(USERID, userId);
-        String sql = String.format(SELECT_INTERVAL_ORDERS_BY_USER_ID, sort);
+        String sql = String.format(SELECT_INTERVAL_ORDERS_BY_USER_ID_SQL, sort);
         List<FullInfoOrderDTO> orders = jdbcTemplate.query(sql, params, (resultSet, rownum) -> {
             String name = resultSet.getString(PRODUCT_NAME);
             Integer orderId = resultSet.getInt(ID);
@@ -454,7 +541,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Integer getCountOrdersWithoutCsr(String search) {
         MapSqlParameterSource params = new MapSqlParameterSource(PATTERN, "%" + search + "%");
-        return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_WITHOUT_CSR, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_WITHOUT_CSR_SQL, params, Integer.class);
     }
 
     /**
@@ -469,7 +556,7 @@ public class OrderDAOImpl implements OrderDAO {
         params.addValue(START, start);
         params.addValue(LENGTH, length);
         params.addValue(PATTERN, "%" + search + "%");
-        String sql = String.format(SELECT_ALL_ORDERS_WITHOUT_CSR, sort);
+        String sql = String.format(SELECT_ALL_ORDERS_WITHOUT_CSR_SQL, sort);
         return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
 
@@ -479,7 +566,7 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public FullInfoOrderDTO getOrderInfoByOrderId(Integer orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource(ORDERID, orderId);
-        return jdbcTemplate.queryForObject(SELECT_ORDER_INFO_BY_ORDER_ID, params, (rs, rownum) -> {
+        return jdbcTemplate.queryForObject(SELECT_ORDER_INFO_BY_ORDER_ID_SQL, params, (rs, rownum) -> {
             FullInfoOrderDTO order = new FullInfoOrderDTO();
             order.setProductName(rs.getString(PRODUCT_NAME));
             order.setDescription(rs.getString(DESCRIPTION));
@@ -504,7 +591,7 @@ public class OrderDAOImpl implements OrderDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(CSR_ID, csrId);
         params.addValue(ORDERID, orderId);
-        return jdbcTemplate.update(SET_CSR_ID, params) > 0;
+        return jdbcTemplate.update(UPDATE_CSR_ID_SQL, params) > 0;
     }
 
     /**
@@ -515,7 +602,7 @@ public class OrderDAOImpl implements OrderDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(PATTERN, "%" + search + "%");
         params.addValue(CSR_ID, csrId);
-        return jdbcTemplate.queryForObject(SELECT_COUNT_INPROCESSING_ORDERS_BY_CSR_ID, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_PROCESSING_ORDERS_BY_CSR_ID_SQL, params, Integer.class);
     }
 
     /**
@@ -531,7 +618,7 @@ public class OrderDAOImpl implements OrderDAO {
         params.addValue(LENGTH, length);
         params.addValue(PATTERN, "%" + search + "%");
         params.addValue(CSR_ID, csrId);
-        String sql = String.format(SELECT_INPROCESSING_ORDERS_BY_CSR_ID, sort);
+        String sql = String.format(SELECT_PROCESSING_ORDERS_BY_CSR_ID_SQL, sort);
         return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
 
@@ -548,7 +635,7 @@ public class OrderDAOImpl implements OrderDAO {
         params.addValue(LENGTH, length);
         params.addValue(PATTERN, "%" + search + "%");
         params.addValue(CSR_ID, csrId);
-        String sql = String.format(SELECT_PROCESSED_ORDERS_BY_CSR_ID, sort);
+        String sql = String.format(SELECT_PROCESSED_ORDERS_BY_CSR_ID_SQL, sort);
         return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
 
@@ -560,7 +647,7 @@ public class OrderDAOImpl implements OrderDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(PATTERN, "%" + search + "%");
         params.addValue(CSR_ID, csrId);
-        return jdbcTemplate.queryForObject(SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID, params, Integer.class);
+        return jdbcTemplate.queryForObject(SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID_SQL, params, Integer.class);
     }
 
 

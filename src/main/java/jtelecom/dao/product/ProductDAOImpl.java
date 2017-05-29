@@ -418,9 +418,11 @@ public class ProductDAOImpl implements ProductDAO {
             "WHERE TYPE_ID = 2\n AND STATUS = 1 /*Active*/ " +
             " AND place_id = :place_id " +
             " AND LOWER(name) LIKE LOWER(:pattern) || '%%' %s";
-    private static final String SELECT_PRODUCT_BY_ORDER_ID = "SELECT * " +
+    private static final String SELECT_PRODUCT_BY_ORDER_ID_SQL = "SELECT * " +
             " FROM PRODUCTS WHERE ID=( " +
-            " SELECT PRODUCT_ID FROM ORDERS WHERE ID=:orderId)";
+            "  SELECT PRODUCT_ID " +
+            "  FROM ORDERS " +
+            "  WHERE ID=:orderId)";
     final static String AND_CATEGORY_ID_SQL = "  AND category_id = :category_id ";
     private static final String PATTERN = "pattern";
 
@@ -1112,7 +1114,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Product getProductByOrderId(int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
-        return jdbcTemplate.queryForObject(SELECT_PRODUCT_BY_ORDER_ID, params, new ProductRowMapper());
+        return jdbcTemplate.queryForObject(SELECT_PRODUCT_BY_ORDER_ID_SQL, params, new ProductRowMapper());
     }
 
     @Override
