@@ -1,6 +1,7 @@
 package jtelecom.controller.csr;
 
 import jtelecom.dao.operationHistory.OperationHistoryDAO;
+import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -36,7 +38,13 @@ public class OperationHistoryController {
     private static Logger logger = LoggerFactory.getLogger(OperationHistoryController.class);
 
     @RequestMapping(value = "userHistory", method = RequestMethod.GET)
-    public ModelAndView viewOrders() throws IOException {
+    public ModelAndView viewOrders(HttpSession session, RedirectAttributes attributes) throws IOException {
+        Integer userId=(Integer)session.getAttribute("userId");
+        User user=userDAO.getUserById(userId);
+        if(user.getRole()== Role.EMPLOYEE){
+            attributes.addFlashAttribute("msg", "Employee can't see this page");
+            return new ModelAndView("redirect:/csr/getUserProfile");
+        }
         return new ModelAndView("newPages/csr/UserHistory");
     }
 

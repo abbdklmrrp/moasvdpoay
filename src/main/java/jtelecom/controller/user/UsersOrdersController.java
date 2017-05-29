@@ -2,6 +2,7 @@ package jtelecom.controller.user;
 
 import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.plannedTask.PlannedTaskDAO;
+import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.OrdersRowDTO;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -59,8 +61,12 @@ public class UsersOrdersController implements Serializable {
     }
 
     @RequestMapping(value = {"csr/orders"}, method = RequestMethod.GET)
-    public String showOrdersForUserCsr(Model model, HttpSession session) {
+    public String showOrdersForUserCsr(Model model, HttpSession session, RedirectAttributes attributes) {
         this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
+        if (currentUser.getRole() == Role.EMPLOYEE) {
+            attributes.addFlashAttribute("msg", "Employee can't see this page");
+            return "redirect:/csr/getUserProfile";
+        }
         model.addAttribute("userRole", "csr");
         logger.debug("Current user: {}", currentUser.toString());
         return "newPages/csr/Orders";

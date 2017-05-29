@@ -6,6 +6,7 @@ import jtelecom.dao.product.ProcessingStrategy;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductCategories;
 import jtelecom.dao.product.ProductDAO;
+import jtelecom.dao.user.Role;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.ServicesCatalogRowDTO;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -70,8 +72,12 @@ public class ServiceOrderController implements Serializable {
     }
 
     @RequestMapping(value = {"csr/orderService"}, method = RequestMethod.GET)
-    public String orderService(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session) throws IOException {
+    public String orderService(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session, RedirectAttributes attributes) throws IOException {
         this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
+        if (currentUser.getRole() == Role.EMPLOYEE) {
+            attributes.addFlashAttribute("msg", "Employee can't see this page");
+            return "redirect:/csr/getUserProfile";
+        }
         orderService(model, categoryId);
         model.addAttribute("userRole", "csr");
         return "newPages/csr/Services";

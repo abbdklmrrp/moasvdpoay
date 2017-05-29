@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -23,7 +25,7 @@ import java.util.List;
 /**
  * @author Anton Bulgakov
  * @since 04.05.2017.
- *
+ * <p>
  * Class is responsible for all actions with tariffs on all jsp pages.
  */
 @Controller
@@ -58,7 +60,13 @@ public class TariffsController {
      * @return jsp page with tariffs.
      */
     @RequestMapping(value = "availableUserTariffs")
-    public String showAvailableTariffsForCSR() {
+    public String showAvailableTariffsForCSR(HttpSession session, RedirectAttributes attributes) {
+        Integer userId = (Integer) session.getAttribute("userId");
+        User user = userDAO.getUserById(userId);
+        if (user.getRole() == Role.EMPLOYEE) {
+            attributes.addFlashAttribute("msg", "Employee can't see this page");
+            return "redirect:/csr/getUserProfile";
+        }
         return "newPages/csr/UserTariffs";
     }
 
@@ -89,12 +97,12 @@ public class TariffsController {
      * Method activates tariff for user with id from params.
      *
      * @param tariffId id of tariff.
-     * @param userId id of user.
+     * @param userId   id of user.
      * @return status of activation.
      */
     @RequestMapping(value = {"activateTariff"}, method = RequestMethod.POST)
     @ResponseBody
-    public String activateTariff(@RequestParam Integer tariffId,@RequestParam Integer userId) {
+    public String activateTariff(@RequestParam Integer tariffId, @RequestParam Integer userId) {
         logger.debug("Method activateTariff param tariffId: {}", tariffId);
         User currentUser;
         if (userId == -1) {
@@ -112,12 +120,12 @@ public class TariffsController {
      * Method identified user and deactivate current tariff, if it's exists.
      *
      * @param tariffId id of tariff.
-     * @param userId id of user.
+     * @param userId   id of user.
      * @return status of deactivation.
      */
     @RequestMapping(value = {"deactivateTariff"}, method = RequestMethod.POST)
     @ResponseBody
-    public String deactivateTariff(@RequestParam Integer tariffId,@RequestParam Integer userId) {
+    public String deactivateTariff(@RequestParam Integer tariffId, @RequestParam Integer userId) {
         logger.debug("Method deactivateTariff param tariffId: {}", tariffId);
         User currentUser;
         if (userId == -1) {
@@ -147,6 +155,7 @@ public class TariffsController {
     /**
      * Method used for filling jsp page of tariffs by records of tariffs begin with row number startIndex till endIndex from params.
      * It used for showing tariffs of user`s for CSR.
+     *
      * @return dto with tariffs.
      */
     @RequestMapping(value = {"userTariffs"})
