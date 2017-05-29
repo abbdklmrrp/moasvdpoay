@@ -1,7 +1,7 @@
 package jtelecom.controller.csr;
 
 
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import org.slf4j.Logger;
@@ -39,14 +39,14 @@ public class UsersDetailController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}. <br>
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO}. <br>
      * After method receives list with all clients from database.<br>
      *
      * @param request contains indexes for first element and last elements and patterns for search and sort
      * @return class which contains number of all elements with such parameters and some interval of the data
      */
     @RequestMapping(value = {"getUsers"}, method = RequestMethod.GET)
-    public ListHolder getUsers(@ModelAttribute GridRequestDto request) {
+    public ListHolder getUsers(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getLength();

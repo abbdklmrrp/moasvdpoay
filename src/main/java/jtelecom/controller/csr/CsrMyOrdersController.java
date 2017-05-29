@@ -4,7 +4,7 @@ import jtelecom.dao.order.OrderDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.orders.OrderService;
@@ -38,7 +38,7 @@ public class CsrMyOrdersController {
 
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto} <br>.
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO} <br>.
      * After method gets list with all orders that assigned to the csr from database.<br>.
      * Method gets csr from the security current user.
      *
@@ -46,7 +46,7 @@ public class CsrMyOrdersController {
      * @return class which contains number of all elements with such parameters and some interval of the data
      */
     @RequestMapping(value = "getMyOrders", method = RequestMethod.GET)
-    public ListHolder getAllOrders(@ModelAttribute GridRequestDto requestDto) {
+    public ListHolder getAllOrders(@ModelAttribute GridRequestDTO requestDto) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Integer csrId = user.getId();
         Integer start = requestDto.getStartBorder();

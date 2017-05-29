@@ -4,7 +4,7 @@ import jtelecom.dao.price.PriceDAO;
 import jtelecom.dao.product.ProductDAO;
 import jtelecom.dto.PriceByRegionDTO;
 import jtelecom.dto.ProductWithTypeNameDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class ViewAllProductsController {
     private PriceDAO priceDAO;
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}.
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO}.
      * After method gets list with all product info.
      *
      * @param request contains indexes for first element and last elements and
@@ -34,10 +34,10 @@ public class ViewAllProductsController {
      * @return class which contains number of all elements with such parameters
      * and some interval of the data
      * @see ProductWithTypeNameDTO
-     * @see GridRequestDto
+     * @see GridRequestDTO
      */
     @RequestMapping(value = {"all"}, method = RequestMethod.GET)
-    public ListHolder servicesByTariff(@ModelAttribute GridRequestDto request) {
+    public ListHolder servicesByTariff(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();

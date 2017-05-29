@@ -2,7 +2,7 @@ package jtelecom.controller.csr;
 
 import jtelecom.dao.product.ProductDAO;
 import jtelecom.dto.ProductWithTypeNameDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class ViewProductsController {
     }
 
     @RequestMapping(value = {"getProducts"}, method = RequestMethod.GET)
-    public ListHolder getProducts(@ModelAttribute GridRequestDto request) {
+    public ListHolder getProducts(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getLength();

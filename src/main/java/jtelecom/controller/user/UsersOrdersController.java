@@ -7,7 +7,7 @@ import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.OrdersRowDTO;
 import jtelecom.dto.PlannedTaskDTO;
 import jtelecom.dto.SuspendFormDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.orders.OrderService;
@@ -92,7 +92,7 @@ public class UsersOrdersController implements Serializable {
 
     @RequestMapping(value = {"csr/getOrders", "residential/getOrders", "business/getOrders", "employee/getOrders"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder showOrders(@ModelAttribute GridRequestDto request) {
+    public ListHolder showOrders(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
@@ -158,7 +158,7 @@ public class UsersOrdersController implements Serializable {
 
     @RequestMapping(value = {"csr/getPlannedTasks", "residential/getPlannedTasks", "business/getPlannedTasks"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder showPlannedTasks(@ModelAttribute GridRequestDto request) {
+    public ListHolder showPlannedTasks(@ModelAttribute GridRequestDTO request) {
         int start = request.getStartBorder();
         int length = request.getEndBorder();
         logger.debug("Current user {} ", currentUser);

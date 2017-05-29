@@ -4,7 +4,7 @@ import jtelecom.controller.product.ViewAllProductsController;
 import jtelecom.dao.price.PriceDAO;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.product.ProductDAO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class AboutController {
 
     @RequestMapping(value = {"productForBusiness"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder getProductListForBusiness(@ModelAttribute GridRequestDto request) {
+    public ListHolder getProductListForBusiness(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();
@@ -59,7 +59,7 @@ public class AboutController {
 
     @RequestMapping(value = {"productForResidential"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder getProductListForResidential(@ModelAttribute GridRequestDto request) {
+    public ListHolder getProductListForResidential(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();

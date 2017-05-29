@@ -9,7 +9,7 @@ import jtelecom.dao.product.ProductDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.ServicesCatalogRowDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import jtelecom.services.orders.OrderService;
@@ -93,7 +93,7 @@ public class ServiceOrderController implements Serializable {
 
     @RequestMapping(value = {"csr/Services", "residential/Services", "business/Services"}, method = RequestMethod.GET)
     @ResponseBody
-    public ListHolder showServices(@ModelAttribute GridRequestDto request) {
+    public ListHolder showServices(@ModelAttribute GridRequestDTO request) {
         String sort = request.getSort();
         int start = request.getStartBorder();
         int length = request.getEndBorder();

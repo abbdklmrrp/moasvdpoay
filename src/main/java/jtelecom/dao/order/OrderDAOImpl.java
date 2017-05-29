@@ -30,6 +30,23 @@ public class OrderDAOImpl implements OrderDAO {
     private static final String PATTERN = "pattern";
     private static final String ID = "id";
     private static final String CUR_STATUS_ID = "cur_status_id";
+
+    private static final String PRODUCT_TYPE = "product_type";
+    private static final String ORDER_ID = "order_id";
+    private static final String CSR_ID = "csrId";
+    private static final String PRODUCT_NAME = "product_name";
+    private static final String DESCRIPTION = "description";
+    private static final String USERID = "userId";
+    private static final String ORDERID = "orderId";
+    private static final String PRODUCTID = "productId";
+    private static final String USER_NAME = "user_name";
+    private static final String USER_SURNAME = "user_surname";
+    private static final String ADDRESS = "address";
+    private static final String PHONE = "user_phone";
+    private static final String PLACE = "place";
+    private static final String OPERATION_DATE = "operation_date";
+    private static final String CUSTOMER_TYPE = "customer_type";
+    private static final String CURRENT_STATUS_ID = "current_status_id";
     private static Logger logger = LoggerFactory.getLogger(OrderDAOImpl.class);
 
     @Resource
@@ -246,6 +263,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
+     *
      * @author Yuliya Pedash
      */
     public Integer saveAndGetGeneratedId(Order order) {
@@ -278,8 +296,10 @@ public class OrderDAOImpl implements OrderDAO {
         params.addValue(CUST_ID, customerId);
         return jdbcTemplate.query(SELECT_ORDERS_BY_CUST_ID_SQL, params, new OrderRowMapper());
     }
+
     /**
      * {@inheritDoc}
+     *
      * @author Yuliya Pedash
      */
     @Override
@@ -292,6 +312,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
+     *
      * @author Yuliya Pedash
      */
     @Override
@@ -305,6 +326,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
+     *
      * @author Yuliya Pedash
      */
     @Override
@@ -323,6 +345,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
+     *
      * @author Yuliya Pedash
      */
     @Override
@@ -336,6 +359,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
+     *
      * @author Yuliya Pedash
      */
     @Override
@@ -345,8 +369,10 @@ public class OrderDAOImpl implements OrderDAO {
         return jdbcTemplate.update(SUSPEND_ORDER_SQL, params) > 0;
 
     }
+
     /**
      * {@inheritDoc}
+     *
      * @author Yuliya Pedash
      */
     @Override
@@ -358,6 +384,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
+     *
      * @author Yuliya Pedash
      */
     @Override
@@ -375,8 +402,8 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Integer getOrderIdByUserIdAndProductId(Integer userId, Integer productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", userId);
-        params.addValue("productId", productId);
+        params.addValue(USERID, userId);
+        params.addValue(PRODUCTID, productId);
         try {
             return jdbcTemplate.queryForObject(SELECT_ORDER_ID_BY_USER_ID_AND_PRODUCT_ID_SQL, params, Integer.class);
         } catch (RuntimeException e) {
@@ -391,7 +418,7 @@ public class OrderDAOImpl implements OrderDAO {
      */
     @Override
     public Integer getCountOrdersByUserId(Integer userId, String search) {
-        MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
+        MapSqlParameterSource params = new MapSqlParameterSource(USERID, userId);
         params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_BY_USER_ID, params, Integer.class);
     }
@@ -403,19 +430,19 @@ public class OrderDAOImpl implements OrderDAO {
     public List<FullInfoOrderDTO> getIntervalOrdersByUserId(int start, int length, String sort, String search, int userId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {
-            sort = "ID";
+            sort = ID;
         }
-        params.addValue("start", start);
-        params.addValue("length", length);
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("userId", userId);
+        params.addValue(START, start);
+        params.addValue(LENGTH, length);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(USERID, userId);
         String sql = String.format(SELECT_INTERVAL_ORDERS_BY_USER_ID, sort);
         List<FullInfoOrderDTO> orders = jdbcTemplate.query(sql, params, (resultSet, rownum) -> {
-            String name = resultSet.getString("product_name");
-            Integer orderId = resultSet.getInt("id");
-            ProductType productType = ProductType.getProductTypeFromId(resultSet.getInt("product_type"));
-            OperationStatus operationStatus = OperationStatus.getOperationStatusFromId(resultSet.getInt("current_status_id"));
-            String description = resultSet.getString("description");
+            String name = resultSet.getString(PRODUCT_NAME);
+            Integer orderId = resultSet.getInt(ID);
+            ProductType productType = ProductType.getProductTypeFromId(resultSet.getInt(PRODUCT_TYPE));
+            OperationStatus operationStatus = OperationStatus.getOperationStatusFromId(resultSet.getInt(CURRENT_STATUS_ID));
+            String description = resultSet.getString(DESCRIPTION);
             return new FullInfoOrderDTO(orderId, name, description, productType, operationStatus);
         });
         return orders;
@@ -426,7 +453,7 @@ public class OrderDAOImpl implements OrderDAO {
      */
     @Override
     public Integer getCountOrdersWithoutCsr(String search) {
-        MapSqlParameterSource params = new MapSqlParameterSource("pattern", "%" + search + "%");
+        MapSqlParameterSource params = new MapSqlParameterSource(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT_ORDERS_WITHOUT_CSR, params, Integer.class);
     }
 
@@ -437,11 +464,11 @@ public class OrderDAOImpl implements OrderDAO {
     public List<FullInfoOrderDTO> getIntervalOrdersWithoutCsr(int start, int length, String sort, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {
-            sort = "order_id";
+            sort = ORDER_ID;
         }
-        params.addValue("start", start);
-        params.addValue("length", length);
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(START, start);
+        params.addValue(LENGTH, length);
+        params.addValue(PATTERN, "%" + search + "%");
         String sql = String.format(SELECT_ALL_ORDERS_WITHOUT_CSR, sort);
         return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
@@ -451,20 +478,20 @@ public class OrderDAOImpl implements OrderDAO {
      */
     @Override
     public FullInfoOrderDTO getOrderInfoByOrderId(Integer orderId) {
-        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
+        MapSqlParameterSource params = new MapSqlParameterSource(ORDERID, orderId);
         return jdbcTemplate.queryForObject(SELECT_ORDER_INFO_BY_ORDER_ID, params, (rs, rownum) -> {
             FullInfoOrderDTO order = new FullInfoOrderDTO();
-            order.setProductName(rs.getString("product_name"));
-            order.setDescription(rs.getString("description"));
-            order.setProductType(ProductType.getProductTypeFromId(rs.getInt("product_type")));
-            order.setCustomerType(CustomerType.getCustomerTypeFromId(rs.getInt("customer_type")));
-            order.setOrderId(rs.getInt("order_id"));
-            order.setActionDate(rs.getString("operation_date"));
-            order.setPlace(rs.getString("place"));
-            order.setUserName(rs.getString("user_name"));
-            order.setUserSurname(rs.getString("user_surname"));
-            order.setPhone(rs.getString("user_phone"));
-            order.setAddress(rs.getString("address"));
+            order.setProductName(rs.getString(PRODUCT_NAME));
+            order.setDescription(rs.getString(DESCRIPTION));
+            order.setProductType(ProductType.getProductTypeFromId(rs.getInt(PRODUCT_TYPE)));
+            order.setCustomerType(CustomerType.getCustomerTypeFromId(rs.getInt(CUSTOMER_TYPE)));
+            order.setOrderId(rs.getInt(ORDER_ID));
+            order.setActionDate(rs.getString(OPERATION_DATE));
+            order.setPlace(rs.getString(PLACE));
+            order.setUserName(rs.getString(USER_NAME));
+            order.setUserSurname(rs.getString(USER_SURNAME));
+            order.setPhone(rs.getString(PHONE));
+            order.setAddress(rs.getString(ADDRESS));
             return order;
         });
     }
@@ -475,8 +502,8 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public boolean assignToUser(int csrId, int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("csrId", csrId);
-        params.addValue("orderId", orderId);
+        params.addValue(CSR_ID, csrId);
+        params.addValue(ORDERID, orderId);
         return jdbcTemplate.update(SET_CSR_ID, params) > 0;
     }
 
@@ -486,8 +513,8 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Integer getCountOfInprocessingOrdersByCsrId(int csrId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("csrId", csrId);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(CSR_ID, csrId);
         return jdbcTemplate.queryForObject(SELECT_COUNT_INPROCESSING_ORDERS_BY_CSR_ID, params, Integer.class);
     }
 
@@ -497,13 +524,13 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public List<FullInfoOrderDTO> getIntervalProcessingOrdersByCsrId(int start, int length, String sort, String search, int csrId) {
         if (sort.isEmpty()) {
-            sort = "order_id";
+            sort = ORDER_ID;
         }
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start);
-        params.addValue("length", length);
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("csrId", csrId);
+        params.addValue(START, start);
+        params.addValue(LENGTH, length);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(CSR_ID, csrId);
         String sql = String.format(SELECT_INPROCESSING_ORDERS_BY_CSR_ID, sort);
         return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
@@ -515,12 +542,12 @@ public class OrderDAOImpl implements OrderDAO {
     public List<FullInfoOrderDTO> getIntervalProccesedOrdersByCsrId(int start, int length, String sort, String search, int csrId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         if (sort.isEmpty()) {
-            sort = "order_id";
+            sort = ORDER_ID;
         }
-        params.addValue("start", start);
-        params.addValue("length", length);
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("csrId", csrId);
+        params.addValue(START, start);
+        params.addValue(LENGTH, length);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(CSR_ID, csrId);
         String sql = String.format(SELECT_PROCESSED_ORDERS_BY_CSR_ID, sort);
         return jdbcTemplate.query(sql, params, new FullInfoOrderDTORowMapper());
     }
@@ -531,8 +558,8 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Integer getCountOfProcessedOrdersByCsrId(int csrId, String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("csrId", csrId);
+        params.addValue(PATTERN, "%" + search + "%");
+        params.addValue(CSR_ID, csrId);
         return jdbcTemplate.queryForObject(SELECT_COUNT_PROCESSED_ORDERS_BY_CSR_ID, params, Integer.class);
     }
 

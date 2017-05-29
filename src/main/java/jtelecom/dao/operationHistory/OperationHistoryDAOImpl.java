@@ -15,6 +15,18 @@ import java.util.List;
  */
 @Service
 public class OperationHistoryDAOImpl implements OperationHistoryDAO {
+
+    private static final String PRODUCT_NAME = "product_name";
+    private static final String OPERATION_DATE = "operation_date";
+    private static final String STATUS_ID = "status_id";
+    private static final String ORDER_ID = "order_id";
+    private static final String USER_ID = "user_id";
+    private static final String CURRENT_STATUS_ID = "current_status_id";
+
+    private static final String START = "start";
+    private static final String END = "end";
+    private static final String PATTERN = "pattern";
+
     private final static String SELECT_OPERATION_HISTORY_BY_USER = "SELECT * from( \n" +
             "  select product_name,OPERATION_DATE,current_status_id, ROW_NUMBER() OVER (ORDER BY %s) R  from \n" +
             "    (Select products.name product_name, TO_CHAR(OPERATION_DATE,'YYYY-MM-DD') operation_date, STATUS_ID current_status_id \n" +
@@ -23,7 +35,7 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
             "       join products on ORDERS.PRODUCT_ID=PRODUCTS.id \n" +
             "       WHERE ORDER_ID IN (SELECT ID FROM ORDERS WHERE USER_ID IN (Select id from users where customer_id= " +
             " (Select customer_id from users where id=:userId))))) \n" +
-            "    where R>:start and R<=:length AND (upper(product_name) LIKE upper(:pattern)  " +
+            "    where R>:start and R<=:end AND (upper(product_name) LIKE upper(:pattern)  " +
             " or upper(operation_date) like upper(:pattern))";
 
     private final static String SELECT_COUNT_OPERATION_FOR_USER = "Select count(*) from ( Select " +
@@ -45,7 +57,7 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
             "FROM OPERATIONS_HISTORY JOIN ORDERS ON OPERATIONS_HISTORY.ORDER_ID = ORDERS.ID \n" +
             "  JOIN PRODUCTS ON PRODUCTS.ID=ORDERS.PRODUCT_ID \n" +
             "WHERE ORDER_ID=:orderId ) \n" +
-            "WHERE R > :startIndex AND R <= :endIndex";
+            "WHERE R > :start AND R <= :end";
 
 
     @Resource
@@ -56,19 +68,19 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
      */
     @Override
     public List<FullInfoOrderDTO> getOperationHistoryByUserId(Integer userId, int start, int length, String order, String search) {
-        MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
+        MapSqlParameterSource params = new MapSqlParameterSource(USER_ID, userId);
         if (order.isEmpty()) {
-            order = "operation_date";
+            order = OPERATION_DATE;
         }
-        params.addValue("start", start);
-        params.addValue("length", length);
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(START, start);
+        params.addValue(END, length);
+        params.addValue(PATTERN, "%" + search + "%");
         String sql = String.format(SELECT_OPERATION_HISTORY_BY_USER, order);
         return jdbcTemplate.query(sql, params, (rs, rownum) -> {
             FullInfoOrderDTO history = new FullInfoOrderDTO();
-            history.setProductName(rs.getString("product_name"));
-            history.setActionDate(rs.getString("operation_date"));
-            history.setOperationStatus(OperationStatus.getOperationStatusFromId(rs.getInt("current_status_id")));
+            history.setProductName(rs.getString(PRODUCT_NAME));
+            history.setActionDate(rs.getString(OPERATION_DATE));
+            history.setOperationStatus(OperationStatus.getOperationStatusFromId(rs.getInt(CURRENT_STATUS_ID)));
             return history;
         });
     }
@@ -78,8 +90,8 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
      */
     @Override
     public Integer getCountOperationForUser(Integer userId, String search) {
-        MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
-        params.addValue("pattern", "%" + search + "%");
+        MapSqlParameterSource params = new MapSqlParameterSource(USER_ID, userId);
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT_OPERATION_FOR_USER, params, Integer.class);
     }
 
@@ -88,7 +100,7 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
      */
     @Override
     public Integer getCountOperationsByOrderId(int orderId) {
-        MapSqlParameterSource params = new MapSqlParameterSource("orderId", orderId);
+        MapSqlParameterSource params = new MapSqlParameterSource(ORDER_ID, orderId);
         return jdbcTemplate.queryForObject(SELECT_COUNT_OF_OPERATIONS_BY_ORDER_ID, params, Integer.class);
     }
 
@@ -98,15 +110,15 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
     @Override
     public List<FullInfoOrderDTO> getIntervalOfOperationsByOrderId(int startIndex, int endIndex, int orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("startIndex", startIndex);
-        params.addValue("endIndex", endIndex);
-        params.addValue("orderId", orderId);
+        params.addValue(START, startIndex);
+        params.addValue(END, endIndex);
+        params.addValue(ORDER_ID, orderId);
         List<FullInfoOrderDTO> history = jdbcTemplate.query(SELECT_INTERVAL_OF_OPERATIONS_BY_ORDER_ID, params, (rs, rownum) -> {
             FullInfoOrderDTO order = new FullInfoOrderDTO();
-            order.setActionDate(rs.getString("operation_date"));
-            Integer status = rs.getInt("status_id");
+            order.setActionDate(rs.getString(OPERATION_DATE));
+            Integer status = rs.getInt(STATUS_ID);
             order.setOperationStatus(OperationStatus.getOperationStatusFromId(status));
-            order.setProductName(rs.getString("product_name"));
+            order.setProductName(rs.getString(PRODUCT_NAME));
             return order;
         });
         return history;

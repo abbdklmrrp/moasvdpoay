@@ -4,7 +4,7 @@ import jtelecom.dao.operationHistory.OperationHistoryDAO;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullInfoOrderDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.security.SecurityAuthenticationHelper;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class OperationHistoryController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}. <br>
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO}. <br>
      * After method gets list with all operations from database.<br>
      * This user's id method gets from session.
      *
@@ -49,7 +49,7 @@ public class OperationHistoryController {
      * @return class which contains number of all elements with such parameters and some interval of the data
      */
     @RequestMapping(value = "getOperationHistory", method = RequestMethod.GET)
-    public ListHolder getOperationHistory(@ModelAttribute GridRequestDto request, HttpSession session) {
+    public ListHolder getOperationHistory(@ModelAttribute GridRequestDTO request, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("userId");
         return getList(userId, request);
     }
@@ -61,7 +61,7 @@ public class OperationHistoryController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto}. <br>
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO}. <br>
      * After method gets list with all operations from database.<br>
      * This user's id method gets from the security current user.
      *
@@ -69,20 +69,20 @@ public class OperationHistoryController {
      * @return class which contains number of all elements with such parameters and some interval of the data
      */
     @RequestMapping(value = "getOrderHistory", method = RequestMethod.GET)
-    public ListHolder getOrderHistory(@ModelAttribute GridRequestDto request) {
+    public ListHolder getOrderHistory(@ModelAttribute GridRequestDTO request) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         return getList(user.getId(), request);
     }
 
     /**
-     * Base method for {@link jtelecom.controller.csr.OperationHistoryController#getOrderHistory(GridRequestDto)} <br>
-     * and {@link jtelecom.controller.csr.OperationHistoryController#getOperationHistory(GridRequestDto, HttpSession)}
+     * Base method for {@link jtelecom.controller.csr.OperationHistoryController#getOrderHistory(GridRequestDTO)} <br>
+     * and {@link jtelecom.controller.csr.OperationHistoryController#getOperationHistory(GridRequestDTO, HttpSession)}
      *
      * @param userId  id of the user
      * @param request contains indexes for first element and last elements and patterns for search and sort
      * @return class which contains number of all elements with such parameters and some interval of the data
      */
-    private ListHolder getList(Integer userId, GridRequestDto request) {
+    private ListHolder getList(Integer userId, GridRequestDTO request) {
         String sort = request.getSort();
         String search = request.getSearch();
         int start = request.getStartBorder();

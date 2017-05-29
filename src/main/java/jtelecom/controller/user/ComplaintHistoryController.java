@@ -3,7 +3,7 @@ package jtelecom.controller.user;
 import jtelecom.dao.user.User;
 import jtelecom.dao.user.UserDAO;
 import jtelecom.dto.FullComplaintInfoDTO;
-import jtelecom.dto.grid.GridRequestDto;
+import jtelecom.dto.grid.GridRequestDTO;
 import jtelecom.dto.grid.ListHolder;
 import jtelecom.repositories.FullComplaintInfoRepository;
 import jtelecom.security.SecurityAuthenticationHelper;
@@ -40,7 +40,7 @@ public class ComplaintHistoryController {
     }
 
     /**
-     * This method gets GridRequestDto( see the {@link jtelecom.dto.grid.GridRequestDto} <br>.
+     * This method gets GridRequestDTO( see the {@link GridRequestDTO} <br>.
      * After method gets list with all client's complaints from database.<br>
      * This client's id method gets from the security current user.
      *
@@ -48,7 +48,7 @@ public class ComplaintHistoryController {
      * @return class which contains number of all elements with such parameters and some interval of the data
      */
     @RequestMapping(value = "getComplaintHistory", method = RequestMethod.GET)
-    public ListHolder getComplaintHistory(@ModelAttribute GridRequestDto request) {
+    public ListHolder getComplaintHistory(@ModelAttribute GridRequestDTO request) {
         User user = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         Integer userId = user.getId();
         String sort = request.getSort();
