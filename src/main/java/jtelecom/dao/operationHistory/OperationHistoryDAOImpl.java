@@ -19,13 +19,13 @@ public class OperationHistoryDAOImpl implements OperationHistoryDAO {
     private static final String PRODUCT_NAME = "product_name";
     private static final String OPERATION_DATE = "operation_date";
     private static final String STATUS_ID = "status_id";
-    private static final String ORDER_ID = "order_id";
-    private static final String USER_ID = "user_id";
     private static final String CURRENT_STATUS_ID = "current_status_id";
 
     private static final String START = "start";
     private static final String END = "end";
     private static final String PATTERN = "pattern";
+    private static final String USER_ID ="userId";
+    private static final String ORDER_ID ="orderId";
 
     private final static String SELECT_OPERATION_HISTORY_BY_USER_SQL = "SELECT * FROM( \n" +
             " SELECT product_name, " +
