@@ -1018,6 +1018,9 @@ public class ProductDAOImpl implements ProductDAO {
     public List<Product> getLimitedServicesForResidential(Integer start, Integer length, String sort, String search, Integer categoryId, Integer placeId) {
         String query;
         MapSqlParameterSource params = new MapSqlParameterSource();
+        if (sort.contains("base_price")) {
+            sort = sort.replace("base_price", "PRICES.price");
+        }
         if (sort.isEmpty()) {
             sort = NAME;
         }
