@@ -138,7 +138,7 @@
                         </div>
                         Type
                     </th>
-                    <th class="col-xs-2" data-grid-header="durationInDays" data-grid-header-sortable="true">
+                    <th class="col-xs-2" data-grid-header="duration_in_days" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"
                                data-grid-header-sortable-up="up"></a>
@@ -157,7 +157,7 @@
                 <tr data-grid="row">
                     <td data-cell="name"></td>
                     <td data-cell="type_id"></td>
-                    <td data-cell="duration"></td>
+                    <td data-cell="duration_in_days"></td>
                     <td data-cell="action"></td>
                 </tr>
                 </tbody>
