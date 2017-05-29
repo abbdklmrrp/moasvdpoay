@@ -169,7 +169,7 @@ public interface ProductDAO extends DAO<Product> {
      * @return {@code true} if object doesn't exist, {@code false} if exist.
      * @see Product
      */
-    Product getProductByName(Product product);
+    boolean getProductByName(Product product, int productId);
 
     /**
      * Method returns all services that are available in place.
