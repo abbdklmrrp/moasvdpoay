@@ -135,15 +135,18 @@
                         </div>
                         Description
                     </th>
-                    <th class="col-xs-1" data-grid-header="product_type_name" data-grid-header-sortable="true">
-                        <div class="pull-right order-by">
-                            <a class="glyphicon glyphicon-chevron-up" href="javascript:"
-                               data-grid-header-sortable-up="up"></a>
-                            <a class="glyphicon glyphicon-chevron-down" href="javascript:"
-                               data-grid-header-sortable-down="down"></a>
-                        </div>
+                    <th class="col-xs-1" data-grid-header="product_type_name">
                         Type
                     </th>
+                    <%--<th class="col-xs-1" data-grid-header="product_type_name" data-grid-header-sortable="true">--%>
+                    <%--<div class="pull-right order-by">--%>
+                    <%--<a class="glyphicon glyphicon-chevron-up" href="javascript:"--%>
+                    <%--data-grid-header-sortable-up="up"></a>--%>
+                    <%--<a class="glyphicon glyphicon-chevron-down" href="javascript:"--%>
+                    <%--data-grid-header-sortable-down="down"></a>--%>
+                    <%--</div>--%>
+                    <%----%>
+                    <%--</th>--%>
                     <th class="col-xs-2" data-grid-header="customer_type_id" data-grid-header-sortable="true">
                         <div class="pull-right order-by">
                             <a class="glyphicon glyphicon-chevron-up" href="javascript:"

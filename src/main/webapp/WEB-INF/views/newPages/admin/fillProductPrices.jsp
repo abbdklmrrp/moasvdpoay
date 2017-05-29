@@ -25,11 +25,13 @@
             <br>
             <table border="1" class="table table-striped table-hover" id="allServicesWithCategory">
                 <tr>
+                    <th>№</th>
                     <th>Region</th>
                     <th>Product price</th>
                 </tr>
-                <c:forEach var="place" items="${placesForFillInTariff}">
+                <c:forEach var="place" items="${placesForFillInTariff}" varStatus="placeCount">
                     <tr>
+                        <td>${placeCount.count}</td>
                         <td><input type="hidden" name="placeId" value="${place.id}">${place.name}</td>
                         <td>
                             <div class="form-group row">
