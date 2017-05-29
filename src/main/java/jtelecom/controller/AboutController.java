@@ -39,12 +39,6 @@ public class AboutController {
     }
 
 
-    @RequestMapping(value = "/products")
-    public String shotProducts() {
-        return "newPages/ProductsForVisitors";
-    }
-
-
     @RequestMapping(value = {"productForBusiness"}, method = RequestMethod.GET)
     @ResponseBody
     public ListHolder getProductListForBusiness(@ModelAttribute GridRequestDTO request) {
