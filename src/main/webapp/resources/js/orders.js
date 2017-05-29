@@ -1,5 +1,6 @@
 /**
- * Created by Yuliya Pedash on 08.05.2017.
+ * @author Yuliya Pedash
+ * @since 08.05.2017.
  */
 $(document).ready(function () {
     $("#planned-tasks-info").hide();

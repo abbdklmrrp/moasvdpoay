@@ -11,7 +11,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by Yuliya Pedash on 09.05.2017.
+ * @author  Yuliya Pedash
+ * @since 09.05.2017.
  */
 @Component
 public class PlannedTaskRowMapper implements RowMapper<PlannedTask> {

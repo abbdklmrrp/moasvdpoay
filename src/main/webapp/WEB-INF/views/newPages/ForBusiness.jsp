@@ -168,7 +168,7 @@
                 <tr data-grid="row">
                     <td data-cell="name"></td>
                     <td data-cell="type_id"></td>
-                    <td data-cell="duration"></td>
+                    <td data-cell="duration_in_days"></td>
                     <td data-cell="base_price"></td>
                     <td data-cell="action"></td>
                 </tr>

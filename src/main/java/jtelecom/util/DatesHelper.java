@@ -6,7 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Calendar;
 
 /**
- * Created by Yuliya Pedash on 08.05.2017.
+ * @author  Yuliya Pedash
+ * @since 08.05.2017.
  */
 public class DatesHelper {
     private static Logger logger = LoggerFactory.getLogger(DatesHelper.class);
@@ -17,7 +18,7 @@ public class DatesHelper {
      * Begin date of superdense should not be before current date.
      * @param beginDate begin date of superdense
      * @param endDate end date of superdense
-     * @return
+     * @return <code>true</code> if dates are correct, <code>false</code> otherwise
      */
     public static boolean areDatesCorrectForOrderSuspense(Calendar beginDate, Calendar endDate) {
         Calendar currentDate = getCurrentDate();

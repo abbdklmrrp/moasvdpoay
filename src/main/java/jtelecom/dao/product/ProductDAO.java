@@ -306,7 +306,6 @@ public interface ProductDAO extends DAO<Product> {
      *
      * @param userId id of user
      * @return list of products with service type.
-     * @author Yuliya Pedash
      */
     List<Product> getAllServicesByCurrentUserTariff(Integer userId);
 
@@ -317,7 +316,6 @@ public interface ProductDAO extends DAO<Product> {
      * @param productId id of product
      * @param placeId   id of place
      * @return found Product
-     * @author Yuliya Pedash
      */
     Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
 
@@ -331,7 +329,6 @@ public interface ProductDAO extends DAO<Product> {
      * @param search     search pattern
      * @param categoryId id of category
      * @return list of services
-     * @author Yuliya Pedash
      * @see jtelecom.dao.user.Role
      * @see ProductType
      */
@@ -348,7 +345,6 @@ public interface ProductDAO extends DAO<Product> {
      * @param categoryId id of category
      * @param placeId    id o place
      * @return list of services
-     * @author Yuliya Pedash
      * @see jtelecom.dao.user.Role
      * @see ProductType
      */
@@ -361,7 +357,6 @@ public interface ProductDAO extends DAO<Product> {
      * @param search search pattern
      * @param categoryId id of category
      * @return total count
-     * @author Yuliya Pedash
      * @see jtelecom.dao.user.Role
      * @see ProductType
      */
@@ -374,16 +369,47 @@ public interface ProductDAO extends DAO<Product> {
      * @param categoryId id of category
      * @param placeId if of place
      * @return total count
-     * @author Yuliya Pedash
      */
     Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId);
 
+    /**
+     * Returns list of available (status=1) products for business type user
+     *
+     * @param start  index of first element
+     * @param length the length of the elements list to select
+     * @param sort   name of the column to sort by
+     * @param search search pattern
+     * @return list of products
+     */
     List<Product> getLimitedActiveProductsForBusiness(Integer start, Integer length, String sort, String search);
 
+    /**
+     * Returns list of available (status=1) products for residential type user
+     *
+     * @param start  index of first element
+     * @param length the length of the elements list to select
+     * @param sort   name of the column to sort by
+     * @param search search pattern
+     * @return list of products
+     */
     List<Product> getLimitedActiveProductsForResidential(Integer start, Integer length, String sort, String search);
 
+    /**
+     * Returns total number of elements that might be get with
+     * {@link ProductDAO#getLimitedActiveProductsForBusiness(Integer, Integer, String, String) getLimitedActiveProductsForBusiness} method
+     *
+     * @param search search pattern
+     * @return total count of products
+     */
     Integer getCountForLimitedActiveProductsForBusiness(String search);
 
+    /**
+     * Returns total number of elements that might be get with
+     * {@link ProductDAO#getLimitedActiveProductsForResidential(Integer, Integer, String, String)}  getLimitedActiveProductsForResidential} method
+     *
+     * @param search search pattern
+     * @return total count of products
+     */
     Integer getCountForLimitedActiveProductsForResidential(String search);
 
     List<Product> getAllEnabledTariffs();

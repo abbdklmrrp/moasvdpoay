@@ -31,6 +31,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * This class contains methods, which control presentation, activation, and deactivation
+ * for users with different roles.
  * @author Yuliya Pedash
  */
 @Controller
@@ -55,7 +57,14 @@ public class ServiceOrderController implements Serializable {
     private final static String ERROR_PLACING_ORDER_MSG = "Sorry, mistake while placing this order. Please, try again!";
     private final static String ALL_CATEGORIES = "All Categories";
 
-
+    /**
+     * This method makes preparation for showing view page. It adds list with all categories
+     * to view page and name of the current category.
+     * @param model model
+     * @param categoryId category id
+     * @see ProductDAO#getProductCategories()
+     * @see ProductDAO#getProductCategoryById(Integer)
+     */
     private void orderService(Model model, Integer categoryId) {
         this.categoryId = categoryId;
         String categoryName = categoryId == null ? ALL_CATEGORIES :
@@ -65,38 +74,74 @@ public class ServiceOrderController implements Serializable {
         model.addAttribute("productsCategories", productCategories);
     }
 
-    public void orderServiceUser(Model model, Integer categoryId) {
+    /**
+     * This method adds user role to view and prepares vew page for user
+     * @param model model
+     * @param categoryId id of category
+     */
+    private void orderServiceUser(Model model, Integer categoryId) {
         String userRoleLowerCase = currentUser.getRole().getNameInLowwerCase();
         model.addAttribute("userRole", userRoleLowerCase);
         orderService(model, categoryId);
     }
-
+    /**
+     * This method shows gets current user with which csr is currently working
+     * and prepares view for user with role {@link jtelecom.dao.user.Role#CSR}
+     * @param model model  model
+     * @param categoryId id of category id of category
+     * @return view address
+     * @see #orderService
+     * @see jtelecom.dao.user.Role
+     */
     @RequestMapping(value = {"csr/orderService"}, method = RequestMethod.GET)
-    public String orderService(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session, RedirectAttributes attributes) throws IOException {
+    public String orderService(Model model, @RequestParam(required = false) Integer categoryId, HttpSession session){
         this.currentUser = userDAO.getUserById((Integer) session.getAttribute("userId"));
-        if (currentUser.getRole() == Role.EMPLOYEE) {
-            attributes.addFlashAttribute("msg", "Employee can't see this page");
-            return "redirect:/csr/getUserProfile";
-        }
         orderService(model, categoryId);
         model.addAttribute("userRole", "csr");
         return "newPages/csr/Services";
     }
-
+    /**
+     * This method  gets current user and performs operation for preparing orderService page
+     * for  user with role {@link jtelecom.dao.user.Role#RESIDENTIAL}
+     * @param model model
+     * @param categoryId id of category
+     * @return view address
+     * @see #orderService
+     * @see jtelecom.dao.user.Role
+     */
     @RequestMapping(value = {"residential/orderService"}, method = RequestMethod.GET)
-    public String orderServiceResidential(Model model, @RequestParam(required = false) Integer categoryId) throws IOException {
+    public String orderServiceResidential(Model model, @RequestParam(required = false) Integer categoryId)  {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         orderServiceUser(model, categoryId);
         return "newPages/residential/Services";
     }
 
+    /**
+     * This method  gets current user and performs operation for preparing orderService page
+     * for user with role {@link jtelecom.dao.user.Role#BUSINESS}
+     * @param model model
+     * @param categoryId id of category
+     * @return view address
+     * @see #orderService
+     * @see jtelecom.dao.user.Role
+     */
     @RequestMapping(value = {"business/orderService"}, method = RequestMethod.GET)
-    public String orderServiceBusiness(Model model, @RequestParam(required = false) Integer categoryId) throws IOException {
+    public String orderServiceBusiness(Model model, @RequestParam(required = false) Integer categoryId) {
         this.currentUser = userDAO.findByEmail(securityAuthenticationHelper.getCurrentUser().getUsername());
         orderServiceUser(model, categoryId);
         return "newPages/business/Services";
     }
 
+    /**
+     * This method {@link GridRequestDto} object and returns all services
+     * limited by parameters in {@link GridRequestDto} object, such as
+     * start, sort, length and search.
+     * @param request {@link GridRequestDto} object
+     * @return {@link ListHolder} object which contains data and total count of data
+     * @see  ProductService#getLimitedServicesForUser(User, Integer, Integer, String, String, Integer)
+     * @see  ProductService#getCountForServicesWithSearch(User, String, Integer)
+     * @see GridRequestDto
+     */
     @RequestMapping(value = {"csr/Services", "residential/Services", "business/Services"}, method = RequestMethod.GET)
     @ResponseBody
     public ListHolder showServices(@ModelAttribute GridRequestDTO request) {
@@ -112,11 +157,12 @@ public class ServiceOrderController implements Serializable {
 
 
     /**
-     * This method takes id of service and creates order for this service for
-     * user
+     * This method controls activation of service.
+     * It takes id of service and creates order for this service for user.
      *
      * @param serviceId id of service
      * @return message with result of operation
+     * @see OrderService#activateOrder(Product, Order)
      */
     @RequestMapping(value = {"csr/activateService", "residential/activateService", "business/activateService"}, method = RequestMethod.POST)
     @ResponseBody
@@ -146,10 +192,12 @@ public class ServiceOrderController implements Serializable {
 
 
     /**
-     * This method deactivates order of user for particular order.
+     * This method controls deactivation of particular product for user.
      *
      * @param serviceId id of service
-     * @return String "success" if deactivation was successful, "fail" otherwise
+     * @return success of operation
+     * @see SharedVariables
+     * @see OrderService#deactivateOrderCompletely(Integer)
      */
     @RequestMapping(value = {"csr/deactivateService", "business/deactivateService", "residential/deactivateService"}, method = RequestMethod.POST)
     @ResponseBody

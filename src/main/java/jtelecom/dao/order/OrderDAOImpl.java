@@ -351,8 +351,6 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
-     *
-     * @author Yuliya Pedash
      */
     public Integer saveAndGetGeneratedId(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -377,18 +375,14 @@ public class OrderDAOImpl implements OrderDAO {
     /**
      * {@inheritDoc}
      *
-     * @author Yuliya Pedash
      */
     public List<Order> getOrdersByCustomerId(Integer customerId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(CUST_ID, customerId);
         return jdbcTemplate.query(SELECT_ORDERS_BY_CUST_ID_SQL, params, new OrderRowMapper());
     }
-
     /**
      * {@inheritDoc}
-     *
-     * @author Yuliya Pedash
      */
     @Override
     public boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId) {
@@ -400,22 +394,6 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
-     *
-     * @author Yuliya Pedash
-     */
-    @Override
-    public Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(USER_ID, userId);
-        params.addValue(PRODUCT_ID, productId);
-        return jdbcTemplate.queryForObject(SELECT_NOT_DIACTIVATED_ORDER_BY_USER_AND_PRODUCT_SQL, params, orderRowMapper);
-    }
-
-
-    /**
-     * {@inheritDoc}
-     *
-     * @author Yuliya Pedash
      */
     @Override
     public List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer length, String search, String sort, Integer customerId) {
@@ -433,8 +411,6 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
-     *
-     * @author Yuliya Pedash
      */
     @Override
     public Integer getCountOrdersByCustomerId(String search, String sort, Integer customerId) {
@@ -447,8 +423,6 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
-     *
-     * @author Yuliya Pedash
      */
     @Override
     public boolean suspendOrder(Integer orderId) {
@@ -457,11 +431,8 @@ public class OrderDAOImpl implements OrderDAO {
         return jdbcTemplate.update(SUSPEND_ORDER_SQL, params) > 0;
 
     }
-
     /**
      * {@inheritDoc}
-     *
-     * @author Yuliya Pedash
      */
     @Override
     public boolean deactivateOrder(Integer orderId) {
@@ -472,8 +443,6 @@ public class OrderDAOImpl implements OrderDAO {
 
     /**
      * {@inheritDoc}
-     *
-     * @author Yuliya Pedash
      */
     @Override
     public boolean activateOrder(Integer orderId) {
