@@ -6,7 +6,8 @@ import jtelecom.dao.user.User;
 import java.util.List;
 
 /**
- * @author Moiseienko Petro, Alistratenko Nikita
+ * @author Moiseienko Petro
+ * @author Alistratenko Nikita
  * @since 24.04.2017.
  */
 public interface CustomerDAO extends DAO<Customer> {
@@ -28,8 +29,24 @@ public interface CustomerDAO extends DAO<Customer> {
      */
     List<Customer> getAllBusinessCustomers();
 
+    /**
+     * Returns list of customers
+     *
+     * @param start  index of first element
+     * @param length the length of the elements list to select
+     * @param sort   name of the column to sort by
+     * @param search search pattern
+     * @return list of customers
+     */
     List<Customer> getLimitedQuantityCustomer(int start, int length, String sort, String search);
 
+    /**
+     * Returns total number of elements that might be get with
+     * {@link CustomerDAO#getLimitedQuantityCustomer(int, int, String, String) getLimitedQuantityCustomer} method
+     *
+     * @param search search pattern
+     * @return total count of customers
+     */
     Integer getCountCustomersWithSearch(String search);
 
     /**

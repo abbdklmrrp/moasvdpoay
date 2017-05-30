@@ -20,9 +20,6 @@ import java.util.List;
 @Service
 public class CustomerDAOImpl implements CustomerDAO {
 
-
-    private static Logger logger = LoggerFactory.getLogger(CustomerDAOImpl.class);
-
     private final static String SELECT_COMPANY_SQL = "SELECT ID " +
             " FROM CUSTOMERS " +
             " WHERE NAME=:name AND SECRET_KEY=:secretKey";
