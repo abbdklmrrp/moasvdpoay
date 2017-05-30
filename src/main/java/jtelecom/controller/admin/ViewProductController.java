@@ -20,6 +20,7 @@ import java.util.Objects;
 
 /**
  * @author Anna Rysakova
+ * @author Nikita Alistratenko
  */
 @Controller
 @RequestMapping({"admin"})
@@ -81,7 +82,10 @@ public class ViewProductController {
     }
 
     /**
-     * @author Nikita Alistratenko
+     * Changes product status to opposite
+     * @param id id of the product to update
+     * @param attributes attribute to add result of updating in
+     * @return redirects to getProduct page
      */
     @RequestMapping("disableEnableProduct")
     public ModelAndView setProductDisabledEnabled(@RequestParam(value = "id") int id, RedirectAttributes attributes) {
