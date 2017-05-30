@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TestSecured {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static Logger logger = LoggerFactory.getLogger(TestSecured.class);
 
     @Secured("ADMIN")
     public void testSecured() {
