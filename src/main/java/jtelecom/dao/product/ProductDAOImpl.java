@@ -325,7 +325,7 @@ public class ProductDAOImpl implements ProductDAO {
             "  JOIN TARIFF_SERVICES\n" +
             "    ON p1.ID = TARIFF_SERVICES.TARIFF_ID\n" +
             "  JOIN PRODUCTS p2 ON p2.ID = TARIFF_SERVICES.SERVICE_ID ";
-    private final static String DISABLE_ENABLE_PRODUCT = "UPDATE Products SET status=:status WHERE id=:id";
+    private final static String UPDATE_DISABLE_ENABLE_PRODUCT_SQL = "UPDATE Products SET status=:status WHERE id=:id";
     private final static String SELECT_PRODUCT_FOR_USER = "SELECT prod.ID AS ID, prod.NAME AS NAME," +
             "prod.description AS DESCRIPTION, prod.DURATION AS duration " +
             "FROM PRODUCTS prod JOIN ORDERS ord ON (prod.ID = ord.PRODUCT_ID) JOIN OPERATION_STATUS" +
@@ -941,7 +941,7 @@ public class ProductDAOImpl implements ProductDAO {
         } else {
             params.addValue("status", 1);
         }
-        return jdbcTemplate.update(DISABLE_ENABLE_PRODUCT, params) > 0;
+        return jdbcTemplate.update(UPDATE_DISABLE_ENABLE_PRODUCT_SQL, params) > 0;
     }
 
     /**
