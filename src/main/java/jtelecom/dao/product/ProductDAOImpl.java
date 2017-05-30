@@ -36,8 +36,11 @@ import java.util.Map;
 public class ProductDAOImpl implements ProductDAO {
 
     private final static String ID = "ID";
+    private final static String SERVICE_ID = "serviceId";
     private final static String TYPE_ID = "TYPE_ID";
     private final static String CATEGORY_ID = "CATEGORY_ID";
+    private final static String CATEGORY = "CATEGORY";
+    private final static String CATEGORY_NAME = "CATEGORY_NAME";
     private final static String NAME = "NAME";
     private final static String DURATION = "DURATION";
     private final static String NEED_PROCESSING = "NEED_PROCESSING";
@@ -52,6 +55,7 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String END_INDEX = "endIndex";
     private static final String USER_ID = "user_id";
     private static final String TARIFF_ID = "tariff_id";
+    private static final String ID_TARIFF = "tariffId";
     private static final String CUSTOMER_ID = "customer_id";
     private final static String ID_LOWER_CASE = "id";
     private static final String START = "start";
@@ -134,8 +138,9 @@ public class ProductDAOImpl implements ProductDAO {
             " OR base_price LIKE :pattern ";
     private static final String SELECT_PRODUCT_NAME_SQL = "SELECT * " +
             "FROM PRODUCTS WHERE upper(PRODUCTS.NAME)=upper(:NAME)";
-    private static final String SELECT_PRODUCT_NAME_WITH_ID_SQL = "SELECT * " +
-            "FROM PRODUCTS WHERE upper(PRODUCTS.NAME)=upper(:NAME) AND PRODUCTS.ID<>:ID";
+    private static final String SELECT_PRODUCT_NAME_WITH_ID_SQL = "SELECT *\n" +
+            "FROM PRODUCTS\n" +
+            "WHERE upper(NAME) = upper(:NAME) AND (ID != :ID)";
     private final static String SELECT_LIMITED_PRODUCTS_SQL = "SELECT *\n" +
             " FROM ( SELECT a.*, rownum rnum\n" +
             "       FROM ( SELECT * FROM PRODUCTS " +
@@ -373,10 +378,10 @@ public class ProductDAOImpl implements ProductDAO {
     private final static String SELECT_ENABLED_TARIFFS = "SELECT * FROM PRODUCTS WHERE TYPE_ID=1 AND STATUS=1 ORDER BY ID";
     private static final String SELECT_ACTIVE_PRODUCT_FOR_BUSINESS_COUNT_SQL = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
-            " Where status = 1 and customer_type_id = 1 and (upper(name) LIKE upper(:pattern) " +
+            " WHERE status = 1 AND customer_type_id = 1 AND (upper(name) LIKE upper(:pattern) " +
             " OR upper(description) LIKE upper(:pattern) " +
             " OR upper(duration) LIKE upper(:pattern) " +
-            " OR upper(base_price) LIKE upper(:pattern) ";
+            " OR upper(base_price) LIKE upper(:pattern)) ";
     private static final String SELECT_ACTIVE_PRODUCT_FOR_RESEDENTIAL_COUNT_SQL = "SELECT count(ID)\n" +
             "  FROM PRODUCTS" +
             " Where status = 1 and customer_type_id = 2 and (upper(name) LIKE upper(:pattern) " +
@@ -513,7 +518,7 @@ public class ProductDAOImpl implements ProductDAO {
 
     /**
      * Rysakova Anna
-     *
+     * <p>
      * {@inheritDoc}
      */
     @Override
@@ -589,7 +594,7 @@ public class ProductDAOImpl implements ProductDAO {
             product.setId(rs.getInt(ID));
             product.setName(rs.getString(NAME));
             product.setDescription(rs.getString(DESCRIPTION));
-            String category = rs.getString("CATEGORY");
+            String category = rs.getString(CATEGORY);
             createMap(serviceMap, product, category);
 
             return product;
@@ -604,14 +609,14 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public List<TariffServiceDTO> getServicesInfoByTariff(int tariffId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("tariffId", tariffId);
+        params.addValue(ID_TARIFF, tariffId);
         return jdbcTemplate.query(SELECT_SERVICES_BY_TARIFF_SQL, params, (rs, rowNum) -> {
             TariffServiceDTO productTmp = new TariffServiceDTO();
             productTmp.setServiceId(rs.getInt(ID));
             productTmp.setServiceName(rs.getString(NAME));
             productTmp.setCategoryId(rs.getInt(CATEGORY_ID));
             productTmp.setTariffId(tariffId);
-            productTmp.setCategoryName(rs.getString("CATEGORY_NAME"));
+            productTmp.setCategoryName(rs.getString(CATEGORY_NAME));
             return productTmp;
         });
     }
@@ -622,10 +627,10 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public List<TariffServiceDTO> getServicesIDByTariff(int tariffId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("tariffId", tariffId);
+        params.addValue(ID_TARIFF, tariffId);
         return jdbcTemplate.query(SELECT_SERVICES_BY_TARIFF_SQL, params, (rs, rowNum) -> {
             TariffServiceDTO productTmp = new TariffServiceDTO();
-            productTmp.setServiceId(rs.getInt("ID"));
+            productTmp.setServiceId(rs.getInt(ID));
             productTmp.setTariffId(tariffId);
             return productTmp;
         });
@@ -637,14 +642,14 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Map<String, List<Product>> getServicesNotInTariff(int tariffId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("tariffId", tariffId);
+        params.addValue(ID_TARIFF, tariffId);
         Map<String, List<Product>> serviceMap = new HashMap<>();
         jdbcTemplate.query(SELECT_SERVICES_NOT_IN_TARIFF_SQL, params, (rs, rowNum) -> {
             Product product = new Product();
             product.setCategoryId(rs.getInt(CATEGORY_ID));
             product.setId(rs.getInt(ID));
             product.setName(rs.getString(NAME));
-            String category = rs.getString("CATEGORY");
+            String category = rs.getString(CATEGORY);
             createMap(serviceMap, product, category);
 
             return product;
@@ -658,7 +663,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Integer getCountProductsWithSearch(String search) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.queryForObject(SELECT_COUNT, params, Integer.class);
     }
 
@@ -672,9 +677,9 @@ public class ProductDAOImpl implements ProductDAO {
         }
         String sql = String.format(SELECT_LIMITED_PRODUCTS_SQL, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start);
-        params.addValue("length", length);
-        params.addValue("pattern", "%" + search + "%");
+        params.addValue(START, start);
+        params.addValue(LENGTH, length);
+        params.addValue(PATTERN, "%" + search + "%");
         return jdbcTemplate.query(sql, params, productWithTypeNameRowMapper);
     }
 
@@ -688,8 +693,8 @@ public class ProductDAOImpl implements ProductDAO {
         List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDTOS.size());
         for (TariffServiceDTO person : tariffServiceDTOS) {
             batchValues.add(
-                    new MapSqlParameterSource("tariffId", person.getTariffId())
-                            .addValue("serviceId", person.getServiceId())
+                    new MapSqlParameterSource(ID_TARIFF, person.getTariffId())
+                            .addValue(SERVICE_ID, person.getServiceId())
                             .getValues());
         }
         jdbcTemplate.batchUpdate(INSERT_TARIFF_SERVICE_SQL, batchValues.toArray(new Map[tariffServiceDTOS.size()]));
@@ -704,8 +709,8 @@ public class ProductDAOImpl implements ProductDAO {
         List<Map<String, Object>> batchValues = new ArrayList<>(tariffServiceDTOS.size());
         for (TariffServiceDTO person : tariffServiceDTOS) {
             batchValues.add(
-                    new MapSqlParameterSource("idTariff", person.getTariffId())
-                            .addValue("idService", person.getServiceId())
+                    new MapSqlParameterSource(ID_TARIFF, person.getTariffId())
+                            .addValue(SERVICE_ID, person.getServiceId())
                             .getValues());
         }
         jdbcTemplate.batchUpdate(DELETE_SERVICE_FROM_TARIFF_SQL, batchValues.toArray(new Map[tariffServiceDTOS.size()]));
@@ -726,11 +731,12 @@ public class ProductDAOImpl implements ProductDAO {
      * {@inheritDoc}
      */
     @Override
-    public Product getProductByName(Product product) {
+    public boolean getProductByName(Product product, int productId) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(NAME, product.getName());
-        List<Product> existProduct = jdbcTemplate.query(SELECT_PRODUCT_NAME_SQL, params, productRowMapper);
-        return existProduct.isEmpty() ? null : existProduct.get(0);
+        params.addValue(ID, productId);
+        List<Product> existProduct = jdbcTemplate.query(SELECT_PRODUCT_NAME_WITH_ID_SQL, params, productRowMapper);
+        return existProduct.isEmpty();
     }
 
     @Override
@@ -739,12 +745,6 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.query(SELECT_ENABLED_TARIFFS, productRowMapper);
     }
 
-    @Override
-    public List<Product> getAllAvailableServicesByPlace(Integer placeId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("place_id", placeId);
-        return jdbcTemplate.query(SELECT_SERVICES_BY_PLACE_PRICE_DEFINED_BY_PLACE_SQL, params, new ProductRowMapper());
-    }
 
     @Override
     public ProductCategories getProductCategoryById(Integer categoryId) {
@@ -982,7 +982,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     public List<Product> getAllServicesByCurrentUserTariff(Integer userId) {
@@ -991,8 +990,8 @@ public class ProductDAOImpl implements ProductDAO {
         return jdbcTemplate.query(SELECT_ALL_SERVICES_OF_USER_CURRENT_TARIFF_SQL, params, new ProductRowMapper());
     }
 
+
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -1005,7 +1004,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -1028,7 +1026,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -1055,7 +1052,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override
@@ -1074,7 +1070,6 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     /**
-     * @author Yuliya Pedash
      * {@inheritDoc}
      */
     @Override

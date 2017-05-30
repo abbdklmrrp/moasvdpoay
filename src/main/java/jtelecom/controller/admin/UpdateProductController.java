@@ -74,7 +74,6 @@ public class UpdateProductController {
         } catch (DataAccessException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
             mav.addObject("error ", ERROR_WITH_DB);
-            mav.addObject("message", "Sorry, try again later");
             attributes.addFlashAttribute("msg", "Sorry, try again later");
             return mav;
         }

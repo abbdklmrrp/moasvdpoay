@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 
 /**
- * Created by Yuliya Pedash on 29.04.2017.
+ * @author Yuliya Pedash
  */
 public class ServicesCatalogRowDTO {
     @JsonProperty("id")

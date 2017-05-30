@@ -127,8 +127,11 @@ public class AddProductController {
         boolean isExistProductName = productService.isExistProductName(product);
         if (isExistProductName) {
             logger.error("Service name already exist");
+            List<ProductCategories> productCategories = productDAO.getProductCategories();
+            logger.debug("Get all service's categories");
+            mav.addObject("productCategories", productCategories);
             mav.addObject("error", ERROR_EXIST_PRODUCT_NAME);
-            mav.setViewName("newPages/admin/addTariff");
+            mav.setViewName("newPages/admin/addService");
             return mav;
         }
         boolean isEmptyFieldsOfService = productService.isEmptyFieldOfProduct(product);
@@ -149,8 +152,12 @@ public class AddProductController {
         try {
             product = productService.getCategory(productCategory, product);
             logger.debug("Set category for tariff {} ", product.getCategoryId());
+
         } catch (DuplicateKeyException e) {
             logger.error(ERROR_EXIST_OF_CATEGORY, e);
+            List<ProductCategories> productCategories = productDAO.getProductCategories();
+            logger.debug("Get all service's categories {} ", productCategories.toString());
+            mav.addObject("productCategories", productCategories);
             mav.addObject("error", ERROR_EXIST_OF_CATEGORY);
             mav.setViewName("newPages/admin/addService");
             return mav;

@@ -1,6 +1,5 @@
 package jtelecom.services.mail;
 
-import com.google.common.annotations.VisibleForTesting;
 import jtelecom.dao.product.Product;
 import jtelecom.dao.user.User;
 import org.slf4j.Logger;
@@ -9,14 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Moiseienko Petro
@@ -60,7 +57,6 @@ public class MailServiceImpl implements MailService {
      * @param model map with parameters
      * @param path  name of subject template and path to content template file
      */
-    @VisibleForTesting
     private void send(String to, Map<String, Object> model, EmailTemplatePath path) {
         SimpleMailMessage message = email.createEmail(to, model, path);
         try {

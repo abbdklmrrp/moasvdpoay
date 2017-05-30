@@ -15,7 +15,6 @@ public interface OrderDAO extends DAO<Order> {
      *
      * @param customerId id of customer
      * @return list of Orders
-     * @author Yuliya Pedash
      */
     List<Order> getOrdersByCustomerId(Integer customerId);
 
@@ -35,7 +34,6 @@ public interface OrderDAO extends DAO<Order> {
      * @param productId id of product to deactivate
      * @param userId    id of user
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise
-     * @author Yuliya Pedash
      * @see jtelecom.dao.entity.OperationStatus
      */
     boolean deactivateOrderOfUserForProduct(Integer productId, Integer userId);
@@ -46,7 +44,6 @@ public interface OrderDAO extends DAO<Order> {
      *
      * @param orderId id of order
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
-     * @author Yuliya Pedash
      * @see jtelecom.dao.entity.OperationStatus
      */
     boolean suspendOrder(Integer orderId);
@@ -56,7 +53,6 @@ public interface OrderDAO extends DAO<Order> {
      *
      * @param orderId id of order
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
-     * @author Yuliya Pedash
      * @see jtelecom.dao.entity.OperationStatus
      */
     boolean activateOrder(Integer orderId);
@@ -66,7 +62,6 @@ public interface OrderDAO extends DAO<Order> {
      *
      * @param orderId id of order
      * @return <code>true</code> if operation was successful, <code>false</code> otherwise.
-     * @author Yuliya Pedash
      */
 
     boolean deactivateOrder(Integer orderId);
@@ -83,7 +78,7 @@ public interface OrderDAO extends DAO<Order> {
      * @param sort       column to sort on
      * @param customerId id of customer
      * @return list of OrdersRowDTO
-     * @author Yuliya Pedash
+     * @see OrdersRowDTO
      */
     List<OrdersRowDTO> getLimitedOrderRowsDTOByCustomerId(Integer start, Integer end, String search, String sort, Integer customerId);
 
@@ -94,19 +89,9 @@ public interface OrderDAO extends DAO<Order> {
      * @param sort       column to sort on
      * @param customerId id of customer
      * @return number of orders
-     * @author Yuliya Pedash
      */
     Integer getCountOrdersByCustomerId(String search, String sort, Integer customerId);
 
-    /**
-     * This method returns order by user for particular product.
-     *
-     * @param userId    id of user
-     * @param productId id of product
-     * @return Order object
-     * @author Yuliya Pedash
-     */
-    Order getNotDeactivatedOrderByUserAndProduct(Integer userId, Integer productId);
 
     /**
      * Method finds count all orders which connected to the user
@@ -185,7 +170,6 @@ public interface OrderDAO extends DAO<Order> {
      *
      * @param order Order object
      * @return generated primary key
-     * @author Yuliya Pedash
      * @see Order
      */
     Integer saveAndGetGeneratedId(Order order);

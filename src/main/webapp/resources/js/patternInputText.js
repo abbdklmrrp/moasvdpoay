@@ -1,3 +1,6 @@
+/**
+ * @author Anna Rysakova
+ */
 var input = document.getElementById('name')
     , value = input.value;
 

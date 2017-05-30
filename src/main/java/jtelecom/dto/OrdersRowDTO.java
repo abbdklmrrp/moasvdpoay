@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jtelecom.dao.product.ProductType;
 
 /**
- * Created by Yuliya Pedash on 07.05.2017.
+ * @author  Yuliya Pedash
  */
 public class OrdersRowDTO {
     @JsonProperty("order_id")

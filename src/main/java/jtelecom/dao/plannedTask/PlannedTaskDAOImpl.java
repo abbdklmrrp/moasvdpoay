@@ -16,7 +16,8 @@ import java.util.List;
 
 
 /**
- * @author Yuliya Pedash on 08.05.2017.
+ * @author Yuliya Pedash
+ * @since 08.05.2017.
  */
 @Service
 public class PlannedTaskDAOImpl implements PlannedTaskDAO {
@@ -185,7 +186,9 @@ public class PlannedTaskDAOImpl implements PlannedTaskDAO {
         params.addValue(ORDER_ID, orderId);
         return jdbcTemplate.update(DELETE_PLANNED_TASKS_FOR_ORDER, params) > 0;
     }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PlannedTask getDeactivationPlannedTaskForOrder(Integer orderId) {
         MapSqlParameterSource params = new MapSqlParameterSource();

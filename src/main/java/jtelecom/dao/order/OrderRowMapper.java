@@ -9,7 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by Yuliya Pedash on 27.04.2017.
+ * @author Yuliya Pedash
+ * @since 27.04.2017.
  */
 @Component
 public class OrderRowMapper implements RowMapper<Order> {

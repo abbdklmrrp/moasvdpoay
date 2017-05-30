@@ -169,16 +169,7 @@ public interface ProductDAO extends DAO<Product> {
      * @return {@code true} if object doesn't exist, {@code false} if exist.
      * @see Product
      */
-    Product getProductByName(Product product);
-
-    /**
-     * Method returns all services that are available in place.
-     * created by Yuliya Pedash
-     *
-     * @param placeId id of place
-     * @return all available services
-     */
-    List<Product> getAllAvailableServicesByPlace(Integer placeId);
+    boolean getProductByName(Product product, int productId);
 
     /**
      * Gets category of admin by id
@@ -306,7 +297,6 @@ public interface ProductDAO extends DAO<Product> {
      *
      * @param userId id of user
      * @return list of products with service type.
-     * @author Yuliya Pedash
      */
     List<Product> getAllServicesByCurrentUserTariff(Integer userId);
 
@@ -317,7 +307,6 @@ public interface ProductDAO extends DAO<Product> {
      * @param productId id of product
      * @param placeId   id of place
      * @return found Product
-     * @author Yuliya Pedash
      */
     Product findProductWithPriceSetByPlace(Integer productId, Integer placeId);
 
@@ -331,7 +320,6 @@ public interface ProductDAO extends DAO<Product> {
      * @param search     search pattern
      * @param categoryId id of category
      * @return list of services
-     * @author Yuliya Pedash
      * @see jtelecom.dao.user.Role
      * @see ProductType
      */
@@ -348,7 +336,6 @@ public interface ProductDAO extends DAO<Product> {
      * @param categoryId id of category
      * @param placeId    id o place
      * @return list of services
-     * @author Yuliya Pedash
      * @see jtelecom.dao.user.Role
      * @see ProductType
      */
@@ -361,7 +348,6 @@ public interface ProductDAO extends DAO<Product> {
      * @param search search pattern
      * @param categoryId id of category
      * @return total count
-     * @author Yuliya Pedash
      * @see jtelecom.dao.user.Role
      * @see ProductType
      */
@@ -374,7 +360,6 @@ public interface ProductDAO extends DAO<Product> {
      * @param categoryId id of category
      * @param placeId if of place
      * @return total count
-     * @author Yuliya Pedash
      */
     Integer getCountForLimitedServicesForResidential(String search, Integer categoryId, Integer placeId);
 

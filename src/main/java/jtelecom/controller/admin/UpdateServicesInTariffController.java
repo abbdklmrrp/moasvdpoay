@@ -7,7 +7,7 @@ import jtelecom.dto.TariffServiceDTO;
 import jtelecom.services.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +33,7 @@ public class UpdateServicesInTariffController {
     private static final String ERROR_WITH_DB = "Error with filling database";
     private static final String ERROR_TYPE = "Wrong type of input data";
     private static final String ERROR_EXIST = "Sorry, input data is invalid";
+    private static final String SUCCESS_UPDATE = "Successfully updating";
     private static Logger logger = LoggerFactory.getLogger(UpdateServicesInTariffController.class);
     @Resource
     private ProductDAO productDAO;
@@ -108,7 +109,7 @@ public class UpdateServicesInTariffController {
             mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
         }
 
-        if (servicesIdArray == null) {
+        if (!Objects.nonNull(servicesIdArray)) {
             logger.error("Incoming data error with services ");
             mav.addObject("error", ERROR_FILL_IN_TARIFF_SERVICES);
             mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
@@ -119,16 +120,16 @@ public class UpdateServicesInTariffController {
             logger.debug("Convert a string array of service's ID to an integer array {} ", Arrays.toString(servicesIdArray));
             productService.updateFillingOfTariffsWithServices(servicesIdArray, id);
             logger.debug("Update tariff: removed unnecessary services, added new services");
-            attributes.addFlashAttribute("msg", "Successfully updating");
+            attributes.addFlashAttribute("msg", SUCCESS_UPDATE);
+            
         } catch (NumberFormatException e) {
-            mav.addObject("error ", ERROR_TYPE);
             logger.error("Wrong parameter's type ", e.getMessage());
-            attributes.addFlashAttribute("msg", "Sorry, try again later");
+            attributes.addFlashAttribute("msg", ERROR_TYPE);
             mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
-        } catch (DataIntegrityViolationException ex) {
+
+        } catch (DataAccessException ex) {
             logger.error("Error with filling database {}", ex.getMessage());
-            mav.addObject("error ", ERROR_WITH_DB);
-            attributes.addFlashAttribute("msg", "Sorry, try again later");
+            attributes.addFlashAttribute("msg", ERROR_WITH_DB);
             mav.setViewName("newPages/admin/updateServicesInTariff/" + id);
             return mav;
         }

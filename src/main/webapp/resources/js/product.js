@@ -1,3 +1,6 @@
+/**
+ * @author Anna Rysakova
+ */
 $(document).ready(function () {
     $('#btn-edit-product-info').click(function () {
         $('#edit-and-changes').addClass("hide");

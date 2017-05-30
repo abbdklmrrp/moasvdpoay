@@ -29,7 +29,7 @@
                 <div class="form-group row" id='categoryId'>
                     <label class="col-sm-4 control-label">Select category</label>
                     <div class="col-sm-8">
-                        <select name="categoryId" class="form-control" onclick="SelectedCategory(this)" required>
+                        <select name="categoryId" class="form-control" onclick="selectedCategory(this)" required>
                             <c:forEach var="category" items="${productCategories}">
                                 <option value="${category.id}">${category.categoryName}</option>
                             </c:forEach>
@@ -80,7 +80,7 @@
                     <label class="col-sm-4 control-label">Base price</label>
                     <div class="col-sm-8">
                         <input type="number" class="currency"
-                               pattern="[0-9]+([,\.][0-9]+)?" step="0.01"
+                               pattern="[0-9]+([,\.][0-9]+)?" step="0.01" value="100.00"
                                name="basePrice" id="basePrice" required>
                         <i class="fa fa-user"></i>
                     </div>
@@ -90,8 +90,8 @@
                     <div class="col-sm-8">
                         <select name="customerType" class="form-control" id="customerTypeId"
                                 onclick="selectedCustomer(this)">
-                            <option value="Residential" selected>Residential</option>
-                            <option value="Business">Business</option>
+                            <option value="Residential">Residential</option>
+                            <option value="Business" selected>Business</option>
                         </select></div>
                 </div>
                 <div class="form-group row">
@@ -143,22 +143,10 @@
 <script type="text/javascript">
     google.load("jquery", "1.4.4");
 </script>
-<script>
-    function handleChange(input) {
-        if (input.value < 0) input.value = 1;
-        if (input.value > 365) input.value = 365;
-    }
-</script>
-<script>
-    document.getElementById('basePrice').onkeypress = function (e) {
-        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') {
-            return !(/[.,А-Яа-яA-Za-z-+]/.test(String.fromCharCode(e.charCode)));
-        }
-    }
-</script>
 <script type="text/javascript" src="<c:url value="/resources/js/patternInputText.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/newCategoryService.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/js/selectedCustomer.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/selectedCustomerBus.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/validateDuration.js"/>"></script>
 </body>
 </html>

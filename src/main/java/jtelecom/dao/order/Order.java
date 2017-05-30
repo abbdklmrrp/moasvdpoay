@@ -20,6 +20,11 @@ public class Order {
     private Integer userId;
     private OperationStatus currentStatus;
 
+    public Order(Integer productId, Integer userId, OperationStatus currentStatus) {
+        this.productId = productId;
+        this.userId = userId;
+        this.currentStatus = currentStatus;
+    }
 
     public Order(Integer id, Integer productId, Integer userId, OperationStatus currentStatus) {
         this.id = id;

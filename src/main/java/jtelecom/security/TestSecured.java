@@ -6,11 +6,11 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by Anna Rysakova on 27.05.2017.
+ * @author Anna Rysakova
  */
 @Component
 public class TestSecured {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static Logger logger = LoggerFactory.getLogger(TestSecured.class);
 
     @Secured("ADMIN")
     public void testSecured() {

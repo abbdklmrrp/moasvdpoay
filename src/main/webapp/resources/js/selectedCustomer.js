@@ -1,5 +1,7 @@
+/**
+ * @author Anna Rysakova
+ */
 $(function () {
-    //initially hide the textbox
     $("#price").hide();
     $('#customerTypeId').change(function () {
         var basePrice = document.getElementById('basePrice');
