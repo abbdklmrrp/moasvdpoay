@@ -20,6 +20,15 @@ public class User {
     private Role role;
     private UserStatus status;
 
+    public User(String name, String surname, String email, String phone, Integer placeId, String password, Role role) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.phone = phone;
+        this.placeId = placeId;
+        this.password = password;
+        this.role = role;
+    }
 
     public User(String name, String password, String authorities) {
         this.name = name;
