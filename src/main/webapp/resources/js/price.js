@@ -1,5 +1,5 @@
 /**
- * Created by Anna Rysakova on 20.05.2017.
+ * @author Anna Rysakova
  */
 (function ($) {
     $.fn.currencyInput = function () {
@@ -28,3 +28,9 @@
 $(document).ready(function () {
     $('input.currency').currencyInput();
 });
+
+document.getElementById('basePrice').onkeypress = function (e) {
+    if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') {
+        return !(/[.,А-Яа-яA-Za-z-+]/.test(String.fromCharCode(e.charCode)));
+    }
+};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

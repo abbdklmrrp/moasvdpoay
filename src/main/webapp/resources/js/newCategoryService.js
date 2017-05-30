@@ -1,5 +1,7 @@
+/**
+ * @author Anna Rysakova
+ */
 $(function () {
-    //initially hide the textbox
     $("#newCategory").hide();
     $("#newCategoryDesc").hide();
     $('#categoryId').change(function () {
@@ -18,7 +20,7 @@ $(function () {
         }
     });
 });
-function SelectedCategory(a) {
+function selectedCategory(a) {
     document.getElementById("newCategory").style.display = 'none';
     document.getElementById("newCategoryDesc").style.display = 'none';
     var label = a.value;

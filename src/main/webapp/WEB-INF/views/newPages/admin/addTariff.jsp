@@ -104,23 +104,11 @@
 </div>
 <jsp:include page="../includes/footer.jsp"/>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script>
-    function handleChange(input) {
-        if (input.value <= 0) input.value = 1;
-        if (input.value > 365) input.value = 365;
-    }
-</script>
-<script>
-    document.getElementById('basePrice').onkeypress = function (e) {
-        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') { // позволяет ввести или одну точку, или одну запятую
-            return !(/[.,А-Яа-яA-Za-z-+]/.test(String.fromCharCode(e.charCode)));
-        }
-    }
-</script>
 </body>
 
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/selectedCustomer.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/patternInputText.js"/>"></script>
 <script src="${pageContext.request.contextPath}/resources/js/alertAfterUpdateProduct.js"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/validateDuration.js"/>"></script>
 </html>

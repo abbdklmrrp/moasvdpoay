@@ -1,3 +1,6 @@
+/**
+ * @author Anna Rysakova
+ */
 $(function () {
     //initially hide the textbox
     $("#price").show();

@@ -201,23 +201,11 @@
 <div class="col-xs-3"></div>
 
 <jsp:include page="../includes/footer.jsp"/>
-<script>
-    function handleChange(input) {
-        if (input.value < 1) input.value = 1;
-        if (input.value > 365) input.value = 365;
-    }
-</script>
-<script>
-    document.getElementById('basePrice').onkeypress = function (e) {
-        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') {
-            return !(/[.,А-Яа-яA-Za-z-+]/.test(String.fromCharCode(e.charCode)));
-        }
-    }
-</script>
 <script src="${pageContext.request.contextPath}/resources/js/alertAfterUpdateProduct.js"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/patternInputText.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/validateDuration.js"/>"></script>
 <script src="<c:url value="/resources/js/selectedCustomerBus.js"/>"></script>
 <c:if test="${product.customerType=='Business'}">
     <script type="text/javascript" src="<c:url value="/resources/js/product.js"/>"></script>

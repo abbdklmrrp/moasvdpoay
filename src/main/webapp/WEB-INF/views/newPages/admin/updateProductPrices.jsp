@@ -122,12 +122,5 @@
 <div class="col-xs-3"></div>
 <jsp:include page="../includes/footer.jsp"/>
 <script type="text/javascript" src="<c:url value="/resources/js/price.js"/>"></script>
-<script>
-    document.getElementById('basePrice').onkeypress = function (e) {
-        if (this.value.indexOf(".") != '-1' || this.value.indexOf(",") != '-1') { // позволяет ввести или одну точку, или одну запятую
-            return !(/[.,А-Яа-яA-Za-z-"+"]/.test(String.fromCharCode(e.charCode)));
-        }
-    }
-</script>
 </body>
 </html>

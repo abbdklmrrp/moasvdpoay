@@ -23,13 +23,17 @@ public class PlaceDAOImpl implements PlaceDAO {
     private final static String PLACE_ID = "PLACE_ID";
     private final static String NAME = "NAME";
     private final static String PRODUCT_NAME = "PRODUCT_NAME";
-    private final static String PRODUCT_TYPE = "PRODUCT_TYPE";
+    private final static String TYPE_ID = "TYPE_ID";
     private final static String STATUS = "STATUS";
     private final static String PLACE = "PLACE";
     private final static String PRICE = "PRICE";
     private final static String START = "START";
     private final static String LENGTH = "LENGTH";
     private final static String PATTERN = "PATTERN";
+    private final static String ID_PLACE = "placeId";
+    private static final String PATTERN_INDEX = "pattern";
+    private static final String LENGTH_INDEX = "length";
+    private static final String START_INDEX = "start";
 
     private final static String SELECT_ALL_SQL = "SELECT * FROM Places";
     private final static String SELECT_PLACES_FOR_FILL_IN_TARIFF_SQL = "SELECT ID, NAME FROM PLACES WHERE \n" +
@@ -155,22 +159,22 @@ public class PlaceDAOImpl implements PlaceDAO {
     public List<PriceByRegionDTO> getLimitedQuantityPriceByPlace(int placeId, int start, int length, String sort, String search) {
         int rownum = start + length;
         if (sort.isEmpty()) {
-            sort = "ID";
+            sort = ID;
         }
         String sql = String.format(SELECT_LIMITED_PRICES_BY_PLACE_SQL, sort);
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("start", start);
-        params.addValue("length", rownum);
-        params.addValue("pattern", "%" + search + "%");
-        params.addValue("placeId", placeId);
+        params.addValue(START_INDEX, start);
+        params.addValue(LENGTH_INDEX, rownum);
+        params.addValue(PATTERN_INDEX, "%" + search + "%");
+        params.addValue(ID_PLACE, placeId);
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> {
             PriceByRegionDTO priceByPlace = new PriceByRegionDTO();
-            priceByPlace.setProductId(rs.getInt("ID"));
-            priceByPlace.setProductName(rs.getString("PRODUCT_NAME"));
-            priceByPlace.setProductType(ProductType.getProductTypeFromId(rs.getInt("TYPE_ID")).getName());
-            priceByPlace.setProductStatus(ProductStatus.getProductStatusFromId(rs.getInt("STATUS")).getName());
-            priceByPlace.setPlaceName(rs.getString("PLACE"));
-            priceByPlace.setPriceProduct(rs.getBigDecimal("PRICE"));
+            priceByPlace.setProductId(rs.getInt(ID));
+            priceByPlace.setProductName(rs.getString(PRODUCT_NAME));
+            priceByPlace.setProductType(ProductType.getProductTypeFromId(rs.getInt(TYPE_ID)).getName());
+            priceByPlace.setProductStatus(ProductStatus.getProductStatusFromId(rs.getInt(STATUS)).getName());
+            priceByPlace.setPlaceName(rs.getString(PLACE));
+            priceByPlace.setPriceProduct(rs.getBigDecimal(PRICE));
             priceByPlace.setPlaceId(placeId);
 
             return priceByPlace;

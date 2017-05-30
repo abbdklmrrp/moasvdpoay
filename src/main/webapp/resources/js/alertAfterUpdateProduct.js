@@ -1,3 +1,6 @@
+/**
+ * @author Anna Rysakova
+ */
 window.onload = function () {
     if (document.getElementById('resultMessage').innerHTML.trim() != '') {
         sweetAlert({
