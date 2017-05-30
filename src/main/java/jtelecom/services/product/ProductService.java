@@ -133,12 +133,11 @@ public interface ProductService {
     Integer saveProduct(Product product);
 
     /**
-     * Method changes status of the product
+     * Method changes status of the product to the opposite
      * ( see {@link jtelecom.dao.product.ProductStatus})
-     * and sends dispatch to users
      *
      * @param productId id of the product
-     * @return success of the operation
+     * @return result of the operation
      */
     boolean disableEnableProduct(int productId);
 
